@@ -1,41 +1,60 @@
 tabset(justified="true")
-   tab(heading="Account Admin")
+   tab(heading="Site Administration")
 
       .btn-group(dropdown is-open='status.isopen')
          button#single-button(type="button", class="btn btn-primary", dropdown-toggle, ng-diabled='disabled') Menu
             span.caret
          ul.dropdown-menu(role="menu", aria-labelledby="single-button")
-            li.divider Acct Admin
+            li.divider
             li(role="menuitem")
-               a(ng-click='addAcct())') Add Account
+               a(ng-click='showAddAcctForm()') Add Account
             li(role="menuitem")
-               a(href="#") Delete Account
+               a(ng-click='showDelAcctForm()') Delete Account
             li(role="menuitem")
-               a(href="#") Change Password
-            li.divider Event Admin
-               a(ng-click='addAcct())') Add Event
+               a(ng-click='showChgPWForm()') Change Password
+            li.divider
             li(role="menuitem")
-               a(href="#") Delete Event
+               a(ng-click='showAddEventForm()') Add Event
             li(role="menuitem")
-               a(href="#") Show Event
-            li(role="menuitem")
+               a(ng-click='showViewEventForm()') View Event
 
+form#addAcct(ng-submit="addAcct()")
+   label(for="username") Username:
+   input(type="text" id="username", placeholder="Username", ng-model="form.username")
+   label(for="password") Password:
+   input(type="password" id="password", placeholder="Password", ng-model="form.password")
+   label(for="acct_type") Account Type:
+   select(name='acct_type', ng-model='form.acct_type')
+      option(value="private") Private
+      option(value="public") Public
+   label(for="lang") Language:
+   select(name='lang', ng-model='form.lang')
+      option(value="da") Danish
+      option(value="en") English
+   input(type="submit", value="Submit")
 
-      nav
-         button(ng-click='addAcct()') Add Account
-         button(ng-click='delAcct()') Remove Account
-         button(ng-click='chgPW()') Change Password
-         button(ng-click='addEvent()') Add Event
-         button(ng-click='delEvent()') Remove Event
-         button(ng-click='showEvent()') Show Event
+form#delAcct(ng-submit='delAcct()')
+   label(for='username') Username:
+   input(type="text" id="username", placeholder="Username", ng-model="form.username")
+   input(type="submit", value="Get Acct Info")
 
-   form#addAcct(ng-submit="submit()")
-      label(for="username") Username:
-      input(type="text" id="username", placeholder="Username", ng-model="form.username")
-      label(for="password") Password:
-      input(type="password" id="password", placeholder="Password", ng-model="form.password")
-      label(for="acct_type") Account Type:
-      input(type="text" id="acct_type", placeholder="Account Type", ng-model="form.acct_type")
-      label(for="lang") Language:
-      input(type="text" id="language", placeholder="Language", ng-model="form.lang")
-      input(type="submit", value="Submit")
+form#chgPW(ng-submit='chgPW()')
+   label(for='username') Username:
+   input(type="text" id="username", placeholder="Username", ng-model="form.username")
+   label(for="password") New Password:
+   input(type="password" id="password", placeholder="Password", ng-model="form.new_password")
+   label(for="password") Confirm Password:
+   input(type="password" id="password", placeholder="Password", ng-model="form.confirm_password")
+   input(type="submit", value="Get Acct Info")
+
+form#addEvent(ng-submit='addEvent()')
+   label(for='event') Event:
+   input(type="textarea", id="event", placeholder="Event", ng-model="form.event")
+   label(for='eventImg') Image URL:
+   input(type='text', id='eventImg', placeholder='Path to image', ng-model='form.url')
+   input(type="submit", value="Get Acct Info")
+
+form#viewEvent(ng-submit='viewEvent()')
+   label(for='event') Event:
+   input(type="text", placeholder="Event", ng-model="form.username")
+   button(type="submit", value="View Event", ng-click='getEventById()') Get Event

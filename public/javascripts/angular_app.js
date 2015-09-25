@@ -52,42 +52,52 @@ app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $ht
     };
 }]);
 
+
 app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
-    $scope.addAcct = function(){
+    var forms = document.getElementsByTagName('form');
+    console.log(forms.addAcct);
+
+    $scope.showAddAcctForm = function(){
       console.log('show add form');
-        var addAcct = document.getElementById('addAcct');
-        var delAcct = document.getElementById('delAcct');
-        var chgPW = document.getElementById('chgPW');
-        angular.element(addAcct).css('display', 'block');
-        angular.element(delAcct, chgPW).css('display','none');
+        angular.element(forms).css('display', 'none');
+        angular.element(forms.addAcct).css('display', 'block');
 
     };
-    $scope.delAcct = function(){
+    $scope.showDelAcctForm = function(){
         console.log('show delete form');
-        var addAcct = document.getElementById('addAcct');
-        var delAcct = document.getElementById('delAcct');
-        var chgPW = document.getElementById('chgPW');
-        angular.element(delAcct).css('display', 'block');
-        angular.element(addAcct, chgPW).css('display','none');
+        angular.element(forms).css('display', 'none');
+        angular.element(forms.delAcct).css('display', 'block');
 
     };
-    $scope.chgPW = function(){
-        console.log('show change pw form')
-        var addAcct = document.getElementById('addAcct');
-        var delAcct = document.getElementById('delAcct');
-        var chgPW = document.getElementById('chgPW');
-        angular.element(chgPW).css('display', 'block');
-        angular.element(delAcct, addAcct).css('display','none');
+    $scope.showChgPWForm = function(){
+        console.log('show change pw form');
+        angular.element(forms).css('display', 'none');
+        angular.element(forms.chgPW).css('display', 'block');
 
     };
 
-    $scope.submit = function(){
+    $scope.addAcct = function(){
         console.log('adding acct ....', $scope);
         $http.post('/admin_crud/add', $scope.form)
             .then(function(response){
                 //console.log(response);
             })
-    }
+    };
+
+    $scope.showAddEventForm = function(){
+        console.log('show change pw form');
+        angular.element(forms).css('display', 'none');
+        angular.element(forms.addEvent).css('display', 'block');
+
+    };
+
+    $scope.showViewEventForm = function(){
+        console.log('show change pw form');
+        angular.element(forms).css('display', 'none');
+        angular.element(forms.viewEvent).css('display', 'block');
+
+    };
+
 }]);
 
 app.controller('privDkCtrl', ['$scope', '$http', function($scope, $http){

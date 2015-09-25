@@ -10,8 +10,9 @@ a {
   text-decoration: none;
 }
 
-#addAcct {
+#addAcct, #delAcct, #chgPW, #addEvent, #viewEvent {
   display: none;
+  margin:20px;
 }
 
 form {
@@ -28,26 +29,11 @@ input{
   display: block;
 }
 
-.animate-show {
-  line-height: 20px;
-  opacity: 1;
-  padding: 10px;
-  border: 1px solid black;
-  background: white;
+select {
+  display:block;
+  width: 150px;
 }
 
-.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
-  transition: all linear 0.5s;
-}
-
-.animate-show.ng-hide {
-  line-height: 0;
-  opacity: 0;
-  padding: 0 10px;
-}
-
-.check-element {
-  padding: 10px;
-  border: 1px solid black;
-  background: white;
+.btn-group {
+  margin:10px;
 }

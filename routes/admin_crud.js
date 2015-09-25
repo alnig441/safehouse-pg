@@ -4,7 +4,8 @@ var path = require('path');
 var User = require('../models/user');
 
 
-router.post('/', function(req, res){
+router.post('/add', function(req, res){
+    console.log('in admin_crud adding ', req);
     User.findOne({username: req.body.username}, function(err, result){
         if(result === null){
             var user = new User(req.body);

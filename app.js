@@ -118,6 +118,8 @@ app.use('/', routes);
 app.use('/login', login);
 app.use('/admin_crud', admin);
 app.use(express.static(path.join(__dirname, 'private')));
+app.use(express.static(path.join(__dirname, 'template')));
+
 
 
 // catch 404 and forward to error handler

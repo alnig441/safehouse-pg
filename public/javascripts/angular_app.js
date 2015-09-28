@@ -56,6 +56,7 @@ app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $ht
 app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     var forms = document.getElementsByTagName('form');
     var acct = document.getElementById('viewAcct');
+    var alert = document.getElementById('alerts');
     console.log(forms.addAcct);
 
     $scope.showAddAcctForm = function(){
@@ -91,14 +92,12 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
         $http.get('/admin_crud/'+ $scope.form.username)
             .then(function(response){
                 var alert = document.getElementById('alerts');
-                var li = document.getElementById('setId');
                 console.log('in scope-delete-acct logging response', response.data);
                 $scope.form.acct_type = response.data.acct_type;
                 $scope.form.id = response.data._id;
                 $scope.form.lang = response.data.lang;
                 angular.element(alert).html(response.data);
                 angular.element(acct).css('display', 'inline');
-                angular.element(li).attr('data-id', $scope.form.id);
             })
     };
 
@@ -106,7 +105,10 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
         console.log('deleting acct... ', $scope.form.id);
         $http.delete('/admin_crud/' + $scope.form.id)
             .then(function(response){
+                var alert = document.getElementById('alerts');
                 console.log('printing response: ', response);
+                angular.element(alert).html(response.data);
+
             })
     }
 
@@ -117,6 +119,25 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
         angular.element(forms.chgPW).css('display', 'block');
 
     };
+
+    $scope.chgPW = function(){
+        console.log('changing pw for acct ', $scope.form.username);
+
+        if($scope.form.new_password === $scope.form.confirm_password){
+            $http.post('/admin_crud/chg', $scope.form)
+                .then(function(response){
+                    console.log('printing response in chgpw ',response);
+                    var alert = document.getElementById('alerts');
+                    console.log('printing response: ', response);
+                    angular.element(alert).html(response.data);
+                })
+        }
+        else {
+            angular.element(document.getElementById('alerts')).html('password mismatch');
+        }
+
+
+    }
 
 
     $scope.showAddEventForm = function(){

@@ -10,6 +10,12 @@ a {
   text-decoration: none;
 }
 
+#alerts {
+  background-color: #f2dede;
+  border-radius: 5px;
+  text-align: center;
+}
+
 #addAcct, #delAcct, #chgPW, #addEvent, #viewEvent, #viewAcct {
   display: none;
   margin:20px;
@@ -37,3 +43,4 @@ select {
 .btn-group {
   margin:10px;
 }
+

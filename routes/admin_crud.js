@@ -42,14 +42,31 @@ router.delete('/:id?', function(req, res){
     console.log('in admin_crud deleting acct id ', req.params.id);
     User.findOneAndRemove({_id: req.params.id}, function(err, doc, result){
         if(err) {
-            console.log(err);
+            console.log('attempting to remove the acct resulted in error ', err);
             next(err);
         }
         else{
             console.log(doc);
-            res.status(200);
+            var message = ('Acct "' + doc.username + '" has been remmoved');
+            res.send(message);
         }
     })
-})
+});
+
+router.post('/chg', function(req, res){
+    console.log('in admin_crud updating ', req.body);
+    User.findOne({username: req.body.username}, function(err, result){
+            console.log('printing result: ', result);
+            var user = result;
+            user.password = req.body.new_password;
+            console.log(user);
+            user.save(function(err){
+                if(err)console.log(err);
+            });
+            var message = 'pw for acct "' + req.body.username + '" has been changed';
+            res.send(message);
+    });
+});
+
 
 module.exports = router;

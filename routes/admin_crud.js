@@ -13,7 +13,11 @@ router.post('/add', function(req, res){
                 if(err)console.log(err);
             });
             console.log('user added');
-            res.send(200);
+            var message = 'user "'+ req.body.username + '" added';
+            res.send(message);
+        } else {
+            var message = 'user "' + req.body.username + '" already exists';
+            res.send(message);
         }
     });
 });

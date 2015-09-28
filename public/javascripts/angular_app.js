@@ -80,7 +80,9 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
         console.log('adding acct ....', $scope);
         $http.post('/admin_crud/add', $scope.form)
             .then(function(response){
-                //console.log(response);
+                var alert = document.getElementById('alerts');
+                console.log('in scope-add-acct logging response', response);
+                angular.element(alert).html(response.data);
             })
     };
 

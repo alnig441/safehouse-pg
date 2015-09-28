@@ -63,18 +63,6 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
         angular.element(forms.addAcct).css('display', 'block');
 
     };
-    $scope.showDelAcctForm = function(){
-        console.log('show delete form');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.delAcct).css('display', 'block');
-
-    };
-    $scope.showChgPWForm = function(){
-        console.log('show change pw form');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.chgPW).css('display', 'block');
-
-    };
 
     $scope.addAcct = function(){
         console.log('adding acct ....', $scope);
@@ -85,6 +73,31 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
                 angular.element(alert).html(response.data);
             })
     };
+
+    $scope.showDelAcctForm = function(){
+        console.log('show delete form');
+        angular.element(forms).css('display', 'none');
+        angular.element(forms.delAcct).css('display', 'block');
+
+    };
+
+    $scope.delAcct = function(){
+        console.log('deleting acct ....', $scope.form.username);
+        $http.get('/admin_crud/'+ $scope.form.username)
+            .then(function(response){
+                var alert = document.getElementById('alerts');
+                console.log('in scope-delete-acct logging response', response.data);
+                angular.element(alert).html(response.data);
+            })
+    };
+
+    $scope.showChgPWForm = function(){
+        console.log('show change pw form');
+        angular.element(forms).css('display', 'none');
+        angular.element(forms.chgPW).css('display', 'block');
+
+    };
+
 
     $scope.showAddEventForm = function(){
         console.log('show change pw form');

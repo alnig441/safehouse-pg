@@ -22,4 +22,20 @@ router.post('/add', function(req, res){
     });
 });
 
+router.get('/:username?', function(req, res){
+    console.log('in admin_crud getting acct data', req.params);
+    User.findOne({username: req.params.username}, function(err, result){
+        if(result === null){
+            console.log(result);
+            var message = 'user "'+ req.params.username + '" does not exist';
+            res.send(message);
+        }
+        else
+        {
+            console.log(req.params.username);
+            res.status(200).send(result);
+        }
+    });
+});
+
 module.exports = router;

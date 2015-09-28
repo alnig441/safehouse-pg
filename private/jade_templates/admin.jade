@@ -40,6 +40,15 @@ form#delAcct(ng-submit='delAcct()')
    input(type="text" id="username", placeholder="Username", ng-model="form.username")
    input(type="submit", value="Get Acct Info")
 
+#viewAcct
+   ul
+      li Username: {{ form.username }}
+      li Account Type: {{ form.acct_type }}
+      li ID: {{ form.id }}
+      li Language: {{ form.lang }}
+      button(value='remove acct') Remove Account
+
+
 form#chgPW(ng-submit='chgPW()')
    label(for='username') Username:
    input(type="text" id="username", placeholder="Username", ng-model="form.username")

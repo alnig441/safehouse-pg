@@ -32,7 +32,7 @@ router.get('/:username?', function(req, res){
         }
         else
         {
-            console.log(req.params.username);
+            console.log(result);
             res.status(200).send(result);
         }
     });

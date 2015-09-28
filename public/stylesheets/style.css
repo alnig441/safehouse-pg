@@ -10,7 +10,7 @@ a {
   text-decoration: none;
 }
 
-#addAcct, #delAcct, #chgPW, #addEvent, #viewEvent {
+#addAcct, #delAcct, #chgPW, #addEvent, #viewEvent, #viewAcct {
   display: none;
   margin:20px;
 }

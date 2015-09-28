@@ -55,10 +55,12 @@ app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $ht
 
 app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     var forms = document.getElementsByTagName('form');
+    var acct = document.getElementById('viewAcct');
     console.log(forms.addAcct);
 
     $scope.showAddAcctForm = function(){
       console.log('show add form');
+        angular.element(acct).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.addAcct).css('display', 'block');
 
@@ -69,6 +71,7 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
         $http.post('/admin_crud/add', $scope.form)
             .then(function(response){
                 var alert = document.getElementById('alerts');
+                angular.element(acct).css('display', 'none');
                 console.log('in scope-add-acct logging response', response);
                 angular.element(alert).html(response.data);
             })
@@ -76,6 +79,7 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
 
     $scope.showDelAcctForm = function(){
         console.log('show delete form');
+        angular.element(acct).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.delAcct).css('display', 'block');
 
@@ -83,16 +87,22 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
 
     $scope.delAcct = function(){
         console.log('deleting acct ....', $scope.form.username);
+        $scope.form.id;
         $http.get('/admin_crud/'+ $scope.form.username)
             .then(function(response){
                 var alert = document.getElementById('alerts');
                 console.log('in scope-delete-acct logging response', response.data);
+                $scope.form.acct_type = response.data.acct_type;
+                $scope.form.id = response.data._id;
+                $scope.form.lang = response.data.lang;
                 angular.element(alert).html(response.data);
+                angular.element(acct).css('display', 'inline');
             })
     };
 
     $scope.showChgPWForm = function(){
         console.log('show change pw form');
+        angular.element(acct).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.chgPW).css('display', 'block');
 
@@ -101,6 +111,7 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
 
     $scope.showAddEventForm = function(){
         console.log('show change pw form');
+        angular.element(acct).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.addEvent).css('display', 'block');
 
@@ -108,6 +119,7 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
 
     $scope.showViewEventForm = function(){
         console.log('show change pw form');
+        angular.element(acct).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.viewEvent).css('display', 'block');
 

@@ -23,10 +23,10 @@ router.post('/add', function(req, res){
 });
 
 router.get('/:username?', function(req, res){
-    console.log('in admin_crud getting acct data', req.params);
+    console.log('in admin_crud getting acct data', req.params._id);
     User.findOne({username: req.params.username}, function(err, result){
         if(result === null){
-            console.log(result);
+            console.log('i am here: ',result);
             var message = 'user "'+ req.params.username + '" does not exist';
             res.send(message);
         }
@@ -37,5 +37,19 @@ router.get('/:username?', function(req, res){
         }
     });
 });
+
+router.delete('/:id?', function(req, res){
+    console.log('in admin_crud deleting acct id ', req.params.id);
+    User.findOneAndRemove({_id: req.params.id}, function(err, doc, result){
+        if(err) {
+            console.log(err);
+            next(err);
+        }
+        else{
+            console.log(doc);
+            res.status(200);
+        }
+    })
+})
 
 module.exports = router;

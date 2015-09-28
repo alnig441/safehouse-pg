@@ -21,8 +21,8 @@ tabset(justified="true")
    #alerts
 
 form#addAcct(ng-submit="addAcct()")
-   label(for="username") Username:
-   input(type="text" id="username", placeholder="Username", ng-model="form.username")
+   label(for="username1") Username:
+   input(type="text" id="username1", placeholder="Username", ng-model="form.username")
    label(for="password") Password:
    input(type="password" id="password", placeholder="Password", ng-model="form.password")
    label(for="acct_type") Account Type:
@@ -35,27 +35,27 @@ form#addAcct(ng-submit="addAcct()")
       option(value="en") English
    input(type="submit", value="Submit")
 
-form#delAcct(ng-submit='delAcct()')
-   label(for='username') Username:
-   input(type="text" id="username", placeholder="Username", ng-model="form.username")
+form#delAcct(ng-submit='viewAcct()')
+   label(for='view_username') Username:
+   input(type="text" id="view_username", placeholder="Username", ng-model="form.username")
    input(type="submit", value="Get Acct Info")
 
 #viewAcct
    ul
       li Username: {{ form.username }}
       li Account Type: {{ form.acct_type }}
-      li ID: {{ form.id }}
+      li#setId(ng-model='form.id') ID: {{ form.id }}
       li Language: {{ form.lang }}
-      button(value='remove acct') Remove Account
+      button(ng-click='delAcct()') Remove Account
 
 
 form#chgPW(ng-submit='chgPW()')
-   label(for='username') Username:
-   input(type="text" id="username", placeholder="Username", ng-model="form.username")
-   label(for="password") New Password:
-   input(type="password" id="password", placeholder="Password", ng-model="form.new_password")
-   label(for="password") Confirm Password:
-   input(type="password" id="password", placeholder="Password", ng-model="form.confirm_password")
+   label(for='chg_username') Username:
+   input(type="text" id="chg_username", placeholder="Username", ng-model="form.username")
+   label(for="chg_password") New Password:
+   input(type="password" id="chg_password", placeholder="Password", ng-model="form.new_password")
+   label(for="conf_password") Confirm Password:
+   input(type="password" id="conf_password", placeholder="Password", ng-model="form.confirm_password")
    input(type="submit", value="Get Acct Info")
 
 form#addEvent(ng-submit='addEvent()')
@@ -66,6 +66,6 @@ form#addEvent(ng-submit='addEvent()')
    input(type="submit", value="Get Acct Info")
 
 form#viewEvent(ng-submit='viewEvent()')
-   label(for='event') Event:
-   input(type="text", placeholder="Event", ng-model="form.username")
+   label(for='view_event') Event:
+   input(type="text",id='view_event', placeholder="Event", ng-model="form.username")
    button(type="submit", value="View Event", ng-click='getEventById()') Get Event

@@ -47,7 +47,7 @@ router.delete('/:id?', function(req, res){
         }
         else{
             console.log(doc);
-            var message = ('Acct "' + doc.username + '" has been remmoved');
+            var message = ('Acct "' + doc.username + '" has been removed');
             res.send(message);
         }
     })

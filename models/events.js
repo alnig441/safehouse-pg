@@ -8,6 +8,7 @@ var EventSchema = new mongoose.Schema({
 });
 
 EventSchema.pre('save', function(next){
+    console.log('in event pre save');
     var today = new Date();
     this.created = today;
     next();

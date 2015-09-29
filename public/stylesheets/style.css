@@ -16,7 +16,7 @@ a {
   text-align: center;
 }
 
-#addAcct, #delAcct, #chgPW, #addEvent, #viewEvent, #viewAcct, #addImg {
+#addAcct, #delAcct, #chgPW, #addEvent, #getEvent, #viewEvent, #viewAcct, #addImg {
   display: none;
   margin:20px;
 }

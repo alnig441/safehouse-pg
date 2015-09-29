@@ -3,6 +3,8 @@ var router = express.Router();
 var path = require('path');
 var Event = require('../models/events');
 var Image = require('../models/images');
+var fs = require('fs');
+var file = path.join(__dirname, '../models/latest.txt');
 
 
 router.post('/add', function(req, res){
@@ -20,14 +22,46 @@ router.post('/add', function(req, res){
     event.event_da = req.body.event_da;
     event.event_en = req.body.event_en;
     event.image_url = req.body.url;
-    event.save(function(err){
+    event.save(function(err, product, numberAffected){
         if(err){
             console.log(err);
             res.send(err);
         }
+
+        console.log('printing product ', product._id);
+
+        fs.writeFile(file, product._id, function(err){
+        if(err)throw err;
+        console.log('saved');
+        })
     });
 
     res.send('event posted');
+
+});
+
+router.get('/', function(req, res){
+    console.log('in event get');
+    var ID = {};
+    fs.readFile(file, 'utf8', function (err, data) {
+        if(err){
+            next(err)
+        }
+        else{
+            ID._id = data;
+            console.log('id of latest event ', ID);
+            Event.findOne(ID, function(err, result){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log(result);
+                    res.send(result);
+                }
+            })
+
+        }
+    })
 
 });
 

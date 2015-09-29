@@ -16,7 +16,7 @@ tabset(justified="true")
             li(role="menuitem")
                a(ng-click='showAddEventForm()') Add Event
             li(role="menuitem")
-               a(ng-click='showViewEventForm()') View Event
+               a(ng-click='showGetEventForm()') View Event
 
 
    #alerts
@@ -77,7 +77,14 @@ form#addEvent(ng-submit='addEvent()')
    textarea#event_en(rows='3', placeholder="Event", ng-model="form.event_en")
    input(type="submit", value="Post Event")
 
-form#viewEvent(ng-submit='viewEvent()')
+form#getEvent(ng-submit='viewEvent()')
    label(for='view_event') Event:
-   input(type="text",id='view_event', placeholder="Event", ng-model="form.username")
-   button(type="submit", value="View Event", ng-click='getEventById()') Get Event
+   //input(type="text",id='view_event', placeholder="Event", ng-model="form.username")
+   button(type="submit", value="View Event", ng-click='getEventById()') Get Latest Event
+
+#viewEvent
+   ul
+      li Begivenhed: {{ form.event_da }}
+      li Event: {{ form.event_en }}
+      li Image: {{ form.image_url }}
+      li Created: {{ form.created }}

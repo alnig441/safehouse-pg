@@ -56,6 +56,7 @@ app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $ht
 app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     var forms = document.getElementsByTagName('form');
     var acct = document.getElementById('viewAcct');
+    var event = document.getElementById('viewEvent');
     //var alert = document.getElementById('alerts');
     //console.log(forms.addAcct);
 
@@ -159,19 +160,92 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     };
 
 
-    $scope.showViewEventForm = function(){
-        console.log('show change pw form');
+    $scope.showGetEventForm = function(){
+        console.log('get event form');
         angular.element(acct).css('display', 'none');
         angular.element(forms).css('display', 'none');
-        angular.element(forms.viewEvent).css('display', 'block');
+        angular.element(forms.getEvent).css('display', 'block');
 
     };
 
+    $scope.getEventById = function(){
+        console.log('getting most recent event...');
+        angular.element(acct).css('display', 'none');
+        angular.element(forms).css('display', 'none');
+
+        $http.get('/event_crud/')
+            .then(function(response){
+                console.log('get event response ', response);
+                $scope.form = response.data;
+                console.log($scope.form.created);
+                angular.element(event).css('display', 'block');
+            })
+    };
+
+
 }]);
 
-app.controller('privDkCtrl', ['$scope', '$http', function($scope, $http){
+app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
     $scope.message = 'velkommen vandaler';
-}]);
+        $scope.animationsEnabled = true;
+        $scope.items = ['item1', 'item2', 'item3'];
+
+        $scope.open = function (size) {
+
+            $http.get('/event_crud/')
+                .then(function(response){
+
+                });
+
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'myModalContent.html',
+                controller: 'ModalInstanceCtrl',
+                size: size,
+                resolve: {
+                    items: function () {
+                        return $scope.items;
+                    }
+                }
+            });
+
+/*
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+*/
+        };
+
+/*
+        $scope.toggleAnimation = function () {
+            $scope.animationsEnabled = !$scope.animationsEnabled;
+        };
+*/
+
+    }]);
+
+// Please note that $modalInstance represents a modal window (instance) dependency.
+// It is not the same as the $modal service used above.
+
+app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
+
+        $scope.items = items;
+        $scope.selected = {
+            item: $scope.items[0]
+        };
+
+/*
+        $scope.ok = function () {
+            $modalInstance.close($scope.selected.item);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+*/
+    });
 
 app.controller('privUkCtrl', ['$scope', '$http', function($scope, $http){
     $scope.message = 'welcome kilsythians';

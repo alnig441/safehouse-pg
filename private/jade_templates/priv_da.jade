@@ -1,1 +1,21 @@
 p {{message}}
+
+div
+    script(type="text/ng-template", id="myModalContent.html")
+        .modal-header
+            h3.modal-title I'm a modal!
+        .modal-body
+            ul
+                li(ng-repeat="item in items")
+                    a(href="#" ng-click="$event.preventDefault(); selected.item = item") {{ item }}
+            Selected: b {{ selected.item }}
+
+        .modal-footer
+            button.btn.btn-primary(type="button" ng-click="ok()") OK
+            button.btn.btn-warning(type="button" ng-click="cancel()") Cancel
+
+    button.btn.btn-default(type="button", ng-click="open()") Open me!
+    button.btn.btn-default(type="button", ng-click="open('lg')") Large modal
+    button.btn.btn-default(type="button", ng-click="open('sm')") Small modal
+    //button.btn.btn-default(type="button", ng-click="toggleAnimation()") Toggle Animation ({{ animationsEnabled }})
+    div(ng-show="selected") Selection from a modal: {{ selected }}

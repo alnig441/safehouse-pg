@@ -3,7 +3,7 @@ var router = express.Router();
 var path = require('path');
 var User = require('../models/user');
 
-
+//Add account
 router.post('/add', function(req, res){
     console.log('in admin_crud adding ', req.body);
     User.findOne({username: req.body.username}, function(err, result){
@@ -22,6 +22,7 @@ router.post('/add', function(req, res){
     });
 });
 
+//View account
 router.get('/:username?', function(req, res){
     console.log('in admin_crud getting acct data', req.params._id);
     User.findOne({username: req.params.username}, function(err, result){
@@ -38,6 +39,7 @@ router.get('/:username?', function(req, res){
     });
 });
 
+//Delete account
 router.delete('/:id?', function(req, res){
     console.log('in admin_crud deleting acct id ', req.params.id);
     User.findOneAndRemove({_id: req.params.id}, function(err, doc, result){
@@ -53,6 +55,7 @@ router.delete('/:id?', function(req, res){
     })
 });
 
+//Change password
 router.post('/chg', function(req, res){
     console.log('in admin_crud updating ', req.body);
     User.findOne({username: req.body.username}, function(err, result){

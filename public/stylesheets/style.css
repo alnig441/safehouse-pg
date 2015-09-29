@@ -16,7 +16,7 @@ a {
   text-align: center;
 }
 
-#addAcct, #delAcct, #chgPW, #addEvent, #viewEvent, #viewAcct {
+#addAcct, #delAcct, #chgPW, #addEvent, #viewEvent, #viewAcct, #addImg {
   display: none;
   margin:20px;
 }
@@ -43,4 +43,6 @@ select {
 .btn-group {
   margin:10px;
 }
-
+label {
+  display:block;
+}

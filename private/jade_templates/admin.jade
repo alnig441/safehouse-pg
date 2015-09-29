@@ -18,6 +18,7 @@ tabset(justified="true")
             li(role="menuitem")
                a(ng-click='showViewEventForm()') View Event
 
+
    #alerts
 
 form#addAcct(ng-submit="addAcct()")
@@ -58,12 +59,23 @@ form#chgPW(ng-submit='chgPW()')
    input(type="password" id="conf_password", placeholder="Password", ng-model="form.confirm_password")
    input(type="submit", value="Change Password")
 
+//form#addImg(ng-submit='addImg()')
+//   label(for='image') Image:
+//   input(type='text', id='image', placeholder='Path to image', ng-model='form.url')
+//   label(for='meta_tags') Meta:
+//   input(type='text', id='meta_tags', placeholder='meta info', ng-model='form.meta')
+//   input(type="submit", value="Post Image")
+
 form#addEvent(ng-submit='addEvent()')
-   label(for='event') Event:
-   input(type="textarea", id="event", placeholder="Event", ng-model="form.event")
-   label(for='eventImg') Image URL:
-   input(type='text', id='eventImg', placeholder='Path to image', ng-model='form.url')
-   input(type="submit", value="Get Acct Info")
+   label(for='image') Image:
+   input(type='text', id='image', placeholder='Path to image', ng-model='form.url')
+   label(for='meta_tags') Meta:
+   input(type='text', id='meta_tags', placeholder='meta info', ng-model='form.meta')
+   label(for='event_da') Beskrivelse:
+   textarea#event_da(rows='3', placeholder="Event", ng-model="form.event_da")
+   label(for='event_en') Description:
+   textarea#event_en(rows='3', placeholder="Event", ng-model="form.event_en")
+   input(type="submit", value="Post Event")
 
 form#viewEvent(ng-submit='viewEvent()')
    label(for='view_event') Event:

@@ -33,7 +33,7 @@ app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $ht
         console.log('loginCtrl - angular route');
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
-                console.log(response.data);
+                //console.log(response.data);
                 var user = response.data;
                 if(user.acct_type === 'admin'){
                     $location.path('/admin');
@@ -56,8 +56,8 @@ app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $ht
 app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     var forms = document.getElementsByTagName('form');
     var acct = document.getElementById('viewAcct');
-    var alert = document.getElementById('alerts');
-    console.log(forms.addAcct);
+    //var alert = document.getElementById('alerts');
+    //console.log(forms.addAcct);
 
     $scope.showAddAcctForm = function(){
       console.log('show add form');
@@ -148,6 +148,17 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
 
     };
 
+    $scope.addEvent = function(){
+        console.log('adding event', $scope.form.url);
+
+        $http.post('/event_crud/add', $scope.form)
+            .then(function(response){
+                console.log('image post response: ', response);
+                angular.element(document.getElementById('alerts')).html(response.data);
+            })
+    };
+
+
     $scope.showViewEventForm = function(){
         console.log('show change pw form');
         angular.element(acct).css('display', 'none');
@@ -169,3 +180,4 @@ app.controller('privUkCtrl', ['$scope', '$http', function($scope, $http){
 app.controller('publicCtrl', ['$scope', '$http', function($scope, $http){
     $scope.message = 'velkommen til den offentlige afdeling';
 }]);
+

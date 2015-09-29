@@ -9,10 +9,14 @@ var session = require('express-session');
 var localStrategy = require('passport-local');
 var mongoose = require('mongoose');
 var User = require('./models/user');
+var Event = require('./models/events');
+var Image = require('./models/images');
+
 
 var routes = require('./routes/index');
 var login = require('./routes/login');
 var admin = require('./routes/admin_crud')
+var event = require('./routes/event_crud')
 
 var data = {
   username: 'admin',
@@ -117,6 +121,8 @@ passport.deserializeUser(function(id, done){
 app.use('/', routes);
 app.use('/login', login);
 app.use('/admin_crud', admin);
+app.use('/event_crud', event);
+
 app.use(express.static(path.join(__dirname, 'private')));
 app.use(express.static(path.join(__dirname, 'template')));
 

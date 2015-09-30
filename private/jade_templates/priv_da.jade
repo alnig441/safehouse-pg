@@ -6,8 +6,9 @@ div
             h3.modal-title I'm a modal!
         .modal-body
             ul
-                li(ng-repeat="item in items")
-                    a(href="#" ng-click="$event.preventDefault(); selected.item = item") {{ item }}
+                //li(ng-repeat="item in items")
+                //    a(href="#" ng-click="$event.preventDefault(); selected.item = item") {{ item }}
+                li(ng-model='event') {{ event.event_da }}
             Selected: b {{ selected.item }}
 
         .modal-footer

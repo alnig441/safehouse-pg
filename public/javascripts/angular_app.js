@@ -27,6 +27,7 @@ app.config(function($routeProvider, $locationProvider){
         .otherwise({redirectTo: '/login'})
 });
 
+//Routing on acct_type
 app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $http, $location){
     console.log($scope);
     $scope.submit = function(){
@@ -63,6 +64,7 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     $scope.showAddAcctForm = function(){
       console.log('show add form');
         angular.element(acct).css('display', 'none');
+        angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.addAcct).css('display', 'block');
 
@@ -82,6 +84,7 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     $scope.showDelAcctForm = function(){
         console.log('show delete form');
         angular.element(acct).css('display', 'none');
+        angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.delAcct).css('display', 'block');
 
@@ -116,6 +119,7 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     $scope.showChgPWForm = function(){
         console.log('show change pw form');
         angular.element(acct).css('display', 'none');
+        angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.chgPW).css('display', 'block');
 
@@ -144,6 +148,7 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     $scope.showAddEventForm = function(){
         console.log('show change pw form');
         angular.element(acct).css('display', 'none');
+        angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.addEvent).css('display', 'block');
 
@@ -163,6 +168,7 @@ app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     $scope.showGetEventForm = function(){
         console.log('get event form');
         angular.element(acct).css('display', 'none');
+        angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
         angular.element(forms.getEvent).css('display', 'block');
 
@@ -194,6 +200,8 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
 
             $http.get('/event_crud/')
                 .then(function(response){
+                    $scope.event = response.data;
+                    console.log($scope.event);
 
                 });
 
@@ -232,9 +240,11 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
 app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
 
         $scope.items = items;
+/*
         $scope.selected = {
             item: $scope.items[0]
         };
+*/
 
 /*
         $scope.ok = function () {

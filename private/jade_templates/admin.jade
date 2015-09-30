@@ -59,16 +59,10 @@ form#chgPW(ng-submit='chgPW()')
    input(type="password" id="conf_password", placeholder="Password", ng-model="form.confirm_password")
    input(type="submit", value="Change Password")
 
-//form#addImg(ng-submit='addImg()')
-//   label(for='image') Image:
-//   input(type='text', id='image', placeholder='Path to image', ng-model='form.url')
-//   label(for='meta_tags') Meta:
-//   input(type='text', id='meta_tags', placeholder='meta info', ng-model='form.meta')
-//   input(type="submit", value="Post Image")
-
 form#addEvent(ng-submit='addEvent()')
    label(for='image') Image:
-   input(type='text', id='image', placeholder='Path to image', ng-model='form.url')
+   input(type='text', id='image', placeholder='{{ f.name }}')
+   button(type='file', ngf-select='uploadFiles($file)', accept='image/*') Select File
    label(for='meta_tags') Meta:
    input(type='text', id='meta_tags', placeholder='meta info', ng-model='form.meta')
    label(for='event_da') Beskrivelse:
@@ -79,7 +73,6 @@ form#addEvent(ng-submit='addEvent()')
 
 form#getEvent(ng-submit='viewEvent()')
    label(for='view_event') Event:
-   //input(type="text",id='view_event', placeholder="Event", ng-model="form.username")
    button(type="submit", value="View Event", ng-click='getEventById()') Get Latest Event
 
 #viewEvent
@@ -88,3 +81,4 @@ form#getEvent(ng-submit='viewEvent()')
       li Event: {{ form.event_en }}
       li Image: {{ form.image_url }}
       li Created: {{ form.created }}
+      #latest

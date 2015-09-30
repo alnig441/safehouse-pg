@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate']);
+var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFileUpload']);
 
 app.config(function($routeProvider, $locationProvider){
     $locationProvider.html5Mode(true);
@@ -54,142 +54,166 @@ app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $ht
 }]);
 
 
-app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
-    var forms = document.getElementsByTagName('form');
-    var acct = document.getElementById('viewAcct');
-    var event = document.getElementById('viewEvent');
-    //var alert = document.getElementById('alerts');
-    //console.log(forms.addAcct);
+app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($scope, $http, Upload, $timeout){
+//app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
 
-    $scope.showAddAcctForm = function(){
-      console.log('show add form');
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.addAcct).css('display', 'block');
+        var forms = document.getElementsByTagName('form');
+        var acct = document.getElementById('viewAcct');
+        var event = document.getElementById('viewEvent');
+        //var alert = document.getElementById('alerts');
+        //console.log(forms.addAcct);
 
-    };
+        $scope.showAddAcctForm = function(){
+            console.log('show add form');
+            angular.element(acct).css('display', 'none');
+            angular.element(event).css('display', 'none');
+            angular.element(forms).css('display', 'none');
+            angular.element(forms.addAcct).css('display', 'block');
 
-    $scope.addAcct = function(){
-        console.log('adding acct ....', $scope);
-        $http.post('/admin_crud/add', $scope.form)
-            .then(function(response){
-                var alert = document.getElementById('alerts');
-                angular.element(acct).css('display', 'none');
-                console.log('in scope-add-acct logging response', response);
-                angular.element(alert).html(response.data);
-            })
-    };
+        };
 
-    $scope.showDelAcctForm = function(){
-        console.log('show delete form');
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.delAcct).css('display', 'block');
-
-    };
-
-    $scope.viewAcct = function(){
-        console.log('viewing acct ....', $scope.form.username);
-        $scope.form.id;
-        $http.get('/admin_crud/'+ $scope.form.username)
-            .then(function(response){
-                var alert = document.getElementById('alerts');
-                console.log('in scope-delete-acct logging response', response.data);
-                $scope.form.acct_type = response.data.acct_type;
-                $scope.form.id = response.data._id;
-                $scope.form.lang = response.data.lang;
-                angular.element(alert).html(response.data);
-                angular.element(acct).css('display', 'inline');
-            })
-    };
-
-    $scope.delAcct = function(){
-        console.log('deleting acct... ', $scope.form.id);
-        $http.delete('/admin_crud/' + $scope.form.id)
-            .then(function(response){
-                var alert = document.getElementById('alerts');
-                console.log('printing response: ', response);
-                angular.element(alert).html(response.data);
-
-            })
-    }
-
-    $scope.showChgPWForm = function(){
-        console.log('show change pw form');
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.chgPW).css('display', 'block');
-
-    };
-
-    $scope.chgPW = function(){
-        console.log('changing pw for acct ', $scope.form.username);
-
-        if($scope.form.new_password === $scope.form.confirm_password){
-            $http.post('/admin_crud/chg', $scope.form)
+        $scope.addAcct = function(){
+            console.log('adding acct ....', $scope);
+            $http.post('/admin_crud/add', $scope.form)
                 .then(function(response){
-                    console.log('printing response in chgpw ',response);
+                    var alert = document.getElementById('alerts');
+                    angular.element(acct).css('display', 'none');
+                    console.log('in scope-add-acct logging response', response);
+                    angular.element(alert).html(response.data);
+                })
+        };
+
+        $scope.showDelAcctForm = function(){
+            console.log('show delete form');
+            angular.element(acct).css('display', 'none');
+            angular.element(event).css('display', 'none');
+            angular.element(forms).css('display', 'none');
+            angular.element(forms.delAcct).css('display', 'block');
+
+        };
+
+        $scope.viewAcct = function(){
+            console.log('viewing acct ....', $scope.form.username);
+            $scope.form.id;
+            $http.get('/admin_crud/'+ $scope.form.username)
+                .then(function(response){
+                    var alert = document.getElementById('alerts');
+                    console.log('in scope-delete-acct logging response', response.data);
+                    $scope.form.acct_type = response.data.acct_type;
+                    $scope.form.id = response.data._id;
+                    $scope.form.lang = response.data.lang;
+                    angular.element(alert).html(response.data);
+                    angular.element(acct).css('display', 'inline');
+                })
+        };
+
+        $scope.delAcct = function(){
+            console.log('deleting acct... ', $scope.form.id);
+            $http.delete('/admin_crud/' + $scope.form.id)
+                .then(function(response){
                     var alert = document.getElementById('alerts');
                     console.log('printing response: ', response);
                     angular.element(alert).html(response.data);
+
                 })
-        }
-        else {
-            angular.element(document.getElementById('alerts')).html('password mismatch');
-        }
+        };
+
+        $scope.showChgPWForm = function(){
+            console.log('show change pw form');
+            angular.element(acct).css('display', 'none');
+            angular.element(event).css('display', 'none');
+            angular.element(forms).css('display', 'none');
+            angular.element(forms.chgPW).css('display', 'block');
+
+        };
+
+        $scope.chgPW = function(){
+            console.log('changing pw for acct ', $scope.form.username);
+
+            if($scope.form.new_password === $scope.form.confirm_password){
+                $http.post('/admin_crud/chg', $scope.form)
+                    .then(function(response){
+                        console.log('printing response in chgpw ',response);
+                        var alert = document.getElementById('alerts');
+                        console.log('printing response: ', response);
+                        angular.element(alert).html(response.data);
+                    })
+            }
+            else {
+                angular.element(document.getElementById('alerts')).html('password mismatch');
+            }
 
 
-    }
+        };
 
 
-    $scope.showAddEventForm = function(){
-        console.log('show change pw form');
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.addEvent).css('display', 'block');
+        $scope.showAddEventForm = function(){
+            console.log('show add event form');
+            angular.element(acct).css('display', 'none');
+            angular.element(event).css('display', 'none');
+            angular.element(forms).css('display', 'none');
+            angular.element(forms.addEvent).css('display', 'block');
 
-    };
+        };
 
-    $scope.addEvent = function(){
-        console.log('adding event', $scope.form.url);
+        $scope.addEvent = function(){
+            $scope.form.url = document.getElementById('image').placeholder;
+            $http.post('/event_crud/add', $scope.form)
+                .then(function(response){
+                    console.log('image post response: ', response);
+                    angular.element(document.getElementById('alerts')).html(response.data);
+                })
+        };
 
-        $http.post('/event_crud/add', $scope.form)
-            .then(function(response){
-                console.log('image post response: ', response);
-                angular.element(document.getElementById('alerts')).html(response.data);
-            })
-    };
+         $scope.uploadFiles = function(file){
+             $scope.f = file;
+             if(file && !file.$error) {
+                 file.upload = Upload.upload({
+                     url: '/event_crud/upload',
+                     data: {file: file}
+                     });
+                 file.upload.then(function(response){
+                     $timeout(function(){
+                         file.result = response.data;
+                         });
+                 }, function(response){
+                     if(response.status > 0)
+                     $scope.errorMsg = response.status + ': ' + response.data;
+                 });
+                 file.upload.progress(function(evt){
+                     file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                 });
+             }
+         };
+
+        $scope.showGetEventForm = function(){
+            console.log('get event form');
+            angular.element(acct).css('display', 'none');
+            angular.element(event).css('display', 'none');
+            angular.element(forms).css('display', 'none');
+            angular.element(forms.getEvent).css('display', 'block');
+
+        };
+
+        $scope.getEventById = function(){
+            console.log('getting most recent event...');
+            angular.element(acct).css('display', 'none');
+            angular.element(forms).css('display', 'none');
+            var latest = document.getElementById('latest');
+
+            $http.get('/event_crud/')
+                .then(function(response){
+                    console.log('get event response ', response);
+                    $scope.form = response.data;
+                    console.log('url("/private/images/'+ response.data.image_url +'")');
+                    angular.element(latest).css('backround-image', 'url("/private/images/'+ response.data.image_url +'")');
+                    angular.element(event).css('display', 'block');
+                })
+        };
 
 
-    $scope.showGetEventForm = function(){
-        console.log('get event form');
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.getEvent).css('display', 'block');
+    }]);
 
-    };
-
-    $scope.getEventById = function(){
-        console.log('getting most recent event...');
-        angular.element(acct).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-
-        $http.get('/event_crud/')
-            .then(function(response){
-                console.log('get event response ', response);
-                $scope.form = response.data;
-                console.log($scope.form.created);
-                angular.element(event).css('display', 'block');
-            })
-    };
-
-
-}]);
 
 app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
     $scope.message = 'velkommen vandaler';

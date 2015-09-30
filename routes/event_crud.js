@@ -5,10 +5,21 @@ var Event = require('../models/events');
 var Image = require('../models/images');
 var fs = require('fs');
 var file = path.join(__dirname, '../models/latest.txt');
+var multer = require('multer');
+var storage  = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './private/images/')
+    },
+    filename: function(req, file, cb){
+        //cb(null, file.fieldname + '-' + Date.now())
+        cb(null, file.originalname)
+    }
+});
+var upload = multer({storage: storage});
 
 
 router.post('/add', function(req, res){
-    console.log('in event_crud adding ', req.body.url);
+    console.log('in event_crud adding ', req.file);
     var image = new Image();
     image.url = req.body.url;
     image.meta = splitString(req.body.meta);
@@ -38,6 +49,11 @@ router.post('/add', function(req, res){
 
     res.send('event posted');
 
+});
+
+router.post('/upload', upload.single('file'), function(req, res, next){
+    console.log('upload',req.file);
+    res.status(200);
 });
 
 router.get('/', function(req, res){

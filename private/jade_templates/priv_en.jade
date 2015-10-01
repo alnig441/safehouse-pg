@@ -1,12 +1,28 @@
 p {{message}}
+
+.btn-group(dropdown is-open='status.isopen')
+    button#single-button(type="button", class="btn btn-primary btn-default", dropdown-toggle, ng-diabled='disabled') Menu
+        span.caret
+    ul.dropdown-menu(role="menu", aria-labelledby="single-button")
+        li(role="menuitem", ng-click='open()') Latest Event
+            a(ng-click=')')
+        li(role="menuitem") Comment Latest Event
+            a(ng-click='')
+        li(role="menuitem") Download Picture
+            a(ng-click='')
+        li(role="menuitem") Picture Carrousel
+            a(ng-click='')
+        li(role="menuitem") Search Picture
+            a(ng-click='')
+
+
 div
     script(type="text/ng-template", id="myModalContent.html")
         .modal-header
-            p.modal-title {{ event.event_en }}!
+            p.modal-title {{ event.event_en }}
         .modal-body
-            //img(src='{{ event.url }}', alt='latest event', width='450', height='600')
-            img(src='./images/{{ event.image_url }}', alt='latest event', width='450', height='600')
+            img(src='{{ event.url }}', alt='latest event', width='450', height='600')
         .modal-footer
-            p.modal-created {{ event.created }}
-    button.btn.btn-default(type="button", ng-click="open()") Latest Event
+            p.modal-created Updated: {{ event.created }}
+                
     div(ng-show="selected") Selection from a modal: {{ selected }}

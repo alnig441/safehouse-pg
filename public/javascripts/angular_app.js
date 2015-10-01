@@ -204,6 +204,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
                 .then(function(response){
                     console.log('get event response ', response);
                     $scope.form = response.data;
+                    $scope.form.created = dateParse(response.data.created);
                     //$scope.form.url ='./images/' + response.data.image_url;
                     //console.log('scope.form.url =', $scope.form.url);
                     angular.element(event).css('display', 'block');
@@ -265,6 +266,7 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
         .then(function(response){
             console.log('hej der');
             $scope.event = response.data;
+            $scope.event.created = dateParse(response.data.created);
             $scope.event.url ='./images/' + response.data.image_url;
             //console.log($scope.event.url);
 
@@ -277,3 +279,11 @@ app.controller('publicCtrl', ['$scope', '$http', function($scope, $http){
     $scope.message = 'velkommen til den offentlige afdeling';
 }]);
 
+//parse Date() string to new format
+function dateParse(string){
+    var temp = string.slice(0,10);
+    var arr = temp.split('-');
+    var months =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    temp = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];
+    return temp;
+}

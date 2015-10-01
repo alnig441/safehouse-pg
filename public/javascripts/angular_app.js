@@ -226,8 +226,8 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
                 controller: 'ModalInstanceCtrl',
                 size: size,
                 resolve: {
-                    items: function () {
-                        return $scope;
+                    events: function () {
+                        return $scope.event;
                     }
                 }
             });
@@ -268,7 +268,6 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
             $scope.event = response.data;
             $scope.event.created = dateParse(response.data.created);
             $scope.event.url ='./images/' + response.data.image_url;
-            //console.log($scope.event.url);
 
         });
 

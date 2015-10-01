@@ -11,7 +11,8 @@ var mongoose = require('mongoose');
 var User = require('./models/user');
 var Event = require('./models/events');
 var Image = require('./models/images');
-
+var fs = require('fs');
+var file = path.join(__dirname, '/access.log');
 
 var routes = require('./routes/index');
 var login = require('./routes/login');
@@ -90,10 +91,11 @@ passport.use('local', new localStrategy({
             throw err;
           }
           if (isMatch) {
+            fs.appendFile(file, new Date().toString());
+            fs.appendFile(file, ': ' + user.username + '\n');
             return done(null, user);
           }else{
             console.log('BINGO');
-
             //done(null, false, {message: 'Incorrect username and password.'});
             done(null, false);
           }

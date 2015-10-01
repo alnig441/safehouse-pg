@@ -47,3 +47,11 @@ label {
   display:block;
 }
 
+.modal-created {
+  text-align: center;
+}
+
+.modal-body{
+  text-align: center;
+  margin:auto;
+}

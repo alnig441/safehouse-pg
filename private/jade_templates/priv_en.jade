@@ -1,5 +1,12 @@
 p {{message}}
-
-header
-main
-footer
+div
+    script(type="text/ng-template", id="myModalContent.html")
+        .modal-header
+            p.modal-title {{ event.event_en }}!
+        .modal-body
+            //img(src='{{ event.url }}', alt='latest event', width='450', height='600')
+            img(src='./images/{{ event.image_url }}', alt='latest event', width='450', height='600')
+        .modal-footer
+            p.modal-created {{ event.created }}
+    button.btn.btn-default(type="button", ng-click="open()") Latest Event
+    div(ng-show="selected") Selection from a modal: {{ selected }}

@@ -56,7 +56,7 @@ router.post('/upload', upload.single('file'), function(req, res, next){
     res.status(200);
 });
 
-router.get('/', function(req, res){
+router.get('/view', function(req, res){
     console.log('in event get');
     var ID = {};
     fs.readFile(file, 'utf8', function (err, data) {
@@ -81,6 +81,7 @@ router.get('/', function(req, res){
 
 });
 
+//splittig meta data string from form into an array of meta data
 function splitString(meta){
     var separator = ' ';
     var temp = meta.split(separator);

@@ -29,12 +29,11 @@ app.config(function($routeProvider, $locationProvider){
 
 //Routing on acct_type
 app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $http, $location){
-    console.log($scope);
+    console.log('in login ctrl ',$scope);
     $scope.submit = function(){
         console.log('loginCtrl - angular route');
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
-                //console.log(response.data);
                 var user = response.data;
                 if(user.acct_type === 'admin'){
                     $location.path('/admin');
@@ -201,12 +200,12 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
             angular.element(forms).css('display', 'none');
             var latest = document.getElementById('latest');
 
-            $http.get('/event_crud/')
+            $http.get('/event_crud/view')
                 .then(function(response){
                     console.log('get event response ', response);
                     $scope.form = response.data;
-                    console.log('url("/private/images/'+ response.data.image_url +'")');
-                    angular.element(latest).css('backround-image', 'url("/private/images/'+ response.data.image_url +'")');
+                    //$scope.form.url ='./images/' + response.data.image_url;
+                    //console.log('scope.form.url =', $scope.form.url);
                     angular.element(event).css('display', 'block');
                 })
         };
@@ -218,16 +217,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
 app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
     $scope.message = 'velkommen vandaler';
         $scope.animationsEnabled = true;
-        $scope.items = ['item1', 'item2', 'item3'];
-
         $scope.open = function (size) {
-
-            $http.get('/event_crud/')
-                .then(function(response){
-                    $scope.event = response.data;
-                    console.log($scope.event);
-
-                });
 
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -236,54 +226,52 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
                 size: size,
                 resolve: {
                     items: function () {
-                        return $scope.items;
+                        return $scope;
                     }
                 }
             });
 
-/*
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
-            }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
-            });
-*/
         };
-
-/*
-        $scope.toggleAnimation = function () {
-            $scope.animationsEnabled = !$scope.animationsEnabled;
-        };
-*/
 
     }]);
+
+app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
+    $scope.message = 'welcome kilsythians';
+    console.log($scope);
+    $scope.animationsEnabled = true;
+    $scope.open = function (size) {
+
+        var modalInstance = $modal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: 'myModalContent.html',
+            controller: 'ModalInstanceCtrl',
+            size: size,
+            resolve: {
+                events: function () {
+                    return $scope.event;
+                }
+            }
+        });
+
+    };
+
+}]);
 
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
-app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
+app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
+    $http.get('/event_crud/view')
+        .then(function(response){
+            console.log('hej der');
+            $scope.event = response.data;
+            $scope.event.url ='./images/' + response.data.image_url;
+            //console.log($scope.event.url);
 
-        $scope.items = items;
-/*
-        $scope.selected = {
-            item: $scope.items[0]
-        };
-*/
+        });
 
-/*
-        $scope.ok = function () {
-            $modalInstance.close($scope.selected.item);
-        };
+});
 
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-*/
-    });
-
-app.controller('privUkCtrl', ['$scope', '$http', function($scope, $http){
-    $scope.message = 'welcome kilsythians';
-}]);
 
 app.controller('publicCtrl', ['$scope', '$http', function($scope, $http){
     $scope.message = 'velkommen til den offentlige afdeling';

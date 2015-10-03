@@ -29,7 +29,7 @@ app.config(function($routeProvider, $locationProvider){
 
 //Routing on acct_type
 app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $http, $location){
-    console.log('in login ctrl ',$scope);
+    console.log('in login ctrl ');
     $scope.submit = function(){
         console.log('loginCtrl - angular route');
         $http.post('/login/authenticate', $scope.form)
@@ -234,7 +234,8 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
 
         };
 
-    }]);
+
+}]);
 
 app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
     $scope.message = 'welcome kilsythians';
@@ -256,20 +257,32 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
 
     };
 
+
 }]);
 
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
 app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
+    $scope.temp ='';
     $http.get('/event_crud/view')
         .then(function(response){
             console.log('hej der');
             $scope.event = response.data;
+            $scope.temp = response.data.image_url;
             $scope.event.created = dateParse(response.data.created);
             $scope.event.url ='./images/' + response.data.image_url;
 
         });
+
+    $scope.download = function(){
+        console.log('in download', $scope.temp);
+        $http.get('/download/file/'+ $scope.temp)
+            .then(function (response){
+                console.log('download response ', response.data);
+            })
+    }
+
 
 });
 

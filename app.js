@@ -16,8 +16,9 @@ var file = path.join(__dirname, '/access.log');
 
 var routes = require('./routes/index');
 var login = require('./routes/login');
-var admin = require('./routes/admin_crud')
-var event = require('./routes/event_crud')
+var admin = require('./routes/admin_crud');
+var event = require('./routes/event_crud');
+var download = require('./routes/download');
 
 var data = {
   username: 'admin',
@@ -124,6 +125,7 @@ app.use('/', routes);
 app.use('/login', login);
 app.use('/admin_crud', admin);
 app.use('/event_crud', event);
+app.use('/download', download);
 
 app.use(express.static(path.join(__dirname, 'private')));
 app.use(express.static(path.join(__dirname, 'template')));

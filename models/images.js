@@ -7,9 +7,11 @@ var ImageSchema = new mongoose.Schema({
 });
 
 ImageSchema.pre('save', function(next){
-    console.log('in image pre_save ', this);
-    var today = new Date();
-    this.created = today;
+    console.log('in image pre_save ', this.created);
+    if(this.created === null){
+        var today = new Date();
+        this.created = today;
+    }
     next();
 });
 

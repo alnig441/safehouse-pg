@@ -19,10 +19,11 @@ var upload = multer({storage: storage});
 
 
 router.post('/add', function(req, res){
-    console.log('in event_crud adding ', req.file);
+    console.log('in event_crud adding ', req.body);
     var image = new Image();
     image.url = req.body.url;
     image.meta = splitString(req.body.meta);
+    image.created = req.body.created;
     image.save(function(err){
         if(err){
             console.log(err);
@@ -35,8 +36,8 @@ router.post('/add', function(req, res){
     event.image_url = req.body.url;
     event.save(function(err, product, numberAffected){
         if(err){
-            console.log(err);
-            res.send(err);
+            console.log(err.message);
+            res.send('no event created: ' + err.message);
         }
 
         console.log('printing product ', product._id);
@@ -45,14 +46,14 @@ router.post('/add', function(req, res){
         if(err)throw err;
         console.log('saved');
         })
-    });
+        res.send('event posted');
 
-    res.send('event posted');
+    });
 
 });
 
 router.post('/upload', upload.single('file'), function(req, res, next){
-    console.log('upload',req.file);
+    //console.log('upload',req.file);
     res.status(200);
 });
 

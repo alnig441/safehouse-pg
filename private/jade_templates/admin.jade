@@ -72,6 +72,8 @@ form#addEvent(ng-submit='addEvent()')
    textarea#event_da(rows='3', placeholder="Event", ng-model="form.event_da")
    label(for='event_en') Description:
    textarea#event_en(rows='3', placeholder="Event", ng-model="form.event_en")
+   label(for='created') Date of picture:
+   input#created(type='date' placeholder="Enter Date", ng-model="form.created")
    input(type="submit", value="Post Event")
 
 form#getEvent(ng-submit='viewEvent()')

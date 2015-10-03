@@ -114,7 +114,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
                     var alert = document.getElementById('alerts');
                     console.log('printing response: ', response);
                     angular.element(alert).html(response.data);
-
+                    $scope.viewAcct();
                 })
         };
 

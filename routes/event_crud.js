@@ -20,16 +20,24 @@ var upload = multer({storage: storage});
 
 router.post('/add', function(req, res){
     console.log('in event_crud adding ', req.body);
-    var image = new Image();
-    image.url = req.body.url;
-    image.meta = splitString(req.body.meta);
-    image.created = req.body.created;
-    image.save(function(err){
-        if(err){
-            console.log(err);
-            res.send(err);
+
+    Image.findOne({url: req.body.url}, function(err, result) {
+        if (!result) {
+            console.log('image find: ', req.body);
+            var image = new Image();
+            image.url = req.body.url;
+            image.meta = splitString(req.body.meta);
+            image.created = req.body.created;
+            console.log(image.url);
+            image.save(function (err) {
+                if (err) {
+                    console.log(err);
+                    res.send(err);
+                }
+            });
         }
     });
+
     var event = new Event();
     event.event_da = req.body.event_da;
     event.event_en = req.body.event_en;

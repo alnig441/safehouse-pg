@@ -37,16 +37,19 @@ form#addAcct(ng-submit="addAcct()")
    input(type="submit", value="Submit")
 
 form#delAcct(ng-submit='viewAcct()')
-   label(for='view_username') Username:
-   input(type="text" id="view_username", placeholder="Username", ng-model="form.username")
+   label(for='view_acct') Acct Type:
+   //input(type="text" id="view_username", placeholder="Acct Type", ng-model="form.acct_type")
+   select(name='view_acct', ng-model='form.acct_type')
+      option(value="private") Private
+      option(value="public") Public
    input(type="submit", value="Get Acct Info")
 
 #viewAcct
-   ul
-      li Username: {{ form.username }}
-      li Account Type: {{ form.acct_type }}
-      li#setId(ng-model='form.id') ID: {{ form.id }}
-      li Language: {{ form.lang }}
+   ul(ng-repeat='user in users')
+      li Username: {{ user.username }}
+      li Account Type: {{ user.acct_type }}
+      li(id='{{ user._id }}') ID: {{ user._id }}
+      li Language: {{ user.lang }}
       button(ng-click='delAcct()') Remove Account
 
 

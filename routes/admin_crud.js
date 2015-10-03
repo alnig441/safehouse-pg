@@ -23,10 +23,14 @@ router.post('/add', function(req, res){
 });
 
 //View account
-router.get('/:username?', function(req, res){
-    console.log('in admin_crud getting acct data', req.params._id);
+router.get('/:acct_type?', function(req, res){
+    console.log('in admin_crud getting acct data', req.params.acct_type);
+/*
     User.findOne({username: req.params.username}, function(err, result){
-        if(result === null){
+*/
+    User.find({acct_type: req.params.acct_type}, function(err, result){
+
+            if(result === null){
             console.log('i am here: ',result);
             var message = 'user "'+ req.params.username + '" does not exist';
             res.send(message);
@@ -45,7 +49,7 @@ router.delete('/:id?', function(req, res){
     User.findOneAndRemove({_id: req.params.id}, function(err, doc, result){
         if(err) {
             console.log('attempting to remove the acct resulted in error ', err);
-            next(err);
+            //next(err);
         }
         else{
             console.log(doc);
@@ -54,6 +58,21 @@ router.delete('/:id?', function(req, res){
         }
     })
 });
+
+/*
+router.get('/acct/:acct_type?', function(req, res){
+
+    User.find({acct_type: req.params.acct_type}, function(err, doc, result){
+        console.log('sam i am', req.params);
+        if(err) {
+            console.log(err);
+        }else {
+            console.log(result);
+            res.send(result);
+        }
+    })
+})
+*/
 
 //Change password
 router.post('/chg', function(req, res){

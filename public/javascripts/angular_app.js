@@ -92,23 +92,24 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
         };
 
         $scope.viewAcct = function(){
-            console.log('viewing acct ....', $scope.form.username);
-            $scope.form.id;
-            $http.get('/admin_crud/'+ $scope.form.username)
+            console.log('viewing acct ....', $scope.form.acct_type);
+            $http.get('/admin_crud/'+ $scope.form.acct_type)
                 .then(function(response){
                     var alert = document.getElementById('alerts');
                     console.log('in scope-delete-acct logging response', response.data);
-                    $scope.form.acct_type = response.data.acct_type;
+                    $scope.users = response.data;
+                    console.log($scope.users);
+                    //$scope.form.acct_type = response.data.acct_type;
                     $scope.form.id = response.data._id;
-                    $scope.form.lang = response.data.lang;
+                    //$scope.form.lang = response.data.lang;
                     angular.element(alert).html(response.data);
                     angular.element(acct).css('display', 'inline');
                 })
         };
 
         $scope.delAcct = function(){
-            console.log('deleting acct... ', $scope.form.id);
-            $http.delete('/admin_crud/' + $scope.form.id)
+            console.log('deleting acct... ', this.user._id);
+            $http.delete('/admin_crud/' + this.user._id)
                 .then(function(response){
                     var alert = document.getElementById('alerts');
                     console.log('printing response: ', response);

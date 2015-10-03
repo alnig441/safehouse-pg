@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var EventSchema = new mongoose.Schema({
     event_da: {type: String, required: true},
     event_en: {type: String, required: true},
-    image_url: {type: String, required: true},
+    url: {type: String, required: true},
     created: Date
 });
 

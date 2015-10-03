@@ -11,7 +11,6 @@ var storage  = multer.diskStorage({
         cb(null, './private/images/')
     },
     filename: function(req, file, cb){
-        //cb(null, file.fieldname + '-' + Date.now())
         cb(null, file.originalname)
     }
 });
@@ -23,12 +22,8 @@ router.post('/add', function(req, res){
 
     Image.findOne({url: req.body.url}, function(err, result) {
         if (!result) {
-            console.log('image find: ', req.body);
-            var image = new Image();
-            image.url = req.body.url;
+            var image = new Image(req.body);
             image.meta = splitString(req.body.meta);
-            image.created = req.body.created;
-            console.log(image.url);
             image.save(function (err) {
                 if (err) {
                     console.log(err);
@@ -38,10 +33,7 @@ router.post('/add', function(req, res){
         }
     });
 
-    var event = new Event();
-    event.event_da = req.body.event_da;
-    event.event_en = req.body.event_en;
-    event.image_url = req.body.url;
+    var event = new Event(req.body);
     event.save(function(err, product, numberAffected){
         if(err){
             console.log(err.message);

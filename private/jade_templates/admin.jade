@@ -84,7 +84,7 @@ form#getEvent(ng-submit='viewEvent()')
    ul
       li Begivenhed: {{ form.event_da }}
       li Event: {{ form.event_en }}
-      li Image: {{ form.image_url }}
+      li Image: {{ form.url }}
       li Created: {{ form.created }}
       #latest
-         img(src='./images/{{ form.image_url }}', alt='Latest Event', height='600', widht='400')
+         img(src='./images/{{ form.url }}', alt='Latest Event', height='600', widht='400')

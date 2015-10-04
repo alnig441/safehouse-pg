@@ -25,9 +25,6 @@ router.post('/add', function(req, res){
 //View account
 router.get('/:acct_type?', function(req, res){
     console.log('in admin_crud getting acct data', req.params.acct_type);
-/*
-    User.findOne({username: req.params.username}, function(err, result){
-*/
     User.find({acct_type: req.params.acct_type}, function(err, result){
 
             if(result === null){
@@ -59,20 +56,6 @@ router.delete('/:id?', function(req, res){
     })
 });
 
-/*
-router.get('/acct/:acct_type?', function(req, res){
-
-    User.find({acct_type: req.params.acct_type}, function(err, doc, result){
-        console.log('sam i am', req.params);
-        if(err) {
-            console.log(err);
-        }else {
-            console.log(result);
-            res.send(result);
-        }
-    })
-})
-*/
 
 //Change password
 router.post('/chg', function(req, res){

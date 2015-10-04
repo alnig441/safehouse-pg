@@ -21,7 +21,7 @@ div
         .modal-header
             p.modal-title {{ event.event_da }}
         .modal-body
-            img(src='{{ event.url }}', alt='latest event', width='450', height='600', download)
+            img(src='{{ event.url }}', alt='event', width='450', height='600', download)
         .modal-footer
             p.modal-created Opdateret: {{ event.created }}
             button(ng-click='download()') Download

@@ -268,11 +268,10 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
     $scope.temp ='';
     $http.get('/event_crud/view')
         .then(function(response){
-            console.log('hej der');
+            console.log('hej der', response.data);
             $scope.event = response.data;
-            $scope.temp = response.data.image_url;
             $scope.event.created = dateParse(response.data.created);
-            $scope.event.url ='./images/' + response.data.image_url;
+            $scope.event.url ='./images/' + response.data.url;
 
         });
 

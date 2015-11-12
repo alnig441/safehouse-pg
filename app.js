@@ -7,10 +7,13 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var session = require('express-session');
 var localStrategy = require('passport-local');
-var mongoose = require('mongoose');
-var User = require('./models/user');
-var Event = require('./models/events');
-var Image = require('./models/images');
+
+//POSTGRESS REFACTOR
+var pg = require('pg');
+var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
+var bcrypt = require('bcrypt');
+//POSTGRESS REFACTOR
+
 var fs = require('fs');
 var file = path.join(__dirname, '/access.log');
 
@@ -20,37 +23,20 @@ var admin = require('./routes/admin_crud');
 var event = require('./routes/event_crud');
 var download = require('./routes/download');
 
-var data = {
-  username: 'admin',
-  password: 'admin',
-  acct_type: 'admin'
-}
-
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-var dbURI = 'mongodb://localhost:27017/starting_over';
-mongoose.connect(dbURI);
+/*
+pg.connect(connectionString, (function(err, client, done){
+  var hash = bcrypt.hashSync(process.env.PASSWORD, 12);
+  console.log(hash.length);
 
-mongoose.connection.on('connected', function(){
-  console.log('Mongoose default connection open to: ', dbURI);
-})
-
-mongoose.connection.on('error', function(err){
-  console.log('Mongoose connection failed with ', err);
-})
-
-User.findOne({username:'admin'}, function(err, result){
-  if(result === null){
-    var user = new User(data);
-    user.save(function(err){
-      if(err)console.log(err);
-    });
-  }
-});
+  client.query("INSERT INTO users(username, password, acct_type) values($1, $2, $3)", [process.env.USERNAME, hash, process.env.ACCT_TYPE]);
+}))
+*/
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -74,50 +60,63 @@ passport.use('local', new localStrategy({
       usernameField: 'username'
     },
     function(req, username, password, done) {
-      console.log('in passport: ', req.body);
-      User.findOne({username: username}, function (err, user) {
-        if (err){
-          throw err;}
-        if (!user) {
-          console.log('user does not exist', done);
-          //return done(null, false, {message: 'Incorrect username and password.'});
-          return done(null, false);
+      console.log('in passport');
 
 
-        }
-        console.log('in passport having received user: ', user);
-        user.comparePassword(password, function (err, isMatch) {
-          if (err) {
-            console.log(err);
-            throw err;
-          }
-          if (isMatch) {
-            fs.appendFile(file, new Date().toString());
-            fs.appendFile(file, ': ' + user.username + '\n');
-            return done(null, user);
-          }else{
-            console.log('BINGO');
-            //done(null, false, {message: 'Incorrect username and password.'});
-            done(null, false);
-          }
-
-
+      //POSTGRES REFACTOR
+      pg.connect(connectionString, function(err, client){
+        console.log(username);
+        var query = client.query("SELECT * FROM users WHERE username='" + username + "'", function(error, result){
+          if(error) {throw error;}
         });
-      });
-    }));
+
+        var user;
+        query.on('row', function(row){
+          user = row;
+        });
+
+        query.on('end', function(result){
+          client.end();
+          //console.log('query.on end: ', user);
+          if(!user){
+            console.log('no user');
+          }
+          else{
+            bcrypt.compare(password, user.password, function(err, isMatch){
+            console.log('bcrypt compare');
+            if(err){console.log(err);}
+            if(isMatch){
+              console.log('password is a match');
+              //console.log('pg refactor: ');
+              //return done(null, user);
+            }
+          });
+          }
+        return done(null,user);
+        });
+      })
+
+
+      //POSTGRES REFACTOR END
+
+    })
+);
 
 
 passport.serializeUser(function(user, done){
-  //console.log('serializing ', user)
+  console.log('serializing ', user)
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done){
-  //console.log("deserializing ", id);
-  User.findById(id, function(err, user){
-    if(err) done(err);
-    done(null, user);
-  });
+  console.log("deserializing ", id);
+
+  pg.connect(connectionString, function(err, client, done){
+    var query = client.query("SELECT * FROM users WHERE id='"+id+"'", function(error, result){
+      if(error){done(error);}
+      done(null, result);
+    })
+  })
 });
 
 

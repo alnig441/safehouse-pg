@@ -1,11 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var path = require('path');
-var Event = require('../models/events');
-var Image = require('../models/images');
-var fs = require('fs');
-var file = path.join(__dirname, '../models/latest.txt');
+var pg = require('pg');
+var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var multer = require('multer');
+
 var storage  = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null, './private/images/')
@@ -17,38 +15,36 @@ var storage  = multer.diskStorage({
 var upload = multer({storage: storage});
 
 
-router.post('/add', function(req, res){
-    console.log('in event_crud adding ', req.body);
+router.post('/add', function(req, res) {
+    console.log('in event_crud adding ', req.body.event_da);
 
-    Image.findOne({url: req.body.url}, function(err, result) {
-        if (!result) {
-            var image = new Image(req.body);
-            image.meta = splitString(req.body.meta);
-            image.save(function (err) {
-                if (err) {
-                    console.log(err);
-                    res.send(err);
-                }
-            });
-        }
-    });
-
-    var event = new Event(req.body);
-    event.save(function(err, product, numberAffected){
-        if(err){
-            console.log(err.message);
-            res.send('no event created: ' + err.message);
-        }
-
-        console.log('printing product ', product._id);
-
-        fs.writeFile(file, product._id, function(err){
-        if(err)throw err;
-        console.log('saved');
+    //POSTGRES REFACTOR SAVE IMAGE
+    pg.connect(connectionString, function (err, client, done) {
+        var array = splitString(req.body.meta);
+        var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", [req.body.url, req.body.created, array], function (error, result) {
+            if (error) { res.send(error.detail);}
+            else { res.send('image saved');}
         })
-        res.send('event posted');
+        query.on('end', function (result) {
+            //console.log(result);
+        })
+    })
+    //POSTGRES REFACTOR SAVE IMAGE END
 
-    });
+    //POSTGRES REFACTOR SAVE EVENT
+    if (req.body.event_da != 'undefined' || req.body.event_en != 'undefined') {
+        pg.connect(connectionString, function (err, client, done) {
+
+            var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, req.body.url, req.body.created], function (error, result) {
+                if (error) {console.log('there was an error ', error.detail);}
+            })
+            query.on('end', function (result) {
+                //console.log(result);
+            })
+        })
+    }
+    //POSTGRES REFACTOR SAVE EVENT END
+
 
 });
 
@@ -59,26 +55,27 @@ router.post('/upload', upload.single('file'), function(req, res, next){
 
 router.get('/view', function(req, res){
     console.log('in event get');
-    var ID = {};
-    fs.readFile(file, 'utf8', function (err, data) {
-        if(err){
-            next(err)
-        }
-        else{
-            ID._id = data;
-            console.log('id of latest event ', ID);
-            Event.findOne(ID, function(err, result){
-                if(err){
-                    console.log(err);
-                }
-                else{
-                    console.log(result);
-                    res.send(result);
-                }
-            })
+    //POSTGRES REFACTOR GET LATEST EVENT
+    pg.connect(connectionString, function(error, client, done){
 
-        }
+        var event;
+        var query = client.query("DECLARE geturl CURSOR FOR SELECT * FROM events; FETCH LAST FROM geturl", function(error, result){
+            if(error){ console.log('theres was an error ', error.detail);}
+            //else{ console.log('printing result: ', result.rows);}
+        })
+        query.on('row', function(row){
+            //console.log('printing row ', row);
+            event = row;
+        })
+
+        query.on('end', function(result){
+            console.log(event.url);
+            res.send(event);
+        })
     })
+
+
+    //POSTGRES REFACTOR GET LATEST EVENT END
 
 });
 

@@ -1,11 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var path = require('path');
 
 
 router.get('/file/:url', function(req, res){
     console.log('in download route ', req.body, req.params);
-    //this.use('/private/images/', express.static('private'));
 
     var options = {
         root: __dirname + '/images/',

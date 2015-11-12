@@ -48,7 +48,7 @@ form#delAcct(ng-submit='viewAcct()')
    ul(ng-repeat='user in users')
       li Username: {{ user.username }}
       li Account Type: {{ user.acct_type }}
-      li(id='{{ user._id }}') ID: {{ user._id }}
+      li(id='{{ user.id }}') ID: {{ user.id }}
       li Language: {{ user.lang }}
       button(ng-click='delAcct()') Remove Account
 
@@ -67,7 +67,7 @@ form#addEvent(ng-submit='addEvent()')
    input(type='text', id='image', placeholder='{{ f.name }}')
    button(type='file', ngf-select='uploadFiles($file)', accept='image/*') Select File
    label(for='meta_tags') Meta:
-   input(type='text', id='meta_tags', placeholder='meta info', ng-model='form.meta')
+   input(type='text', id='meta_tags', placeholder='meta info', ng-model='form.meta', required='true')
    label(for='event_da') Beskrivelse:
    textarea#event_da(rows='3', placeholder="Event", ng-model="form.event_da")
    label(for='event_en') Description:

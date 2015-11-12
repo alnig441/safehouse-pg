@@ -31,20 +31,20 @@ app.config(function($routeProvider, $locationProvider){
 app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $http, $location){
     console.log('in login ctrl ');
     $scope.submit = function(){
-        console.log('loginCtrl - angular route');
+        console.log('loginCtrl - angular route', $scope.form);
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
-                var user = response.data;
-                if(user.acct_type === 'admin'){
+                console.log(response);
+                if(response.data.acct_type === 'admin'){
                     $location.path('/admin');
                 }
-                else if(user.acct_type === 'private' && user.lang === 'en'){
+                else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
                     $location.path('/priv_uk');
                 }
-                else if(user.acct_type === 'private' && user.lang === 'da'){
+                else if(response.data.acct_type === 'private' && response.data.lang === 'da'){
                     $location.path('/priv_dk');
                 }
-                else if(user.acct_type === 'public'){
+                else if(response.data.acct_type === 'public'){
                     $location.path('/public');
                 }
                 else{$location.path('/login')};
@@ -100,7 +100,8 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
                     $scope.users = response.data;
                     console.log($scope.users);
                     //$scope.form.acct_type = response.data.acct_type;
-                    $scope.form.id = response.data._id;
+                    //$scope.form.id = response.data._id;
+                    $scope.form.id = response.data.id;
                     //$scope.form.lang = response.data.lang;
                     angular.element(alert).html(response.data);
                     angular.element(acct).css('display', 'inline');
@@ -108,8 +109,8 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
         };
 
         $scope.delAcct = function(){
-            console.log('deleting acct... ', this.user._id);
-            $http.delete('/admin_crud/' + this.user._id)
+            console.log('deleting acct... ', this.user.username);
+            $http.delete('/admin_crud/' + this.user.username)
                 .then(function(response){
                     var alert = document.getElementById('alerts');
                     console.log('printing response: ', response);
@@ -131,7 +132,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
             console.log('changing pw for acct ', $scope.form.username);
 
             if($scope.form.new_password === $scope.form.confirm_password){
-                $http.post('/admin_crud/chg', $scope.form)
+                $http.put('/admin_crud/chg', $scope.form)
                     .then(function(response){
                         console.log('printing response in chgpw ',response);
                         var alert = document.getElementById('alerts');
@@ -268,7 +269,7 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
     $scope.temp ='';
     $http.get('/event_crud/view')
         .then(function(response){
-            console.log('hej der', response.data);
+            console.log('hej der', response);
             $scope.event = response.data;
             $scope.event.created = dateParse(response.data.created);
             $scope.event.url ='./images/' + response.data.url;

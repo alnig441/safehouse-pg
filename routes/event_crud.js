@@ -6,7 +6,7 @@ var multer = require('multer');
 
 var storage  = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, './private/images/')
+        cb(null, './public/images/')
     },
     filename: function(req, file, cb){
         cb(null, file.originalname)
@@ -14,8 +14,11 @@ var storage  = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 
+router.get('/test', isAuthenticated, function(req, res){
+    res.send('some message');
+})
 
-router.post('/add', function(req, res) {
+router.post('/add', isAuthenticated, function(req, res) {
     console.log('in event_crud adding ', req.body.event_da);
 
     //POSTGRES REFACTOR SAVE IMAGE
@@ -53,7 +56,7 @@ router.post('/upload', upload.single('file'), function(req, res, next){
     res.status(200);
 });
 
-router.get('/view', function(req, res){
+router.get('/view', isAuthenticated, function(req, res){
     console.log('in event get');
     //POSTGRES REFACTOR GET LATEST EVENT
     pg.connect(connectionString, function(error, client, done){
@@ -79,11 +82,20 @@ router.get('/view', function(req, res){
 
 });
 
+function isAuthenticated (req, res, next){
+    console.log(req.isAuthenticated());
+    if(req.isAuthenticated()){
+        return next;
+    }
+    res.send('unauthorized')
+}
+
 //splittig meta data string from form into an array of meta data
 function splitString(meta){
     var separator = ' ';
     var temp = meta.split(separator);
     return temp;
 };
+
 
 module.exports = router;

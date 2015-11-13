@@ -1,8 +1,22 @@
 var express = require('express');
 var router = express.Router();
+//var passport = require('passport')
 var pg = require('pg');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var bcrypt = require('bcrypt');
+
+/*
+router.get('/test', isAuthenticated, function(req, res){
+
+    var isAuthenticated = function(req, res, next){
+        if(req.isAuthenticated()){
+            return next;
+        }
+        res.send('not authenticated');
+    }
+
+})
+*/
 
 //Add account
 router.post('/add', function(req, res){

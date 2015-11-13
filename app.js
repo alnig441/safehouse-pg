@@ -60,7 +60,7 @@ passport.use('local', new localStrategy({
       usernameField: 'username'
     },
     function(req, username, password, done) {
-      console.log('in passport');
+      console.log('in passport', req.isAuthenticated());
 
 
       //POSTGRES REFACTOR
@@ -86,13 +86,17 @@ passport.use('local', new localStrategy({
             console.log('bcrypt compare');
             if(err){console.log(err);}
             if(isMatch){
-              console.log('password is a match');
+              console.log('password is a match', req.isAuthenticated());
               //console.log('pg refactor: ');
-              //return done(null, user);
+              return done(null, user);
+            }
+            else{
+              console.log('unauthorized');
+              done(null, false);
             }
           });
           }
-        return done(null,user);
+        //return done(null, user);
         });
       })
 
@@ -126,7 +130,7 @@ app.use('/admin_crud', admin);
 app.use('/event_crud', event);
 app.use('/download', download);
 
-app.use(express.static(path.join(__dirname, 'private')));
+//app.use(express.static(path.join(__dirname, 'private')));
 app.use(express.static(path.join(__dirname, 'template')));
 
 

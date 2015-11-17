@@ -29,12 +29,12 @@ app.config(function($routeProvider, $locationProvider){
 
 //Routing on acct_type
 app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $http, $location){
-    console.log('in login ctrl ');
+    // console.log('in login ctrl ');
     $scope.submit = function(){
-        console.log('loginCtrl - angular route', $scope.form);
+        // console.log('loginCtrl - angular route', $scope.form);
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
-                console.log(response);
+                // console.log(response);
                 if(response.data.acct_type === 'admin'){
                     $location.path('/admin');
                 }
@@ -241,7 +241,7 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
 
 app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
     $scope.message = 'welcome kilsythians';
-    console.log($scope);
+    //console.log($scope);
     $scope.animationsEnabled = true;
     $scope.open = function (size) {
 

@@ -31,10 +31,10 @@ app.config(function($routeProvider, $locationProvider){
 app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $http, $location){
     console.log('in login ctrl ');
     $scope.submit = function(){
-        console.log('loginCtrl - angular route', $scope.form);
+        // console.log('loginCtrl - angular route', $scope.form);
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
-                console.log(response);
+                // console.log(response);
                 if(response.data.acct_type === 'admin'){
                     $location.path('/admin');
                 }
@@ -219,29 +219,29 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
 
 app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
     $scope.message = 'velkommen vandaler';
-        $scope.animationsEnabled = true;
-        $scope.open = function (size) {
+    $scope.animationsEnabled = true;
+    $scope.open = function (size) {
 
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'myModalContent.html',
-                controller: 'ModalInstanceCtrl',
-                size: size,
-                resolve: {
-                    events: function () {
-                        return $scope.event;
-                    }
+        var modalInstance = $modal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: 'myModalContent.html',
+            controller: 'ModalInstanceCtrl',
+            size: size,
+            resolve: {
+                events: function () {
+                    return $scope.event;
                 }
-            });
+            }
+        });
 
-        };
+    };
 
 
 }]);
 
 app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
     $scope.message = 'welcome kilsythians';
-    console.log($scope);
+    console.log('in privukctrl');
     $scope.animationsEnabled = true;
     $scope.open = function (size) {
 
@@ -267,6 +267,7 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
 
 app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
     $scope.temp ='';
+    console.log('building modal');
     $http.get('/event_crud/view')
         .then(function(response){
             console.log('hej der', response);

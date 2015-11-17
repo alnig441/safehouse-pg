@@ -34,7 +34,7 @@ pg.connect(connectionString, (function(err, client, done){
   var hash = bcrypt.hashSync(process.env.PASSWORD, 12);
   console.log(hash.length);
 
-  client.query("INSERT INTO users(username, password, acct_type) values($1, $2, $3)", [process.env.USERNAME, hash, process.env.ACCT_TYPE]);
+  var query = client.query("INSERT INTO users(username, password, acct_type) values($1, $2, $3)", [process.env.USERNAME, hash, process.env.ACCT_TYPE]);
 }))
 */
 
@@ -46,11 +46,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-  secret: 'sfjcQqVLBEobtZ3pJCDCBppt6Gv',
+  secret: 'mysecret' || process.env.SECRET,
   key: 'user',
   resave: 'true',
   saveUnitialized: false,
-  cookie: { maxAge: 6000, secure: false }
+  cookie: { maxAge: 60000, secure: false }
 }));
 app.use(passport.initialize());
 app.use(passport.session());

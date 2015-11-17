@@ -14,11 +14,11 @@ var storage  = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 
-router.get('/test', isAuthenticated, function(req, res){
+router.get('/test', function(req, res){
     res.send('some message');
 })
 
-router.post('/add', isAuthenticated, function(req, res) {
+router.post('/add', function(req, res) {
     console.log('in event_crud adding ', req.body.event_da);
 
     //POSTGRES REFACTOR SAVE IMAGE
@@ -56,7 +56,7 @@ router.post('/upload', upload.single('file'), function(req, res, next){
     res.status(200);
 });
 
-router.get('/view', isAuthenticated, function(req, res){
+router.get('/view', function(req, res){
     console.log('in event get');
     //POSTGRES REFACTOR GET LATEST EVENT
     pg.connect(connectionString, function(error, client, done){

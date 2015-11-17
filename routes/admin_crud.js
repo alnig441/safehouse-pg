@@ -56,9 +56,8 @@ router.get('/:acct_type?', function(req, res){
     pg.connect(connectionString, function(err, client, done){
 
         var user = [];
-        var query = client.query("SELECT * FROM users", function(error, result){
+        var query = client.query("SELECT * FROM users WHERE acct_type='" + req.params.acct_type + "'", function(error, result){
             if(error){console.log('there was an error ', error.detail);}
-            else {console.log('this is the query result: ', result);}
         })
 
         query.on('row', function(row, result){

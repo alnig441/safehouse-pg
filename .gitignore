@@ -1,4 +1,4 @@
 node_modules/
-private/images
-private/.DS_Store
-routes/images
+public/images
+development/
+

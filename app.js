@@ -131,7 +131,6 @@ app.use('/admin_crud', admin);
 app.use('/event_crud', event);
 app.use('/download', download);
 
-//app.use(express.static(path.join(__dirname, 'private')));
 app.use(express.static(path.join(__dirname, 'template')));
 
 

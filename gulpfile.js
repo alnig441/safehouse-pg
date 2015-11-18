@@ -9,16 +9,16 @@ var minify = require('gulp-minify-css');
 var vendors = ['./node_modules/ng-file-upload/dist/ng-file-upload.min.js', './node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js'];
 
 gulp.task('jade-templates', function(){
-    gulp.src('./private/jade_templates/*.jade')
+    gulp.src('./development/jade_templates/*.jade')
         .pipe(jade({}))
         .pipe(gulp.dest('./public/views/'))
 });
 
 gulp.task('watch', function(){
-    gulp.watch('./private/jade_templates/*.jade', ['jade-templates']);
+    gulp.watch('./development/jade_templates/*.jade', ['jade-templates']);
 })
 
-gulp.task('default',['watch', 'move-vendors'], function(){
+gulp.task('default',['watch', 'move-vendors', 'move-css', 'move-js'], function(){
     gulp.start('jade-templates');
 });
 
@@ -27,13 +27,17 @@ gulp.task('move-vendors', function(){
         .pipe(gulp.dest('./public/vendors/'))
 })
 
-/*
 gulp.task('move-js', function(){
-    return gulp.src('./private/javascripts/!*.js')
-        .pipe(sourcemaps.init())
-        .pipe(concat('app.min.js'))
-        .pipe(uglify())
-        .pipe(sourcemaps.write())
+    return gulp.src('./development/javascripts/*.js')
+        //.pipe(sourcemaps.init())
+        //.pipe(concat('app.min.js'))
+        //.pipe(uglify())
+        //.pipe(sourcemaps.write())
         .pipe(gulp.dest('./public/javascripts'));
 });
-*/
+
+gulp.task('move-css', function(){
+    return gulp.src('./development/styles/*.css')
+        .pipe(minify())
+        .pipe(gulp.dest('./public/stylesheets'))
+})

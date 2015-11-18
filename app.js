@@ -116,9 +116,10 @@ passport.deserializeUser(function(id, done){
   console.log("deserializing ", id);
 
   pg.connect(connectionString, function(err, client, done){
-    var query = client.query("SELECT * FROM users WHERE id='"+id+"'", function(error, result){
+    var query = client.query("SELECT * FROM users WHERE username='"+id+"'", function(error, result){
       if(error){done(error);}
-      done(null, result.rows[0]);
+      console.log(result.rows);
+      done(null, result);
     })
   })
 });

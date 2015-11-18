@@ -109,7 +109,7 @@ passport.use('local', new localStrategy({
 
 passport.serializeUser(function(user, done){
   console.log('serializing ', user)
-  done(null, user.id);
+  done(null, user.username);
 });
 
 passport.deserializeUser(function(id, done){
@@ -118,7 +118,7 @@ passport.deserializeUser(function(id, done){
   pg.connect(connectionString, function(err, client, done){
     var query = client.query("SELECT * FROM users WHERE id='"+id+"'", function(error, result){
       if(error){done(error);}
-      done(null, result);
+      done(null, result.rows[0]);
     })
   })
 });

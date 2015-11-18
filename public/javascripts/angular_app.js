@@ -296,8 +296,11 @@ app.controller('publicCtrl', ['$scope', '$http', function($scope, $http){
 //parse Date() string to new format
 function dateParse(string){
     var temp = string.slice(0,10);
+    var created = {};
     var arr = temp.split('-');
     var months =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    temp = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];
-    return temp;
+    var months_da =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Juni', 'Juli', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    created.en = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];
+    created.da = arr[2] + ' ' + months_da[parseInt(arr[1]-1)] + ' ' + arr[0];
+    return created;
 }

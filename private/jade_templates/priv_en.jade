@@ -23,6 +23,6 @@ div
         .modal-body
             img(src='{{ event.url }}', alt='latest event', width='450', height='600')
         .modal-footer
-            p.modal-created Updated: {{ event.created }}
+            p.modal-created Updated: {{ event.created.en }}
                 
     div(ng-show="selected") Selection from a modal: {{ selected }}

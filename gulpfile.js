@@ -18,7 +18,7 @@ gulp.task('watch', function(){
     gulp.watch('./development/jade_templates/*.jade', ['jade-templates']);
 })
 
-gulp.task('default',['watch', 'move-vendors', 'move-css', 'move-js'], function(){
+gulp.task('default',['watch', 'move-vendors', 'move-css', 'move-js', 'move-modules'], function(){
     gulp.start('jade-templates');
 });
 
@@ -40,4 +40,10 @@ gulp.task('move-css', function(){
     return gulp.src('./development/styles/*.css')
         .pipe(minify())
         .pipe(gulp.dest('./public/stylesheets'))
+})
+
+gulp.task('move-modules', function(){
+    return gulp.src('./development/modules/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('./public/javascripts'));
 })

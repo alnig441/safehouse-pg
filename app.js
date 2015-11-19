@@ -60,7 +60,7 @@ passport.use('local', new localStrategy({
       usernameField: 'username'
     },
     function(req, username, password, done) {
-      console.log('in passport', req.isAuthenticated());
+      console.log('in passport', req.user);
 
 
       //POSTGRES REFACTOR

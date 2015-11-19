@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var pg = require('pg');
+var call = require('../public/javascripts/myFunctions.js');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var multer = require('multer');
 
@@ -23,7 +24,7 @@ router.post('/add', function(req, res) {
 
     //POSTGRES REFACTOR SAVE IMAGE
     pg.connect(connectionString, function (err, client, done) {
-        var array = splitString(req.body.meta);
+        var array = call.splitString(req.body.meta);
         var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", [req.body.url, req.body.created, array], function (error, result) {
             if (error) { res.send(error.detail);}
             else { res.send('image saved');}
@@ -67,12 +68,12 @@ router.get('/view', function(req, res){
             //else{ console.log('printing result: ', result.rows);}
         })
         query.on('row', function(row){
-            //console.log('printing row ', row);
             event = row;
+            event.created = call.parser(JSON.stringify(row.created));
         })
 
         query.on('end', function(result){
-            console.log(event.url);
+            console.log(event);
             res.send(event);
         })
     })
@@ -82,20 +83,6 @@ router.get('/view', function(req, res){
 
 });
 
-function isAuthenticated (req, res, next){
-    console.log(req.isAuthenticated());
-    if(req.isAuthenticated()){
-        return next;
-    }
-    res.send('unauthorized')
-}
-
-//splittig meta data string from form into an array of meta data
-function splitString(meta){
-    var separator = ' ';
-    var temp = meta.split(separator);
-    return temp;
-};
-
 
 module.exports = router;
+

@@ -1,23 +1,11 @@
 var express = require('express');
 var router = express.Router();
-//var passport = require('passport')
+var passport = require('passport')
 var pg = require('pg');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var bcrypt = require('bcrypt');
 
-/*
-router.get('/test', isAuthenticated, function(req, res){
-
-    var isAuthenticated = function(req, res, next){
-        if(req.isAuthenticated()){
-            return next;
-        }
-        res.send('not authenticated');
-    }
-
-})
-*/
-
+//router.all('/router/*', Router.middleware('ensureAuthenticated'))
 //Add account
 router.post('/add', function(req, res){
     console.log('in admin_crud adding ', req.body);
@@ -51,7 +39,7 @@ router.post('/add', function(req, res){
 
 //View account
 router.get('/:acct_type?', function(req, res){
-    console.log('in admin_crud getting acct data', req.params.acct_type);
+    console.log('in admin_crud getting acct data', req.params.acct_type, req.isAuthenticated());
 
     pg.connect(connectionString, function(err, client, done){
 

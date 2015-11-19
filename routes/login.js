@@ -1,12 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var call = require('../development/modules/myFunctions.js');
 
 /* GET authenticated. */
-router.post('/authenticate',
-    passport.authenticate('local'),
-    function(req, res){
-    console.log('user authenticated', req.user);
+router.post('/authenticate', passport.authenticate('local'), function(req, res){
+    console.log('user authenticated', req.user, req._passport);
         var user = {};
         user.username = req.user.username;
         user.acct_type = req.user.acct_type;

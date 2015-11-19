@@ -7,6 +7,7 @@ var jade = require('gulp-jade');
 var watch = require('gulp-watch');
 var minify = require('gulp-minify-css');
 var vendors = ['./node_modules/ng-file-upload/dist/ng-file-upload.min.js', './node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js'];
+var dev = ['./development/jade_templates/*.jade', './development/javascripts/*.js', './development/modules/*.js', './development/styles/*.css']
 
 gulp.task('jade-templates', function(){
     gulp.src('./development/jade_templates/*.jade')
@@ -14,9 +15,16 @@ gulp.task('jade-templates', function(){
         .pipe(gulp.dest('./public/views/'))
 });
 
+/*
 gulp.task('watch', function(){
-    gulp.watch('./development/jade_templates/*.jade', ['jade-templates']);
+    gulp.watch('./development/jade_templates/!*.jade', ['jade-templates']);
 })
+*/
+
+gulp.task('watch', function(){
+    gulp.watch(dev, ['jade-templates', 'move-js', 'move-modules', 'move-css']);
+})
+
 
 gulp.task('default',['watch', 'move-vendors', 'move-css', 'move-js', 'move-modules'], function(){
     gulp.start('jade-templates');

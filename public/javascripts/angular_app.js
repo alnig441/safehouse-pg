@@ -132,6 +132,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
             console.log('changing pw for acct ', $scope.form.username);
 
             if($scope.form.new_password === $scope.form.confirm_password){
+                $scope.form.password = $scope.form.confirm_password;
                 $http.put('/admin_crud/chg', $scope.form)
                     .then(function(response){
                         console.log('printing response in chgpw ',response);

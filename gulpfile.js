@@ -10,16 +10,10 @@ var vendors = ['./node_modules/ng-file-upload/dist/ng-file-upload.min.js', './no
 var dev = ['./development/jade_templates/*.jade', './development/javascripts/*.js', './development/modules/*.js', './development/styles/*.css']
 
 gulp.task('jade-templates', function(){
-    gulp.src('./development/jade_templates/*.jade')
+    gulp.src(['./development/jade_templates/*.jade', './views/index.jade'])
         .pipe(jade({}))
         .pipe(gulp.dest('./public/views/'))
 });
-
-/*
-gulp.task('watch', function(){
-    gulp.watch('./development/jade_templates/!*.jade', ['jade-templates']);
-})
-*/
 
 gulp.task('watch', function(){
     gulp.watch(dev, ['jade-templates', 'move-js', 'move-modules', 'move-css']);

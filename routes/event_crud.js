@@ -16,7 +16,7 @@ var storage  = multer.diskStorage({
 var upload = multer({storage: storage});
 
 router.post('/add', call.isAuthenticated, function(req, res) {
-    console.log('in event_crud adding ', req.body.event_da);
+    console.log('in event_crud adding ', req.body);
 
     //POSTGRES REFACTOR SAVE IMAGE
     pg.connect(connectionString, function (err, client, done) {
@@ -78,6 +78,27 @@ router.get('/view', call.isAuthenticated, function(req, res){
     //POSTGRES REFACTOR GET LATEST EVENT END
 
 });
+
+router.post('/select', function(req, res){
+    console.log(req.body);
+
+    pg.connect(connectionString, function(error, client, done){
+        var array = [];
+        var query = client.query('SELECT * FROM ' + req.body.database, function(error, result){
+            if(error){console.log(error);}
+        })
+        query.on('row', function(row){
+            array.push(row);
+        })
+        query.on('end', function(result){
+            client.end();
+            var arr = [2015, 5];
+            req.body.meta = call.splitString(req.body.meta);
+            array = call.selection(array, req.body);
+            res.send(array);
+        })
+    })
+})
 
 
 module.exports = router;

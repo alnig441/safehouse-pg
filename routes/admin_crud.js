@@ -13,7 +13,7 @@ router.post('/add', call.isAuthenticated, function(req, res){
         if(err){console.log(err);}
         var hash = bcrypt.hashSync(req.body.password, 12);
 
-        var query = client.query("INSERT INTO users(username, password, acct_type, lang) values($1, $2, $3, $4)", [req.body.username, hash, req.body.acct_type, req.body.lang], function(error, result){
+        var query = client.query("INSERT INTO users(username, password, acct_type, lang) values($1, $2, $3, $4)", [req.body.username.toLowerCase(), hash, req.body.acct_type, req.body.lang], function(error, result){
             if(error){console.log(error.detail);}
         });
 
@@ -76,7 +76,7 @@ router.put('/chg', call.isAuthenticated, function(req, res){
 
     pg.connect(connectionString, function(err, client, done){
 
-        var query = client.query("UPDATE users SET password='" + hash + "' WHERE username='" + req.body.username + "'", function(error, result){
+        var query = client.query("UPDATE users SET password='" + hash + "' WHERE username='" + req.body.username.toLowerCase() + "'", function(error, result){
             if(error){console.log('there was an error ', error.detail);}
         });
 

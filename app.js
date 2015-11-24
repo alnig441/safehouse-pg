@@ -58,7 +58,7 @@ passport.use('local', new localStrategy({
     },
     function(req, username, password, done) {
         pg.connect(connectionString, function(err, client){
-            var query = client.query("SELECT * FROM users WHERE username='" + username + "'", function(error, result){
+            var query = client.query("SELECT * FROM users WHERE username='" + username.toLowerCase() + "'", function(error, result){
                 if(error) {throw error;}
             });
             var user;

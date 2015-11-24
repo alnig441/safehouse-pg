@@ -15,6 +15,7 @@ var storage  = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 
+
 router.post('/add', call.isAuthenticated, function(req, res) {
     console.log('in event_crud adding ', req.body);
 
@@ -79,7 +80,7 @@ router.get('/view', call.isAuthenticated, function(req, res){
 
 });
 
-router.post('/select', function(req, res){
+router.post('/select', call.isAuthenticated, function(req, res){
     console.log(req.body);
 
     pg.connect(connectionString, function(error, client, done){

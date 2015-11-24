@@ -53,7 +53,7 @@ app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $ht
 }]);
 
 
-app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($scope, $http, Upload, $timeout){
+app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location', function($scope, $http, Upload, $timeout, $location){
 //app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
 
         var forms = document.getElementsByTagName('form');
@@ -210,11 +210,18 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', function($
                 })
         };
 
+        $scope.logout = function(){
+            $http.get('/logout')
+                .then(function(response){
+                    $location.path('/login');
+                })
+        };
 
-    }]);
+
+}]);
 
 
-app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
+app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', function($scope, $http, $log, $modal, $location){
     $scope.message = 'velkommen vandaler';
     $scope.animationsEnabled = true;
     $scope.open = function (size) {
@@ -233,10 +240,17 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
 
     };
 
+    $scope.logout = function(){
+        $http.get('/logout')
+            .then(function(response){
+                $location.path('/login');
+            })
+    };
+
 
 }]);
 
-app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', function($scope, $http, $log, $modal){
+app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', function($scope, $http, $log, $modal, $location){
     $scope.message = 'welcome kilsythians';
     console.log('in privukctrl');
     $scope.animationsEnabled = true;
@@ -256,6 +270,14 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', function($sco
 
     };
 
+    $scope.logout = function(){
+        $http.get('/logout')
+            .then(function(response){
+                $location.path('/login');
+            })
+    };
+
+
 
 }]);
 
@@ -272,14 +294,6 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
             $scope.event.url ='./images/' + response.data.url;
 
         });
-
-    $scope.download = function(){
-        console.log('in download', $scope.temp);
-        $http.get('/download/file/'+ $scope.temp)
-            .then(function (response){
-                console.log('download response ', response.data);
-            })
-    }
 
 
 });

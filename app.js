@@ -23,6 +23,7 @@ var pg = require('pg'),
 
 var routes = require('./routes/index');
 var login = require('./routes/login');
+var logout = require('./routes/logout');
 var admin = require('./routes/admin_crud');
 var event = require('./routes/event_crud');
 var download = require('./routes/download');
@@ -108,6 +109,7 @@ passport.deserializeUser(function(id, done){
 
 app.use('/', routes);
 app.use('/login', login);
+app.use('/logout', logout);
 app.use('/admin_crud', admin);
 app.use('/event_crud', event);
 app.use('/download', download);

@@ -255,6 +255,9 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
     $scope.animationsEnabled = true;
     $scope.open = function (size) {
 
+        angular.element(eventForm).css('display', 'none');
+        angular.element(imageForm).css('display', 'none');
+
         var modalInstance = $modal.open({
             animation: $scope.animationsEnabled,
             templateUrl: 'myModalContent.html',
@@ -391,7 +394,6 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
 
 });
-
 
 app.controller('publicCtrl', ['$scope', '$http', function($scope, $http){
     $scope.message = 'velkommen til den offentlige afdeling';

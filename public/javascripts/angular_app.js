@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFileUpload']);
+var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFileUpload', 'ui.bootstrap.carousel']);
 
 app.config(function($routeProvider, $locationProvider){
     $locationProvider.html5Mode(true);
@@ -220,9 +220,38 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
 
 }]);
 
+app.controller('SidebarController', function($scope) {
+
+    $scope.state = false;
+
+    $scope.toggleState = function() {
+        $scope.state = !$scope.state;
+    };
+
+});
+
+app.directive('sidebarDirective', function() {
+    return {
+        link : function(scope, element, attr) {
+            scope.$watch(attr.sidebarDirective, function(newVal) {
+                if(newVal)
+                {
+                    element.addClass('show');
+                    return;
+                }
+                element.removeClass('show');
+            });
+        }
+    };
+});
 
 app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', function($scope, $http, $log, $modal, $location){
-    $scope.message = 'velkommen vandaler';
+    //$scope.message = 'velkommen vandaler';
+    var eventForm = document.getElementById('queryEvents');
+    var imageForm = document.getElementById('queryImages');
+    angular.element(eventForm).css('display', 'none');
+    angular.element(imageForm).css('display', 'none');
+
     $scope.animationsEnabled = true;
     $scope.open = function (size) {
 
@@ -239,6 +268,35 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
         });
 
     };
+
+    $scope.viewEventsForm = function () {
+        angular.element(imageForm).css('display','none');
+        angular.element(eventForm).css('display','table');
+
+    };
+
+    $scope.viewImagesForm = function () {
+        angular.element(eventForm).css('display','none');
+        angular.element(imageForm).css('display','table');
+
+    };
+
+
+    $scope.queryEvents = function(){
+        $scope.form.database = 'events';
+        $http.post('/event_crud/select', $scope.form)
+            .then(function(response){
+                console.log(response);
+        })
+    };
+
+    $scope.queryImages = function(){
+        $scope.form.database = 'images';
+        $http.post('/event_crud/select', $scope.form)
+            .then(function(response){
+                console.log(response);
+            })
+    }
 
     $scope.logout = function(){
         $http.get('/logout')
@@ -251,10 +309,18 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
 }]);
 
 app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', function($scope, $http, $log, $modal, $location){
-    $scope.message = 'welcome kilsythians';
-    console.log('in privukctrl');
+    //$scope.message = 'welcome kilsythians';
+    var eventForm = document.getElementById('queryEvents');
+    var imageForm = document.getElementById('queryImages');
+    angular.element(eventForm).css('display', 'none');
+    angular.element(imageForm).css('display', 'none');
+
     $scope.animationsEnabled = true;
     $scope.open = function (size) {
+
+        angular.element(eventForm).css('display', 'none');
+        angular.element(imageForm).css('display', 'none');
+
 
         var modalInstance = $modal.open({
             animation: $scope.animationsEnabled,
@@ -269,6 +335,34 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
         });
 
     };
+    $scope.viewEventsForm = function () {
+        angular.element(imageForm).css('display','none');
+        angular.element(eventForm).css('display','table');
+
+    };
+
+    $scope.viewImagesForm = function () {
+        angular.element(eventForm).css('display','none');
+        angular.element(imageForm).css('display','table');
+
+    };
+
+
+    $scope.queryEvents = function(){
+        $scope.form.database = 'events';
+        $http.post('/event_crud/select', $scope.form)
+            .then(function(response){
+                console.log(response);
+            })
+    };
+
+    $scope.queryImages = function(){
+        $scope.form.database = 'images';
+        $http.post('/event_crud/select', $scope.form)
+            .then(function(response){
+                console.log(response);
+            })
+    }
 
     $scope.logout = function(){
         $http.get('/logout')
@@ -303,3 +397,19 @@ app.controller('publicCtrl', ['$scope', '$http', function($scope, $http){
     $scope.message = 'velkommen til den offentlige afdeling';
 }]);
 
+app.controller('CarouselDemoCtrl', function($scope){
+    $scope.myInterval = 5000;
+    $scope.noWrapSlides = false;
+    //var slides = $scope.slides = [];
+    $scope.addSlide = function() {
+        var newWidth = 600 + slides.length + 1;
+        slides.push({
+            image: './public/images/' + newWidth + '/*.jpg',
+            text: ['More','Extra','Lots of','Surplus'][slides.length % 4] + ' ' +
+            ['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
+        });
+    };
+    for (var i=0; i<4; i++) {
+        $scope.addSlide();
+    }
+});

@@ -93,8 +93,10 @@ router.post('/select', call.isAuthenticated, function(req, res){
         })
         query.on('end', function(result){
             client.end();
-            var arr = [2015, 5];
-            req.body.meta = call.splitString(req.body.meta);
+            //var arr = [2015, 5];
+            if(req.body.meta){
+                req.body.meta = call.splitString(req.body.meta);
+            }
             array = call.selection(array, req.body);
             res.send(array);
         })

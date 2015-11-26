@@ -67,7 +67,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
             angular.element(acct).css('display', 'none');
             angular.element(event).css('display', 'none');
             angular.element(forms).css('display', 'none');
-            angular.element(forms.addAcct).css('display', 'block');
+            angular.element(forms.addAcct).css('display', 'table');
 
         };
 
@@ -87,7 +87,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
             angular.element(acct).css('display', 'none');
             angular.element(event).css('display', 'none');
             angular.element(forms).css('display', 'none');
-            angular.element(forms.delAcct).css('display', 'block');
+            angular.element(forms.delAcct).css('display', 'table');
 
         };
 
@@ -124,7 +124,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
             angular.element(acct).css('display', 'none');
             angular.element(event).css('display', 'none');
             angular.element(forms).css('display', 'none');
-            angular.element(forms.chgPW).css('display', 'block');
+            angular.element(forms.chgPW).css('display', 'table');
 
         };
 
@@ -153,7 +153,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
             angular.element(acct).css('display', 'none');
             angular.element(event).css('display', 'none');
             angular.element(forms).css('display', 'none');
-            angular.element(forms.addEvent).css('display', 'block');
+            angular.element(forms.addEvent).css('display', 'table');
 
         };
 
@@ -192,7 +192,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
             angular.element(acct).css('display', 'none');
             angular.element(event).css('display', 'none');
             angular.element(forms).css('display', 'none');
-            angular.element(forms.getEvent).css('display', 'block');
+            angular.element(forms.getEvent).css('display', 'table');
 
         };
 
@@ -206,7 +206,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
                 .then(function(response){
                     console.log('get event response ', response);
                     $scope.form = response.data;
-                    angular.element(event).css('display', 'block');
+                    angular.element(event).css('display', 'table');
                 })
         };
 
@@ -341,7 +341,6 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
     $scope.viewEventsForm = function () {
         angular.element(imageForm).css('display','none');
         angular.element(eventForm).css('display','table');
-
     };
 
     $scope.viewImagesForm = function () {

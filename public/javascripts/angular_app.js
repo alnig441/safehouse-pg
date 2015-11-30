@@ -391,7 +391,6 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
         });
 
-
 });
 
 app.controller('publicCtrl', ['$scope', '$http', function($scope, $http){

@@ -22,7 +22,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
     //POSTGRES REFACTOR SAVE IMAGE
     pg.connect(connectionString, function (err, client, done) {
         var array = call.splitString(req.body.meta);
-        var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", [req.body.url, req.body.created, array], function (error, result) {
+        var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", ['./images/' + req.body.url, req.body.created, array], function (error, result) {
             if (error) { res.send(error.detail);}
             else { res.send('image saved');}
         })
@@ -36,7 +36,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
     if (req.body.event_da != 'undefined' || req.body.event_en != 'undefined') {
         pg.connect(connectionString, function (err, client, done) {
 
-            var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, req.body.url, req.body.created], function (error, result) {
+            var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, './images/' + req.body.url, req.body.created], function (error, result) {
                 if (error) {console.log('there was an error ', error.detail);}
             })
             query.on('end', function (result) {

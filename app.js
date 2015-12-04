@@ -11,15 +11,15 @@ var bcrypt = require('bcrypt');
 
 var pg = require('pg'),
     connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
-
 /*
+
  pg.connect(connectionString, (function(err, client, done){
  var hash = bcrypt.hashSync(process.env.PASSWORD, 12);
 
  var query = client.query("INSERT INTO users(username, password, acct_type) values($1, $2, $3)", [process.env.USERNAME, hash, process.env.ACCT_TYPE]);
  }))
- */
 
+*/
 
 var routes = require('./routes/index');
 var login = require('./routes/login');

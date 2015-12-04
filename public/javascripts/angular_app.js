@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFileUpload', 'ui.bootstrap.carousel']);
+var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFileUpload']);
 
 app.config(function($routeProvider, $locationProvider){
     $locationProvider.html5Mode(true);
@@ -266,7 +266,7 @@ app.directive('sidebarDirective', function() {
     };
 });
 
-app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', function($scope, $http, $log, $modal, $location){
+app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
     //$scope.message = 'velkommen vandaler';
     var eventForm = document.getElementById('queryEvents');
     var imageForm = document.getElementById('queryImages');
@@ -279,6 +279,7 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
         angular.element(eventForm).css('display', 'none');
         angular.element(imageForm).css('display', 'none');
 
+
         var modalInstance = $modal.open({
             animation: $scope.animationsEnabled,
             templateUrl: 'myModalContent.html',
@@ -290,6 +291,43 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
                 }
             }
         });
+
+    };
+
+    $scope.open2 = function (size) {
+
+        console.log($scope.form);
+        angular.element(eventForm).css('display', 'none');
+        angular.element(imageForm).css('display', 'none');
+
+        if($scope.form.meta){
+            $scope.form.database = 'images';
+        }
+        else{
+            $scope.form.database = 'events';
+        }
+        var temp = [];
+
+        $http.post('/event_crud/select', $scope.form)
+            .then(function(response){
+                $rootScope.events = response.data;
+                console.log('RIGHT HERE: ', $scope.form, $rootScope.events, response.data);
+
+            })
+            .then(function(){
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalContent2.html',
+                    controller: 'ModalInstanceCtrl2',
+                    size: size,
+                    resolve: {
+                        events: function () {
+                            return $rootScope.events;
+                        }
+                    }
+                });
+
+            });
 
     };
 
@@ -321,23 +359,6 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
 
     };
 
-
-    $scope.queryEvents = function(){
-        $scope.form.database = 'events';
-        $http.post('/event_crud/select', $scope.form)
-            .then(function(response){
-                console.log(response);
-        })
-    };
-
-    $scope.queryImages = function(){
-        $scope.form.database = 'images';
-        $http.post('/event_crud/select', $scope.form)
-            .then(function(response){
-                console.log(response);
-            })
-    }
-
     $scope.logout = function(){
         $http.get('/logout')
             .then(function(response){
@@ -348,7 +369,7 @@ app.controller('privDkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
 
 }]);
 
-app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', function($scope, $http, $log, $modal, $location){
+app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', '$rootScope', function($scope, $http, $log, $modal, $location, $rootScope){
     //$scope.message = 'welcome kilsythians';
     var eventForm = document.getElementById('queryEvents');
     var imageForm = document.getElementById('queryImages');
@@ -375,6 +396,45 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
         });
 
     };
+
+    $scope.open2 = function (size) {
+
+        console.log($scope.form);
+        angular.element(eventForm).css('display', 'none');
+        angular.element(imageForm).css('display', 'none');
+
+        if($scope.form.meta){
+            $scope.form.database = 'images';
+        }
+        else{
+            $scope.form.database = 'events';
+        }
+        var temp = [];
+
+        $http.post('/event_crud/select', $scope.form)
+            .then(function(response){
+                $rootScope.events = response.data;
+                console.log('RIGHT HERE: ', $scope.form, $rootScope.events, response.data);
+
+            })
+            .then(function(){
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalContent2.html',
+                    controller: 'ModalInstanceCtrl2',
+                    size: size,
+                    resolve: {
+                        events: function () {
+                            return $rootScope.events;
+                        }
+                    }
+                });
+
+            });
+
+    };
+
+
 
     $scope.months = [
         {name: 'January', value: '01'},
@@ -403,22 +463,6 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
     };
 
 
-    $scope.queryEvents = function(){
-        $scope.form.database = 'events';
-        $http.post('/event_crud/select', $scope.form)
-            .then(function(response){
-                console.log(response);
-            })
-    };
-
-    $scope.queryImages = function(){
-        $scope.form.database = 'images';
-        $http.post('/event_crud/select', $scope.form)
-            .then(function(response){
-                console.log(response);
-            })
-    }
-
     $scope.logout = function(){
         $http.get('/logout')
             .then(function(response){
@@ -434,35 +478,70 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
 // It is not the same as the $modal service used above.
 
 app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
+    var next = document.getElementById('next');
+    angular.element(next).css('display', 'none');
+
     $scope.temp ='';
     console.log('building modal');
     $http.get('/event_crud/view')
         .then(function(response){
             console.log('hej der', response);
             $scope.event = response.data;
-            $scope.event.url ='./images/' + response.data.url;
+            //$scope.event.url = response.data.url;
 
         });
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    }
 
 });
+
+app.controller('Modal2', function($scope, $rootScope, $http, $modal){
+    // in progess
+})
+
+app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
+    console.log('building modal 2 ', events);
+    var selector = 0;
+
+    $scope.events = events;
+    $scope.selected = {
+        event: $scope.events[selector]
+    };
+
+    console.log('Selected event: ', $scope.selected);
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+    $scope.next = function(){
+        if(selector < events.length - 1){
+            selector ++;
+        }
+        else{
+            selector = 0;
+        }
+        $scope.selected = {
+            event: $scope.events[selector]
+        }
+        console.log('SUCCESS', selector, $scope.selected);
+    };
+
+    $scope.previous = function(){
+        if(selector == 0){
+            selector = events.length -1;
+        }
+        else {
+            selector --;
+        }
+        $scope.selected = {
+            event: $scope.events[selector]
+        }
+        console.log('going back ', selector, $scope.selected);
+    }
+})
 
 app.controller('publicCtrl', ['$scope', '$http', function($scope, $http){
     $scope.message = 'velkommen til den offentlige afdeling';
 }]);
 
-app.controller('CarouselDemoCtrl', function($scope){
-    $scope.myInterval = 5000;
-    $scope.noWrapSlides = false;
-    //var slides = $scope.slides = [];
-    $scope.addSlide = function() {
-        var newWidth = 600 + slides.length + 1;
-        slides.push({
-            image: './public/images/' + newWidth + '/*.jpg',
-            text: ['More','Extra','Lots of','Surplus'][slides.length % 4] + ' ' +
-            ['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
-        });
-    };
-    for (var i=0; i<4; i++) {
-        $scope.addSlide();
-    }
-});

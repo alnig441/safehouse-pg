@@ -52,24 +52,31 @@ app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $ht
     };
 }]);
 
+app.controller('logoutCtrl', function($scope, $location, $http){
+    $scope.logout = function(){
+        $http.get('/logout')
+            .then(function(response){
+                $location.path('/login');
+            })
+    };
+});
 
 app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location', function($scope, $http, Upload, $timeout, $location){
 //app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
+    $scope.acct = [
+        {name: 'Private', value: 'private'},
+        {name: 'Public', value: 'public'},
+        {name: 'Admin', value: 'admin'}
+    ];
+
+    $scope.speak = [
+        {name: 'English', value: 'en'},
+        {name: 'Danish', value: 'da'}
+    ];
 
     var forms = document.getElementsByTagName('form');
     var acct = document.getElementById('viewAcct');
     var event = document.getElementById('viewEvent');
-    //var alert = document.getElementById('alerts');
-    //console.log(forms.addAcct);
-
-/*
-    $scope.acct_type = [
-        {name: 'Private', value: 'private'},
-        {name: 'Publice', value: 'public'},
-        {name: 'Admin', value: 'admin'}
-    ]
-*/
-
 
     $scope.showAddAcctForm = function(){
         console.log('show add form');
@@ -101,16 +108,6 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
 
     };
 
-    $scope.acct = [
-        {name: 'Admin', value: 'admin'},
-        {name: 'Public', value: 'public'},
-        {name: 'Private', value: 'private'}
-    ];
-
-    $scope.speak = [
-        {name: 'English', value: 'en'},
-        {name: 'Danish', value: 'da'}
-    ]
 
     $scope.viewAcct = function(){
         console.log('viewing acct ....', $scope.form.acct_type);
@@ -231,40 +228,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
             })
     };
 
-    $scope.logout = function(){
-        $http.get('/logout')
-            .then(function(response){
-                $location.path('/login');
-            })
-    };
-
-
 }]);
-
-app.controller('SidebarController', function($scope) {
-
-    $scope.state = false;
-
-    $scope.toggleState = function() {
-        $scope.state = !$scope.state;
-    };
-
-});
-
-app.directive('sidebarDirective', function() {
-    return {
-        link : function(scope, element, attr) {
-            scope.$watch(attr.sidebarDirective, function(newVal) {
-                if(newVal)
-                {
-                    element.addClass('show');
-                    return;
-                }
-                element.removeClass('show');
-            });
-        }
-    };
-});
 
 app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
     //$scope.message = 'velkommen vandaler';
@@ -272,64 +236,6 @@ app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', 
     var imageForm = document.getElementById('queryImages');
     angular.element(eventForm).css('display', 'none');
     angular.element(imageForm).css('display', 'none');
-
-    $scope.animationsEnabled = true;
-    $scope.open = function (size) {
-
-        angular.element(eventForm).css('display', 'none');
-        angular.element(imageForm).css('display', 'none');
-
-
-        var modalInstance = $modal.open({
-            animation: $scope.animationsEnabled,
-            templateUrl: 'myModalContent.html',
-            controller: 'ModalInstanceCtrl',
-            size: size,
-            resolve: {
-                events: function () {
-                    return $scope.event;
-                }
-            }
-        });
-
-    };
-
-    $scope.open2 = function (size) {
-
-        console.log($scope.form);
-        angular.element(eventForm).css('display', 'none');
-        angular.element(imageForm).css('display', 'none');
-
-        if($scope.form.meta){
-            $scope.form.database = 'images';
-        }
-        else{
-            $scope.form.database = 'events';
-        }
-        var temp = [];
-
-        $http.post('/event_crud/select', $scope.form)
-            .then(function(response){
-                $rootScope.events = response.data;
-                console.log('RIGHT HERE: ', $scope.form, $rootScope.events, response.data);
-
-            })
-            .then(function(){
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: 'myModalContent2.html',
-                    controller: 'ModalInstanceCtrl2',
-                    size: size,
-                    resolve: {
-                        events: function () {
-                            return $rootScope.events;
-                        }
-                    }
-                });
-
-            });
-
-    };
 
     $scope.months = [
         {name: 'Januar', value: '01'},
@@ -359,14 +265,6 @@ app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', 
 
     };
 
-    $scope.logout = function(){
-        $http.get('/logout')
-            .then(function(response){
-                $location.path('/login');
-            })
-    };
-
-
 }]);
 
 app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', '$rootScope', function($scope, $http, $log, $modal, $location, $rootScope){
@@ -376,12 +274,40 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
     angular.element(eventForm).css('display', 'none');
     angular.element(imageForm).css('display', 'none');
 
+    $scope.months = [
+        {name: 'January', value: '01'},
+        {name: 'February', value: '02'},
+        {name: 'March', value: '03'},
+        {name: 'April', value: '04'},
+        {name: 'May', value: '05'},
+        {name: 'June', value: '06'},
+        {name: 'July', value: '07'},
+        {name: 'August', value: '08'},
+        {name: 'September', value: '09'},
+        {name: 'October', value: '10'},
+        {name: 'Novemnber', value: '11'},
+        {name: 'December', value: '12'}
+    ];
+
+    $scope.viewEventsForm = function () {
+        angular.element(imageForm).css('display','none');
+        angular.element(eventForm).css('display','table');
+    };
+
+    $scope.viewImagesForm = function () {
+        angular.element(eventForm).css('display','none');
+        angular.element(imageForm).css('display','table');
+
+    };
+
+}]);
+
+// Please note that $modalInstance represents a modal window (instance) dependency.
+// It is not the same as the $modal service used above.
+
+app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope){
     $scope.animationsEnabled = true;
     $scope.open = function (size) {
-
-        angular.element(eventForm).css('display', 'none');
-        angular.element(imageForm).css('display', 'none');
-
 
         var modalInstance = $modal.open({
             animation: $scope.animationsEnabled,
@@ -397,11 +323,29 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
 
     };
 
+})
+
+app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
+
+    console.log('building modal');
+    $http.get('/event_crud/view')
+        .then(function(response){
+            console.log('hej der', response);
+            $scope.event = response.data;
+
+        });
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    }
+
+});
+
+app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal){
+
+    $scope.animationsEnabled = true;
     $scope.open2 = function (size) {
 
         console.log($scope.form);
-        angular.element(eventForm).css('display', 'none');
-        angular.element(imageForm).css('display', 'none');
 
         if($scope.form.meta){
             $scope.form.database = 'images';
@@ -433,72 +377,7 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
             });
 
     };
-
-
-
-    $scope.months = [
-        {name: 'January', value: '01'},
-        {name: 'February', value: '02'},
-        {name: 'March', value: '03'},
-        {name: 'April', value: '04'},
-        {name: 'May', value: '05'},
-        {name: 'June', value: '06'},
-        {name: 'July', value: '07'},
-        {name: 'August', value: '08'},
-        {name: 'September', value: '09'},
-        {name: 'October', value: '10'},
-        {name: 'Novemnber', value: '11'},
-        {name: 'December', value: '12'}
-    ];
-
-    $scope.viewEventsForm = function () {
-        angular.element(imageForm).css('display','none');
-        angular.element(eventForm).css('display','table');
-    };
-
-    $scope.viewImagesForm = function () {
-        angular.element(eventForm).css('display','none');
-        angular.element(imageForm).css('display','table');
-
-    };
-
-
-    $scope.logout = function(){
-        $http.get('/logout')
-            .then(function(response){
-                $location.path('/login');
-            })
-    };
-
-
-
-}]);
-
-// Please note that $modalInstance represents a modal window (instance) dependency.
-// It is not the same as the $modal service used above.
-
-app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
-    var next = document.getElementById('next');
-    angular.element(next).css('display', 'none');
-
-    $scope.temp ='';
-    console.log('building modal');
-    $http.get('/event_crud/view')
-        .then(function(response){
-            console.log('hej der', response);
-            $scope.event = response.data;
-            //$scope.event.url = response.data.url;
-
-        });
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    }
-
 });
-
-app.controller('Modal2', function($scope, $rootScope, $http, $modal){
-    // in progess
-})
 
 app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
     console.log('building modal 2 ', events);

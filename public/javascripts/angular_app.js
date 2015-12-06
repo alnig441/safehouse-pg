@@ -381,11 +381,11 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
 
 app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
     console.log('building modal 2 ', events);
-    var selector = 0;
+    $scope.selector = 0;
 
     $scope.events = events;
     $scope.selected = {
-        event: $scope.events[selector]
+        event: $scope.events[$scope.selector]
     };
 
     console.log('Selected event: ', $scope.selected);
@@ -394,29 +394,29 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
         $modalInstance.dismiss('cancel');
     };
     $scope.next = function(){
-        if(selector < events.length - 1){
-            selector ++;
+        if($scope.selector < events.length - 1){
+            $scope.selector ++;
         }
         else{
-            selector = 0;
+            $scope.selector = 0;
         }
         $scope.selected = {
-            event: $scope.events[selector]
+            event: $scope.events[$scope.selector]
         }
-        console.log('SUCCESS', selector, $scope.selected);
+        console.log('SUCCESS', $scope.selector, $scope.selected);
     };
 
     $scope.previous = function(){
-        if(selector == 0){
-            selector = events.length -1;
+        if($scope.selector == 0){
+            $scope.selector = events.length -1;
         }
         else {
-            selector --;
+            $scope.selector --;
         }
         $scope.selected = {
-            event: $scope.events[selector]
+            event: $scope.events[$scope.selector]
         }
-        console.log('going back ', selector, $scope.selected);
+        console.log('going back ', $scope.selector, $scope.selected);
     }
 })
 

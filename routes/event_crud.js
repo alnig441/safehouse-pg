@@ -60,7 +60,7 @@ router.get('/view', call.isAuthenticated, function(req, res){
     pg.connect(connectionString, function(error, client, done){
 
         var event;
-        var query = client.query("DECLARE geturl CURSOR FOR SELECT * FROM events; FETCH LAST FROM geturl", function(error, result){
+        var query = client.query("DECLARE geturl CURSOR FOR SELECT * FROM events ORDER BY url DESC; FETCH FIRST FROM geturl", function(error, result){
             if(error){ console.log('theres was an error ', error.detail);}
             //else{ console.log('printing result: ', result.rows);}
         })

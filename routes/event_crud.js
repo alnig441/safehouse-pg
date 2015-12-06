@@ -85,7 +85,7 @@ router.post('/select', call.isAuthenticated, function(req, res){
 
     pg.connect(connectionString, function(error, client, done){
         var array = [];
-        var query = client.query('SELECT * FROM ' + req.body.database, function(error, result){
+        var query = client.query('SELECT * FROM ' + req.body.database + ' ORDER BY url ASC', function(error, result){
             if(error){console.log(error);}
         })
         query.on('row', function(row){

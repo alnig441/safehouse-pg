@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/angular_app.js" afterPath="$PROJECT_DIR$/public/javascripts/angular_app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/priv_da.html" afterPath="$PROJECT_DIR$/public/views/priv_da.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/event_crud.js" afterPath="$PROJECT_DIR$/routes/event_crud.js" />
     </list>
     <ignored path="starting_over.iws" />
@@ -46,10 +44,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="angular_app.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="angular_app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="0.52100843">
               <caret line="413" column="31" selection-start-line="413" selection-start-column="31" selection-end-line="413" selection-end-column="31" />
               <folding />
             </state>
@@ -66,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="event_crud.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="event_crud.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/event_crud.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5546219">
-              <caret line="67" column="24" selection-start-line="67" selection-start-column="24" selection-end-line="67" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="90" column="38" selection-start-line="90" selection-start-column="38" selection-end-line="90" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -955,18 +953,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
+    <entry file="file://$PROJECT_DIR$/routes/event_crud.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="413" column="31" selection-start-line="413" selection-start-column="31" selection-end-line="413" selection-end-column="31" />
+          <caret line="90" column="38" selection-start-line="90" selection-start-column="38" selection-end-line="90" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/event_crud.js">
+    <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5546219">
-          <caret line="67" column="24" selection-start-line="67" selection-start-column="24" selection-end-line="67" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.52100843">
+          <caret line="413" column="31" selection-start-line="413" selection-start-column="31" selection-end-line="413" selection-end-column="31" />
           <folding />
         </state>
       </provider>

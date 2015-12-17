@@ -248,7 +248,7 @@ app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', 
         {name: 'August', value: '08'},
         {name: 'September', value: '09'},
         {name: 'Oktober', value: '10'},
-        {name: 'Novemnber', value: '11'},
+        {name: 'November', value: '11'},
         {name: 'December', value: '12'}
     ];
 
@@ -285,7 +285,7 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
         {name: 'August', value: '08'},
         {name: 'September', value: '09'},
         {name: 'October', value: '10'},
-        {name: 'Novemnber', value: '11'},
+        {name: 'November', value: '11'},
         {name: 'December', value: '12'}
     ];
 

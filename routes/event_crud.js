@@ -60,7 +60,7 @@ router.get('/view', call.isAuthenticated, function(req, res){
     pg.connect(connectionString, function(error, client, done){
 
         var event;
-        var query = client.query("DECLARE geturl CURSOR FOR SELECT * FROM events ORDER BY url DESC; FETCH FIRST FROM geturl", function(error, result){
+        var query = client.query("DECLARE geturl CURSOR FOR SELECT * FROM events ORDER BY created DESC; FETCH FIRST FROM geturl", function(error, result){
             if(error){ console.log('theres was an error ', error.detail);}
             //else{ console.log('printing result: ', result.rows);}
         })
@@ -85,7 +85,7 @@ router.post('/select', call.isAuthenticated, function(req, res){
 
     pg.connect(connectionString, function(error, client, done){
         var array = [];
-        var query = client.query('SELECT * FROM ' + req.body.database + ' ORDER BY url ASC', function(error, result){
+        var query = client.query('SELECT * FROM ' + req.body.database + ' ORDER BY created ASC', function(error, result){
             if(error){console.log(error);}
         })
         query.on('row', function(row){

@@ -186,7 +186,16 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
 
      $scope.uploadFiles = function(file){
          $scope.f = file;
-         if(file && !file.$error) {
+         console.log('save image?: ', $scope.form.img_save, $scope.f);
+
+         //if($scope.form.img_save==true){
+         //    console.log('we move on');
+         //} else {
+         //    console.log('we stop here');
+         //}
+         //
+
+         if(file && !file.$error && $scope.form.img_save==true) {
              file.upload = Upload.upload({
                  url: '/event_crud/upload',
                  data: {file: file}

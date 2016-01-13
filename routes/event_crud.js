@@ -7,7 +7,7 @@ var multer = require('multer');
 
 var storage  = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, './public/buffalo/')
+        cb(null, './public/buffalo/' + call.setDate().getFullYear() + '/')
     },
     filename: function(req, file, cb){
         cb(null, file.originalname)
@@ -16,13 +16,13 @@ var storage  = multer.diskStorage({
 var upload = multer({storage: storage});
 
 
-router.post('/add', call.isAuthenticated, function(req, res) {
+router.post('/add', call.isAuthenticated, function(req, res){
     console.log('in event_crud adding ', req.body);
 
     //POSTGRES REFACTOR SAVE IMAGE
     pg.connect(connectionString, function (err, client, done) {
         var array = call.splitString(req.body.meta);
-        var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", ['./buffalo/' + req.body.url, req.body.created, array], function (error, result) {
+        var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", ['./buffalo/' + call.setDate().getFullYear() + '/' + req.body.url, req.body.created, array], function (error, result) {
             if (error) { res.send(error.detail);}
             else { res.send('image saved');}
         })
@@ -36,7 +36,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
     if (req.body.event_da != 'undefined' || req.body.event_en != 'undefined') {
         pg.connect(connectionString, function (err, client, done) {
 
-            var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, './buffalo/' + req.body.url, req.body.created], function (error, result) {
+            var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, './buffalo/' + call.setDate().getFullYear() + '/' + req.body.urll, req.body.created], function (error, result) {
                 if (error) {console.log('there was an error ', error.detail);}
             })
             query.on('end', function (result) {
@@ -101,8 +101,7 @@ router.post('/select', call.isAuthenticated, function(req, res){
             res.send(array);
         })
     })
-})
-
+});
 
 module.exports = router;
 

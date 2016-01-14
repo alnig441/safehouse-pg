@@ -35,7 +35,7 @@ router.post('/add', call.isAuthenticated, function(req, res){
     //POSTGRES REFACTOR SAVE IMAGE END
 
     //POSTGRES REFACTOR SAVE EVENT
-    if (req.body.event_da != 'undefined' || req.body.event_en != 'undefined') {
+    if (req.body.event_da != undefined && req.body.event_en != undefined) {
         pg.connect(connectionString, function (err, client, done) {
 
             var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, './buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created], function (error, result) {

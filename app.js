@@ -19,6 +19,7 @@ var pg = require('pg'),
  var query = client.query("INSERT INTO users(username, password, acct_type) values($1, $2, $3)", [process.env.USERNAME, hash, process.env.ACCT_TYPE]);
  }))
 
+
 */
 
 var routes = require('./routes/index');

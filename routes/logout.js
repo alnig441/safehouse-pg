@@ -4,7 +4,6 @@ var express = require('express'),
 
 router.get('/', function(req, res, next){
     req.logout();
-    console.log(req.isAuthenticated());
     res.redirect('/');
 });
 

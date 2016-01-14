@@ -7,7 +7,7 @@ var multer = require('multer');
 
 var storage  = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, './public/buffalo/' + call.setDate().getFullYear() + '/')
+        cb(null, './public/buffalo/' + call.setDate(file.originalname).getFullYear() + '/')
     },
     filename: function(req, file, cb){
         cb(null, file.originalname)
@@ -17,17 +17,19 @@ var upload = multer({storage: storage});
 
 
 router.post('/add', call.isAuthenticated, function(req, res){
-    console.log('in event_crud adding ', req.body);
+
+    if(req.body.created == null){
+        req.body.created = call.setDate(req.body.url);
+    }
 
     //POSTGRES REFACTOR SAVE IMAGE
     pg.connect(connectionString, function (err, client, done) {
         var array = call.splitString(req.body.meta);
-        var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", ['./buffalo/' + call.setDate().getFullYear() + '/' + req.body.url, req.body.created, array], function (error, result) {
+        var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, array], function (error, result) {
             if (error) { res.send(error.detail);}
             else { res.send('image saved');}
         })
         query.on('end', function (result) {
-            //console.log(result);
         })
     })
     //POSTGRES REFACTOR SAVE IMAGE END
@@ -36,11 +38,10 @@ router.post('/add', call.isAuthenticated, function(req, res){
     if (req.body.event_da != 'undefined' || req.body.event_en != 'undefined') {
         pg.connect(connectionString, function (err, client, done) {
 
-            var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, './buffalo/' + call.setDate().getFullYear() + '/' + req.body.urll, req.body.created], function (error, result) {
-                if (error) {console.log('there was an error ', error.detail);}
+            var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, './buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created], function (error, result) {
+                if (error) {console.log('there was an error ', error);}
             })
             query.on('end', function (result) {
-                //console.log(result);
             })
         })
     }
@@ -50,19 +51,18 @@ router.post('/add', call.isAuthenticated, function(req, res){
 });
 
 router.post('/upload', call.isAuthenticated, upload.single('file'), function(req, res, next){
-    console.log('upload',req.file);
+
     res.status(200);
 });
 
 router.get('/view', call.isAuthenticated, function(req, res){
-    console.log('in event get', req.sessionID);
+
     //POSTGRES REFACTOR GET LATEST EVENT
     pg.connect(connectionString, function(error, client, done){
 
         var event;
         var query = client.query("DECLARE geturl CURSOR FOR SELECT * FROM events ORDER BY created DESC; FETCH FIRST FROM geturl", function(error, result){
             if(error){ console.log('theres was an error ', error.detail);}
-            //else{ console.log('printing result: ', result.rows);}
         })
         query.on('row', function(row){
             event = row;
@@ -70,7 +70,6 @@ router.get('/view', call.isAuthenticated, function(req, res){
         })
 
         query.on('end', function(result){
-            console.log(event);
             res.send(event);
         })
     })
@@ -81,7 +80,6 @@ router.get('/view', call.isAuthenticated, function(req, res){
 });
 
 router.post('/select', call.isAuthenticated, function(req, res){
-    console.log(req.body);
 
     pg.connect(connectionString, function(error, client, done){
         var array = [];
@@ -93,7 +91,6 @@ router.post('/select', call.isAuthenticated, function(req, res){
         })
         query.on('end', function(result){
             client.end();
-            //var arr = [2015, 5];
             if(req.body.meta){
                 req.body.meta = call.splitString(req.body.meta);
             }

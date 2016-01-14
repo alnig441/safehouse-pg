@@ -29,12 +29,9 @@ app.config(function($routeProvider, $locationProvider){
 
 //Routing on acct_type
 app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $http, $location){
-    console.log('in login ctrl ');
     $scope.submit = function(){
-        // console.log('loginCtrl - angular route', $scope.form);
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
-                // console.log(response);
                 if(response.data.acct_type === 'admin'){
                     $location.path('/admin');
                 }
@@ -62,7 +59,6 @@ app.controller('logoutCtrl', function($scope, $location, $http){
 });
 
 app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location', function($scope, $http, Upload, $timeout, $location){
-//app.controller('adminCtrl', ['$scope', '$http', function($scope, $http){
     $scope.acct = [
         {name: 'Private', value: 'private'},
         {name: 'Public', value: 'public'},
@@ -79,7 +75,6 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
     var event = document.getElementById('viewEvent');
 
     $scope.showAddAcctForm = function(){
-        console.log('show add form');
         angular.element(acct).css('display', 'none');
         angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
@@ -88,19 +83,16 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
     };
 
     $scope.addAcct = function(){
-        console.log('adding acct ....', $scope);
         $http.post('/admin_crud/add', $scope.form)
             .then(function(response){
                 var alert = document.getElementById('alerts');
                 angular.element(acct).css('display', 'none');
-                console.log('in scope-add-acct logging response', response);
                 angular.element(alert).html(response.data);
             })
     };
 
 
     $scope.showDelAcctForm = function(){
-        console.log('show delete form');
         angular.element(acct).css('display', 'none');
         angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
@@ -110,35 +102,26 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
 
 
     $scope.viewAcct = function(){
-        console.log('viewing acct ....', $scope.form.acct_type);
         $http.get('/admin_crud/'+ $scope.form.acct_type)
             .then(function(response){
                 var alert = document.getElementById('alerts');
-                console.log('in scope-delete-acct logging response', response.data);
                 $scope.users = response.data;
-                console.log($scope.users);
-                //$scope.form.acct_type = response.data.acct_type;
-                //$scope.form.id = response.data._id;
                 $scope.form.id = response.data.id;
-                //$scope.form.lang = response.data.lang;
                 angular.element(alert).html(response.data);
                 angular.element(acct).css('display', 'inline');
             })
     };
 
     $scope.delAcct = function(){
-        console.log('deleting acct... ', this.user.username);
         $http.delete('/admin_crud/' + this.user.username)
             .then(function(response){
                 var alert = document.getElementById('alerts');
-                console.log('printing response: ', response);
                 angular.element(alert).html(response.data);
                 $scope.viewAcct();
             })
     };
 
     $scope.showChgPWForm = function(){
-        console.log('show change pw form');
         angular.element(acct).css('display', 'none');
         angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
@@ -147,14 +130,11 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
     };
 
     $scope.chgPW = function(){
-        console.log('changing pw for acct ', $scope.form.username);
 
         if($scope.form.new_password === $scope.form.confirm_password){
             $http.put('/admin_crud/chg', $scope.form)
                 .then(function(response){
-                    console.log('printing response in chgpw ',response);
                     var alert = document.getElementById('alerts');
-                    console.log('printing response: ', response);
                     angular.element(alert).html(response.data);
                 })
         }
@@ -167,7 +147,6 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
 
 
     $scope.showAddEventForm = function(){
-        console.log('show add event form');
         angular.element(acct).css('display', 'none');
         angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
@@ -179,21 +158,12 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
         $scope.form.url = document.getElementById('image').placeholder;
         $http.post('/event_crud/add', $scope.form)
             .then(function(response){
-                console.log('image post response: ', response);
                 angular.element(document.getElementById('alerts')).html(response.data);
             })
     };
 
      $scope.uploadFiles = function(file){
          $scope.f = file;
-         console.log('save image?: ', $scope.form.img_save, $scope.f);
-
-         //if($scope.form.img_save==true){
-         //    console.log('we move on');
-         //} else {
-         //    console.log('we stop here');
-         //}
-         //
 
          if(file && !file.$error && $scope.form.img_save==true) {
              file.upload = Upload.upload({
@@ -215,7 +185,6 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
      };
 
     $scope.showGetEventForm = function(){
-        console.log('get event form');
         angular.element(acct).css('display', 'none');
         angular.element(event).css('display', 'none');
         angular.element(forms).css('display', 'none');
@@ -224,14 +193,12 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
     };
 
     $scope.getEventById = function(){
-        console.log('getting most recent event...');
         angular.element(acct).css('display', 'none');
         angular.element(forms).css('display', 'none');
         var latest = document.getElementById('latest');
 
         $http.get('/event_crud/view')
             .then(function(response){
-                console.log('get event response ', response);
                 $scope.form = response.data;
                 angular.element(event).css('display', 'table');
             })
@@ -240,7 +207,6 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
 }]);
 
 app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
-    //$scope.message = 'velkommen vandaler';
     var eventForm = document.getElementById('queryEvents');
     var imageForm = document.getElementById('queryImages');
     angular.element(eventForm).css('display', 'none');
@@ -277,7 +243,6 @@ app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', 
 }]);
 
 app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', '$rootScope', function($scope, $http, $log, $modal, $location, $rootScope){
-    //$scope.message = 'welcome kilsythians';
     var eventForm = document.getElementById('queryEvents');
     var imageForm = document.getElementById('queryImages');
     angular.element(eventForm).css('display', 'none');
@@ -336,10 +301,8 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
 
 app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
-    console.log('building modal');
     $http.get('/event_crud/view')
         .then(function(response){
-            console.log('hej der', response);
             $scope.event = response.data;
 
         });
@@ -353,8 +316,6 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
 
     $scope.animationsEnabled = true;
     $scope.open2 = function (size) {
-
-        console.log($scope.form);
 
         if($scope.form.meta){
             $scope.form.database = 'images';
@@ -389,7 +350,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
 });
 
 app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
-    console.log('building modal 2 ', events);
+
     $scope.selector = 0;
 
     $scope.events = events;
@@ -397,7 +358,6 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
         event: $scope.events[$scope.selector]
     };
 
-    console.log('Selected event: ', $scope.selected);
 
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
@@ -412,7 +372,6 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
         $scope.selected = {
             event: $scope.events[$scope.selector]
         }
-        console.log('SUCCESS', $scope.selector, $scope.selected);
     };
 
     $scope.previous = function(){
@@ -425,7 +384,6 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
         $scope.selected = {
             event: $scope.events[$scope.selector]
         }
-        console.log('going back ', $scope.selector, $scope.selected);
     }
 })
 

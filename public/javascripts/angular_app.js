@@ -366,6 +366,10 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
             $modalInstance.dismiss('cancel');
     };
 
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
 });
 
 app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal){

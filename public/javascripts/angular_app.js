@@ -305,17 +305,25 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
 
         //console.log($location);
 
-        var x;
+        var contr;
+        var templ;
         if(option === 'login'){
-            x = 'LoginModalCtrl';
-        } else {
-            x = 'ModalInstanceCtrl';
+            contr = 'LoginModalCtrl';
+            templ = 'loginModal.html';
+        }
+        else if(option === 'resume'){
+            contr = 'ResumeModalCtrl';
+            templ = 'resumeModal.html';
+        }
+        else {
+            contr = 'ModalInstanceCtrl';
+            templ ='myModalContent.html';
         }
 
         var modalInstance = $modal.open({
             animation: $scope.animationsEnabled,
-            templateUrl: 'myModalContent.html',
-            controller: x,
+            templateUrl: templ,
+            controller: contr,
             size: size,
             resolve: {
                 events: function () {
@@ -364,6 +372,18 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
                 });
 
             $modalInstance.dismiss('cancel');
+    };
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
+
+app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
+
+    $scope.download = function(){
+
     };
 
     $scope.cancel = function(){

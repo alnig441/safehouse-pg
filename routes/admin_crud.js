@@ -28,6 +28,8 @@ router.post('/add', call.isAuthenticated, function(req, res){
 //View account
 router.get('/:acct_type?', call.isAuthenticated, function(req, res){
 
+    console.log('admin_crud: ', req.params);
+
     pg.connect(connectionString, function(err, client, done){
 
         var user = [];

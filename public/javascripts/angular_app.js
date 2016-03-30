@@ -13,6 +13,14 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/admin.html',
             controller: 'adminCtrl'
         })
+        .when('/admin/btle', {
+            templateUrl: 'views/btle.html',
+            controller: 'adminCtrl'
+        })
+        .when('/admin/diary', {
+            templateUrl: 'views/diary.html',
+            controller: 'adminCtrl'
+        })
         .when('/priv_uk', {
             templateUrl: 'views/priv_en.html',
             controller: 'privUkCtrl'
@@ -21,7 +29,6 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/priv_da.html',
             controller: 'privDkCtrl'
         })
-
         .when('/public', {
             templateUrl: 'views/public.html',
             controller: 'publicCtrl'
@@ -64,18 +71,51 @@ app.controller('logoutCtrl', function($scope, $location, $http){
     };
 });
 
-app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location','$rootScope', function($scope, $rootScope, $http, Upload, $timeout, $location){
+app.controller('switchCtrl', function($scope, $rootScope){
 
-    $rootScope.template = {
-        default: '/views/partials/default.html',
-        addAcct: '/views/partials/addAcct.html',
-        addEvent: '/views/partials/addEvent.html',
-        changePwd: '/views/partials/chgPwd.html',
-        deleteAcct: '/views/partials/deleteAcct.html',
-        getEvent: '/views/partials/getEvent.html'
+    var menu = document.getElementsByClassName('collapse');
+
+    $rootScope.template = {};
+
+    $scope.templates = {
+        schedule_job: './views/sched_job.html',
+        view_job: './views/view_jobs.html',
+        add_acct: './views/add_acct.html',
+        delete_acct: './views/delete_acct.html',
+        add_image: './views/add_image.html',
+        add_event: './views/add_event.html'
     };
-    $rootScope.template.url = $rootScope.template.default;
-    console.log($rootScope.template.url);
+
+    $scope.switch = function(option){
+        console.log('in switch: ', option);
+        $rootScope.template.url = $scope.templates[option];
+        angular.element(menu).collapse('hide');
+    };
+
+});
+
+app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
+
+    $scope.setLocation = function(option){
+
+        if(option === 'btle'){
+            $location.path('/admin/btle');
+        }
+        if(option === 'diary'){
+            $location.path('/admin/diary');
+        }
+    };
+
+    //$rootScope.template = {
+    //    default: '/views/partials/default.html',
+    //    addAcct: '/views/partials/addAcct.html',
+    //    addEvent: '/views/partials/addEvent.html',
+    //    changePwd: '/views/partials/chgPwd.html',
+    //    deleteAcct: '/views/partials/deleteAcct.html',
+    //    getEvent: '/views/partials/getEvent.html'
+    //};
+    //$rootScope.template.url = $rootScope.template.default;
+    //console.log($rootScope.template.url);
 
 
     $scope.acct = [
@@ -122,6 +162,7 @@ app.controller('adminCtrl', ['$scope', '$http', 'Upload', '$timeout', '$location
 
 
     $scope.viewAcct = function(){
+        console.log('hallo: ', $scope.form.acct_type);
         $http.get('/admin_crud/'+ $scope.form.acct_type)
             .then(function(response){
                 var alert = document.getElementById('alerts');

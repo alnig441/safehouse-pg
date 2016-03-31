@@ -5,8 +5,6 @@ app.config(function($routeProvider, $locationProvider){
     $routeProvider
         .when('/login', {
             templateUrl: 'views/login.html',
-            //templateUrl: 'views/partials/landing-page.html',
-            //controller: 'loginCtrl'
             controller: 'singleViewModalCtrl'
         })
         .when('/admin', {
@@ -35,32 +33,6 @@ app.config(function($routeProvider, $locationProvider){
         })
         .otherwise({redirectTo: '/login'});
 });
-
-//Routing on acct_type
-//app.controller('loginCtrl',['$scope', '$http', '$location', function($scope, $http, $location){
-//
-//    console.log('testing modal: ', $scope.form);
-//
-//    $scope.submit = function(){
-//        $http.post('/login/authenticate', $scope.form)
-//            .then(function(response){
-//                if(response.data.acct_type === 'admin'){
-//                    $location.path('/admin');
-//                }
-//                else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
-//                    $location.path('/priv_uk');
-//                }
-//                else if(response.data.acct_type === 'private' && response.data.lang === 'da'){
-//                    $location.path('/priv_dk');
-//                }
-//                else if(response.data.acct_type === 'public'){
-//                    $location.path('/public');
-//                }
-//                else{$location.path('/login');}
-//            });
-////
-//    };
-//}]);
 
 app.controller('logoutCtrl', function($scope, $location, $http){
     $scope.logout = function(){
@@ -106,18 +78,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         }
     };
 
-    //$rootScope.template = {
-    //    default: '/views/partials/default.html',
-    //    addAcct: '/views/partials/addAcct.html',
-    //    addEvent: '/views/partials/addEvent.html',
-    //    changePwd: '/views/partials/chgPwd.html',
-    //    deleteAcct: '/views/partials/deleteAcct.html',
-    //    getEvent: '/views/partials/getEvent.html'
-    //};
-    //$rootScope.template.url = $rootScope.template.default;
-    //console.log($rootScope.template.url);
-
-
     $scope.acct = [
         {name: 'Private', value: 'private'},
         {name: 'Public', value: 'public'},
@@ -143,6 +103,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     $scope.addAcct = function(){
+        console.log('..adding..', this);
         $http.post('/admin_crud/add', $scope.form)
             .then(function(response){
                 var alert = document.getElementById('alerts');
@@ -162,18 +123,20 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
 
     $scope.viewAcct = function(){
-        console.log('hallo: ', $scope.form.acct_type);
-        $http.get('/admin_crud/'+ $scope.form.acct_type)
+        console.log('..viewing..', $scope);
+        $http.get('/admin_crud/'+ this.form.acct_type)
             .then(function(response){
+                //console.log(response);
                 var alert = document.getElementById('alerts');
                 $scope.users = response.data;
-                $scope.form.id = response.data.id;
+                //$scope.form.id = response.data.id;
                 angular.element(alert).html(response.data);
                 angular.element(acct).css('display', 'inline');
             });
     };
 
     $scope.delAcct = function(){
+        console.log('..deleting..', this);
         $http.delete('/admin_crud/' + this.user.username)
             .then(function(response){
                 var alert = document.getElementById('alerts');

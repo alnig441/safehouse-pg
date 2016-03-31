@@ -1,0 +1,24 @@
+<div class="container-fluid"><div class="row"><!--.col-sm-4--><!--    p view--><!--    form#delAcct(ng-submit='viewAcct()')--><!--        ul--><!--            li--><!--                label(for='view_acct') Acct Type:--><!--            li--><!--                select(name='view_acct', ng-model='form.acct_type',  ng-options='option.value as option.name for option in acct', ng-init='form.acct_type=acct[0].value')--><!--            li--><!--                input(type="submit", value="Get Acct Info")--></div><div class="col-sm-12"><form ng-submit="viewAcct()" class="container"><table class="table table-condensed"><thead><tr><th class="col-sm-3"><label class="control-label col-sm-2">Type</label><div class="col-sm-1"><select ng-change="viewAcct()" name="view_acct" ng-model="form.acct_type" ng-options="option.value as option.name for option in acct" ng-init="form.acct_type=acct[0].value"></select></div></th><th class="col-sm-3">UserID</th><th class="col-sm-3">Language</th><th class="col-sm-3">Select</th></tr></thead><tbody><tr ng-repeat="user in users"><td># {{user.id}}</td><td value="{{user.username}}">{{user.username}}</td><td>{{user.lang}}</td><td><!--input(type='checkbox', ng-model='user.selected')--><button class="btn btn-primary btn-sm">Modify</button><button ng-click="delAcct()" ng-disabled="form.acct_type === &quot;admin&quot;" class="btn btn-primary btn-sm">Delete</button></td></tr></tbody></table><div id="test" class="btn-group btn-group-justified btn-group-sm"><!--input.btn.btn-primary.col-sm-3(type='submit', value='Refresh')--><button class="btn btn-primary col-sm-3">Add</button><!--button.btn.btn-primary.col-sm-3 Modify--><!--button.btn.btn-primary.col-sm-3(type='submit', ng-click='delAcct()') Delete--></div></form></div><!--.col-sm-4//    p add
+//    form#addAcct(ng-submit="addAcct()")
+//        ul
+//            li
+//                label(for="username1") Username:
+//            li
+//                input(type="text" id="username1", placeholder="Username", ng-model="form.username")
+//            li
+//                label(for="password") Password:
+//            li
+//                input(type="password" id="password", placeholder="Password", ng-model="form.password")
+//            li
+//                label(for="acct_type") Account Type:
+//            li
+//                select(name='view_acct', ng-model='form.acct_type',  ng-options='option.value as option.name for option in acct', ng-init='form.acct_type=acct[0].value')
+//            li
+//                label(for="lang") Language:
+//            li
+//                select(name='lang', ng-model='form.lang',  ng-options='option.value as option.name for option in speak', ng-init='form.lang=speak[0].value')
+//            li
+//                input(type="submit", value="Submit")
+//
+//.col-sm-4
+//    p chg pwd--></div>

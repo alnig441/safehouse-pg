@@ -53,7 +53,6 @@ app.controller('switchCtrl', function($scope, $rootScope){
         schedule_job: './views/sched_job.html',
         view_job: './views/view_jobs.html',
         add_acct: './views/add_acct.html',
-        delete_acct: './views/delete_acct.html',
         add_image: './views/add_image.html',
         add_event: './views/add_event.html'
     };
@@ -79,6 +78,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     $scope.acct = [
+        {name: 'acct_type', value: null},
         {name: 'Private', value: 'private'},
         {name: 'Public', value: 'public'},
         {name: 'Admin', value: 'admin'}

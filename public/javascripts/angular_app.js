@@ -7,10 +7,10 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/login.html',
             controller: 'singleViewModalCtrl'
         })
-        .when('/admin', {
-            templateUrl: 'views/admin.html',
-            controller: 'adminCtrl'
-        })
+        //.when('/admin', {
+        //    templateUrl: 'views/admin.html',
+        //    controller: 'adminCtrl'
+        //})
         .when('/admin/btle', {
             templateUrl: 'views/btle.html',
             controller: 'adminCtrl'
@@ -52,13 +52,11 @@ app.controller('switchCtrl', function($scope, $rootScope){
     $scope.templates = {
         schedule_job: './views/sched_job.html',
         view_job: './views/view_jobs.html',
-        add_acct: './views/add_acct.html',
-        add_image: './views/add_image.html',
-        add_event: './views/add_event.html'
+        accounts: './views/accounts.html',
+        images: './views/images.html'
     };
 
     $scope.switch = function(option){
-        console.log('in switch: ', option);
         $rootScope.template.url = $scope.templates[option];
         angular.element(menu).collapse('hide');
     };
@@ -66,6 +64,13 @@ app.controller('switchCtrl', function($scope, $rootScope){
 });
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
+    $scope.selected = 'list';
+
+    $rootScope.items = [
+        "list",
+        "modify",
+        "add"
+    ];
 
     $scope.setLocation = function(option){
 
@@ -361,7 +366,7 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
             $http.post('/login/authenticate', $scope.form)
                 .then(function(response){
                     if(response.data.acct_type === 'admin'){
-                        $location.path('/admin');
+                        $location.path('/admin/diary');
                     }
                     else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
                         $location.path('/priv_uk');

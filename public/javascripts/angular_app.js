@@ -50,8 +50,6 @@ app.controller('switchCtrl', function($scope, $rootScope){
     $rootScope.template = {};
 
     $scope.templates = {
-        schedule_job: './views/sched_job.html',
-        view_job: './views/view_jobs.html',
         accounts: './views/accounts.html',
         images: './views/images.html'
     };

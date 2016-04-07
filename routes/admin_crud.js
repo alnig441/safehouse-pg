@@ -9,6 +9,8 @@ var call = require('../public/javascripts/myFunctions.js');
 //Add account
 router.post('/add', call.isAuthenticated, function(req, res){
 
+    console.log('admin crud add: ', req.body);
+
     pg.connect(connectionString, function(err, client, done){
         if(err){console.log(err);}
         var hash = bcrypt.hashSync(req.body.password, 12);
@@ -74,7 +76,9 @@ router.delete('/:username?', call.isAuthenticated, function(req, res){
 //Change password
 router.put('/chg', call.isAuthenticated, function(req, res){
 
-    var hash = bcrypt.hashSync(req.body.password, 12);
+    console.log('..changing pw.. :', req.body);
+
+    var hash = bcrypt.hashSync(req.body.new_password, 12);
 
     pg.connect(connectionString, function(err, client, done){
 

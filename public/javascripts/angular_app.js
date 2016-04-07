@@ -62,13 +62,6 @@ app.controller('switchCtrl', function($scope, $rootScope){
 });
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
-    $scope.selected = 'list';
-
-    $rootScope.items = [
-        "list",
-        "modify",
-        "add"
-    ];
 
     $scope.setLocation = function(option){
 
@@ -106,8 +99,8 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     $scope.addAcct = function(){
-        console.log('..adding..', this);
-        $http.post('/admin_crud/add', $scope.form)
+        console.log('..adding..', this.selected, $rootScope.selected, $scope.selected);
+        $http.post('/admin_crud/add', this.form)
             .then(function(response){
                 var alert = document.getElementById('alerts');
                 angular.element(acct).css('display', 'none');
@@ -125,26 +118,26 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
 
-    $scope.viewAcct = function(){
-        console.log('..viewing..', $scope);
-        $http.get('/admin_crud/'+ this.form.acct_type)
+    $scope.viewAcct = function(acct){
+        var type = acct || this.form.acct_type;
+        console.log('..viewing..', $rootScope.selected);
+        $http.get('/admin_crud/'+ type)
             .then(function(response){
-                //console.log(response);
                 var alert = document.getElementById('alerts');
                 $scope.users = response.data;
-                //$scope.form.id = response.data.id;
                 angular.element(alert).html(response.data);
                 angular.element(acct).css('display', 'inline');
             });
     };
 
     $scope.delAcct = function(){
-        console.log('..deleting..', this);
+        console.log('..deleting..', $rootScope.selected);
+        var type = this.user.acct_type;
         $http.delete('/admin_crud/' + this.user.username)
             .then(function(response){
                 var alert = document.getElementById('alerts');
                 angular.element(alert).html(response.data);
-                $scope.viewAcct();
+                $scope.viewAcct(type);
             });
     };
 
@@ -156,21 +149,21 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     };
 
-    $scope.chgPW = function(){
-
-        if($scope.form.new_password === $scope.form.confirm_password){
-            $http.put('/admin_crud/chg', $scope.form)
-                .then(function(response){
-                    var alert = document.getElementById('alerts');
-                    angular.element(alert).html(response.data);
-                });
-        }
-        else {
-            angular.element(document.getElementById('alerts')).html('password mismatch');
-        }
-
-
-    };
+    //$scope.chgPW = function(){
+    //    console.log('..changing pw..', this.user);
+    //    if(this.user.new_password === this.user.confirm_password){
+    //        $http.put('/admin_crud/chg', this.user)
+    //            .then(function(response){
+    //                var alert = document.getElementById('alerts');
+    //                angular.element(alert).html(response.data);
+    //            });
+    //    }
+    //    else {
+    //        angular.element(document.getElementById('alerts')).html('password mismatch');
+    //    }
+    //
+    //
+    //};
 
 
     $scope.showAddEventForm = function(){
@@ -310,7 +303,7 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
     $scope.animationsEnabled = true;
     $scope.open = function (size, option) {
 
-        //console.log($location);
+        console.log('..modal..', $scope, this.user);
 
         var contr;
         var templ;
@@ -322,12 +315,17 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             contr = 'ResumeModalCtrl';
             templ = 'resumeModal.html';
         }
+        else if(option === 'modify'){
+            contr = 'ModifyAcctModalCtrl';
+            templ = 'modifyAcctModal.html';
+        }
         else {
             contr = 'ModalInstanceCtrl';
             templ ='myModalContent.html';
         }
 
         var modalInstance = $modal.open({
+            scope: $scope,
             animation: $scope.animationsEnabled,
             templateUrl: templ,
             controller: contr,
@@ -398,6 +396,31 @@ app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
     };
 
 });
+
+app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http){
+
+    $scope.submit = function(){
+
+        if(this.user.new_password === $scope.user.confirm_password){
+            $http.put('/admin_crud/chg', $scope.user)
+                .then(function(response){
+                    var alert = document.getElementById('alerts');
+                    angular.element(alert).html(response.data);
+                });
+        }
+        else {
+            angular.element(document.getElementById('alerts')).html('password mismatch');
+        }
+
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
+
 
 app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal){
 

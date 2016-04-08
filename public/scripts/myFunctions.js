@@ -31,6 +31,7 @@ var call = {
             date = new Date();
         }
 
+        console.log('setDate: ', date);
         return date;
     },
     parser: function(string){

@@ -67,8 +67,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     var acct = document.getElementById('viewAcct');
     var event = document.getElementById('viewEvent');
 
-    console.log($scope);
-
     $scope.setLocation = function(option){
 
         if(option === 'btle'){
@@ -102,12 +100,16 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     $scope.select = function(opt){
+
+        console.log('selecting: ', opt);
         var x = 'active';
         var y = 'ng-hide';
         var list = document.getElementById('list');
         var add = document.getElementById('add');
         var list_div = document.getElementById('list_div');
         var add_div = document.getElementById('add_div');
+
+        console.log(list_div);
 
         $scope.selected = opt;
         if(opt === 'list'){
@@ -122,6 +124,19 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             angular.element(list_div).addClass(y);
             angular.element(add_div).removeClass(y);
         }
+        else if(opt === 'image'){
+            angular.element(list).addClass(x);
+            angular.element(add).removeClass(x);
+            angular.element(add_div).addClass(y);
+            angular.element(list_div).removeClass(y);
+        }
+        else if(opt === 'event'){
+            angular.element(add).addClass(x);
+            angular.element(list).removeClass(x);
+            angular.element(list_div).addClass(y);
+            angular.element(add_div).removeClass(y);
+        }
+
     };
 
     $scope.viewAcct = function(acct, show){
@@ -149,6 +164,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     $scope.addEvent = function(){
+        console.log('addEvent: ', this.form);
         $scope.form.url = document.getElementById('image').placeholder;
         $http.post('/event_crud/add', $scope.form)
             .then(function(response){
@@ -156,27 +172,29 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             });
     };
 
-     $scope.uploadFiles = function(file){
-         $scope.f = file;
-
-         if(file && !file.$error && $scope.form.img_save===true) {
-             file.upload = Upload.upload({
-                 url: '/event_crud/upload',
-                 data: {file: file}
-                 });
-             file.upload.then(function(response){
-                 $timeout(function(){
-                     file.result = response.data;
-                     });
-             }, function(response){
-                 if(response.status > 0)
-                 $scope.errorMsg = response.status + ': ' + response.data;
-             });
-             file.upload.progress(function(evt){
-                 file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-             });
-         }
-     };
+     //$scope.uploadFiles = function(file, opt){
+     //
+     //    console.log('fileupload: ', file, opt);
+     //    $scope.f = file;
+     //
+     //    if(file && !file.$error && opt) {
+     //        file.upload = Upload.upload({
+     //            url: '/event_crud/upload',
+     //            data: {file: file}
+     //            });
+     //        file.upload.then(function(response){
+     //            $timeout(function(){
+     //                file.result = response.data;
+     //                });
+     //        }, function(response){
+     //            if(response.status > 0)
+     //            $scope.errorMsg = response.status + ': ' + response.data;
+     //        });
+     //        file.upload.progress(function(evt){
+     //            file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+     //        });
+     //    }
+     //};
 
     $scope.showGetEventForm = function(){
         angular.element(acct).css('display', 'none');
@@ -273,7 +291,7 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
-app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location){
+app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload){
     $scope.animationsEnabled = true;
     $scope.open = function (size, option) {
 
@@ -290,6 +308,10 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
         else if(option === 'modify'){
             contr = 'ModifyAcctModalCtrl';
             templ = 'modifyAcctModal.html';
+        }
+        else if(option === 'file'){
+            contr = 'SaveImgModalCtrl';
+            templ = 'saveImgModal.html';
         }
         else {
             contr = 'ModalInstanceCtrl';
@@ -369,6 +391,45 @@ app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
 
 });
 
+app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, $http, Upload){
+
+    $scope.uploadFiles = function(file, opt){
+
+        console.log('fileupload: ', file, $scope);
+        $scope.img = {};
+        $scope.img.url = file.name;
+        $scope.img.meta = $scope.meta;
+        $rootScope.f = file;
+
+        if(file && !file.$error && opt) {
+            file.upload = Upload.upload({
+                url: '/event_crud/upload',
+                data: {file: file}
+            });
+            file.upload.then(function(response){
+                $timeout(function(){
+                    file.result = response.data;
+                });
+            }, function(response){
+                if(response.status > 0)
+                    $scope.errorMsg = response.status + ': ' + response.data;
+            });
+            file.upload.progress(function(evt){
+                file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+            });
+        }
+
+        $http.post('/event_crud/add', $scope.img)
+            .then(function(response){
+                console.log(response);
+            });
+
+        $modalInstance.dismiss('cancel');
+
+    };
+
+});
+
 app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http){
 
     $scope.submit = function(){
@@ -392,7 +453,6 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http){
     };
 
 });
-
 
 app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal){
 

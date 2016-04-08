@@ -63,6 +63,12 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
 
+    var forms = document.getElementsByTagName('form');
+    var acct = document.getElementById('viewAcct');
+    var event = document.getElementById('viewEvent');
+
+    console.log($scope);
+
     $scope.setLocation = function(option){
 
         if(option === 'btle'){
@@ -85,86 +91,54 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         {name: 'Danish', value: 'da'}
     ];
 
-    var forms = document.getElementsByTagName('form');
-    var acct = document.getElementById('viewAcct');
-    var event = document.getElementById('viewEvent');
-
-    $scope.showAddAcctForm = function(url){
-
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.addAcct).css('display', 'table');
-
-    };
 
     $scope.addAcct = function(){
-        console.log('..adding..', this.selected, $rootScope.selected, $scope.selected);
+        var type = this.form.acct_type;
         $http.post('/admin_crud/add', this.form)
             .then(function(response){
-                var alert = document.getElementById('alerts');
-                angular.element(acct).css('display', 'none');
-                angular.element(alert).html(response.data);
+                $scope.viewAcct(type, 'list');
+                $scope.select('list');
             });
     };
 
+    $scope.select = function(opt){
+        var x = 'active';
+        var y = 'ng-hide';
+        var list = document.getElementById('list');
+        var add = document.getElementById('add');
+        var list_div = document.getElementById('list_div');
+        var add_div = document.getElementById('add_div');
 
-    $scope.showDelAcctForm = function(){
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.delAcct).css('display', 'table');
-
+        $scope.selected = opt;
+        if(opt === 'list'){
+            angular.element(list).addClass(x);
+            angular.element(add).removeClass(x);
+            angular.element(add_div).addClass(y);
+            angular.element(list_div).removeClass(y);
+        }
+        else if(opt === 'add'){
+            angular.element(add).addClass(x);
+            angular.element(list).removeClass(x);
+            angular.element(list_div).addClass(y);
+            angular.element(add_div).removeClass(y);
+        }
     };
 
-
-    $scope.viewAcct = function(acct){
+    $scope.viewAcct = function(acct, show){
         var type = acct || this.form.acct_type;
-        console.log('..viewing..', $rootScope.selected);
         $http.get('/admin_crud/'+ type)
             .then(function(response){
-                var alert = document.getElementById('alerts');
                 $scope.users = response.data;
-                angular.element(alert).html(response.data);
-                angular.element(acct).css('display', 'inline');
             });
     };
 
     $scope.delAcct = function(){
-        console.log('..deleting..', $rootScope.selected);
         var type = this.user.acct_type;
         $http.delete('/admin_crud/' + this.user.username)
             .then(function(response){
-                var alert = document.getElementById('alerts');
-                angular.element(alert).html(response.data);
                 $scope.viewAcct(type);
             });
     };
-
-    $scope.showChgPWForm = function(){
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.chgPW).css('display', 'table');
-
-    };
-
-    //$scope.chgPW = function(){
-    //    console.log('..changing pw..', this.user);
-    //    if(this.user.new_password === this.user.confirm_password){
-    //        $http.put('/admin_crud/chg', this.user)
-    //            .then(function(response){
-    //                var alert = document.getElementById('alerts');
-    //                angular.element(alert).html(response.data);
-    //            });
-    //    }
-    //    else {
-    //        angular.element(document.getElementById('alerts')).html('password mismatch');
-    //    }
-    //
-    //
-    //};
-
 
     $scope.showAddEventForm = function(){
         angular.element(acct).css('display', 'none');
@@ -302,8 +276,6 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
 app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location){
     $scope.animationsEnabled = true;
     $scope.open = function (size, option) {
-
-        console.log('..modal..', $scope, this.user);
 
         var contr;
         var templ;

@@ -101,7 +101,10 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.select = function(opt){
 
-        console.log('selecting: ', opt);
+        console.log('selecting: ', opt, $scope, this, $rootScope);
+        if(this.img){
+            $rootScope.img = this.img;
+        }
         var x = 'active';
         var y = 'ng-hide';
         var list = document.getElementById('list');
@@ -164,9 +167,11 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     $scope.addEvent = function(){
-        console.log('addEvent: ', this.form);
-        $scope.form.url = document.getElementById('image').placeholder;
-        $http.post('/event_crud/add', $scope.form)
+        console.log('addEvent: ', $rootScope.img, this.form);
+        this.form.url = $rootScope.img.url;
+        this.form.meta = $rootScope.img.meta;
+        //$scope.form.url = document.getElementById('image').placeholder;
+        $http.post('/event_crud/add', this.form)
             .then(function(response){
                 angular.element(document.getElementById('alerts')).html(response.data);
             });
@@ -425,6 +430,7 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
             });
 
         $modalInstance.dismiss('cancel');
+        $scope.select('event');
 
     };
 

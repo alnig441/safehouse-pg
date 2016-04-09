@@ -21,20 +21,19 @@ router.post('/add', call.isAuthenticated, function(req, res){
     console.log('adding image: ', req.body);
 
     if(req.body.created == null){
-        console.log('buh');
         req.body.created = call.setDate(req.body.url);
     }
 
     //POSTGRES REFACTOR SAVE IMAGE
     pg.connect(connectionString, function (err, client, done) {
-        console.log('bah');
 
         var array = call.splitString(req.body.meta);
         var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, array], function (error, result) {
             if (error) { res.send(error.detail);}
-            else { res.status(200).send(result);}
+            //else { res.status(200).send(result);}
         })
         query.on('end', function (result) {
+            res.status(200).send(result);
         })
     })
     //POSTGRES REFACTOR SAVE IMAGE END
@@ -47,6 +46,7 @@ router.post('/add', call.isAuthenticated, function(req, res){
                 if (error) {console.log('there was an error ', error);}
             })
             query.on('end', function (result) {
+                res.status(200).send(result);
             })
         })
     }

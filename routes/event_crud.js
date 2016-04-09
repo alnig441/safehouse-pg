@@ -113,5 +113,20 @@ router.post('/select', call.isAuthenticated, function(req, res){
     })
 });
 
+router.get('/img', function(req, res, next){
+
+    pg.connect(connectionString, function(error, client, done){
+        var query = client.query('DECLARE geturl CURSOR FOR SELECT * FROM images ORDER BY id DESC; FETCH FIRST FROM geturl', function(error, result){
+            if(error){
+                console.log(error);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result.rows);
+        })
+    })
+});
+
 module.exports = router;
 

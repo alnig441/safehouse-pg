@@ -207,7 +207,6 @@ app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', 
 
     };
 
-
     $scope.viewImagesForm = function () {
         angular.element(eventForm).css('display','none');
         angular.element(imageForm).css('display','table');
@@ -383,11 +382,15 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
 
         $http.post('/event_crud/add_img', $scope.img)
             .then(function(response){
-                console.log('from image save: ', response.data);
+                $http.get('/event_crud/img')
+                    .then(function(response){
+                        $rootScope.img = response.data;
+                        console.log($rootScope.img);
+                    });
             });
 
         $modalInstance.dismiss('cancel');
-        $scope.select('event');
+        //$scope.select('event');
 
     };
 

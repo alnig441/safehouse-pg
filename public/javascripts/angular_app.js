@@ -7,10 +7,6 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/login.html',
             controller: 'singleViewModalCtrl'
         })
-        //.when('/admin', {
-        //    templateUrl: 'views/admin.html',
-        //    controller: 'adminCtrl'
-        //})
         .when('/admin/btle', {
             templateUrl: 'views/btle.html',
             controller: 'adminCtrl'
@@ -101,7 +97,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.select = function(opt){
 
-        console.log('selecting: ', opt, $scope, this, $rootScope);
+        //console.log('selecting: ', opt, $scope, this, $rootScope);
         if(this.img){
             $rootScope.img = this.img;
         }
@@ -112,7 +108,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         var list_div = document.getElementById('list_div');
         var add_div = document.getElementById('add_div');
 
-        console.log(list_div);
+        //console.log(list_div);
 
         $scope.selected = opt;
         if(opt === 'list'){
@@ -158,55 +154,16 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             });
     };
 
-    $scope.showAddEventForm = function(){
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.addEvent).css('display', 'table');
-
-    };
-
     $scope.addEvent = function(){
-        console.log('addEvent: ', $rootScope.img, this.form);
+        //console.log('addEvent: ', $rootScope.img, this.form);
         this.form.url = $rootScope.img.url;
         this.form.meta = $rootScope.img.meta;
         //$scope.form.url = document.getElementById('image').placeholder;
-        $http.post('/event_crud/add', this.form)
+        $http.post('/event_crud/add_event', this.form)
             .then(function(response){
-                angular.element(document.getElementById('alerts')).html(response.data);
+                console.log(response.data);
+                //angular.element(document.getElementById('alerts')).html(response.data);
             });
-    };
-
-     //$scope.uploadFiles = function(file, opt){
-     //
-     //    console.log('fileupload: ', file, opt);
-     //    $scope.f = file;
-     //
-     //    if(file && !file.$error && opt) {
-     //        file.upload = Upload.upload({
-     //            url: '/event_crud/upload',
-     //            data: {file: file}
-     //            });
-     //        file.upload.then(function(response){
-     //            $timeout(function(){
-     //                file.result = response.data;
-     //                });
-     //        }, function(response){
-     //            if(response.status > 0)
-     //            $scope.errorMsg = response.status + ': ' + response.data;
-     //        });
-     //        file.upload.progress(function(evt){
-     //            file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-     //        });
-     //    }
-     //};
-
-    $scope.showGetEventForm = function(){
-        angular.element(acct).css('display', 'none');
-        angular.element(event).css('display', 'none');
-        angular.element(forms).css('display', 'none');
-        angular.element(forms.getEvent).css('display', 'table');
-
     };
 
     $scope.getEventById = function(){
@@ -400,7 +357,7 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
 
     $scope.uploadFiles = function(file, opt){
 
-        console.log('fileupload: ', file, $scope);
+        //console.log('fileupload: ', file, $scope);
         $scope.img = {};
         $scope.img.url = file.name;
         $scope.img.meta = $scope.meta;
@@ -424,9 +381,9 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
             });
         }
 
-        $http.post('/event_crud/add', $scope.img)
+        $http.post('/event_crud/add_img', $scope.img)
             .then(function(response){
-                console.log(response);
+                console.log('from image save: ', response.data);
             });
 
         $modalInstance.dismiss('cancel');

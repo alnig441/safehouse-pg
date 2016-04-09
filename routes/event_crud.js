@@ -16,11 +16,11 @@ var storage  = multer.diskStorage({
 var upload = multer({storage: storage});
 
 
-router.post('/add', call.isAuthenticated, function(req, res){
+router.post('/add_img', call.isAuthenticated, function(req, res) {
 
     console.log('adding image: ', req.body);
 
-    if(req.body.created == null){
+    if (req.body.created == null) {
         req.body.created = call.setDate(req.body.url);
     }
 
@@ -29,29 +29,35 @@ router.post('/add', call.isAuthenticated, function(req, res){
 
         var array = call.splitString(req.body.meta);
         var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, array], function (error, result) {
-            if (error) { res.send(error.detail);}
-            //else { res.status(200).send(result);}
+            if (error) {
+                res.send(error.detail);
+            }
+        })
+        query.on('end', function (result) {
+            res.status(200).send(result.rows);
+        })
+    })
+
+})
+
+router.post('/add_event', function(req, res, next){
+
+    if(req.body.created == null){
+        req.body.created = call.setDate(req.body.url);
+    }
+
+    pg.connect(connectionString, function (err, client, done) {
+
+        var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, './buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created], function (error, result) {
+            if (error) {
+                console.log('there was an error ', error);
+                res.status(200).send(error.error);
+            }
         })
         query.on('end', function (result) {
             res.status(200).send(result);
         })
     })
-    //POSTGRES REFACTOR SAVE IMAGE END
-
-    //POSTGRES REFACTOR SAVE EVENT
-    if (req.body.event_da != undefined && req.body.event_en != undefined) {
-        pg.connect(connectionString, function (err, client, done) {
-
-            var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, './buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created], function (error, result) {
-                if (error) {console.log('there was an error ', error);}
-            })
-            query.on('end', function (result) {
-                res.status(200).send(result);
-            })
-        })
-    }
-    //POSTGRES REFACTOR SAVE EVENT END
-
 
 });
 

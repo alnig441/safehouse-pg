@@ -134,6 +134,11 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             angular.element(list).removeClass(x);
             angular.element(list_div).addClass(y);
             angular.element(add_div).removeClass(y);
+            $http.get('/event_crud/img_all')
+                .then(function(response){
+                    $scope.images = response.data;
+                    console.log($scope.images);
+                });
         }
 
     };
@@ -356,7 +361,6 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
 
     $scope.uploadFiles = function(file, opt){
 
-        //console.log('fileupload: ', file, $scope);
         $scope.img = {};
         $scope.img.url = file.name;
         $scope.img.meta = $scope.meta;
@@ -385,7 +389,6 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
                 $http.get('/event_crud/img')
                     .then(function(response){
                         $rootScope.img = response.data;
-                        console.log($rootScope.img);
                     });
             });
 

@@ -128,5 +128,20 @@ router.get('/img', function(req, res, next){
     })
 });
 
+router.get('/img_all', function(req, res, next){
+
+    pg.connect(connectionString, function(error, client, done){
+        var query = client.query('SELECT * FROM images', function(error, result){
+            if(error){
+                console.log(error);
+                res.status(200).send(error);
+            }
+        })
+        query.on('end', function(result){
+            res.status(200).send(result.rows);
+        })
+    })
+});
+
 module.exports = router;
 

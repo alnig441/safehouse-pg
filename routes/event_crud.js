@@ -42,13 +42,15 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
 
 router.post('/add_event', function(req, res, next){
 
-    if(req.body.created == null){
-        req.body.created = call.setDate(req.body.url);
-    }
+    console.log('..adding event.. :', req.body);
+
+    //if(req.body.created == null){
+    //    req.body.created = call.setDate(req.body.url);
+    //}
 
     pg.connect(connectionString, function (err, client, done) {
 
-        var query = client.query("INSERT INTO events (event_da, event_en, url, created) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, './buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created], function (error, result) {
+        var query = client.query("INSERT INTO events (event_da, event_en, img_id) values($1, $2, $3)", [req.body.event_da, req.body.event_en, req.body.img_id], function (error, result) {
             if (error) {
                 console.log('there was an error ', error);
                 res.status(200).send(error.error);
@@ -121,6 +123,23 @@ router.get('/img', function(req, res, next){
                 console.log(error);
             }
         })
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result.rows);
+        })
+    })
+});
+
+router.get('/get_one/:img_id?', function(req, res, next){
+
+    console.log('getting event by img_id: ', req.params);
+
+    pg.connect(connectionString, function(error, client, done){
+        var query = client.query('SELECT * FROM events WHERE img_id=' + parseInt(req.params.img_id), function(error, result){
+           if(error){
+               console.log(error);
+           }
+        });
         query.on('end', function(result){
             client.end();
             res.status(200).send(result.rows);

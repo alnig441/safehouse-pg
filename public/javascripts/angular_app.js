@@ -63,7 +63,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     var acct = document.getElementById('viewAcct');
     var event = document.getElementById('viewEvent');
     $rootScope.img = {};
-
+    $rootScope.event_form = {};
 
     $scope.setLocation = function(option){
 
@@ -99,16 +99,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.select = function(opt){
 
-        this.selected_id = undefined;
-
-        console.log('selecting: ', $rootScope.img);
-        if($rootScope.img !== undefined){
-            $scope.selected_id = $rootScope.img.id;
-            console.log('bingosan', $scope.selected_id);
-        }
-        //else{
-        //    $scope.selected_id = this.img.id;
-        //}
+        //console.log('selecting: ', $rootScope.selected_id, this.selected_id, $scope.selected_id);
 
         var x = 'active';
         var y = 'ng-hide';
@@ -116,8 +107,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         var add = document.getElementById('add');
         var list_div = document.getElementById('list_div');
         var add_div = document.getElementById('add_div');
-
-        //console.log(list_div);
 
         $scope.selected = opt;
         if(opt === 'list'){
@@ -168,43 +157,44 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     $scope.addEvent = function(){
-        console.log('addEvent: ', this.form, $rootScope.img, $scope.images);
+        console.log('addEvent: ', this, $rootScope);
+        this.form = $rootScope.event_form;
         this.form.url = $rootScope.img.url;
         this.form.meta = $rootScope.img.meta;
         this.form.img_id = $rootScope.img.id || this.selected_id;
+        this.form.updated = new Date();
 
         console.log('HANSEN HER; ', this.form, typeof this.form);
         $http.post('/event_crud/add_event', this.form)
             .then(function(response){
                 console.log(response.data);
             });
+        this.form = {};
+        $rootScope.img = {};
+        $rootScope.f = {};
     };
 
-    $scope.getEventById = function(){
+    $scope.getEventById = function(id, x){
 
-        console.log('getEvById: ', $rootScope, this);
-        var img_id;
+        //console.log('getEvById: ', this.selected_id, $rootScope.img.id, id, x);
 
-        if(this.selected_id === undefined){
-            img_id = $rootScope.img.id;
+        if(x){
+            $scope.select('event');
         }
-        else{
-            img_id = this.selected_id;
-        }
+        var img_id = id;
 
         $http.get('/event_crud/get_one/' + img_id)
             .then(function(response){
                 if(response.data.length !== 0){
-                    $scope.form = response.data[0];
+                    $rootScope.event_form = response.data[0];
+
                 }
                 else{
-                    $scope.form = {};
+                    $rootScope.event_form = {};
+
                 }
             });
 
-        if(this.selected_id === undefined){
-            $scope.select('event');
-        }
     };
 
 }]);
@@ -408,17 +398,21 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
             });
         }
 
+
         $http.post('/event_crud/add_img', $scope.img)
             .then(function(response){
                 $http.get('/event_crud/img')
                     .then(function(response){
                         $rootScope.img = response.data[0];
+                        $http.get('/event_crud/img_all')
+                            .then(function(response){
+                                $scope.images = response.data;
+                            });
+
                     });
             });
 
         $modalInstance.dismiss('cancel');
-        //$scope.getEventById();
-        //$scope.select('event');
 
     };
 

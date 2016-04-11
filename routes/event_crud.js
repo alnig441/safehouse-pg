@@ -50,13 +50,14 @@ router.post('/add_event', function(req, res, next){
 
     pg.connect(connectionString, function (err, client, done) {
 
-        var query = client.query("INSERT INTO events (event_da, event_en, img_id) values($1, $2, $3)", [req.body.event_da, req.body.event_en, req.body.img_id], function (error, result) {
+        var query = client.query("INSERT INTO events (event_da, event_en, img_id, updated) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, req.body.img_id, req.body.updated], function (error, result) {
             if (error) {
                 console.log('there was an error ', error);
                 res.status(200).send(error.error);
             }
         })
         query.on('end', function (result) {
+            client.end();
             res.status(200).send(result);
         })
     })
@@ -85,6 +86,7 @@ router.get('/view', call.isAuthenticated, function(req, res){
         })
 
         query.on('end', function(result){
+            client.end();
             res.send(event);
         })
     })
@@ -157,6 +159,7 @@ router.get('/img_all', function(req, res, next){
             }
         })
         query.on('end', function(result){
+            client.end();
             res.status(200).send(result.rows);
         })
     })

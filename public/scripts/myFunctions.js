@@ -45,6 +45,7 @@ var call = {
         return created;
     },
     splitString: function(meta){
+        console.log('..splitstring..', meta);
         var separator = ' ';
         var temp = meta.toLowerCase().split(separator);
         return temp;
@@ -57,6 +58,7 @@ var call = {
 
         },
     selection: function(dbDump , query){
+        console.log('..myfunctions..', dbDump, query);
         var temp =[];
         if(query.database == 'events'){
             dbDump.forEach(function(element, index, array){

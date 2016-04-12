@@ -176,10 +176,15 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.getEventById = function(id, x){
 
-        //console.log('getEvById: ', this.selected_id, $rootScope.img.id, id, x);
-
         if(x){
             $scope.select('event');
+        }
+        else{
+            $http.get('/event_crud/img_get_one/' + id)
+                .then(function(response){
+                    //console.log('jespersen: ', response.data[0]);
+                    $rootScope.img.url = response.data[0].url;
+                });
         }
         var img_id = id;
 
@@ -193,6 +198,17 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                     $rootScope.event_form = {};
 
                 }
+            });
+
+    };
+
+    $scope.updateEvent = function(){
+
+        console.log('..updating event..', $rootScope);
+
+        $http.put('/event_crud', $rootScope.event_form)
+            .then(function(response){
+                console.log(response);
             });
 
     };
@@ -319,6 +335,7 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
     $http.get('/event_crud/view')
         .then(function(response){
+            console.log('lalalala ', response);
             $scope.event = response.data;
 
         });
@@ -371,7 +388,7 @@ app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
 
 });
 
-app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, $http, Upload){
+app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, $http, Upload, $timeout){
 
     $scope.uploadFiles = function(file, opt){
 
@@ -443,6 +460,8 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http){
 });
 
 app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal){
+
+    console.log('..multiview..: ', $scope);
 
     $scope.animationsEnabled = true;
     $scope.open2 = function (size) {

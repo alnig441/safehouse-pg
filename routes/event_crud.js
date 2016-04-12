@@ -30,7 +30,7 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
         var array = call.splitString(req.body.meta);
         var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, array], function (error, result) {
             if (error) {
-                res.send(error.detail);
+                res.status(304).send(error);
             }
         })
         query.on('end', function (result) {
@@ -77,8 +77,9 @@ router.get('/view', call.isAuthenticated, function(req, res){
     pg.connect(connectionString, function(error, client, done){
 
         var event;
-        var query = client.query("DECLARE geturl CURSOR FOR SELECT * FROM events ORDER BY created DESC; FETCH FIRST FROM geturl", function(error, result){
-            if(error){ console.log('theres was an error ', error.detail);}
+        var query = client.query("declare geturl cursor for select * from events cross join images where events.img_id = images.id order by images.created desc; fetch first from geturl", function(error, result){
+
+                if(error){ console.log('theres was an error ', error.detail);}
         })
         query.on('row', function(row){
             event = row;
@@ -100,8 +101,9 @@ router.post('/select', call.isAuthenticated, function(req, res){
 
     pg.connect(connectionString, function(error, client, done){
         var array = [];
-        var query = client.query('SELECT * FROM ' + req.body.database + ' ORDER BY created ASC', function(error, result){
-            if(error){console.log(error);}
+        var query = client.query('SELECT * FROM events CROSS JOIN images WHERE events.img_id = images.id ORDER BY images.created ASC', function(error, result){
+
+                if(error){console.log(error);}
         })
         query.on('row', function(row){
             array.push(row);
@@ -138,6 +140,7 @@ router.get('/get_one/:img_id?', function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query('SELECT * FROM events WHERE img_id=' + parseInt(req.params.img_id), function(error, result){
+
            if(error){
                console.log(error);
            }
@@ -146,6 +149,22 @@ router.get('/get_one/:img_id?', function(req, res, next){
             client.end();
             res.status(200).send(result.rows);
         })
+    })
+});
+
+router.get('/img_get_one/:id?', function(req, res, next){
+
+    pg.connect(connectionString, function(error, client, done){
+        var query = client.query('SELECT images.url FROM images where id=' + parseInt(req.params.id), function(error, result){
+            if(error){
+                console.log(error);
+            }
+        });
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result.rows);
+        })
+
     })
 });
 
@@ -163,6 +182,25 @@ router.get('/img_all', function(req, res, next){
             res.status(200).send(result.rows);
         })
     })
+});
+
+router.put('/', function(req, res, next){
+
+    console.log('..updating event ... ', req.body);
+
+    pg.connect(connectionString, function(error, client, done){
+        var query = client.query('UPDATE events SET (event_da, event_en) =($1, $2) WHERE img_id= $3 ', [req.body.event_da, req.body.event_en, req.body.img_id], function(error, result){
+            if(error){
+                console.log(error);
+                res.status(200).send(error);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result.rows);
+        })
+    })
+
 });
 
 module.exports = router;

@@ -59,6 +59,8 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
 
+    var menu = document.getElementsByClassName('collapse');
+
     var forms = document.getElementsByTagName('form');
     var acct = document.getElementById('viewAcct');
     var event = document.getElementById('viewEvent');
@@ -216,6 +218,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 }]);
 
 app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
+    var menu = document.getElementsByClassName('collapse');
     var eventForm = document.getElementById('queryEvents');
     var imageForm = document.getElementById('queryImages');
     angular.element(eventForm).css('display', 'none');
@@ -237,12 +240,14 @@ app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', 
     ];
 
     $scope.viewEventsForm = function () {
+        angular.element(menu).collapse('hide');
         angular.element(imageForm).css('display','none');
         angular.element(eventForm).css('display','table');
 
     };
 
     $scope.viewImagesForm = function () {
+        angular.element(menu).collapse('hide');
         angular.element(eventForm).css('display','none');
         angular.element(imageForm).css('display','table');
 
@@ -251,6 +256,7 @@ app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', 
 }]);
 
 app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', '$rootScope', function($scope, $http, $log, $modal, $location, $rootScope){
+    var menu = document.getElementsByClassName('collapse');
     var eventForm = document.getElementById('queryEvents');
     var imageForm = document.getElementById('queryImages');
     angular.element(eventForm).css('display', 'none');
@@ -272,11 +278,13 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
     ];
 
     $scope.viewEventsForm = function () {
+        angular.element(menu).collapse('hide');
         angular.element(imageForm).css('display','none');
         angular.element(eventForm).css('display','table');
     };
 
     $scope.viewImagesForm = function () {
+        angular.element(menu).collapse('hide');
         angular.element(eventForm).css('display','none');
         angular.element(imageForm).css('display','table');
 
@@ -288,6 +296,8 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
 // It is not the same as the $modal service used above.
 
 app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload){
+    var menu = document.getElementsByClassName('collapse');
+
     $scope.animationsEnabled = true;
     $scope.open = function (size, option) {
 
@@ -310,6 +320,7 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             templ = 'saveImgModal.html';
         }
         else {
+            angular.element(menu).collapse('hide');
             contr = 'ModalInstanceCtrl';
             templ ='myModalContent.html';
         }

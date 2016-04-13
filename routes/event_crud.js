@@ -27,8 +27,8 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
     //POSTGRES REFACTOR SAVE IMAGE
     pg.connect(connectionString, function (err, client, done) {
 
-        var array = call.splitString(req.body.meta);
-        var query = client.query("INSERT INTO images(url, created, meta) values($1, $2, $3)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, array], function (error, result) {
+        //var array = call.splitString(req.body.meta);
+        var query = client.query("INSERT INTO images(url, created) values($1, $2)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created], function (error, result) {
             if (error) {
                 res.status(304).send(error);
             }
@@ -155,7 +155,7 @@ router.get('/get_one/:img_id?', function(req, res, next){
 router.get('/img_get_one/:id?', function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query('SELECT images.url FROM images where id=' + parseInt(req.params.id), function(error, result){
+        var query = client.query('SELECT * FROM images where id=' + parseInt(req.params.id), function(error, result){
             if(error){
                 console.log(error);
             }
@@ -201,6 +201,26 @@ router.put('/', function(req, res, next){
         })
     })
 
+});
+
+router.put('/img_meta', function(req, res, next){
+
+    console.log('...updating img meta ..', req.body);
+
+    var array = call.splitString(req.body.meta);
+
+    pg.connect(connectionString, function(error, client, done){
+        var query = client.query('UPDATE images SET meta = $1 WHERE id = $2', [array, req.body.id], function(error, result){
+            if(error){
+                console.log(error);
+                res.status(200).send(error);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result.rows);
+        })
+    })
 });
 
 module.exports = router;

@@ -59,13 +59,8 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
 
-    console.log('adminctrl ', $scope);
-
     var menu = document.getElementsByClassName('collapse');
 
-    //var forms = document.getElementsByTagName('form');
-    //var acct = document.getElementById('viewAcct');
-    //var event = document.getElementById('viewEvent');
     $rootScope.img = {};
     $rootScope.event_form = {};
 
@@ -161,19 +156,19 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     $scope.addEvent = function(){
-        console.log('addEvent: ', this, $rootScope);
+
         this.form = $rootScope.event_form;
         this.form.url = $rootScope.img.url;
         this.form.meta = $rootScope.img.meta;
         this.form.img_id = $rootScope.img.id || this.selected_id;
         this.form.updated = new Date();
 
-        console.log('HANSEN HER; ', this.form, typeof this.form);
         $http.post('/event_crud/add_event', this.form)
             .then(function(response){
                 console.log(response.data);
             });
         this.form = {};
+        $rootScope.event_form = {};
         $rootScope.img = {};
         $rootScope.f = {};
     };
@@ -186,8 +181,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         else{
             $http.get('/event_crud/img_get_one/' + id)
                 .then(function(response){
-                    //console.log('jespersen: ', response.data[0]);
-                    $rootScope.img.url = response.data[0].url;
+                    $rootScope.img = response.data[0];
                 });
         }
         var img_id = id;
@@ -208,21 +202,19 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.updateEvent = function(){
 
-        console.log('..updating event..', $rootScope);
-
         $http.put('/event_crud', $rootScope.event_form)
             .then(function(response){
                 console.log(response);
             });
+
+        $rootScope.event_form = {};
+        $rootScope.img = {};
 
     };
 
 }]);
 
 app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
-
-    console.log('privdkctrl ', $scope);
-
 
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
@@ -250,8 +242,6 @@ app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', 
 }]);
 
 app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', '$rootScope', function($scope, $http, $log, $modal, $location, $rootScope){
-
-    console.log('..privUkCtrl..', $scope);
 
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
@@ -285,6 +275,7 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
 app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload){
     var menu = document.getElementsByClassName('collapse');
 
+
     $scope.animationsEnabled = true;
     $scope.open = function (size, option) {
 
@@ -305,6 +296,10 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
         else if(option === 'file'){
             contr = 'SaveImgModalCtrl';
             templ = 'saveImgModal.html';
+        }
+        else if(option === 'meta'){
+            contr = 'AddTagsModalCtrl';
+            templ = 'addTagsModal.html';
         }
         else {
             angular.element(menu).collapse('hide');
@@ -333,7 +328,6 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
     $http.get('/event_crud/view')
         .then(function(response){
-            console.log('lalalala ', response);
             $scope.event = response.data;
 
         });
@@ -384,6 +378,23 @@ app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
         $modalInstance.dismiss('cancel');
     };
 
+});
+
+app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $rootScope){
+
+    $scope.submit = function(){
+
+        $http.put('/event_crud/img_meta', $rootScope.img)
+            .then(function(response){
+            });
+
+        $modalInstance.dismiss('cancel');
+
+    };
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
 });
 
 app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, $http, Upload, $timeout){

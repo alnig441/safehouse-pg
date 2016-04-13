@@ -59,11 +59,13 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
 
+    console.log('adminctrl ', $scope);
+
     var menu = document.getElementsByClassName('collapse');
 
-    var forms = document.getElementsByTagName('form');
-    var acct = document.getElementById('viewAcct');
-    var event = document.getElementById('viewEvent');
+    //var forms = document.getElementsByTagName('form');
+    //var acct = document.getElementById('viewAcct');
+    //var event = document.getElementById('viewEvent');
     $rootScope.img = {};
     $rootScope.event_form = {};
 
@@ -218,11 +220,12 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 }]);
 
 app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
+
+    console.log('privdkctrl ', $scope);
+
+
     var menu = document.getElementsByClassName('collapse');
-    var eventForm = document.getElementById('queryEvents');
-    var imageForm = document.getElementById('queryImages');
-    angular.element(eventForm).css('display', 'none');
-    angular.element(imageForm).css('display', 'none');
+    angular.element(menu).collapse('hide');
 
     $scope.months = [
         {name: 'Januar', value: '01'},
@@ -239,28 +242,19 @@ app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', 
         {name: 'December', value: '12'}
     ];
 
-    $scope.viewEventsForm = function () {
+    $scope.select = function(x){
         angular.element(menu).collapse('hide');
-        angular.element(imageForm).css('display','none');
-        angular.element(eventForm).css('display','table');
-
-    };
-
-    $scope.viewImagesForm = function () {
-        angular.element(menu).collapse('hide');
-        angular.element(eventForm).css('display','none');
-        angular.element(imageForm).css('display','table');
-
+        $scope.selection = x;
     };
 
 }]);
 
 app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', '$rootScope', function($scope, $http, $log, $modal, $location, $rootScope){
+
+    console.log('..privUkCtrl..', $scope);
+
     var menu = document.getElementsByClassName('collapse');
-    var eventForm = document.getElementById('queryEvents');
-    var imageForm = document.getElementById('queryImages');
-    angular.element(eventForm).css('display', 'none');
-    angular.element(imageForm).css('display', 'none');
+    angular.element(menu).collapse('hide');
 
     $scope.months = [
         {name: 'January', value: '01'},
@@ -277,20 +271,13 @@ app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', 
         {name: 'December', value: '12'}
     ];
 
-    $scope.viewEventsForm = function () {
+    $scope.select = function(x){
         angular.element(menu).collapse('hide');
-        angular.element(imageForm).css('display','none');
-        angular.element(eventForm).css('display','table');
-    };
-
-    $scope.viewImagesForm = function () {
-        angular.element(menu).collapse('hide');
-        angular.element(eventForm).css('display','none');
-        angular.element(imageForm).css('display','table');
-
+        $scope.selection = x;
     };
 
 }]);
+
 
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.

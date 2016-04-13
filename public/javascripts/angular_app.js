@@ -393,6 +393,9 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
         $scope.img = {};
         $scope.img.url = file.name;
         $scope.img.meta = $scope.meta;
+        if($scope.created){
+            $scope.img.created = $scope.created;
+        }
         $rootScope.f = file;
 
         if(file && !file.$error && opt) {

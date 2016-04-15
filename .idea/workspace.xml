@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/event_crud.js" afterPath="$PROJECT_DIR$/routes/event_crud.js" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,26 +28,16 @@
         <entry file="file://$PROJECT_DIR$/routes/event_crud.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="275" column="45" selection-start-line="275" selection-start-column="45" selection-end-line="275" selection-end-column="45" />
+              <caret line="269" column="46" selection-start-line="269" selection-start-column="46" selection-end-line="269" selection-end-column="46" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="angular_app.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/javascripts/angular_app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="5.762357">
-              <caret line="414" column="0" selection-start-line="414" selection-start-column="0" selection-end-line="414" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="angular_app.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.148149">
+            <state vertical-scroll-proportion="0.5490982">
               <caret line="229" column="37" selection-start-line="229" selection-start-column="37" selection-end-line="229" selection-end-column="37" />
               <folding />
             </state>
@@ -170,8 +161,8 @@
         <option value="$PROJECT_DIR$/development/templates/priv_da.jade" />
         <option value="$PROJECT_DIR$/models/database.js" />
         <option value="$PROJECT_DIR$/development/javascripts/angular_app.js" />
-        <option value="$PROJECT_DIR$/routes/event_crud.js" />
         <option value="$PROJECT_DIR$/public/javascripts/angular_app.js" />
+        <option value="$PROJECT_DIR$/routes/event_crud.js" />
       </list>
     </option>
   </component>
@@ -489,7 +480,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="243" y="52" width="1612" height="858" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15165877" sideWeight="0.09422111" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16530484" sideWeight="0.9057789" order="0" side_tool="false" content_ui="combo" />
@@ -500,7 +491,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24927704" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2767624" sideWeight="0.48973143" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2767624" sideWeight="0.48973143" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14007372" sideWeight="0.5126051" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -922,10 +913,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
+    <entry file="file://$PROJECT_DIR$/public/javascripts/angular_app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.148149">
-          <caret line="229" column="37" selection-start-line="229" selection-start-column="37" selection-end-line="229" selection-end-column="37" />
+        <state vertical-scroll-proportion="5.762357">
+          <caret line="414" column="0" selection-start-line="414" selection-start-column="0" selection-end-line="414" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -933,15 +924,15 @@
     <entry file="file://$PROJECT_DIR$/routes/event_crud.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="275" column="45" selection-start-line="275" selection-start-column="45" selection-end-line="275" selection-end-column="45" />
+          <caret line="269" column="46" selection-start-line="269" selection-start-column="46" selection-end-line="269" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/angular_app.js">
+    <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="5.762357">
-          <caret line="414" column="0" selection-start-line="414" selection-start-column="0" selection-end-line="414" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.5490982">
+          <caret line="229" column="37" selection-start-line="229" selection-start-column="37" selection-end-line="229" selection-end-column="37" />
           <folding />
         </state>
       </provider>

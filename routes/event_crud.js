@@ -269,7 +269,7 @@ router.put('/img_meta', function(req, res, next){
 
 router.post('/date', function(req, res, next){
 
-    console.log('...building BLAAAAH for ' + req);
+    console.log('...building BLAAAAH for ' + req.body.option, req.params);
     var months = [
         {value: 12, da: 'Januar', en:'January'},
         {value: 1, da: 'Februar', en:'February'},

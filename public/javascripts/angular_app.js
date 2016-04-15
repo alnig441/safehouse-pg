@@ -230,7 +230,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         $scope.query.option = 'year';
         $scope.query.database = x;
 
-        console.log('QUERY: ', $scope.query);
+        console.log('QUERY: ', 'this is a string');
 
         $http.post('/event_crud/date', $scope.query)
             .then(function(response){

@@ -29,7 +29,7 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
     pg.connect(connectionString, function (err, client, done) {
 
         //var array = call.splitString(req.body.meta);
-        var query = client.query("INSERT INTO images(url, created, year, month, day, date_ms) values($1, $2, $3, $4, $5, $6)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), Date.parse(req.body.created)], function (error, result) {
+        var query = client.query("INSERT INTO images(url, created, year, month, day) values($1, $2, $3, $4, $5)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate()], function (error, result) {
             if (error) {
                 res.status(304).send(error);
             }
@@ -290,7 +290,7 @@ router.post('/date', function(req, res, next){
     var query_string;
     if(req.body.database === 'events'){
         //query_string = 'SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC';
-
+        console.log('BINGO', req.body);
         pg.connect(connectionString, function(error, client, done){
             var query = client.query('SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC', function(error, result){
                 if(error){
@@ -384,6 +384,7 @@ router.post('/date', function(req, res, next){
         console.log('images');
         //query_string = 'SELECT created FROM images ORDER BY CREATED DESC';
 
+        console.log('BANKO', req.body);
 
         pg.connect(connectionString, function(error, client, done){
             var query = client.query('SELECT created FROM images ORDER BY CREATED DESC', function(error, result){

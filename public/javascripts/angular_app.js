@@ -226,10 +226,9 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         $scope.form = {};
         angular.element(menu).collapse('hide');
         $scope.selection = x;
-        var query = {
-            option: 'year',
-            database: x
-        };
+        $scope.query =  {};
+        $scope.query.option = 'year';
+        $scope.query.database = x;
 
         console.log('QUERY: ', query);
 

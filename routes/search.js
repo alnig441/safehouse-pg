@@ -9,6 +9,7 @@ router.post('/dropdown', function(req, res, next){
 
     console.log('..building dropdwon..', req.body);
 
+    var mySet = new Set();
     var option = req.body.option;
     var db = req.body.database;
     var array = [];

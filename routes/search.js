@@ -12,7 +12,7 @@ router.post('/dropdown', function(req, res, next){
     var option = req.body.option;
     var db = req.body.database;
     var array = [];
-    var mySet = new Set();
+    //var mySet = new Set();
 
     var query_string;
     db === 'events' ? query_string = 'SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC' : query_string = 'SELECT created FROM images ORDER BY CREATED DESC' ;

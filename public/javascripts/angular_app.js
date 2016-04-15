@@ -226,8 +226,14 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         $scope.form = {};
         angular.element(menu).collapse('hide');
         $scope.selection = x;
+        var query = {
+            option: 'year',
+            database: x
+        };
 
-        $http.post('/event_crud/date', {option: 'year', database: x})
+        console.log('QUERY: ', query);
+
+        $http.post('/event_crud/date', query)
             .then(function(response){
                 $scope.years = response.data;
             });

@@ -17,11 +17,11 @@ app.config(function($routeProvider, $locationProvider){
         })
         .when('/priv_uk', {
             templateUrl: 'views/priv_en.html',
-            controller: 'privUkCtrl'
+            controller: 'privCtrl'
         })
         .when('/priv_dk', {
             templateUrl: 'views/priv_da.html',
-            controller: 'privDkCtrl'
+            controller: 'privCtrl'
         })
         .when('/public', {
             templateUrl: 'views/public.html',
@@ -214,56 +214,23 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
 }]);
 
-app.controller('privDkCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
+app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
 
+    $scope.years = {};
+    $scope.days = {};
+    $scope.months = {};
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
-    $scope.months = [
-        {name: 'Januar', value: '01'},
-        {name: 'Februar', value: '02'},
-        {name: 'Marts', value: '03'},
-        {name: 'April', value: '04'},
-        {name: 'Maj', value: '05'},
-        {name: 'Juni', value: '06'},
-        {name: 'Juli', value: '07'},
-        {name: 'August', value: '08'},
-        {name: 'September', value: '09'},
-        {name: 'Oktober', value: '10'},
-        {name: 'November', value: '11'},
-        {name: 'December', value: '12'}
-    ];
-
     $scope.select = function(x){
+        $scope.form = {};
         angular.element(menu).collapse('hide');
         $scope.selection = x;
-    };
 
-}]);
-
-app.controller('privUkCtrl', ['$scope', '$http', '$log', '$modal', '$location', '$rootScope', function($scope, $http, $log, $modal, $location, $rootScope){
-
-    var menu = document.getElementsByClassName('collapse');
-    angular.element(menu).collapse('hide');
-
-    $scope.months = [
-        {name: 'January', value: '01'},
-        {name: 'February', value: '02'},
-        {name: 'March', value: '03'},
-        {name: 'April', value: '04'},
-        {name: 'May', value: '05'},
-        {name: 'June', value: '06'},
-        {name: 'July', value: '07'},
-        {name: 'August', value: '08'},
-        {name: 'September', value: '09'},
-        {name: 'October', value: '10'},
-        {name: 'November', value: '11'},
-        {name: 'December', value: '12'}
-    ];
-
-    $scope.select = function(x){
-        angular.element(menu).collapse('hide');
-        $scope.selection = x;
+        $http.post('/event_crud/date/', {option: 'year', database: x})
+            .then(function(response){
+                $scope.years = response.data;
+            });
     };
 
 }]);
@@ -472,24 +439,15 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http){
 });
 
 app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal){
-
-    console.log('..multiview..: ', $scope);
-
     $scope.animationsEnabled = true;
-    $scope.open2 = function (size) {
+    $scope.open2 = function (size, db) {
 
-        if($scope.form.meta){
-            $scope.form.database = 'images';
-        }
-        else{
-            $scope.form.database = 'events';
-        }
+        $scope.form.database = db;
         var temp = [];
 
         $http.post('/event_crud/select', $scope.form)
             .then(function(response){
                 $rootScope.events = response.data;
-                console.log('RIGHT HERE: ', $scope.form, $rootScope.events, response.data);
 
             })
             .then(function(){
@@ -504,6 +462,28 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
                         }
                     }
                 });
+
+            });
+
+        $scope.form = {};
+
+    };
+
+    $scope.getValues = function(option, db){
+
+        $scope.query = {};
+        $scope.query = $scope.form;
+        $scope.query.option = option;
+        $scope.query.database = db;
+
+        $http.post('/event_crud/date/', $scope.query)
+            .then(function(response){
+                if(response.data[0].month !== undefined){
+                    $scope.months = response.data;
+                }
+                if(response.data[0].day !== undefined){
+                    $scope.days = response.data;
+                }
 
             });
 

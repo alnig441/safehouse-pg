@@ -71,6 +71,7 @@ var call = {
 
         }
         if(query.database == 'images'){
+            console.log('SES DETTE??');
             dbDump.forEach(function(element, index, array){
                 var incr = 0;
 
@@ -94,8 +95,31 @@ var call = {
 
         }
 
-    }
+    },
 
+    build_set: function(obj, date){
+
+        var mySet = new Set();
+
+        switch (obj.option) {
+            case 'year':
+                mySet.add(date.getUTCFullYear());
+                break;
+            case 'month':
+                if(date.getUTCFullYear() === req.body.year){
+                    mySet.add(date.getUTCMonth());
+                }
+                break;
+            case 'day':
+                if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month){
+                    mySet.add(date.getUTCDate());
+                }
+                break;
+        }
+
+        return mySet;
+
+    }
 
 };
 

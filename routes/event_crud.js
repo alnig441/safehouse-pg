@@ -284,7 +284,8 @@ router.post('/date', function(req, res, next){
         {value: 10, da: 'November', en:'November'},
         {value: 11, da: 'December', en:'December'}
     ];
-    var opt = req.body.option;
+    var opt = req.body.option || 'year';
+    var db = req.body.database || 'events';
     var array = [];
     var mySet = new Set();
     var query_string;

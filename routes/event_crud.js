@@ -289,98 +289,189 @@ router.post('/date', function(req, res, next){
     var mySet = new Set();
     var query_string;
     if(req.body.database === 'events'){
-        query_string = 'SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC';
-    }
-    if(req.body.database === 'images'){
-        console.log('images');
-        query_string = 'SELECT created FROM images ORDER BY CREATED DESC';
-    }
+        //query_string = 'SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC';
 
-
-    pg.connect(connectionString, function(error, client, done){
-        var query = client.query(query_string, function(error, result){
-            if(error){
-                res.status(200).send(error);
-            }
-        })
-        query.on('row', function(row){
-            var date = new Date(row.created);
-            //mySet = call.build_set(req.body, date);
-            switch (opt) {
-                case 'year':
-                    mySet.add(date.getUTCFullYear());
-                    break;
-                case 'month':
-                    if(date.getUTCFullYear() === req.body.year){
-                        mySet.add(date.getUTCMonth());
-                    }
-                    break;
-                case 'day':
-                    if(req.body.month == 12){
-                        req.body.month = 0;
-                    }
-                    if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month){
-                        mySet.add(date.getUTCDate());
-                    }
-                    break;
-            }
-        })
-        query.on('end',function(result){
-            client.end();
-            mySet.forEach(function(x, y, z){
-                if(x !== undefined){
-                    switch (opt) {
-                        case 'year':
-                            array.push({year: x});
-                            break;
-                        case 'month':
-                            if(x<10){
-                                var str = x.toString();
-                                x ='0' + str;
-                            }
-                            else{
-                                x = x.toString();
-                            }
-                            array.push(x);
-                            break;
-                        case 'day':
-                            if(x<10){
-                                var str = x.toString();
-                                x ='0' + str;
-                            }
-                            else{
-                                x = x.toString();
-                            }
-                            array.push(x);
-                            break;
-                    }
+        pg.connect(connectionString, function(error, client, done){
+            var query = client.query('SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC', function(error, result){
+                if(error){
+                    res.status(200).send(error);
                 }
             })
-
-            if(opt === 'month' || opt === 'day'){
-                //array = array.sort();
-                var y = [];
-
-                if(opt === 'month'){
-                    array.forEach(function(elem, ind, arr){
-                        var x = opt;
-                        y.push({month: parseInt(elem), name: months[parseInt(elem)]});
-                    })
+            query.on('row', function(row){
+                var date = new Date(row.created);
+                switch (opt) {
+                    case 'year':
+                        mySet.add(date.getUTCFullYear());
+                        break;
+                    case 'month':
+                        if(date.getUTCFullYear() === req.body.year){
+                            mySet.add(date.getUTCMonth());
+                        }
+                        break;
+                    case 'day':
+                        if(req.body.month == 12){
+                            req.body.month = 0;
+                        }
+                        if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month){
+                            mySet.add(date.getUTCDate());
+                        }
+                        break;
                 }
-                if(opt ==='day'){
-                    array.forEach(function(elem, ind, arr){
-                        var x = opt;
-                        y.push({day: parseInt(elem)});
-                    })
-                }
-                array = y;
+            })
+            query.on('end',function(result){
+                client.end();
+                mySet.forEach(function(x, y, z){
+                    if(x !== undefined){
+                        switch (opt) {
+                            case 'year':
+                                array.push({year: x});
+                                break;
+                            case 'month':
+                                if(x<10){
+                                    var str = x.toString();
+                                    x ='0' + str;
+                                }
+                                else{
+                                    x = x.toString();
+                                }
+                                array.push(x);
+                                break;
+                            case 'day':
+                                if(x<10){
+                                    var str = x.toString();
+                                    x ='0' + str;
+                                }
+                                else{
+                                    x = x.toString();
+                                }
+                                array.push(x);
+                                break;
+                        }
+                    }
+                })
 
-            }
-            console.log('...'+opt+' array..', array);
-            res.status(200).send(array);
+                if(opt === 'month' || opt === 'day'){
+                    //array = array.sort();
+                    var y = [];
+
+                    if(opt === 'month'){
+                        array.forEach(function(elem, ind, arr){
+                            var x = opt;
+                            y.push({month: parseInt(elem), name: months[parseInt(elem)]});
+                        })
+                    }
+                    if(opt ==='day'){
+                        array.forEach(function(elem, ind, arr){
+                            var x = opt;
+                            y.push({day: parseInt(elem)});
+                        })
+                    }
+                    array = y;
+
+                }
+                console.log('...'+opt+' array..', array);
+                res.status(200).send(array);
+            })
+
         })
 
-    })
+
+    }
+
+
+
+    if(req.body.database === 'images'){
+        console.log('images');
+        //query_string = 'SELECT created FROM images ORDER BY CREATED DESC';
+
+
+        pg.connect(connectionString, function(error, client, done){
+            var query = client.query('SELECT created FROM images ORDER BY CREATED DESC', function(error, result){
+                if(error){
+                    res.status(200).send(error);
+                }
+            })
+            query.on('row', function(row){
+                var date = new Date(row.created);
+                switch (opt) {
+                    case 'year':
+                        mySet.add(date.getUTCFullYear());
+                        break;
+                    case 'month':
+                        if(date.getUTCFullYear() === req.body.year){
+                            mySet.add(date.getUTCMonth());
+                        }
+                        break;
+                    case 'day':
+                        if(req.body.month == 12){
+                            req.body.month = 0;
+                        }
+                        if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month){
+                            mySet.add(date.getUTCDate());
+                        }
+                        break;
+                }
+            })
+            query.on('end',function(result){
+                client.end();
+                mySet.forEach(function(x, y, z){
+                    if(x !== undefined){
+                        switch (opt) {
+                            case 'year':
+                                array.push({year: x});
+                                break;
+                            case 'month':
+                                if(x<10){
+                                    var str = x.toString();
+                                    x ='0' + str;
+                                }
+                                else{
+                                    x = x.toString();
+                                }
+                                array.push(x);
+                                break;
+                            case 'day':
+                                if(x<10){
+                                    var str = x.toString();
+                                    x ='0' + str;
+                                }
+                                else{
+                                    x = x.toString();
+                                }
+                                array.push(x);
+                                break;
+                        }
+                    }
+                })
+
+                if(opt === 'month' || opt === 'day'){
+                    //array = array.sort();
+                    var y = [];
+
+                    if(opt === 'month'){
+                        array.forEach(function(elem, ind, arr){
+                            var x = opt;
+                            y.push({month: parseInt(elem), name: months[parseInt(elem)]});
+                        })
+                    }
+                    if(opt ==='day'){
+                        array.forEach(function(elem, ind, arr){
+                            var x = opt;
+                            y.push({day: parseInt(elem)});
+                        })
+                    }
+                    array = y;
+
+                }
+                console.log('...'+opt+' array..', array);
+                res.status(200).send(array);
+            })
+
+        })
+
+    }
+
+
 });
 
 module.exports = router;

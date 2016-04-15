@@ -232,7 +232,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
         console.log('QUERY: ', query);
 
-        $http.post('/event_crud/date', query)
+        $http.post('/event_crud/date', $scope.query)
             .then(function(response){
                 $scope.years = response.data;
             });

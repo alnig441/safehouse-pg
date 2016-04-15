@@ -480,14 +480,15 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
         $scope.query.option = option;
         $scope.query.database = db;
 
-        $http.post('/event_crud/date', $scope.query)
+        $http.post('/search/dropdown', $scope.query)
             .then(function(response){
-                if(response.data[0].month !== undefined){
+                if(response.data[0].da !== undefined){
                     $scope.months = response.data;
                 }
                 if(response.data[0].day !== undefined){
                     $scope.days = response.data;
                 }
+                console.log('search/dropdown response: ', response.data, $scope);
 
             });
 

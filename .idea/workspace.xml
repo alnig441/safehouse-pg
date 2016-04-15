@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/search.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/angular_app.js" afterPath="$PROJECT_DIR$/public/javascripts/angular_app.js" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -22,86 +25,64 @@
     <favorites_list name="starting_over" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="event_crud.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/routes/event_crud.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.54372627">
-              <caret line="283" column="51" selection-start-line="283" selection-start-column="51" selection-end-line="283" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="angular_app.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.259259">
-              <caret line="231" column="0" selection-start-line="231" selection-start-column="0" selection-end-line="231" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/database.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="156" selection-start-line="7" selection-start-column="156" selection-end-line="7" selection-end-column="156" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="images.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/development/templates/images.jade">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="56" column="120" selection-start-line="56" selection-start-column="120" selection-end-line="56" selection-end-column="120" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="priv_da.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/development/templates/priv_da.jade">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5555556">
-              <caret line="46" column="118" selection-start-line="46" selection-start-column="118" selection-end-line="46" selection-end-column="118" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="admin_crud.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/admin_crud.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="priv_en.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/development/templates/priv_en.jade">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6296296">
-              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="search.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/search.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="27" column="19" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="angular_app.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.36877525">
+                  <caret line="229" column="37" selection-start-line="229" selection-start-column="37" selection-end-line="229" selection-end-column="37" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/app.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="112" column="25" selection-start-line="112" selection-start-column="25" selection-end-line="112" selection-end-column="25" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="event_crud.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/routes/event_crud.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.53246754">
+                  <caret line="283" column="44" selection-start-line="283" selection-start-column="44" selection-end-line="283" selection-end-column="44" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Html5" />
-        <option value="JavaScript File" />
         <option value="XSLT Stylesheet" />
         <option value="Jade File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -111,7 +92,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/private/jade_templates/priv_en.jade" />
         <option value="$PROJECT_DIR$/public/stylesheets/style.css" />
         <option value="$PROJECT_DIR$/development/modules/authenticator.js" />
         <option value="$PROJECT_DIR$/development/modules/parser.js" />
@@ -151,7 +131,6 @@
         <option value="$PROJECT_DIR$/routes/admin_crud.js" />
         <option value="$PROJECT_DIR$/development/templates/diary.jade" />
         <option value="$PROJECT_DIR$/development/templates/accounts.jade" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/development/templates/login.jade" />
         <option value="$PROJECT_DIR$/development/templates/images.jade" />
         <option value="$PROJECT_DIR$/public/scripts/myFunctions.js" />
@@ -160,8 +139,10 @@
         <option value="$PROJECT_DIR$/development/templates/priv_da.jade" />
         <option value="$PROJECT_DIR$/models/database.js" />
         <option value="$PROJECT_DIR$/public/javascripts/angular_app.js" />
-        <option value="$PROJECT_DIR$/development/javascripts/angular_app.js" />
         <option value="$PROJECT_DIR$/routes/event_crud.js" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/routes/search.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/angular_app.js" />
       </list>
     </option>
   </component>
@@ -178,10 +159,8 @@
     </gulpfiles>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="243" />
-    <option name="y" value="52" />
-    <option name="width" value="1612" />
-    <option name="height" value="858" />
+    <option name="width" value="1920" />
+    <option name="height" value="1080" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -385,6 +364,7 @@
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/app.js" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/allannielsen/WebstormProjects/starting_over/routes/event_crud.js" />
+    <property name="FullScreen" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -478,11 +458,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="243" y="52" width="1612" height="858" extended-state="0" />
+    <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15165877" sideWeight="0.09422111" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16530484" sideWeight="0.9057789" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13849394" sideWeight="0.9057789" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32914573" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32963374" sideWeight="0.51026857" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32291666" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -490,7 +470,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24927704" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2767624" sideWeight="0.48973143" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20990099" sideWeight="0.48973143" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14007372" sideWeight="0.5126051" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -552,13 +532,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/passport-strategy/lib/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/passport/lib/strategies/session.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33212996">
@@ -763,14 +736,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="43" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/templates/login.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.3977273">
@@ -880,26 +845,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/database.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="156" selection-start-line="7" selection-start-column="156" selection-end-line="7" selection-end-column="156" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/templates/accounts.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.22813688">
           <caret line="18" column="77" selection-start-line="18" selection-start-column="77" selection-end-line="18" selection-end-column="77" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/templates/images.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="56" column="120" selection-start-line="56" selection-start-column="120" selection-end-line="56" selection-end-column="120" />
           <folding />
         </state>
       </provider>
@@ -920,18 +869,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
+    <entry file="file://$PROJECT_DIR$/models/database.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.259259">
-          <caret line="231" column="0" selection-start-line="231" selection-start-column="0" selection-end-line="231" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.13636364">
+          <caret line="7" column="156" selection-start-line="7" selection-start-column="156" selection-end-line="7" selection-end-column="156" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/templates/images.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0909091">
+          <caret line="56" column="120" selection-start-line="56" selection-start-column="120" selection-end-line="56" selection-end-column="120" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="112" column="25" selection-start-line="112" selection-start-column="25" selection-end-line="112" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/event_crud.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.54372627">
-          <caret line="283" column="51" selection-start-line="283" selection-start-column="51" selection-end-line="283" selection-end-column="51" />
+        <state vertical-scroll-proportion="0.53246754">
+          <caret line="283" column="44" selection-start-line="283" selection-start-column="44" selection-end-line="283" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/search.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="19" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36877525">
+          <caret line="229" column="37" selection-start-line="229" selection-start-column="37" selection-end-line="229" selection-end-column="37" />
           <folding />
         </state>
       </provider>

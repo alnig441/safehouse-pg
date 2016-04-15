@@ -230,7 +230,8 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         $scope.query.option = 'year';
         $scope.query.database = x;
 
-        $http.post('/event_crud/date', $scope.query)
+        //$http.post('/event_crud/date', $scope.query)
+        $http.post('/search/dropdown', $scope.query)
             .then(function(response){
                 $scope.years = response.data;
             });

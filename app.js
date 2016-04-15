@@ -28,6 +28,7 @@ var logout = require('./routes/logout');
 var admin = require('./routes/admin_crud');
 var event = require('./routes/event_crud');
 var download = require('./routes/download');
+var search = require('./routes/search');
 
 
 var app = express();
@@ -114,6 +115,7 @@ app.use('/logout', logout);
 app.use('/admin_crud', admin);
 app.use('/event_crud', event);
 app.use('/download', download);
+app.use('/search', search);
 
 app.use(express.static(path.join(__dirname, 'public')));
 

@@ -227,7 +227,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         angular.element(menu).collapse('hide');
         $scope.selection = x;
 
-        $http.post('/event_crud/date/', {option: 'year', database: x})
+        $http.post('/event_crud/date', {option: 'year', database: x})
             .then(function(response){
                 $scope.years = response.data;
             });
@@ -476,7 +476,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
         $scope.query.option = option;
         $scope.query.database = db;
 
-        $http.post('/event_crud/date/', $scope.query)
+        $http.post('/event_crud/date', $scope.query)
             .then(function(response){
                 if(response.data[0].month !== undefined){
                     $scope.months = response.data;

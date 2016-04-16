@@ -79,20 +79,26 @@ router.post('/dropdown', function(req, res, next){
             }
         })
         query.on('end', function(result){
-            console.log(array);
+            console.log('1: ',array);
             client.end();
-            array.sort().reduce(function(prev, curr, index, array){
-                prev = array[index -1];
+            if(array.length > 1){
+                array.sort().reduce(function(prev, curr, index, array){
+                    console.log(prev, curr, index, array);
+                    prev = array[index -1];
 
-                if(prev != curr){
-                    temp.push(prev);
-                }
-                if(index === array.length -1){
-                    temp.push(curr);
-                }
+                    if(prev != curr){
+                        temp.push(prev);
+                    }
+                    if(index === array.length -1){
+                        temp.push(curr);
+                    }
 
-            });
-            console.log(temp);
+                });
+            }
+            else{
+                temp = array;
+            }
+            console.log('2: ', temp);
             array = [];
             temp.forEach(function(elem, ind, arr){
                 switch (option){
@@ -112,7 +118,7 @@ router.post('/dropdown', function(req, res, next){
                         break;
                 }
             })
-            console.log(array);
+            console.log('3: ',array);
             res.status(200).send(array);
 
         })

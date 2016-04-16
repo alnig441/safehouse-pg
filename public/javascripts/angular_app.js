@@ -475,6 +475,16 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
 
     $scope.getValues = function(option, db){
 
+        //console.log('...jeller...', $scope, option);
+
+        if(option === 'month') {
+            console.log('query: ' + $scope.query + ' form: ', $scope.form);
+            $scope.form.option = null;
+            $scope.form.day = null;
+            $scope.form.month = null;
+        }
+
+        console.log('form: ', $scope.form);
         $scope.query = {};
         $scope.query = $scope.form;
         $scope.query.option = option;

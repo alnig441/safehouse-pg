@@ -100,29 +100,29 @@ router.get('/view', call.isAuthenticated, function(req, res){
 
 router.post('/select', call.isAuthenticated, function(req, res){
 
-    console.log('...event_crud/select.. ', req.body.year, req.body.month, typeof req.body.day);
+    console.log('...event_crud/select.. ', req.body);
 
-    var x = false;
-    var y = false;
-    var z = false;
+    var year = false;
+    var month = false;
+    var day = false;
 
-    if(typeof req.body.year === 'number'){
-        var x = true;
+    if(typeof req.body.year === 'number' && !req.body.date){
+        year = true;
     }
     if(typeof req.body.month === 'number'){
         console.log(req.body.month, typeof req.body.month);
         if(req.body.month === 12){
             req.body.month = 0;
         }
-        var y = true;
+        month = true;
     }
     if(typeof req.body.day === 'string'){
         req.body.day = parseInt(req.body.day);
         console.log(req.body.day, typeof req.body.day);
-        var z = true;
+        day = true;
     }
 
-    console.log(x, y, z);
+    console.log(year, month, day);
 
     var query_string;
     if(req.body.database === 'events'){
@@ -140,17 +140,22 @@ router.post('/select', call.isAuthenticated, function(req, res){
         })
         query.on('row', function(row){
             var date = new Date(row.created);
-            if(x && y && z){
+            if(year && month && day){
                 if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month && date.getUTCDate() === req.body.day){
                     array.push(row);
                 }
             }
-            else if(x && y) {
+            else if(year && month) {
                 if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month) {
                     array.push(row);
                 }
             }
-            else if(x){
+            else if(month && day){
+                if(date.getUTCMonth() === req.body.month && date.getUTCDate() === req.body.day){
+                    array.push(row);
+                }
+            }
+            else if(year){
                 if(date.getUTCFullYear() === req.body.year) {
                     array.push(row);
                 }

@@ -100,16 +100,29 @@ router.get('/view', call.isAuthenticated, function(req, res){
 
 router.post('/select', call.isAuthenticated, function(req, res){
 
-    console.log('...event_crud/select.. ', req.body);
+    console.log('...event_crud/select.. ', req.body.year, req.body.month, req.body.day);
 
-    if(req.body.month === 12){
-        req.body.month = 0;
+    var x = false;
+    var y = false;
+    var z = false;
+
+    if(req.body.year !== undefined){
+        var x = true;
+    }
+    if(req.body.month !== undefined){
+        console.log(req.body.month, typeof req.body.month);
+        if(req.body.month === 12){
+            req.body.month = 0;
+        }
+        var y = true;
+    }
+    if(req.body.day !== undefined){
+        req.body.day = parseInt(req.body.day);
+        console.log(req.body.day, typeof req.body.day);
+        var z = true;
     }
 
-    var x, y, z;
-    req.body.year !== undefined ? x = true : x = false;
-    req.body.month !== undefined ? y = true : y = false;
-    req.body.day !== undefined ? z = true : z = false;
+    console.log(x, y, z);
 
     var query_string;
     if(req.body.database === 'events'){
@@ -127,7 +140,6 @@ router.post('/select', call.isAuthenticated, function(req, res){
         })
         query.on('row', function(row){
             var date = new Date(row.created);
-            console.log(row.created, x, y, z);
             if(x && y && z){
                 if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month && date.getUTCDate() === req.body.day){
                     array.push(row);

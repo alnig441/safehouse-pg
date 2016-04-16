@@ -9,6 +9,10 @@ router.post('/dropdown', function(req, res, next){
 
     console.log('..building dropdwon..', req.body);
 
+    if(req.body.month === 12){
+        req.body.month = 0;
+    }
+
     var option = req.body.option;
     var db = req.body.database;
     var array = [];
@@ -47,8 +51,14 @@ router.post('/dropdown', function(req, res, next){
                 case 'month':
                     if(date.getUTCFullYear() === req.body.year){
                         if(date.getUTCMonth() < 10){
-                            var x = '0' + date.getUTCMonth().toString();
-                            array.push(x);
+                            console.log(date.getUTCMonth());
+                            if(date.getUTCMonth() === 0){
+                                array.push(12);
+                            }
+                            else{
+                                var x = '0' + date.getUTCMonth().toString();
+                                array.push(x);
+                            }
                         }
                         else{
                             array.push(date.getUTCMonth().toString());
@@ -69,6 +79,7 @@ router.post('/dropdown', function(req, res, next){
             }
         })
         query.on('end', function(result){
+            console.log(array);
             client.end();
             array.sort().reduce(function(prev, curr, index, array){
                 prev = array[index -1];
@@ -81,6 +92,7 @@ router.post('/dropdown', function(req, res, next){
                 }
 
             });
+            console.log(temp);
             array = [];
             temp.forEach(function(elem, ind, arr){
                 switch (option){
@@ -100,6 +112,7 @@ router.post('/dropdown', function(req, res, next){
                         break;
                 }
             })
+            console.log(array);
             res.status(200).send(array);
 
         })

@@ -4,6 +4,112 @@ var pg = require('pg');
 var call = require('../public/javascripts/myFunctions.js');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 
+router.get('/latest', call.isAuthenticated, function(req, res){
+
+    //POSTGRES REFACTOR GET LATEST EVENT
+    pg.connect(connectionString, function(error, client, done){
+
+        var event;
+        var query = client.query("declare geturl cursor for select * from events cross join images where events.img_id = images.id order by images.created desc; fetch first from geturl", function(error, result){
+
+            if(error){ console.log('theres was an error ', error.detail);}
+        })
+        query.on('row', function(row){
+            event = row;
+            event.created = call.parser(JSON.stringify(row.created));
+        })
+
+        query.on('end', function(result){
+            client.end();
+            res.send(event);
+        })
+    })
+
+    //POSTGRES REFACTOR GET LATEST EVENT END
+});
+
+
+router.post('/query', call.isAuthenticated, function(req, res){
+
+    console.log('...search/query.. ', req.body);
+
+    var year = false;
+    var month = false;
+    var day = false;
+
+    if(typeof req.body.year === 'number' && !req.body.date){
+        year = true;
+    }
+    if(typeof req.body.month === 'number'){
+        console.log(req.body.month, typeof req.body.month);
+        if(req.body.month === 12){
+            req.body.month = 0;
+        }
+        month = true;
+    }
+    if(typeof req.body.day === 'string'){
+        req.body.day = parseInt(req.body.day);
+        console.log(req.body.day, typeof req.body.day);
+        day = true;
+    }
+
+    console.log(year, month, day);
+
+    var query_string;
+    if(req.body.database === 'events'){
+        query_string = 'SELECT * FROM events CROSS JOIN images WHERE events.img_id = images.id ORDER BY images.created ASC';
+    }
+    if(req.body.database === 'images'){
+        query_string ='SELECT * FROM images WHERE meta IS NOT NULL ORDER BY created ASC';
+    }
+
+    pg.connect(connectionString, function(error, client, done){
+        var array = [];
+        var query = client.query(query_string, function(error, result){
+
+            if(error){console.log(error);}
+        })
+        query.on('row', function(row){
+            var date = new Date(row.created);
+            if(year && month && day){
+                if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month && date.getUTCDate() === req.body.day){
+                    array.push(row);
+                }
+            }
+            else if(year && month) {
+                if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month) {
+                    array.push(row);
+                }
+            }
+            else if(month && day){
+                if(date.getUTCMonth() === req.body.month && date.getUTCDate() === req.body.day){
+                    array.push(row);
+                }
+            }
+            else if(year){
+                if(date.getUTCFullYear() === req.body.year) {
+                    array.push(row);
+                }
+            }
+            else{
+                array.push(row);
+            }
+        })
+        query.on('end', function(result){
+
+            client.end();
+            if(req.body.meta !== undefined){
+                req.body.meta = call.splitString(req.body.meta);
+                array = call.selection(array, req.body);
+                res.status(200).send(array);
+            }
+            else{
+                res.status(200).send(array);
+            }
+
+        })
+    })
+});
 
 router.post('/dropdown', function(req, res, next){
 

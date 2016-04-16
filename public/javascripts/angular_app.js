@@ -230,7 +230,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         $scope.query.option = 'year';
         $scope.query.database = x;
 
-        //$http.post('/event_crud/date', $scope.query)
         $http.post('/search/dropdown', $scope.query)
             .then(function(response){
                 $scope.years = response.data;
@@ -297,7 +296,7 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
 
 app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
-    $http.get('/event_crud/view')
+    $http.get('/search/latest')
         .then(function(response){
             $scope.event = response.data;
 
@@ -449,7 +448,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
         $scope.form.database = db;
         var temp = [];
 
-        $http.post('/event_crud/select', $scope.form)
+        $http.post('/search/query', $scope.form)
             .then(function(response){
                 $rootScope.events = response.data;
 

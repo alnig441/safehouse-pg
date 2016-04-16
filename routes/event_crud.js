@@ -100,23 +100,23 @@ router.get('/view', call.isAuthenticated, function(req, res){
 
 router.post('/select', call.isAuthenticated, function(req, res){
 
-    console.log('...event_crud/select.. ', req.body.year, req.body.month, req.body.day);
+    console.log('...event_crud/select.. ', req.body.year, req.body.month, typeof req.body.day);
 
     var x = false;
     var y = false;
     var z = false;
 
-    if(req.body.year !== undefined){
+    if(typeof req.body.year === 'number'){
         var x = true;
     }
-    if(req.body.month !== undefined){
+    if(typeof req.body.month === 'number'){
         console.log(req.body.month, typeof req.body.month);
         if(req.body.month === 12){
             req.body.month = 0;
         }
         var y = true;
     }
-    if(req.body.day !== undefined){
+    if(typeof req.body.day === 'string'){
         req.body.day = parseInt(req.body.day);
         console.log(req.body.day, typeof req.body.day);
         var z = true;

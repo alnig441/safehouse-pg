@@ -479,9 +479,9 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
 
         if(option === 'month') {
             console.log('query: ' + $scope.query + ' form: ', $scope.form);
-            $scope.form.option = null;
-            $scope.form.day = null;
-            $scope.form.month = null;
+            $scope.form.option = false;
+            $scope.form.day = false;
+            $scope.form.month = false;
         }
 
         console.log('form: ', $scope.form);

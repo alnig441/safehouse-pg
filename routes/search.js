@@ -7,7 +7,7 @@ var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/sa
 
 router.post('/dropdown', function(req, res, next){
 
-    console.log('..building dropdwon..', req.body);
+    //console.log('..building dropdwon..', req.body);
 
     if(req.body.month === 12){
         req.body.month = 0;
@@ -79,11 +79,11 @@ router.post('/dropdown', function(req, res, next){
             }
         })
         query.on('end', function(result){
-            console.log('1: ',array);
+            //console.log('1: ',array);
             client.end();
             if(array.length > 1){
                 array.sort().reduce(function(prev, curr, index, array){
-                    console.log(prev, curr, index, array);
+                    //console.log(prev, curr, index, array);
                     prev = array[index -1];
 
                     if(prev != curr){
@@ -98,7 +98,7 @@ router.post('/dropdown', function(req, res, next){
             else{
                 temp = array;
             }
-            console.log('2: ', temp);
+            //console.log('2: ', temp);
             array = [];
             temp.forEach(function(elem, ind, arr){
                 switch (option){
@@ -110,6 +110,10 @@ router.post('/dropdown', function(req, res, next){
                             if(parseInt(elem) === x.value){
                                 //console.log(elem, x.value);
                                 array.push(x);
+                                if(parseInt(elem)===12){
+                                    array.unshift(x);
+                                    array.pop();
+                                }
                             }
                         });
                         break;
@@ -118,7 +122,7 @@ router.post('/dropdown', function(req, res, next){
                         break;
                 }
             })
-            console.log('3: ',array);
+            //console.log('3: ',array);
             res.status(200).send(array);
 
         })

@@ -30,7 +30,7 @@ router.post('/dropdown', function(req, res, next){
     var query_string;
     db === 'events' ? query_string = 'SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC' : query_string = 'SELECT created FROM images ORDER BY CREATED DESC' ;
 
-    console.log(query_string);
+    //console.log(query_string);
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(query_string, function(error, result){
@@ -46,12 +46,24 @@ router.post('/dropdown', function(req, res, next){
                     break;
                 case 'month':
                     if(date.getUTCFullYear() === req.body.year){
-                        array.push(date.getUTCMonth());
+                        if(date.getUTCMonth() < 10){
+                            var x = '0' + date.getUTCMonth().toString();
+                            array.push(x);
+                        }
+                        else{
+                            array.push(date.getUTCMonth().toString());
+                        }
                     }
                     break;
                 case 'day':
                     if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month){
-                        array.push(date.getUTCDate());
+                        if(date.getUTCDate() < 10){
+                            var x = '0' + date.getUTCDate().toString();
+                            array.push(x);
+                        }
+                        else {
+                            array.push(date.getUTCDate().toString());
+                        }
                     }
                     break;
             }
@@ -77,8 +89,8 @@ router.post('/dropdown', function(req, res, next){
                         break;
                     case 'month':
                         months.forEach(function(x, y, z){
-                            if(elem === x.value){
-                                console.log(elem, x.value);
+                            if(parseInt(elem) === x.value){
+                                //console.log(elem, x.value);
                                 array.push(x);
                             }
                         });
@@ -88,7 +100,6 @@ router.post('/dropdown', function(req, res, next){
                         break;
                 }
             })
-            console.log(array);
             res.status(200).send(array);
 
         })

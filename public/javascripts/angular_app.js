@@ -59,6 +59,22 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
 
+    $scope.update_images = function(){
+
+        console.log('..updating images..');
+
+        $http.put('/admin_crud/date')
+            .then(function(response){
+                console.log(response.data.images);
+                response.data.images.forEach(function(elem, ind, arr){
+                   $http.post('/admin_crud/update', elem)
+                       .then(function(response){
+                           console.log(response.data);
+                       });
+                });
+            });
+    };
+
     var menu = document.getElementsByClassName('collapse');
 
     $rootScope.img = {};

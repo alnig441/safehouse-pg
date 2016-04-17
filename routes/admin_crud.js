@@ -113,17 +113,28 @@ router.get('/images/files', function(req, res, next){
 
 router.post('/images', function(req, res, next){
 
+    console.log('in images: ', req.body.file);
 
+    req.body.file = req.body.file.toLowerCase();
     var url = './buffalo/2015/';
     var url = url + req.body.file;
+    var created;
+    var year;
+    var month;
+    var day;
 
-    var created = call.setDate(req.body.file);
-    var year = created.getUTCFullYear();
-    var month = created.getUTCMonth();
-    var day = created.getUTCDate();
+    if(req.body.file.charAt(0)=='i' && req.body.file.charAt(1)=='m' && req.body.file.charAt(2)=='g' && req.body.file.length >= 23 ){
+        console.log('YES INDEED');
+        created = call.setDate(req.body.file);
+        year = created.getUTCFullYear();
+        month = created.getUTCMonth();
+        day = created.getUTCDate();
+    }
 
-    console.log('..batch posting...', created, year, month, day);
-
+    else{
+        res.send('bad file');
+    }
+    console.log('..batch posting...', created);
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query("INSERT INTO images(url, created, year, month, day) values($1, $2, $3, $4, $5)", [url, created, year, month, day],function(error, result){

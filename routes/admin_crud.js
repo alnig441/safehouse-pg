@@ -5,6 +5,7 @@ var pg = require('pg');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var bcrypt = require('bcrypt');
 var call = require('../public/javascripts/myFunctions.js');
+var fs = require('fs');
 
 //Add account
 router.post('/add', call.isAuthenticated, function(req, res){
@@ -92,6 +93,49 @@ router.put('/chg', call.isAuthenticated, function(req, res){
         })
     })
 
+});
+
+router.get('/images/files', function(req, res, next){
+
+    console.log('..getting files..');
+
+    fs.readdir('./public/buffalo/2015/', function(err, files){
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log(files);
+        }
+        res.send(files);
+    })
+
+});
+
+router.post('/images', function(req, res, next){
+
+
+    var url = './buffalo/2015/';
+    var url = url + req.body.file;
+
+    var created = call.setDate(req.body.file);
+    var year = created.getUTCFullYear();
+    var month = created.getUTCMonth();
+    var day = created.getUTCDate();
+
+    console.log('..batch posting...', created, year, month, day);
+
+
+    pg.connect(connectionString, function(error, client, done){
+        var query = client.query("INSERT INTO images(url, created, year, month, day) values($1, $2, $3, $4, $5)", [url, created, year, month, day],function(error, result){
+            if(error){
+                console.log(error);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+
+        })
+    })
 });
 
 // FOR UPDATE TOOL

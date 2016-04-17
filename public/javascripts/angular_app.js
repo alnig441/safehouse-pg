@@ -59,23 +59,28 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
 
-    //IMAGE UPDATE TOOL TO EXTRACE YY MM DD FROM CREATED
+    //IMAGE BATCH UPDATE TOOL
 
-    //$scope.update_images = function(){
-    //
-    //    console.log('..updating images..');
-    //
-    //    $http.put('/admin_crud/date')
-    //        .then(function(response){
-    //            console.log(response.data.images);
-    //            response.data.images.forEach(function(elem, ind, arr){
-    //               $http.post('/admin_crud/update', elem)
-    //                   .then(function(response){
-    //                       console.log(response.data);
-    //                   });
-    //            });
-    //        });
-    //};
+    $scope.update_images = function(){
+
+        console.log('..updating images..');
+
+        $http.get('/admin_crud/images/files')
+            .then(function(response){
+                console.log(response);
+
+                //console.log(response.data.images);
+                response.data.forEach(function(elem, ind, arr){
+                    var image = {};
+                    image.file = elem;
+                    console.log('FILE_NAME: ', image);
+                   $http.post('/admin_crud/images', image)
+                       .then(function(response){
+                           console.log(response.data);
+                       });
+                });
+            });
+    };
 
     var menu = document.getElementsByClassName('collapse');
 
@@ -317,6 +322,7 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
     $http.get('/search/latest')
         .then(function(response){
             $scope.event = response.data;
+            console.log('this event: ', response.data);
 
         });
     $scope.cancel = function(){

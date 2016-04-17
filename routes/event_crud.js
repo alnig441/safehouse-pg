@@ -117,8 +117,10 @@ router.get('/img_get_one/:id?', function(req, res, next){
 
 router.get('/img_all', function(req, res, next){
 
+    console.log('jallerup hansen:');
+
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query('SELECT * FROM images', function(error, result){
+        var query = client.query('SELECT * FROM images order by id asc', function(error, result){
             if(error){
                 console.log(error);
                 res.status(200).send(error);

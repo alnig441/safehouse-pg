@@ -94,43 +94,44 @@ router.put('/chg', call.isAuthenticated, function(req, res){
 
 });
 
-router.put('/date', function(req, res, next){
+// FOR UPDATE TOOL
 
-    console.log('bla bla bla');
-
-    pg.connect(connectionString, function(err, client, done){
-        var query = client.query('select id, created from images', function(error, result){
-            if(error){
-                console.log(error);
-            }
-        })
-        query.on('end',function(result){
-            client.end();
-            res.send({images: result.rows});
-        })
-    })
-});
-
-router.post('/update', function(req, res, next){
-
-    var date = new Date(req.body.created);
-    console.log('cleland: ', date, date.getUTCDate());
-
-    pg.connect(connectionString, function(error, client, result){
-        var query = client.query('update images set (year, month, day) = ($1, $2, $3) where id=$4',[date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), req.body.id], function(err, client, done){
-            if(error){
-                console.log(error);
-            }
-        })
-        query.on('row', function(row){
-            console.log('BAAAH: ', row);
-        })
-        query.on('end',function(result){
-            client.end();
-            res.send('forsatanda');
-        })
-    })
-
-});
-
+//
+//router.put('/date', function(req, res, next){
+//
+//
+//    pg.connect(connectionString, function(err, client, done){
+//        var query = client.query('select id, created from images', function(error, result){
+//            if(error){
+//                console.log(error);
+//            }
+//        })
+//        query.on('end',function(result){
+//            client.end();
+//            res.send({images: result.rows});
+//        })
+//    })
+//});
+//
+//router.post('/update', function(req, res, next){
+//
+//    var date = new Date(req.body.created);
+//
+//    pg.connect(connectionString, function(error, client, result){
+//        var query = client.query('update images set (year, month, day) = ($1, $2, $3) where id=$4',[date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), req.body.id], function(err, client, done){
+//            if(error){
+//                console.log(error);
+//            }
+//        })
+//        query.on('row', function(row){
+//            console.log('BAAAH: ', row);
+//        })
+//        query.on('end',function(result){
+//            client.end();
+//            res.send('forsatanda');
+//        })
+//    })
+//
+//});
+//
 module.exports = router;

@@ -114,12 +114,12 @@ router.get('/images/files', function(req, res, next){
             if(x[0] !== 'img'){
                 files.splice(ind, 1);
             }
-            //console.log(files.slice(0,5));
+            console.log(files[z]);
 
         });
 
         files.sort();
-        console.log(files[z]);
+        //console.log(files[z]);
 
 
             //pg.connect(connectionString,function(error,client,done){

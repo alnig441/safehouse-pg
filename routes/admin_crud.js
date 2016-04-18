@@ -99,13 +99,15 @@ router.get('/images/files', function(req, res, next){
 
     console.log('..getting files..');
 
+    var arr = [];
+
     fs.readdir('./public/buffalo/2015/', function(err, files){
         if(err){
             console.log(err);
         }
         console.log(files.length);
         var z = files.length;
-        var arr = files.forEach(function(elem, ind, arr){
+        arr = files.forEach(function(elem, ind, arr){
             var x = elem.toLowerCase().split('_');
             if(elem.length != 23 && z === files.length){
                 //files.splice(ind, 1);

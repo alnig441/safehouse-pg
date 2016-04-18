@@ -111,8 +111,8 @@ router.get('/images/files', function(req, res, next){
 
     fs.readdir('./public/buffalo/2015/', function(err, files){
 
-        files.forEach(getRid);
-        console.log(files);
+        var arr = files.forEach(getRid);
+        console.log(arr);
 
 
         //files.sort();

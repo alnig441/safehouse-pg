@@ -100,11 +100,13 @@ router.get('/images/files', function(req, res, next){
     console.log('..getting files..');
 
     fs.readdir('./public/buffalo/2015/', function(err, files){
+        var z;
         if(err){
             console.log(err);
         }
         console.log(files.length);
         files.forEach(function(elem, ind, arr){
+            z = ind;
             var x = elem.toLowerCase().split('_');
             if(elem.length != 23){
                 files.splice(ind, 1);
@@ -112,12 +114,12 @@ router.get('/images/files', function(req, res, next){
             if(x[0] !== 'img'){
                 files.splice(ind, 1);
             }
-            console.log(files.slice(0,5));
+            //console.log(files.slice(0,5));
 
         });
 
         files.sort();
-        console.log(files.length);
+        console.log(files[z]);
 
 
             //pg.connect(connectionString,function(error,client,done){

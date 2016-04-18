@@ -104,8 +104,6 @@ router.get('/images/files', function(req, res, next){
         if(x[0] !== 'img'){
             arr.splice();
         }
-        console.log('getRid: ',arr);
-        return arr;
     }
 
     var arr = [];
@@ -113,6 +111,7 @@ router.get('/images/files', function(req, res, next){
     fs.readdir('./public/buffalo/2015/', function(err, files){
 
         files.forEach(getRid);
+        console.log(files.slice(0,5));
 
 
         //files.sort();

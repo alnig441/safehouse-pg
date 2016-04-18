@@ -68,8 +68,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         $http.get('/admin_crud/images/files')
             .then(function(response){
                 console.log(response);
-
-                //console.log(response.data.images);
                 response.data.forEach(function(elem, ind, arr){
                     var image = {};
                     image.file = elem;

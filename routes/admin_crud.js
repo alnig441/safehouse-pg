@@ -104,14 +104,47 @@ router.get('/images/files', function(req, res, next){
             console.log(err);
         }
         else{
+            //console.log(files);
+            files.forEach(function(elem, ind, arr){
+
+                var x = elem.toLowerCase().split('_');
+                if(x[0]!=='img'){
+                    files.splice(ind, 1);
+                }
+
+            });
+
             console.log(files);
+            pg.connect(connectionString,function(error,client,done){
+                var query = client.query('SELECT URL FROM images ORDER BY CREATED ASC', function(error, result){
+                    if(error){
+                        console.log(error);
+                    }
+                })
+                query.on('end',function(result){
+                    client.end();
+
+                    result.rows.forEach(function(elem,ind,arr){
+                        for(var i = 0 ; i < files.length ; i ++){
+                            if(elem.url.slice(-23).toLowerCase() === files[i].toLowerCase()){
+                                //console.log(files[i]);
+                                files.splice(i, 1);
+                            }
+                        }
+                    })
+                    //console.log(files);
+                    files = files.slice(0,5);
+                    res.send(files);
+                })
+            })
         }
-        res.send(files);
     })
 
 });
 
 router.post('/images', function(req, res, next){
+
+    console.log('in images: ', req.body.file);
 
     req.body.file = req.body.file.toLowerCase();
 
@@ -136,6 +169,7 @@ router.post('/images', function(req, res, next){
             })
             query.on('end', function(result){
                 client.end();
+                res.send(result);
 
             })
         })

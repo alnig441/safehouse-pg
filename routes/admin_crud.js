@@ -113,40 +113,35 @@ router.get('/images/files', function(req, res, next){
 
 router.post('/images', function(req, res, next){
 
-    console.log('in images: ', req.body.file);
-
     req.body.file = req.body.file.toLowerCase();
+
     var url = './buffalo/2015/';
     var url = url + req.body.file;
+    var arr = req.body.file.split('_');
     var created;
-    var year;
-    var month;
-    var day;
 
-    if(req.body.file.charAt(0)=='i' && req.body.file.charAt(1)=='m' && req.body.file.charAt(2)=='g' && req.body.file.length >= 23 ){
-        console.log('YES INDEED');
-        created = call.setDate(req.body.file);
-        year = created.getUTCFullYear();
-        month = created.getUTCMonth();
-        day = created.getUTCDate();
+    if(arr[0] !== 'img'){
+        res.status(400).send('bad file');
+        console.log('bad file', req.body.file);
     }
-
     else{
-        res.send('bad file');
+
+        created = call.setDate(req.body.file);
+
+        pg.connect(connectionString, function(error, client, done){
+            var query = client.query("INSERT INTO images(url, created, year, month, day) values($1, $2, $3, $4, $5)", [url, created, created.getUTCFullYear(), created.getUTCMonth(), created.getUTCDate()],function(error, result){
+                if(error){
+                    console.log(error);
+                }
+            })
+            query.on('end', function(result){
+                client.end();
+
+            })
+        })
+
     }
-    console.log('..batch posting...', created);
 
-    pg.connect(connectionString, function(error, client, done){
-        var query = client.query("INSERT INTO images(url, created, year, month, day) values($1, $2, $3, $4, $5)", [url, created, year, month, day],function(error, result){
-            if(error){
-                console.log(error);
-            }
-        })
-        query.on('end', function(result){
-            client.end();
-
-        })
-    })
 });
 
 // FOR UPDATE TOOL

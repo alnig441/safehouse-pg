@@ -111,15 +111,15 @@ router.get('/images/files', function(req, res, next){
                 //console.log(elem, elem.length, x[0]);
                 if(x[0]!=='img'){
                     console.log('splicing on img', files[ind], elem);
-                    var y = files.splice(ind, 1);
-                    console.log('spliced element: ',y);
+                    files.splice(ind, 1);
+                    console.log('first 5 files: ', files.slice(0,5));
                 }
                 else if(elem.length != 23){
                     console.log('splicing on length');
                     files.splice(ind, 1);
                 }
 
-                console.log('beginning of files array before comparison loop: ', files.slice(0, 5));
+                //console.log('beginning of files array before comparison loop: ', files.slice(0, 5));
 
             });
 

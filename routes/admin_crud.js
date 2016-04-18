@@ -109,7 +109,7 @@ router.get('/images/files', function(req, res, next){
 
                 var x = elem.toLowerCase().split('_');
                 console.log(elem, elem.length, x[0]);
-                if(x[0]!=='img' || elem.length !== 23){
+                if(x[0]!=='img' || elem.length > 23 || elem.length < 23){
                     files.splice(ind, 1);
                 }
 

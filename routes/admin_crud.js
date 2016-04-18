@@ -100,6 +100,7 @@ router.get('/images/files', function(req, res, next){
     console.log('..getting files..');
 
     function getRid(elem, ind, arr){
+        console.log(arr[0]);
         var x = elem.toLowerCase().split('_');
         if(x[0] !== 'img'){
             arr.splice();
@@ -111,7 +112,7 @@ router.get('/images/files', function(req, res, next){
 
     fs.readdir('./public/buffalo/2015/', function(err, files){
 
-        console.log(files.forEach(getRid));
+        filesforEach(getRid);
 
 
         //files.sort();

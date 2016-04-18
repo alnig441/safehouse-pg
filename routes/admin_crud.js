@@ -101,25 +101,9 @@ router.get('/images/files', function(req, res, next){
 
     var arr = [];
 
-    fs.readdirSync('./public/buffalo/2015/', function(err, files){
-        if(err){
-            console.log(err);
-        }
-        console.log(files);
-        var z = files.length;
-        arr = files.forEach(function(elem, ind, arr){
-            var x = elem.toLowerCase().split('_');
-            if(elem.length != 23 && z === files.length){
-                //files.splice(ind, 1);
-                files.shift();
-                z--;
-            }
-            //if(x[0] !== 'img'){
-            //    files.splice(ind, 1);
-            //}
-            //console.log(files[z]);
+    fs.readdir('./public/buffalo/2015/', function(err, files){
 
-        });
+        console.log(files);
 
         //files.sort();
         //console.log(arr.length, arr.slice(0,5));

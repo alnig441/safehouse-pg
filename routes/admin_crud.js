@@ -102,7 +102,7 @@ router.get('/images/files', function(req, res, next){
     function getRid(elem, ind, arr){
         var x = elem.toLowerCase().split('_');
         if(x[0] !== 'img'){
-            arr.elem.splice();
+            arr.splice();
         }
         return arr;
     }

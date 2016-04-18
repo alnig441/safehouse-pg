@@ -107,7 +107,7 @@ router.get('/images/files', function(req, res, next){
             var x = elem.split('_');
             if(x[0] !== 'img'){
                 //array[ind] = 'zzz';
-                array.splice(ind, 1):
+                array.splice(ind, 1);
                 //elem = 'zzz';
             }
         });

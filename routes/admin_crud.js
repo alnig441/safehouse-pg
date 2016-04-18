@@ -105,45 +105,44 @@ router.get('/images/files', function(req, res, next){
         }
         else{
             //console.log(files);
-            files.forEach(function(elem, ind, arr) {
+            files.forEach(function(elem, ind, arr){
 
                 var x = elem.toLowerCase().split('_');
                 //console.log(elem, elem.length, x[0]);
-                if (x[0] !== 'img') {
+                if(x[0]!=='img'){
                     console.log('splicing on img');
                     files.splice(ind, 1);
                 }
-                else if (elem.length != 23) {
+                else if(elem.length != 23){
                     console.log('splicing on length');
                     files.splice(ind, 1);
                 }
 
-                //});
+            });
 
-                console.log('beginning of files array before comparison loop: ', files.slice(0, 5));
+            console.log('beginning of files array before comparison loop: ', files.slice(0, 5));
 
-                pg.connect(connectionString, function (error, client, done) {
-                    var query = client.query('SELECT URL FROM images ORDER BY CREATED ASC', function (error, result) {
-                        if (error) {
-                            console.log(error);
+            pg.connect(connectionString,function(error,client,done){
+                var query = client.query('SELECT URL FROM images ORDER BY CREATED ASC', function(error, result){
+                    if(error){
+                        console.log(error);
+                    }
+                })
+                query.on('end',function(result){
+                    client.end();
+
+                    result.rows.forEach(function(elem,ind,arr){
+                        for(var i = 0 ; i < files.length ; i ++){
+                            if(elem.url.slice(-23).toLowerCase() === files[i].toLowerCase()){
+                                //console.log(files[i]);
+                                files.splice(i, 1);
+                            }
                         }
                     })
-                    query.on('end', function (result) {
-                        client.end();
-
-                        result.rows.forEach(function (elem, ind, arr) {
-                            for (var i = 0; i < files.length; i++) {
-                                if (elem.url.slice(-23).toLowerCase() === files[i].toLowerCase()) {
-                                    //console.log(files[i]);
-                                    files.splice(i, 1);
-                                }
-                            }
-                        })
-                        //console.log(files);
-                        files = files.slice(0, 5);
-                        console.log('sending files: ', files);
-                        res.send(files);
-                    })
+                    //console.log(files);
+                    files = files.slice(0,5);
+                    console.log('sending files: ',files);
+                    res.send(files);
                 })
             })
         }

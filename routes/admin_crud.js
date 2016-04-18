@@ -102,7 +102,7 @@ router.get('/images/files', function(req, res, next){
     fs.readdir('./public/buffalo/2015/', function(err, files){
 
         files.forEach(function(elem, ind, array){
-            console.log(array[ind], elem);
+            //console.log(array[ind], elem);
             array[ind] = elem.toLowerCase();
             //elem = elem.toLowerCase();
             var x = array[ind].split('_');
@@ -110,7 +110,7 @@ router.get('/images/files', function(req, res, next){
                 array[ind] = 'zzz';
             }
         });
-        console.log(files);
+        //console.log(files);
         files.sort();
         console.log(files.slice(0,5));
 

@@ -110,9 +110,11 @@ router.get('/images/files', function(req, res, next){
                 var x = elem.toLowerCase().split('_');
                 //console.log(elem, elem.length, x[0]);
                 if(x[0]!=='img'){
+                    console.log('splicing on img');
                     files.splice(ind, 1);
                 }
                 else if(elem.length != 23){
+                    console.log('splicing on length');
                     files.splice(ind, 1);
                 }
 

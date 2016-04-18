@@ -108,14 +108,17 @@ router.get('/images/files', function(req, res, next){
             files.forEach(function(elem, ind, arr){
 
                 var x = elem.toLowerCase().split('_');
-                console.log(elem, elem.length, x[0]);
-                if(x[0]!=='img' || elem.length > 23 || elem.length < 23){
+                //console.log(elem, elem.length, x[0]);
+                if(x[0]!=='img'){
+                    files.splice(ind, 1);
+                }
+                else if(elem.length != 23){
                     files.splice(ind, 1);
                 }
 
             });
 
-            //console.log(files);
+            console.log('beginning of files array before comparison loop: ', files.slice(0, 5));
             pg.connect(connectionString,function(error,client,done){
                 var query = client.query('SELECT URL FROM images ORDER BY CREATED ASC', function(error, result){
                     if(error){

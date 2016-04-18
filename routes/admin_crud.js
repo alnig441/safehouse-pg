@@ -99,7 +99,7 @@ router.get('/images/files', function(req, res, next){
 
     console.log('..getting files..');
 
-    fs.readdir('./public/buffalo/2015/', function(err, files){
+    fs.readdir('./public/buffalo/2016/', function(err, files){
         if(err){
             console.log(err);
         }
@@ -115,7 +115,7 @@ router.post('/images', function(req, res, next){
 
     req.body.file = req.body.file.toLowerCase();
 
-    var url = './buffalo/2015/';
+    var url = './buffalo/2016/';
     var url = url + req.body.file;
     var arr = req.body.file.split('_');
     var created;

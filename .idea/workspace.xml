@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/admin_crud.js" afterPath="$PROJECT_DIR$/routes/admin_crud.js" />
-    </list>
+    <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="" />
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -47,7 +44,7 @@
       <file leaf-file-name="admin_crud.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/admin_crud.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4296578">
+            <state vertical-scroll-proportion="0.60076046">
               <caret line="114" column="0" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
               <folding />
             </state>
@@ -877,7 +874,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/admin_crud.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4296578">
+        <state vertical-scroll-proportion="0.60076046">
           <caret line="114" column="0" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
           <folding />
         </state>

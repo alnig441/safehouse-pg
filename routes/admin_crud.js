@@ -112,7 +112,7 @@ router.get('/images/files', function(req, res, next){
             if(x[0] !== 'img'){
                 files.splice(ind, 1);
             }
-
+            console.log(files.slice(0,5));
 
         });
 

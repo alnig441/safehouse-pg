@@ -119,29 +119,30 @@ router.get('/images/files', function(req, res, next){
             });
 
             console.log('beginning of files array before comparison loop: ', files.slice(0, 5));
-            pg.connect(connectionString,function(error,client,done){
-                var query = client.query('SELECT URL FROM images ORDER BY CREATED ASC', function(error, result){
-                    if(error){
-                        console.log(error);
-                    }
-                })
-                query.on('end',function(result){
-                    client.end();
 
-                    result.rows.forEach(function(elem,ind,arr){
-                        for(var i = 0 ; i < files.length ; i ++){
-                            if(elem.url.slice(-23).toLowerCase() === files[i].toLowerCase()){
-                                //console.log(files[i]);
-                                files.splice(i, 1);
-                            }
-                        }
-                    })
-                    //console.log(files);
-                    files = files.slice(0,5);
-                    console.log('sending files: ',files);
-                    res.send(files);
-                })
-            })
+            //pg.connect(connectionString,function(error,client,done){
+            //    var query = client.query('SELECT URL FROM images ORDER BY CREATED ASC', function(error, result){
+            //        if(error){
+            //            console.log(error);
+            //        }
+            //    })
+            //    query.on('end',function(result){
+            //        client.end();
+            //
+            //        result.rows.forEach(function(elem,ind,arr){
+            //            for(var i = 0 ; i < files.length ; i ++){
+            //                if(elem.url.slice(-23).toLowerCase() === files[i].toLowerCase()){
+            //                    //console.log(files[i]);
+            //                    files.splice(i, 1);
+            //                }
+            //            }
+            //        })
+            //        //console.log(files);
+            //        files = files.slice(0,5);
+            //        console.log('sending files: ',files);
+            //        res.send(files);
+            //    })
+            //})
         }
     })
 

@@ -119,7 +119,7 @@ router.get('/images/files', function(req, res, next){
 
         });
 
-        files.sort();
+        //files.sort();
         console.log(files.length, files.slice(0,5));
 
 

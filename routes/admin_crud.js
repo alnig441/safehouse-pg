@@ -100,11 +100,11 @@ router.get('/images/files', function(req, res, next){
     console.log('..getting files..');
 
     function getRid(elem, ind, arr){
-        console.log(arr[0]);
         var x = elem.toLowerCase().split('_');
         if(x[0] !== 'img'){
             arr.splice();
         }
+        console.log('getRid: ',arr);
         return arr;
     }
 

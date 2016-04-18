@@ -102,12 +102,12 @@ router.get('/images/files', function(req, res, next){
     fs.readdir('./public/buffalo/2015/', function(err, files){
 
         files.forEach(function(elem, ind, array){
-            //array[ind] = elem.toLowerCase();
-            elem = elem.toLowerCase();
+            array[ind] = elem.toLowerCase();
+            //elem = elem.toLowerCase();
             var x = elem.split('_');
             if(x[0] !== 'img'){
-                //array[ind] = 'zzz';
-                elem = 'zzz';
+                array[ind] = 'zzz';
+                //elem = 'zzz';
             }
         });
         console.log(files.slice(0,5));

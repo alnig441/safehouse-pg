@@ -101,11 +101,11 @@ router.get('/images/files', function(req, res, next){
 
     var arr = [];
 
-    fs.readdir('./public/buffalo/2015/', function(err, files){
+    fs.readdirSync('./public/buffalo/2015/', function(err, files){
         if(err){
             console.log(err);
         }
-        console.log(files.length);
+        console.log(files);
         var z = files.length;
         arr = files.forEach(function(elem, ind, arr){
             var x = elem.toLowerCase().split('_');
@@ -122,7 +122,7 @@ router.get('/images/files', function(req, res, next){
         });
 
         //files.sort();
-        console.log(arr.length, arr.slice(0,5));
+        //console.log(arr.length, arr.slice(0,5));
 
 
             //pg.connect(connectionString,function(error,client,done){

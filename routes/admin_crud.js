@@ -118,9 +118,9 @@ router.get('/images/files', function(req, res, next){
                     files.splice(ind, 1);
                 }
 
-            });
+                console.log('beginning of files array before comparison loop: ', files.slice(0, 5));
 
-            console.log('beginning of files array before comparison loop: ', files.slice(0, 5));
+            });
 
             pg.connect(connectionString,function(error,client,done){
                 var query = client.query('SELECT URL FROM images ORDER BY CREATED ASC', function(error, result){

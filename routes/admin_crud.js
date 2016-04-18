@@ -100,27 +100,27 @@ router.get('/images/files', function(req, res, next){
     console.log('..getting files..');
 
     fs.readdir('./public/buffalo/2015/', function(err, files){
-        var z;
         if(err){
             console.log(err);
         }
         console.log(files.length);
-        var arr = files;
-        arr.forEach(function(elem, ind, arr){
-            z = ind;
+        var z = files.length;
+        files.forEach(function(elem, ind, arr){
             var x = elem.toLowerCase().split('_');
-            if(elem.length != 23){
-                arr.splice(ind, 1);
+            if(elem.length != 23 && z === files.length){
+                //files.splice(ind, 1);
+                files.shift();
+                z--;
             }
-            if(x[0] !== 'img'){
-                arr.splice(ind, 1);
-            }
+            //if(x[0] !== 'img'){
+            //    files.splice(ind, 1);
+            //}
             //console.log(files[z]);
 
         });
 
-        //files.sort();
-        console.log(arr.slice(0,5), arr.length);
+        files.sort();
+        console.log(files.length, files.slice(0,5));
 
 
             //pg.connect(connectionString,function(error,client,done){

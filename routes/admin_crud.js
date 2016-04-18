@@ -117,7 +117,7 @@ router.get('/images/files', function(req, res, next){
         });
 
         files.sort();
-        console.log(files.slice(1353,1358), files.length);
+        console.log(files.slice(500,505), files.length);
 
 
             //pg.connect(connectionString,function(error,client,done){

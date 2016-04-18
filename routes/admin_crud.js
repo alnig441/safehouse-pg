@@ -111,7 +111,8 @@ router.get('/images/files', function(req, res, next){
                 //console.log(elem, elem.length, x[0]);
                 if(x[0]!=='img'){
                     console.log('splicing on img', files[ind], elem);
-                    files.splice(ind, 1);
+                    var y = files.splice(ind, 1);
+                    console.log('spliced element: ',y);
                 }
                 else if(elem.length != 23){
                     console.log('splicing on length');

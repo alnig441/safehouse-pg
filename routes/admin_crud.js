@@ -103,17 +103,21 @@ router.get('/images/files', function(req, res, next){
         if(err){
             console.log(err);
         }
-        var arr = [];
         console.log(files.length);
         files.forEach(function(elem, ind, arr){
             var x = elem.toLowerCase().split('_');
-            if(elem.length === 23 && x[0] === 'img'){
-                arr.push(elem);
+            if(elem.length != 23){
+                files.splice(ind, 1);
             }
+            if(x[0] !== 'img'){
+                files.splice(ind, 1);
+            }
+
 
         });
 
-        console.log(arr.slice(0,5), arr.length);
+        files.sort();
+        console.log(files.slice(0,5), files.length);
 
 
             //pg.connect(connectionString,function(error,client,done){

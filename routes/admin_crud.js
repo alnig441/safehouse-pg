@@ -109,7 +109,7 @@ router.get('/images/files', function(req, res, next){
                 array[ind] = 'zzz';
             }
         });
-        console.log(files.slice(0,5));
+        console.log(files.slice(-5));
         files.sort();
         console.log(files.slice(0,5));
 

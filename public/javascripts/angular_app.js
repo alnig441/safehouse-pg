@@ -87,7 +87,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                     });
                 });
 
-        }, 300000);
+        }, 30000);
 
         console.log('..updating images..');
 

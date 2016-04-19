@@ -105,12 +105,12 @@ router.get('/images/files', function(req, res, next){
 
             array[ind] = elem.toLowerCase();
             var x = array[ind].split('_');
-            if(x[0] !== 'img'){
+            if(x[0] !== 'img' && isNaN(x[0]) || elem.length != 23){
                 array[ind] = 'zzz';
             }
         });
         files.sort();
-        console.log(files.slice(0,5));
+        console.log('lorteprogram: ', files.slice(0,5));
 
 
         pg.connect(connectionString,function(error,client,done){

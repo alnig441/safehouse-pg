@@ -76,10 +76,14 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                         image.file = elem;
                         console.log('FILE_NAME: ', image);
 
-                        $http.post('/admin_crud/images', image)
-                            .then(function(response){
-                                console.log(response.data);
-                            });
+                        var stop2 = $timeout(function(){
+                            $http.post('/admin_crud/images', image)
+                                .then(function(response){
+                                    console.log(response.data);
+                                });
+                            $timeout.cancel(stop2);
+                        },2000);
+
                     });
                 });
 

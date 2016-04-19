@@ -101,6 +101,8 @@ router.get('/images/files', function(req, res, next){
 
     fs.readdir('./public/buffalo/2015/', function(err, files){
 
+        console.log('original files: ', files.slice(0,5));
+
         files.forEach(function(elem, ind, array){
 
             array[ind] = elem.toLowerCase();

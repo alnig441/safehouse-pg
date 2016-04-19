@@ -57,27 +57,36 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 });
 
-app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', function($scope, $rootScope, $http, Upload, $timeout, $location){
+app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval){
 
     //IMAGE BATCH UPDATE TOOL
 
     $scope.update_images = function(){
 
+        var stop = $interval(function(){
+
+            $http.get('/admin_crud/images/files')
+                .then(function(response){
+                    console.log(response);
+                    response.data.forEach(function(elem, ind, arr){
+                        if(elem === 'zzz'){
+                            $interval.cancel(stop);
+                        }
+                        var image = {};
+                        image.file = elem;
+                        console.log('FILE_NAME: ', image);
+
+                        $http.post('/admin_crud/images', image)
+                            .then(function(response){
+                                console.log(response.data);
+                            });
+                    });
+                });
+
+        }, 1200000);
+
         console.log('..updating images..');
 
-        $http.get('/admin_crud/images/files')
-            .then(function(response){
-                console.log(response);
-                response.data.forEach(function(elem, ind, arr){
-                    var image = {};
-                    image.file = elem;
-                    console.log('FILE_NAME: ', image);
-                   $http.post('/admin_crud/images', image)
-                       .then(function(response){
-                           console.log(response.data);
-                       });
-                });
-            });
     };
 
     var menu = document.getElementsByClassName('collapse');

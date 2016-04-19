@@ -111,7 +111,8 @@ router.get('/images/files', function(req, res, next){
             if(elem.length != 23){
                 array[ind] = 'zzz';
             }
-            else if(isNaN(x[0]) && x[0] !== 'img'){
+            //else if(isNaN(x[0]) && x[0] !== 'img'){
+            else if(isNaN(x[0])){
                 array[ind] = 'zzz';
             }
             //if(x[0] !== 'img' && isNaN(x[0]) || elem.length != 23){

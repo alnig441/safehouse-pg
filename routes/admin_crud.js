@@ -106,7 +106,8 @@ router.get('/images/files', function(req, res, next){
         files.forEach(function(elem, ind, array){
 
             array[ind] = elem.toLowerCase();
-            var x = array[ind].split('_');
+            var x = array[ind].split('_') || array[ind].split('-');
+
             console.log('elem: ', isNaN(x[0]), x[0]);
 
             if(elem.length != 23){

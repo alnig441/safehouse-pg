@@ -163,9 +163,10 @@ router.post('/images', function(req, res, next){
     var url = './buffalo/2015/';
     var url = url + req.body.file;
     var arr = req.body.file.split('_');
+    var arr2 = req.body.file.split('-');
     var created;
 
-    if(arr[0] !== 'img'){
+    if(arr[0] !== 'img' && isNaN(arr2[0])){
         res.status(400).send('bad file');
         console.log('bad file', req.body.file);
     }

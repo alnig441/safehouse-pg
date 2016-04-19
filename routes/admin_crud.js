@@ -107,6 +107,7 @@ router.get('/images/files', function(req, res, next){
 
             array[ind] = elem.toLowerCase();
             var x = array[ind].split('_');
+            console.log('elem: ', isNaN(x[0]), x[0]);
 
             if(elem.length != 23){
                 array[ind] = 'zzz';

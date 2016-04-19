@@ -105,12 +105,19 @@ router.get('/images/files', function(req, res, next){
 
             array[ind] = elem.toLowerCase();
             var x = array[ind].split('_');
-            if(x[0] !== 'img' && isNaN(x[0]) || elem.length != 23){
+
+            if(elem.length != 23){
                 array[ind] = 'zzz';
             }
+            else if(isNaN(x[0]) && x[0] !== 'img'){
+                array[ind] = 'zzz';
+            }
+            //if(x[0] !== 'img' && isNaN(x[0]) || elem.length != 23){
+            //    array[ind] = 'zzz';
+            //}
         });
         files.sort();
-        console.log('lorteprogram: ', files.slice(0,5));
+        //console.log('lorteprogram: ', files.slice(0,5));
 
 
         pg.connect(connectionString,function(error,client,done){

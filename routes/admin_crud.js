@@ -106,15 +106,16 @@ router.get('/images/files', function(req, res, next){
         files.forEach(function(elem, ind, array){
 
             array[ind] = elem.toLowerCase();
-            var x = array[ind].split('_') || array[ind].split('-');
+            var x = array[ind].split('_');
+            var y = array[ind].split('-');
 
-            console.log('elem: ', isNaN(x[0]), x[0]);
+            console.log('elem: ', isNaN(y[0]), x[0]);
 
             if(elem.length != 23){
                 array[ind] = 'zzz';
             }
-            //else if(isNaN(x[0]) && x[0] !== 'img'){
-            else if(isNaN(x[0])){
+            else if(isNaN(y[0]) && x[0] !== 'img'){
+            //else if(isNaN(y[0])){
                 array[ind] = 'zzz';
             }
             //if(x[0] !== 'img' && isNaN(x[0]) || elem.length != 23){

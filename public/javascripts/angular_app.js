@@ -61,8 +61,41 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     //IMAGE BATCH UPDATE TOOL
 
+    //update_files();
+    //
+    //function update_files(){
+    //
+    //    var quantity = document.getElementById('new_files').getAttribute('data-value');
+    //    console.log('update_files: ', quantity, $rootScope.new_files, document.getElementById('new_files').getAttribute('data-value'));
+    //
+    //        $http.get('/admin_crud/images/new_files')
+    //            .then(function(response){
+    //                if(quantity === undefined){
+    //                    console.log('gummibamse', response.data, response.data.length);
+    //                    document.getElementById('new_files').setAttribute('data-value', response.data.length);
+    //                    $rootScope.new_files.quantity = response.data.length;
+    //                    $rootScope.new_files.present = true;
+    //                }
+    //                else if(quantity < response.data.length){
+    //                    console.log('gummiand: ', response.data, response.data.length);
+    //                    document.getElementById('new_files').setAttribute('data-value', response.data.length);
+    //                    $rootScope.new_files.quantity = response.data.length;
+    //                    $rootScope.new_files.present = true;
+    //                }
+    //                else{
+    //                    console.log('badebold: ', $rootScope.new_files.quantity);
+    //                    //document.getElementById('new_files').setAttribute('data-value', quantity);
+    //                    $rootScope.new_files.present = false;
+    //                }
+    //            });
+    //        console.log('helledelle: ', $rootScope, document.getElementById('new_files').getAttribute('data-value'));
+    //}
+
+
     $scope.update_images = function(){
 
+        //BATCH UPDATE OF FILES
+/*
         var stop = $interval(function(){
 
             $http.get('/admin_crud/images/files')
@@ -90,6 +123,30 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         }, 30000);
 
         console.log('..updating images..');
+*/
+        //API CALL TO UPDATE IMAGES file_name
+        var stop = $interval(function(){
+
+            $http.get('/event_crud/img_all')
+                .then(function(response){
+                    var img = response.data;
+                    if(img.file_name !== null){
+                        $interval.cancel(stop);
+                    }
+
+                    else{
+                        var temp = img.url.split('/');
+                        img.name = temp[3];
+                        $http.put('/event_crud/img_url', img)
+                            .then(function(response){
+                                console.log(response);
+                            });
+                    }
+
+                });
+
+        }, 250);
+
 
     };
 
@@ -343,7 +400,9 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 });
 
 
-app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location) {
+app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope) {
+
+    $rootScope.new_files = {};
 
     $scope.submit = function(){
 

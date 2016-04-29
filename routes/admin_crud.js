@@ -182,6 +182,18 @@ router.post('/images', function(req, res, next){
 
 });
 
+router.get('/images/new_files', function(req, res, next){
+
+    fs.readdir('./public/buffalo/2015/', function(err, files) {
+
+        console.log('jammerbugt: ', files);
+
+        res.send(files);
+
+    });
+
+});
+
 // FOR UPDATE TOOL
 
 //

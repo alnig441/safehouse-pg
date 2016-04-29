@@ -125,6 +125,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         console.log('..updating images..');
 */
         //API CALL TO UPDATE IMAGES file_name
+/*
         var stop = $interval(function(){
 
             $http.get('/event_crud/img_all')
@@ -146,6 +147,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                 });
 
         }, 250);
+*/
 
 
     };

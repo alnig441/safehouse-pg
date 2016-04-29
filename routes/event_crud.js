@@ -118,8 +118,8 @@ router.get('/img_get_one/:id?', function(req, res, next){
 router.get('/img_all', function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query('SELECT * FROM images order by file_name desc', function(error, result){
-        //var query = client.query('SELECT * FROM images order by id asc', function(error, result){
+        //var query = client.query('SELECT * FROM images order by file_name desc', function(error, result){
+        var query = client.query('SELECT * FROM images order by id asc', function(error, result){
 
                 if(error){
                 console.log(error);
@@ -128,8 +128,8 @@ router.get('/img_all', function(req, res, next){
         })
         query.on('end', function(result){
             client.end();
-            //res.status(200).send(result.rows);
-            res.status(200).send(result.rows[0]);
+            res.status(200).send(result.rows);
+            //res.status(200).send(result.rows[0]);
         })
     })
 });
@@ -173,23 +173,23 @@ router.put('/img_meta', function(req, res, next){
     })
 });
 
-router.put('/img_url', function(req, res, next){
-
-    console.log('img_url: ', req.body.name, req.body.id);
-
-    pg.connect(connectionString, function(error, client, done){
-        var query = client.query('UPDATE images SET file_name = $1 WHERE id = $2', [req.body.name, req.body.id], function(error, result){
-            if(error){
-                console.log(error);
-                res.status(200).send(error);
-            }
-        })
-        query.on('end', function(result){
-            client.end();
-            res.status(200).send(result);
-        })
-    })
-});
+//router.put('/img_url', function(req, res, next){
+//
+//    console.log('img_url: ', req.body.name, req.body.id);
+//
+//    pg.connect(connectionString, function(error, client, done){
+//        var query = client.query('UPDATE images SET file_name = $1 WHERE id = $2', [req.body.name, req.body.id], function(error, result){
+//            if(error){
+//                console.log(error);
+//                res.status(200).send(error);
+//            }
+//        })
+//        query.on('end', function(result){
+//            client.end();
+//            res.status(200).send(result);
+//        })
+//    })
+//});
 
 module.exports = router;
 

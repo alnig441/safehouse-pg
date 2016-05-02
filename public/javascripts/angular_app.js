@@ -467,6 +467,8 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
 
     $scope.uploadFiles = function(file, opt){
 
+        console.log('uplaoding file: ', $scope, $rootScope, this);
+
         $scope.img = {};
         $scope.img.url = file.name;
         $scope.img.meta = $scope.meta;

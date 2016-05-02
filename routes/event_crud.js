@@ -7,7 +7,9 @@ var multer = require('multer');
 
 var storage  = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, './public/buffalo/' + call.setDate(file.originalname).getFullYear() + '/')
+        console.log('in storage obj: ', file, req.user);
+        //cb(null, './public/buffalo/' + call.setDate(file.originalname).getFullYear() + '/')
+        cb(null, './public/buffalo/James/')
     },
     filename: function(req, file, cb){
         cb(null, file.originalname)
@@ -61,6 +63,8 @@ router.post('/add_event', function(req, res, next){
 });
 
 router.post('/upload', call.isAuthenticated, upload.single('file'), function(req, res, next){
+
+    console.log('in upload: ', req.file, req.body);
 
     res.status(200);
 });

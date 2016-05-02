@@ -476,11 +476,14 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
             $scope.img.created = $scope.created;
         }
         $rootScope.f = file;
+        file.location = 'testing';
+        console.log('show me that file: ', file);
 
         if(file && !file.$error && opt) {
             file.upload = Upload.upload({
-                url: '/event_crud/upload',
-                data: {file: file}
+                url: '/event_crud/upload/' + 'James',
+                data: {file: file},
+                method: 'PUT'
             });
             file.upload.then(function(response){
                 $timeout(function(){

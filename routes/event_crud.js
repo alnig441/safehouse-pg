@@ -5,6 +5,7 @@ var call = require('../public/javascripts/myFunctions.js');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var multer = require('multer');
 
+/*
 var storage  = multer.diskStorage({
     destination: function(req, file, cb){
         console.log('in storage obj: ', file, req.user);
@@ -16,7 +17,26 @@ var storage  = multer.diskStorage({
     }
 });
 var upload = multer({storage: storage});
+*/
 
+
+var uploadFnct = function(dest){
+    var storage = multer.diskStorage({ //multers disk storage settings
+        destination: function (req, file, cb) {
+            cb(null, './public/buffalo/'+dest+'/');
+        },
+        filename: function (req, file, cb) {
+            //var datetimestamp = Date.now();
+            cb(null, file.originalname)
+        }
+    });
+
+    var upload = multer({ //multer settings
+        storage: storage
+    }).single('file');
+
+    return upload;
+};
 
 router.post('/add_img', call.isAuthenticated, function(req, res) {
 
@@ -61,6 +81,7 @@ router.post('/add_event', function(req, res, next){
     })
 
 });
+/*
 
 router.post('/upload', call.isAuthenticated, upload.single('file'), function(req, res, next){
 
@@ -68,7 +89,23 @@ router.post('/upload', call.isAuthenticated, upload.single('file'), function(req
 
     res.status(200);
 });
+*/
 
+router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
+
+    console.log('in new upload: ', req.params);
+
+    var currUpload = uploadFnct(req.params.dest);
+    currUpload(req,res,function(err){
+        if(err){
+            res.json({error_code:1,err_desc:err});
+            return;
+        }
+        console.log('hansemand: ',req.file);
+        res.json({error_code:0,err_desc:null, filename: req.file.filename});
+    });
+
+});
 
 router.get('/img', function(req, res, next){
 

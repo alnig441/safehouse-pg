@@ -142,12 +142,14 @@ router.get('/get_one/:img_id?', function(req, res, next){
 router.get('/img_get_one/:id?', function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query('SELECT * FROM images where id=' + parseInt(req.params.id), function(error, result){
-            if(error){
+        var query = client.query("SELECT *, path || folder || '/' || file AS url FROM images CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
+
+                if(error){
                 console.log(error);
             }
         });
         query.on('end', function(result){
+            console.log('en enkelt begivenhed', result.rows);
             client.end();
             res.status(200).send(result.rows);
         })

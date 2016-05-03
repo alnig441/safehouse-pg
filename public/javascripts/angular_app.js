@@ -228,6 +228,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             $http.get('/event_crud/img_all')
                 .then(function(response){
                     $scope.images = response.data;
+                    console.log('send me images:', response.data);
                 });
         }
 

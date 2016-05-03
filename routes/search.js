@@ -130,6 +130,7 @@ router.post('/dropdown', function(req, res, next){
             }
         })
         query.on('end', function(result){
+            console.log('printing '+ option +'s:', result.rows);
             client.end();
 
             if(option === 'month'){

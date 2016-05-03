@@ -51,6 +51,7 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
         var query = client.query("INSERT INTO images(created, year, month, day, file, storage) values($1, $2, $3, $4, $5, 'James')",[req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url] , function (error, result) {
 
                 if (error) {
+                console.log(error);
                 res.status(304).send(error);
             }
         })

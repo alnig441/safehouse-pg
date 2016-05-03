@@ -143,6 +143,7 @@ router.post('/dropdown', function(req, res, next){
                 })
             }
 
+            console.log('sending rows: ', result.rows);
             res.status(200).send(result.rows);
 
         })

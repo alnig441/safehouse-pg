@@ -468,7 +468,7 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
 
     $scope.uploadFiles = function(file, opt){
 
-        console.log('uplaoding file: ', $scope, $rootScope, this);
+        //console.log('uplaoding file: ', $scope, $rootScope, this);
 
         $scope.img = {};
         $scope.img.url = file.name;
@@ -477,8 +477,6 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
             $scope.img.created = $scope.created;
         }
         $rootScope.f = file;
-        file.location = 'testing';
-        console.log('show me that file: ', file);
 
         if(file && !file.$error && opt) {
             file.upload = Upload.upload({
@@ -498,7 +496,6 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
                 file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
             });
         }
-
 
         $http.post('/event_crud/add_img', $scope.img)
             .then(function(response){

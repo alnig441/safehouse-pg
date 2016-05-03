@@ -48,9 +48,7 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
     console.log('jim-bob', Date.parse(req.body.created));
     //POSTGRES REFACTOR SAVE IMAGE
     pg.connect(connectionString, function (err, client, done) {
-
-        //var query = client.query("INSERT INTO images(url, created, year, month, day) values($1, $2, $3, $4, $5)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate()], function (error, result) {
-        var query = client.query("INSERT INTO images(created, year, month, day, file, storage) values($1, $2, $3, $4, $5, 'James')", [req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url], function (error, result) {
+        var query = client.query("INSERT INTO images(created, year, month, day, file, storage) values($1, $2, $3, $4, $5, 'James')",[req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url] , function (error, result) {
 
                 if (error) {
                 res.status(304).send(error);
@@ -102,7 +100,6 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
             res.json({error_code:1,err_desc:err});
             return;
         }
-        console.log('hansemand: ',req.file);
         res.json({error_code:0,err_desc:null, filename: req.file.filename});
     });
 
@@ -111,12 +108,13 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 router.get('/img', function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query('DECLARE geturl CURSOR FOR SELECT * FROM images ORDER BY id DESC; FETCH FIRST FROM geturl', function(error, result){
-            if(error){
+        var query = client.query("SELECT *, path || folder || '/' || file AS url FROM images CROSS JOIN storages WHERE storage = folder AND id = (SELECT max(id) FROM images)", function(error, result){
+                if(error){
                 console.log(error);
             }
         })
         query.on('end', function(result){
+            console.log('min bare roev:', result.rows);
             client.end();
             res.status(200).send(result.rows);
         })
@@ -160,7 +158,6 @@ router.get('/img_get_one/:id?', function(req, res, next){
 router.get('/img_all', function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        //var query = client.query('SELECT * FROM images order by file_name desc', function(error, result){
         var query = client.query('SELECT * FROM images order by id asc', function(error, result){
 
                 if(error){
@@ -171,7 +168,6 @@ router.get('/img_all', function(req, res, next){
         query.on('end', function(result){
             client.end();
             res.status(200).send(result.rows);
-            //res.status(200).send(result.rows[0]);
         })
     })
 });

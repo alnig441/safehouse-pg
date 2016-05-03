@@ -171,7 +171,8 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         {name: 'acct_type', value: null},
         {name: 'Private', value: 'private'},
         {name: 'Public', value: 'public'},
-        {name: 'Admin', value: 'admin'}
+        {name: 'Admin', value: 'admin'},
+        {name: 'Superuser', value: 'superuser'}
     ];
 
     $scope.speak = [
@@ -552,6 +553,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
         $http.post('/search/query', $scope.form)
             .then(function(response){
                 $rootScope.events = response.data;
+                console.log('himmerland: ', $rootScope.events);
 
             })
             .then(function(){

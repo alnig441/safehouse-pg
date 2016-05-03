@@ -36,31 +36,38 @@ router.post('/query', call.isAuthenticated, function(req, res){
     var year = false;
     var month = false;
     var day = false;
+    var search = "";
 
     if(typeof req.body.year === 'number' && !req.body.date){
         year = true;
+        search = search + " AND YEAR = " + req.body.year;
     }
     if(typeof req.body.month === 'number'){
-        console.log(req.body.month, typeof req.body.month);
+        //console.log(req.body.month, typeof req.body.month);
         if(req.body.month === 12){
             req.body.month = 0;
         }
         month = true;
+        search = search + " AND MONTH = "+ req.body.month;
     }
     if(typeof req.body.day === 'string'){
         req.body.day = parseInt(req.body.day);
-        console.log(req.body.day, typeof req.body.day);
+        //console.log(req.body.day, typeof req.body.day);
         day = true;
+        search = search + " AND DAY = " + parseInt(req.body.day);
     }
 
-    console.log(year, month, day);
+    console.log(year, month, day, search);
 
     var query_string;
     if(req.body.database === 'events'){
-        query_string = 'SELECT * FROM events CROSS JOIN images WHERE events.img_id = images.id ORDER BY images.created ASC';
+        //query_string = 'SELECT * FROM events CROSS JOIN images WHERE events.img_id = images.id ORDER BY images.created ASC';
+        query_string ="SELECT X.IMG_ID, X.EVENT_DA, X.EVENT_EN, Y.CREATED, Z.LOCATION || Z.NAME || '/' || Y.FILE_NAME AS URL FROM EVENTS AS X CROSS JOIN IMAGES AS Y CROSS JOIN STORAGES AS Z WHERE X.IMG_ID = Y.ID AND Y.STORAGE = Z.NAME AND META IS NOT NULL" + search + " ORDER BY Y.CREATED";
+
     }
     if(req.body.database === 'images'){
-        query_string ='SELECT * FROM images WHERE meta IS NOT NULL ORDER BY created ASC';
+        //query_string ='SELECT * FROM images WHERE meta IS NOT NULL ORDER BY created ASC';
+        query_string ="SELECT X.ID, X.CREATED, Y.LOCATION || Y.NAME || '/' || X.FILE_NAME AS URL FROM IMAGES AS X CROSS JOIN STORAGES AS Y WHERE X.STORAGE = Y.NAME AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
     pg.connect(connectionString, function(error, client, done){
@@ -69,8 +76,10 @@ router.post('/query', call.isAuthenticated, function(req, res){
 
             if(error){console.log(error);}
         })
+/*
         query.on('row', function(row){
             var date = new Date(row.created);
+            //console.log('show me row: ', row);
             if(year && month && day){
                 if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month && date.getUTCDate() === req.body.day){
                     array.push(row);
@@ -95,16 +104,19 @@ router.post('/query', call.isAuthenticated, function(req, res){
                 array.push(row);
             }
         })
+*/
         query.on('end', function(result){
 
             client.end();
             if(req.body.meta !== undefined){
                 req.body.meta = call.splitString(req.body.meta);
                 array = call.selection(array, req.body);
-                res.status(200).send(array);
+                //res.status(200).send(array);
+                res.status(200).send(result.rows);
             }
             else{
-                res.status(200).send(array);
+                //res.status(200).send(array);
+                res.status(200).send(result.rows);
             }
 
         })
@@ -157,7 +169,7 @@ router.post('/dropdown', function(req, res, next){
                 case 'month':
                     if(date.getUTCFullYear() === req.body.year){
                         if(date.getUTCMonth() < 10){
-                            console.log(date.getUTCMonth());
+                            //console.log(date.getUTCMonth());
                             if(date.getUTCMonth() === 0){
                                 array.push(12);
                             }

@@ -26,7 +26,6 @@ var uploadFnct = function(dest){
             cb(null, './public/buffalo/'+dest+'/');
         },
         filename: function (req, file, cb) {
-            //var datetimestamp = Date.now();
             cb(null, file.originalname)
         }
     });

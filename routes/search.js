@@ -44,9 +44,9 @@ router.post('/query', call.isAuthenticated, function(req, res){
     }
     if(typeof req.body.month === 'number'){
         //console.log(req.body.month, typeof req.body.month);
-        if(req.body.month === 12){
-            req.body.month = 0;
-        }
+        //if(req.body.month === 12){
+        //    req.body.month = 0;
+        //}
         month = true;
         search = search + " AND MONTH = "+ req.body.month;
     }
@@ -62,12 +62,12 @@ router.post('/query', call.isAuthenticated, function(req, res){
     var query_string;
     if(req.body.database === 'events'){
         //query_string = 'SELECT * FROM events CROSS JOIN images WHERE events.img_id = images.id ORDER BY images.created ASC';
-        query_string ="SELECT X.IMG_ID, X.EVENT_DA, X.EVENT_EN, Y.CREATED, Z.LOCATION || Z.NAME || '/' || Y.FILE_NAME AS URL FROM EVENTS AS X CROSS JOIN IMAGES AS Y CROSS JOIN STORAGES AS Z WHERE X.IMG_ID = Y.ID AND Y.STORAGE = Z.NAME AND META IS NOT NULL" + search + " ORDER BY Y.CREATED";
+        query_string ="SELECT ID, EVENT_DA, EVENT_EN, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
 
     }
     if(req.body.database === 'images'){
         //query_string ='SELECT * FROM images WHERE meta IS NOT NULL ORDER BY created ASC';
-        query_string ="SELECT X.ID, X.CREATED, Y.LOCATION || Y.NAME || '/' || X.FILE_NAME AS URL FROM IMAGES AS X CROSS JOIN STORAGES AS Y WHERE X.STORAGE = Y.NAME AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
+        query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
     pg.connect(connectionString, function(error, client, done){
@@ -125,7 +125,7 @@ router.post('/query', call.isAuthenticated, function(req, res){
 
 router.post('/dropdown', function(req, res, next){
 
-    //console.log('..building dropdwon..', req.body);
+    console.log('..building dropdwon..', req.body);
 
     if(req.body.month === 12){
         req.body.month = 0;
@@ -133,10 +133,11 @@ router.post('/dropdown', function(req, res, next){
 
     var option = req.body.option;
     var db = req.body.database;
-    var array = [];
-    var temp = [];
+    //var array = [];
+    //var temp = [];
     var months = [
-        {value: 12, da: 'Januar', en:'January'},
+        //{value: 12, da: 'Januar', en:'January'},
+        {value: 0, da: 'Januar', en:'January'},
         {value: 1, da: 'Februar', en:'February'},
         {value: 2, da: 'Marts', en: 'March'},
         {value: 3, da: 'April', en:'April'},
@@ -150,9 +151,22 @@ router.post('/dropdown', function(req, res, next){
         {value: 11, da: 'December', en:'December'}
     ];
     var query_string;
-    db === 'events' ? query_string = 'SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC' : query_string = 'SELECT created FROM images ORDER BY CREATED DESC' ;
+    var filter = "";
 
-    //console.log(query_string);
+    switch (option) {
+        case 'month':
+            db === 'images' ? filter += " where year = "+ req.body.year : filter += " and year = "+ req.body.year;
+            break;
+        case 'day':
+            db === 'images' ? filter += " where year = "+ req.body.year +" and month = "+req.body.month : filter += " and year = "+ req.body.year +" and month = "+req.body.month;
+            break;
+    }
+
+    console.log('show me filter: ', filter);
+    //db === 'events' ? query_string = 'SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC' : query_string = 'SELECT created FROM images ORDER BY CREATED DESC' ;
+    db === 'events' ? query_string = 'SELECT DISTINCT '+ option +' FROM events CROSS JOIN images where id = img_id'+ filter +' ORDER BY '+ option +' asc' : query_string = 'SELECT DISTINCT '+ option +' FROM images '+ filter +' ORDER BY '+ option +' asc' ;
+
+    console.log(query_string);
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(query_string, function(error, result){
@@ -160,6 +174,7 @@ router.post('/dropdown', function(req, res, next){
                 res.status(200).send(error);
             }
         })
+/*
         query.on('row', function(row){
             var date = new Date(row.created);
             switch (option){
@@ -196,9 +211,22 @@ router.post('/dropdown', function(req, res, next){
                     break;
             }
         })
+*/
         query.on('end', function(result){
-            //console.log('1: ',array);
+            console.log('from postgres: ',result.rows);
             client.end();
+
+            if(option === 'month'){
+                result.rows.forEach(function(elem, ind, arr){
+                    months.forEach(function(x, y, z){
+                        if(elem.month === x.value){
+                            result.rows[ind] = x;
+                        }
+                    })
+                })
+            }
+
+/*
             if(array.length > 1){
                 array.sort().reduce(function(prev, curr, index, array){
                     //console.log(prev, curr, index, array);
@@ -240,8 +268,9 @@ router.post('/dropdown', function(req, res, next){
                         break;
                 }
             })
-            //console.log('3: ',array);
-            res.status(200).send(array);
+*/
+            console.log('hernede du:', result.rows);
+            res.status(200).send(result.rows);
 
         })
     })

@@ -580,13 +580,13 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
         //console.log('...jeller...', $scope, option);
 
         if(option === 'month') {
-            console.log('query: ' + $scope.query + ' form: ', $scope.form);
+            //console.log('query: ' + $scope.query + ' form: ', $scope.form);
             $scope.form.option = false;
             $scope.form.day = false;
             $scope.form.month = false;
         }
 
-        console.log('form: ', $scope.form);
+        //console.log('form: ', $scope.form);
         $scope.query = {};
         $scope.query = $scope.form;
         $scope.query.option = option;
@@ -600,7 +600,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
                 if(response.data[0].day !== undefined){
                     $scope.days = response.data;
                 }
-                console.log('search/dropdown response: ', response.data, $scope);
+                //console.log('search/dropdown response: ', response.data, $scope);
 
             });
 

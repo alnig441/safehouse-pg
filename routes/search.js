@@ -107,6 +107,8 @@ router.post('/query', call.isAuthenticated, function(req, res){
 */
         query.on('end', function(result){
 
+            console.log('search/query results: ', result.rows);
+
             client.end();
             if(req.body.meta !== undefined){
                 req.body.meta = call.splitString(req.body.meta);
@@ -162,7 +164,7 @@ router.post('/dropdown', function(req, res, next){
             break;
     }
 
-    console.log('show me filter: ', filter);
+    //console.log('show me filter: ', filter);
     //db === 'events' ? query_string = 'SELECT images.created FROM images cross join events where images.id = events.img_id ORDER BY CREATED DESC' : query_string = 'SELECT created FROM images ORDER BY CREATED DESC' ;
     db === 'events' ? query_string = 'SELECT DISTINCT '+ option +' FROM events CROSS JOIN images where id = img_id'+ filter +' ORDER BY '+ option +' asc' : query_string = 'SELECT DISTINCT '+ option +' FROM images '+ filter +' ORDER BY '+ option +' asc' ;
 
@@ -213,7 +215,7 @@ router.post('/dropdown', function(req, res, next){
         })
 */
         query.on('end', function(result){
-            console.log('from postgres: ',result.rows);
+            //console.log('from postgres: ',result.rows);
             client.end();
 
             if(option === 'month'){

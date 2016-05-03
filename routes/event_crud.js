@@ -49,8 +49,10 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
     //POSTGRES REFACTOR SAVE IMAGE
     pg.connect(connectionString, function (err, client, done) {
 
-        var query = client.query("INSERT INTO images(url, created, year, month, day) values($1, $2, $3, $4, $5)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate()], function (error, result) {
-            if (error) {
+        //var query = client.query("INSERT INTO images(url, created, year, month, day) values($1, $2, $3, $4, $5)", ['./buffalo/' + call.setDate(req.body.url).getFullYear() + '/' + req.body.url, req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate()], function (error, result) {
+        var query = client.query("INSERT INTO images(created, year, month, day, file, storage) values($1, $2, $3, $4, $5, 'James')", [req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url], function (error, result) {
+
+                if (error) {
                 res.status(304).send(error);
             }
         })

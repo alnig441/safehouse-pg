@@ -11,7 +11,7 @@ router.get('/latest', call.isAuthenticated, function(req, res){
 
         var event;
         //var query = client.query("declare geturl cursor for select * from events cross join images where events.img_id = images.id order by images.created desc; fetch first from geturl", function(error, result){
-        var query = client.query("declare geturl cursor for select id, event_da, event_en, path || folder || '/' || file as url from events cross join images cross join storages where img_id = id and storage = folder order by created desc; fetch first from geturl", function(error, result){
+        var query = client.query("declare geturl cursor for select id, created, event_da, event_en, path || folder || '/' || file as url from events cross join images cross join storages where img_id = id and storage = folder order by created desc; fetch first from geturl", function(error, result){
 
             if(error){ console.log('theres was an error ', error.detail);}
         })

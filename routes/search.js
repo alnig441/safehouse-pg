@@ -109,7 +109,7 @@ router.post('/query', call.isAuthenticated, function(req, res){
 */
         query.on('end', function(result){
 
-            console.log('search/query results: ', result.rows);`
+            console.log('search/query results: ', result.rows);
 
             client.end();
             if(req.body.meta !== undefined){

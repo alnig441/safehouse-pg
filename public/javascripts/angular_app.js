@@ -228,7 +228,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             $http.get('/event_crud/img_all')
                 .then(function(response){
                     $scope.images = response.data;
-                    console.log('send me images:', response.data);
                 });
         }
 
@@ -478,6 +477,8 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
             $scope.img.created = $scope.created;
         }
         $rootScope.f = file;
+
+        console.log("hvad sker der: ", $scope.img, file);
 
         if(file && !file.$error && opt) {
             file.upload = Upload.upload({

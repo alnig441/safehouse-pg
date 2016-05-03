@@ -57,7 +57,7 @@ router.post('/query', call.isAuthenticated, function(req, res){
         search = search + " AND DAY = " + parseInt(req.body.day);
     }
 
-    console.log(year, month, day, search);
+    //console.log(year, month, day, search);
 
     var query_string;
     if(req.body.database === 'events'){
@@ -69,6 +69,8 @@ router.post('/query', call.isAuthenticated, function(req, res){
         //query_string ='SELECT * FROM images WHERE meta IS NOT NULL ORDER BY created ASC';
         query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
+
+    console.log('query string: ', query_string);
 
     pg.connect(connectionString, function(error, client, done){
         var array = [];
@@ -107,7 +109,7 @@ router.post('/query', call.isAuthenticated, function(req, res){
 */
         query.on('end', function(result){
 
-            console.log('search/query results: ', result.rows);
+            console.log('search/query results: ', result.rows);`
 
             client.end();
             if(req.body.meta !== undefined){

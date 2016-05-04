@@ -41,9 +41,11 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
 
     console.log('adding image: ', req.body);
 
-    if (req.body.created == null) {
-        req.body.created = call.setDate(req.body.url);
-    }
+    //if (req.body.created == null) {
+    //    req.body.created = call.setDate(req.body.url);
+    //}
+
+    req.body.created == null ? req.body.created = call.setDate(req.body.url): req.body.created = new Date(req.body.created);
 
     console.log('jim-bob', Date.parse(req.body.created));
     //POSTGRES REFACTOR SAVE IMAGE

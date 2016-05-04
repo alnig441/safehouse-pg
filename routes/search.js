@@ -43,6 +43,9 @@ router.post('/query', call.isAuthenticated, function(req, res){
         search = search + " AND YEAR = " + req.body.year;
     }
     if(typeof req.body.month === 'number'){
+        if(req.body.month === 12){
+            req.body.month = 0;
+        }
         month = true;
         search = search + " AND MONTH = "+ req.body.month;
     }
@@ -94,7 +97,8 @@ router.post('/dropdown', function(req, res, next){
     var option = req.body.option;
     var db = req.body.database;
     var months = [
-        {value: 0, da: 'Januar', en:'January'},
+        {value: 12, da: 'Januar', en:'January'},
+        //{value: 0, da: 'Januar', en:'January'},
         {value: 1, da: 'Februar', en:'February'},
         {value: 2, da: 'Marts', en: 'March'},
         {value: 3, da: 'April', en:'April'},
@@ -135,6 +139,9 @@ router.post('/dropdown', function(req, res, next){
 
             if(option === 'month'){
                 result.rows.forEach(function(elem, ind, arr){
+                    if(elem.month === 0){
+                        result.rows[ind].month = 12;
+                    }
                     months.forEach(function(x, y, z){
                         if(elem.month === x.value){
                             result.rows[ind] = x;

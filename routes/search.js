@@ -64,6 +64,8 @@ router.post('/query', call.isAuthenticated, function(req, res){
         query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
+    console.log('hillemaend da: ', query_string);
+
     pg.connect(connectionString, function(error, client, done){
         var array = [];
         var query = client.query(query_string, function(error, result){

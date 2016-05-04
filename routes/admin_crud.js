@@ -120,7 +120,7 @@ router.get('/images/files', function(req, res, next){
 
 
         pg.connect(connectionString,function(error,client,done){
-            var query = client.query('SELECT name FROM images ORDER BY CREATED ASC', function(error, result){
+            var query = client.query('SELECT file FROM images ORDER BY CREATED ASC', function(error, result){
                 if(error){
                     console.log(error);
                 }
@@ -166,7 +166,7 @@ router.post('/images', function(req, res, next){
         created = call.setDate(req.body.file);
 
         pg.connect(connectionString, function(error, client, done){
-            var query = client.query("INSERT INTO images(url, created, year, month, day) values($1, $2, $3, $4, $5)", [url, created, created.getUTCFullYear(), created.getUTCMonth(), created.getUTCDate()],function(error, result){
+            var query = client.query("INSERT INTO images(file, created, year, month, day, storage) values($1, $2, $3, $4, $5, 'James')", [req.body.file, created, created.getUTCFullYear(), created.getUTCMonth(), created.getUTCDate()],function(error, result){
                 if(error){
                     console.log(error);
                 }

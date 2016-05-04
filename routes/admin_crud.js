@@ -99,7 +99,7 @@ router.get('/images/files', function(req, res, next){
 
     console.log('..getting files..');
 
-    fs.readdir('./public/buffalo/2015/', function(err, files){
+    fs.readdir('./public/buffalo/James/', function(err, files){
 
         console.log('original files: ', files.slice(0,5));
 
@@ -120,7 +120,7 @@ router.get('/images/files', function(req, res, next){
 
 
         pg.connect(connectionString,function(error,client,done){
-            var query = client.query('SELECT URL FROM images ORDER BY CREATED ASC', function(error, result){
+            var query = client.query('SELECT name FROM images ORDER BY CREATED ASC', function(error, result){
                 if(error){
                     console.log(error);
                 }
@@ -151,8 +151,8 @@ router.post('/images', function(req, res, next){
 
     req.body.file = req.body.file.toLowerCase();
 
-    var url = './buffalo/2015/';
-    var url = url + req.body.file;
+    //var url = './buffalo/James/';
+    //var url = url + req.body.file;
     var arr = req.body.file.split('_');
     var arr2 = req.body.file.split('-');
     var created;

@@ -94,8 +94,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.update_images = function(){
 
-        //BATCH UPDATE OF FILES
-/*
+        //BATCH UPLOAD OF FILES
         var stop = $interval(function(){
 
             $http.get('/admin_crud/images/files')
@@ -123,7 +122,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         }, 30000);
 
         console.log('..updating images..');
-*/
         //API CALL TO UPDATE IMAGES file_name
 /*
         var stop = $interval(function(){

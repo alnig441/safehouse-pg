@@ -50,9 +50,8 @@ router.post('/query', call.isAuthenticated, function(req, res){
         search = search + " AND MONTH = "+ req.body.month;
     }
     if(typeof req.body.day === 'number'){
-        //req.body.day = parseInt(req.body.day);
         day = true;
-        search = search + " AND DAY = " + parseInt(req.body.day);
+        search = search + " AND DAY = " + req.body.day;
     }
 
     var query_string;
@@ -63,8 +62,6 @@ router.post('/query', call.isAuthenticated, function(req, res){
     if(req.body.database === 'images'){
         query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
-
-    console.log('hillemaend da: ', query_string);
 
     pg.connect(connectionString, function(error, client, done){
         var array = [];

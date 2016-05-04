@@ -49,8 +49,8 @@ router.post('/query', call.isAuthenticated, function(req, res){
         month = true;
         search = search + " AND MONTH = "+ req.body.month;
     }
-    if(typeof req.body.day === 'string'){
-        req.body.day = parseInt(req.body.day);
+    if(typeof req.body.day === 'number'){
+        //req.body.day = parseInt(req.body.day);
         day = true;
         search = search + " AND DAY = " + parseInt(req.body.day);
     }

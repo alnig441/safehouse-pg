@@ -57,9 +57,6 @@ router.post('/query', call.isAuthenticated, function(req, res){
     if(req.body.meta !== undefined){
         var arr = req.body.meta.split(' ');
         arr.forEach(function(elem, ind, arr){
-            if(year === false && ind === 0){
-                search += " where '"+ elem.toLowerCase() +"' = any (meta)";
-            }
             search += " and '"+ elem.toLowerCase() +"'= any (meta)";
         })
 

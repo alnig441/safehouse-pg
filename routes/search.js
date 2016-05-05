@@ -54,6 +54,17 @@ router.post('/query', call.isAuthenticated, function(req, res){
         search = search + " AND DAY = " + req.body.day;
     }
 
+    if(req.body.meta !== undefined){
+        var arr = req.body.meta.split(' ');
+        arr.forEach(function(elem, ind, arr){
+            if(!year && ind === 0){
+                search += " where '"+ elem +"' = any (meta)";
+            }
+            search += " and '"+elem+"'= any (meta)";
+        })
+
+    }
+
     var query_string;
     if(req.body.database === 'events'){
         query_string ="SELECT ID, EVENT_DA, EVENT_EN, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
@@ -62,6 +73,8 @@ router.post('/query', call.isAuthenticated, function(req, res){
     if(req.body.database === 'images'){
         query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
+
+    console.log('..seach/query query string: ', query_string);
 
     pg.connect(connectionString, function(error, client, done){
         var array = [];
@@ -72,6 +85,7 @@ router.post('/query', call.isAuthenticated, function(req, res){
         query.on('end', function(result){
 
             client.end();
+/*
             if(req.body.meta !== undefined){
                 req.body.meta = call.splitString(req.body.meta);
                 array = call.selection(array, req.body);
@@ -80,6 +94,8 @@ router.post('/query', call.isAuthenticated, function(req, res){
             else{
                 res.status(200).send(result.rows);
             }
+*/
+            res.status(200).send(result.rows);
 
         })
     })

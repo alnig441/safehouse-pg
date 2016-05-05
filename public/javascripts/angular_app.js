@@ -114,12 +114,12 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                                     console.log(response.data);
                                 });
                             $timeout.cancel(stop2);
-                        },2000);
+                        },500);
 
                     });
                 });
 
-        }, 30000);
+        }, 5000);
 
         console.log('..updating images..');
         //API CALL TO UPDATE IMAGES file_name

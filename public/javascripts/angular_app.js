@@ -61,35 +61,35 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     //IMAGE BATCH UPDATE TOOL
 
-    //update_files();
-    //
-    //function update_files(){
-    //
-    //    var quantity = document.getElementById('new_files').getAttribute('data-value');
-    //    console.log('update_files: ', quantity, $rootScope.new_files, document.getElementById('new_files').getAttribute('data-value'));
-    //
-    //        $http.get('/admin_crud/images/new_files')
-    //            .then(function(response){
-    //                if(quantity === undefined){
-    //                    console.log('gummibamse', response.data, response.data.length);
-    //                    document.getElementById('new_files').setAttribute('data-value', response.data.length);
-    //                    $rootScope.new_files.quantity = response.data.length;
-    //                    $rootScope.new_files.present = true;
-    //                }
-    //                else if(quantity < response.data.length){
-    //                    console.log('gummiand: ', response.data, response.data.length);
-    //                    document.getElementById('new_files').setAttribute('data-value', response.data.length);
-    //                    $rootScope.new_files.quantity = response.data.length;
-    //                    $rootScope.new_files.present = true;
-    //                }
-    //                else{
-    //                    console.log('badebold: ', $rootScope.new_files.quantity);
-    //                    //document.getElementById('new_files').setAttribute('data-value', quantity);
-    //                    $rootScope.new_files.present = false;
-    //                }
-    //            });
-    //        console.log('helledelle: ', $rootScope, document.getElementById('new_files').getAttribute('data-value'));
-    //}
+    update_files();
+
+    function update_files(){
+
+        var elem =  document.getElementById('new_files');
+        var show = 'ng-show';
+
+        $http.get('/admin_crud/images/count')
+            .then(function(result){
+                $scope.img_db = result.data;
+
+                console.log('images in db: ', $scope.img_db);
+
+                $http.get('/admin_crud/images/new_files/')
+                    .then(function(result){
+                        if(result.data.amount  > $scope.img_db.size){
+                            console.log('new files in directory', result.data.amount);
+                            angular.element(elem).removeClass('ng-hide');
+                            angular.element(elem).addClass(show);
+                        }
+                        else{
+                            console.log('no new files in directory');
+                        }
+                    });
+            });
+
+
+
+    }
 
 
     $scope.update_images = function(){

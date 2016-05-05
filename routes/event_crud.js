@@ -64,7 +64,7 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
 
 })
 
-router.post('/add_event', function(req, res, next){
+router.post('/add_event', call.isAuthenticated, function(req, res, next){
 
     console.log('..adding event.. :', req.body);
 
@@ -108,7 +108,7 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
 });
 
-router.get('/img', function(req, res, next){
+router.get('/img', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query("SELECT *, path || folder || '/' || file AS url FROM images CROSS JOIN storages WHERE storage = folder AND id = (SELECT max(id) FROM images)", function(error, result){
@@ -117,14 +117,13 @@ router.get('/img', function(req, res, next){
             }
         })
         query.on('end', function(result){
-            console.log('min bare roev:', result.rows);
             client.end();
             res.status(200).send(result.rows);
         })
     })
 });
 
-router.get('/get_one/:img_id?', function(req, res, next){
+router.get('/get_one/:img_id?', call.isAuthenticated, function(req, res, next){
 
     console.log('getting event by img_id: ', req.params);
 
@@ -142,7 +141,7 @@ router.get('/get_one/:img_id?', function(req, res, next){
     })
 });
 
-router.get('/img_get_one/:id?', function(req, res, next){
+router.get('/img_get_one/:id?', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query("SELECT *, path || folder || '/' || file AS url FROM images CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
@@ -160,7 +159,7 @@ router.get('/img_get_one/:id?', function(req, res, next){
     })
 });
 
-router.get('/img_all', function(req, res, next){
+router.get('/img_all', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query('SELECT * FROM images order by id asc', function(error, result){
@@ -177,7 +176,7 @@ router.get('/img_all', function(req, res, next){
     })
 });
 
-router.put('/', function(req, res, next){
+router.put('/', call.isAuthenticated, function(req, res, next){
 
     console.log('..updating event ... ', req.body);
 
@@ -196,7 +195,7 @@ router.put('/', function(req, res, next){
 
 });
 
-router.put('/img_meta', function(req, res, next){
+router.put('/img_meta', call.isAuthenticated, function(req, res, next){
 
     console.log('...updating img meta ..', req.body);
 
@@ -216,7 +215,7 @@ router.put('/img_meta', function(req, res, next){
     })
 });
 
-//router.put('/img_url', function(req, res, next){
+//router.put('/img_url', call.isAuthenticated, function(req, res, next){
 //
 //    console.log('img_url: ', req.body.name, req.body.id);
 //

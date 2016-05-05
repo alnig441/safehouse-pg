@@ -95,7 +95,7 @@ router.put('/chg', call.isAuthenticated, function(req, res){
 
 });
 
-router.get('/images/files', function(req, res, next){
+router.get('/images/files', call.isAuthenticated, function(req, res, next){
 
     console.log('..getting files..');
 
@@ -145,7 +145,7 @@ router.get('/images/files', function(req, res, next){
 
 });
 
-router.post('/images', function(req, res, next){
+router.post('/images', call.isAuthenticated, function(req, res, next){
 
     console.log('in images: ', req.body.file);
 
@@ -182,13 +182,25 @@ router.post('/images', function(req, res, next){
 
 });
 
-router.get('/images/new_files', function(req, res, next){
+router.get('/images/count', call.isAuthenticated, function(req, res, next){
 
-    fs.readdir('./public/buffalo/2015/', function(err, files) {
+    pg.connect(connectionString, function(err, client, done){
+        var query = client.query("update storages set size = (select count(*) from images) where folder = 'James'; select size from storages where folder='James'", function(error, result){
+            if(error){
+                console.log(error);
+            }
+            query.on('end', function(result){
+                client.end();
+                res.status(200).send(result.rows[0]);
+            })
+        })
+    })
+})
 
-        console.log('jammerbugt: ', files);
+router.get('/images/new_files', call.isAuthenticated, function(req, res, next){
 
-        res.send(files);
+    fs.readdir('./public/buffalo/James/', function(err, files) {
+        res.send({amount: files.length});
 
     });
 
@@ -197,7 +209,7 @@ router.get('/images/new_files', function(req, res, next){
 // FOR UPDATE TOOL
 
 //
-//router.put('/date', function(req, res, next){
+//router.put('/date', call.isAuthenticated, function(req, res, next){
 //
 //
 //    pg.connect(connectionString, function(err, client, done){
@@ -213,7 +225,7 @@ router.get('/images/new_files', function(req, res, next){
 //    })
 //});
 //
-//router.post('/update', function(req, res, next){
+//router.post('/update', call.isAuthenticated, function(req, res, next){
 //
 //    var date = new Date(req.body.created);
 //

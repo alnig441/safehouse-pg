@@ -33,24 +33,24 @@ router.post('/query', call.isAuthenticated, function(req, res){
 
     console.log('...search/query.. ', req.body);
 
-    var year = false;
-    var month = false;
-    var day = false;
+    //var year = false;
+    //var month = false;
+    //var day = false;
     var search = "";
 
     if(typeof req.body.year === 'number' && !req.body.date){
-        year = true;
+        //year = true;
         search = search + " AND YEAR = " + req.body.year;
     }
     if(typeof req.body.month === 'number'){
         if(req.body.month === 12){
             req.body.month = 0;
         }
-        month = true;
+        //month = true;
         search = search + " AND MONTH = "+ req.body.month;
     }
     if(typeof req.body.day === 'number'){
-        day = true;
+        //day = true;
         search = search + " AND DAY = " + req.body.day;
     }
 
@@ -74,7 +74,7 @@ router.post('/query', call.isAuthenticated, function(req, res){
     console.log('..seach/query query string: ', query_string);
 
     pg.connect(connectionString, function(error, client, done){
-        var array = [];
+        //var array = [];
         var query = client.query(query_string, function(error, result){
 
             if(error){console.log(error);}
@@ -82,23 +82,13 @@ router.post('/query', call.isAuthenticated, function(req, res){
         query.on('end', function(result){
 
             client.end();
-/*
-            if(req.body.meta !== undefined){
-                req.body.meta = call.splitString(req.body.meta);
-                array = call.selection(array, req.body);
-                res.status(200).send(result.rows);
-            }
-            else{
-                res.status(200).send(result.rows);
-            }
-*/
             res.status(200).send(result.rows);
 
         })
     })
 });
 
-router.post('/dropdown', function(req, res, next){
+router.post('/dropdown', call.isAuthenticated, function(req, res, next){
 
     console.log('..building dropdwon..', req.body);
 

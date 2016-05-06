@@ -5,21 +5,6 @@ var call = require('../public/javascripts/myFunctions.js');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var multer = require('multer');
 
-/*
-var storage  = multer.diskStorage({
-    destination: function(req, file, cb){
-        console.log('in storage obj: ', file, req.user);
-        //cb(null, './public/buffalo/' + call.setDate(file.originalname).getFullYear() + '/')
-        cb(null, './public/buffalo/James/')
-    },
-    filename: function(req, file, cb){
-        cb(null, file.originalname)
-    }
-});
-var upload = multer({storage: storage});
-*/
-
-
 var uploadFnct = function(dest){
     var storage = multer.diskStorage({ //multers disk storage settings
         destination: function (req, file, cb) {
@@ -39,16 +24,9 @@ var uploadFnct = function(dest){
 
 router.post('/add_img', call.isAuthenticated, function(req, res) {
 
-    console.log('adding image: ', req.body);
-
-    //if (req.body.created == null) {
-    //    req.body.created = call.setDate(req.body.url);
-    //}
-
     req.body.created == null ? req.body.created = call.setDate(req.body.url): req.body.created = new Date(req.body.created);
 
-    console.log('jim-bob', Date.parse(req.body.created));
-    //POSTGRES REFACTOR SAVE IMAGE
+    //NB!! STORAGE IS HARDCODED!!
     pg.connect(connectionString, function (err, client, done) {
         var query = client.query("INSERT INTO images(created, year, month, day, file, storage) values($1, $2, $3, $4, $5, 'James')",[req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url] , function (error, result) {
 
@@ -66,8 +44,6 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
 
 router.post('/add_event', call.isAuthenticated, function(req, res, next){
 
-    console.log('..adding event.. :', req.body);
-
     pg.connect(connectionString, function (err, client, done) {
 
         var query = client.query("INSERT INTO events (event_da, event_en, img_id, updated) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, req.body.img_id, req.body.updated], function (error, result) {
@@ -83,15 +59,6 @@ router.post('/add_event', call.isAuthenticated, function(req, res, next){
     })
 
 });
-/*
-
-router.post('/upload', call.isAuthenticated, upload.single('file'), function(req, res, next){
-
-    console.log('in upload: ', req.file, req.body);
-
-    res.status(200);
-});
-*/
 
 router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
@@ -151,7 +118,6 @@ router.get('/img_get_one/:id?', call.isAuthenticated, function(req, res, next){
             }
         });
         query.on('end', function(result){
-            console.log('en enkelt begivenhed', result.rows);
             client.end();
             res.status(200).send(result.rows);
         })
@@ -178,8 +144,6 @@ router.get('/img_all', call.isAuthenticated, function(req, res, next){
 
 router.put('/', call.isAuthenticated, function(req, res, next){
 
-    console.log('..updating event ... ', req.body);
-
     pg.connect(connectionString, function(error, client, done){
         var query = client.query('UPDATE events SET (event_da, event_en) =($1, $2) WHERE img_id= $3 ', [req.body.event_da, req.body.event_en, req.body.img_id], function(error, result){
             if(error){
@@ -197,8 +161,6 @@ router.put('/', call.isAuthenticated, function(req, res, next){
 
 router.put('/img_meta', call.isAuthenticated, function(req, res, next){
 
-    console.log('...updating img meta ..', req.body);
-
     var array = call.splitString(req.body.meta);
 
     pg.connect(connectionString, function(error, client, done){
@@ -214,24 +176,6 @@ router.put('/img_meta', call.isAuthenticated, function(req, res, next){
         })
     })
 });
-
-//router.put('/img_url', call.isAuthenticated, function(req, res, next){
-//
-//    console.log('img_url: ', req.body.name, req.body.id);
-//
-//    pg.connect(connectionString, function(error, client, done){
-//        var query = client.query('UPDATE images SET file_name = $1 WHERE id = $2', [req.body.name, req.body.id], function(error, result){
-//            if(error){
-//                console.log(error);
-//                res.status(200).send(error);
-//            }
-//        })
-//        query.on('end', function(result){
-//            client.end();
-//            res.status(200).send(result);
-//        })
-//    })
-//});
 
 module.exports = router;
 

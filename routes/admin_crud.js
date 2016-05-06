@@ -200,7 +200,13 @@ router.get('/images/count', call.isAuthenticated, function(req, res, next){
 router.get('/images/new_files', call.isAuthenticated, function(req, res, next){
 
     fs.readdir('./public/buffalo/James/', function(err, files) {
-        res.send({amount: files.length});
+        var i = 0;
+        files.forEach(function(elem, ind, arr){
+            if(elem.charAt(0) === '.'){
+                i++;
+            }
+        })
+        res.send({amount: files.length - i});
 
     });
 

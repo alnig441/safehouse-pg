@@ -72,7 +72,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             .then(function(result){
                 $scope.img_db = result.data;
 
-                console.log('images in db: ', $scope.img_db);
+                console.log('images in db: ', $scope.img_db.size);
 
                 $http.get('/admin_crud/images/new_files/')
                     .then(function(result){
@@ -82,7 +82,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                             angular.element(elem).addClass(show);
                         }
                         else{
-                            console.log('no new files in directory');
+                            console.log('no new files in directory', result.data.amount);
                         }
                     });
             });

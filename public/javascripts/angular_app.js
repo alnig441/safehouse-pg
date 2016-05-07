@@ -76,7 +76,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
                 $http.get('/admin_crud/images/new_files/')
                     .then(function(result){
-                        if(result.data.amount  > $scope.img_db.size){
+                        if(parseInt(result.data.amount)  > parseInt($scope.img_db.size)){
                             console.log('new files in directory', result.data.amount);
                             angular.element(elem).removeClass('ng-hide');
                             angular.element(elem).addClass(show);

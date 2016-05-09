@@ -109,7 +109,7 @@ router.get('/images/files', call.isAuthenticated, function(req, res, next){
             var x = array[ind].split('_');
             var y = array[ind].split('-');
 
-            if(elem.length != 23){
+            if(elem.length < 23){
                 array[ind] = 'zzz';
             }
             else if(isNaN(y[0]) && x[0] !== 'img'){

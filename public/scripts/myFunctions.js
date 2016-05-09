@@ -14,8 +14,9 @@ var call = {
             arr.push(tmp[1].slice(0,2));
             arr.push(tmp[1].slice(2,4));
             arr.push(tmp[1].slice(4,6));
-            date = new Date([arr.slice(0,3).join('-'), arr.slice(3,6).join(':')].join('T'));
-            date.setHours(date.getHours()+5);
+            //date = new Date([arr.slice(0,3).join('-'), arr.slice(3,6).join(':')].join('T'));
+            date = new Date([arr.slice(0,3).join('-'), arr.slice(3,6).join(':')].join(' '));
+            //date.setHours(date.getHours()+5);
         }
         else if (string.length >=19) {
             string = string.slice(0,19);
@@ -24,8 +25,9 @@ var call = {
             tmp = tmp.join(':');
             string.pop();
             string.push(tmp);
-            date = new Date(string.join('T'));
-            date.setHours(date.getHours()+5);
+            //date = new Date(string.join('T'));
+            date = new Date(string.join(' '));
+            //date.setHours(date.getHours()+5);
         }
         else {
             date = new Date();

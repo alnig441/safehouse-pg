@@ -130,7 +130,9 @@ router.get('/images/files', call.isAuthenticated, function(req, res, next){
 
                 result.rows.forEach(function(elem,ind,arr){
                     for(var i = 0 ; i < files.length ; i ++){
-                        if(elem.file.slice(-23).toLowerCase() === files[i].toLowerCase()){
+                        var x = elem.file.split('.');
+                            //if(elem.file.slice(-23).toLowerCase() === files[i].toLowerCase()){
+                            if(x[0].toLowerCase() === files[i].toLowerCase()){
                             files[i] = 'zzz';
                         }
                     }

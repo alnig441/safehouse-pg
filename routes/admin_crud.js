@@ -203,7 +203,7 @@ router.get('/images/new_files', call.isAuthenticated, function(req, res, next){
     fs.readdir('./public/buffalo/James/', function(err, files) {
         var i = 0;
         files.forEach(function(elem, ind, arr){
-            if(elem.charAt(0) === '.' && elem.charAt(0).toLowerCase() !== 'i' && parseInt(elem.charAt(0)) !== 2){
+            if(elem.charAt(0) === '.' && parseInt(elem.charAt(0)) !== 2){
                 i++;
             }
         })

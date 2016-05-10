@@ -296,7 +296,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
         $http.put('/event_crud', $rootScope.event_form)
             .then(function(response){
-                console.log(response);
             });
 
         $rootScope.event_form = {};
@@ -307,6 +306,12 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 }]);
 
 app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
+
+    $http.get('/admin_crud/images/count')
+        .then(function(result){
+           $scope.img_db = result.data;
+            console.log(result.data);
+        });
 
     $scope.years = {};
     $scope.days = {};

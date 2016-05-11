@@ -3,6 +3,7 @@ var router = express.Router();
 var pg = require('pg');
 var call = require('../public/javascripts/myFunctions.js');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
+var ExifImage = require('exif').ExifImage;
 var multer = require('multer');
 
 var uploadFnct = function(dest){
@@ -24,23 +25,54 @@ var uploadFnct = function(dest){
 
 router.post('/add_img', call.isAuthenticated, function(req, res) {
 
-    req.body.created == null ? req.body.created = call.setDate(req.body.url): req.body.created = new Date(req.body.created);
+    console.log('/add_img: ', req.body);
+    var cols = "created, year, month, day, file, storage, latitude, longitude";
+    var vals = "$1, $2, $3, $4, $5, 'James', $6, $7";
 
-    //NB!! STORAGE IS HARDCODED!!
-    pg.connect(connectionString, function (err, client, done) {
-        var query = client.query("INSERT INTO images(created, year, month, day, file, storage) values($1, $2, $3, $4, $5, 'James')",[req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url] , function (error, result) {
-
-                if (error) {
-                console.log(error);
-                res.status(304).send(error);
+    new ExifImage({ image : './public/buffalo/James/'+ req.body.url }, function (error, exifData) {
+            if (exifData === undefined){
+                req.body.created === undefined ? req.body.created = new Date(): req.body.created = new Date(req.body.created);
             }
-        })
-        query.on('end', function (result) {
-            res.status(200).send(result.rows);
-        })
-    })
+            else{
+                console.log('all exif: ', exifData);
+                var dto = exifData.exif.DateTimeOriginal;
+                var make = exifData.image.Make.toLowerCase();
 
-})
+                if(exifData.gps !== undefined){
+                    req.body.latitude = exifData.gps.GPSLatitude;
+                    req.body.longitude = exifData.gps.GPSLongitude;
+                } else{
+                    req.body.latitude = null;
+                    req.body.longitude = null;
+                }
+
+                if(dto !== undefined){
+                    var arr = dto.split(' ');
+                    var arr1 = arr[0].split(':');
+                    var tempStr = arr1.join('-') + ' ' + arr[1];
+                    req.body.created = new Date(tempStr);
+                }
+                else if(exifData.image !== undefined && (make === 'motorola' || make === 'apple')){
+                    req.body.created = call.setDate(req.body.url);
+                }
+            }
+
+            pg.connect(connectionString, function (err, client, done) {
+                var query = client.query("INSERT INTO images("+cols+") values("+vals+")",[req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url, req.body.latitude, req.body.longitude] , function (error, result) {
+
+                    if (error) {
+                        console.log(error);
+                        res.status(304).send(error);
+                    }
+                })
+                query.on('end', function (result) {
+                    res.status(200).send(result.rows);
+                })
+            })
+
+        });
+
+});
 
 router.post('/add_event', call.isAuthenticated, function(req, res, next){
 

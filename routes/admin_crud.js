@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
 var pg = require('pg');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var bcrypt = require('bcrypt');
@@ -152,8 +151,6 @@ router.post('/images', call.isAuthenticated, function(req, res, next){
 
     req.body.file = req.body.file.toLowerCase();
 
-    //var url = './buffalo/James/';
-    //var url = url + req.body.file;
     var arr = req.body.file.split('_');
     var arr2 = req.body.file.split('-');
     var created;
@@ -213,44 +210,4 @@ router.get('/images/new_files', call.isAuthenticated, function(req, res, next){
 
 });
 
-// FOR UPDATE TOOL
-
-//
-//router.put('/date', call.isAuthenticated, function(req, res, next){
-//
-//
-//    pg.connect(connectionString, function(err, client, done){
-//        var query = client.query('select id, created from images', function(error, result){
-//            if(error){
-//                console.log(error);
-//            }
-//        })
-//        query.on('end',function(result){
-//            client.end();
-//            res.send({images: result.rows});
-//        })
-//    })
-//});
-//
-//router.post('/update', call.isAuthenticated, function(req, res, next){
-//
-//    var date = new Date(req.body.created);
-//
-//    pg.connect(connectionString, function(error, client, result){
-//        var query = client.query('update images set (year, month, day) = ($1, $2, $3) where id=$4',[date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), req.body.id], function(err, client, done){
-//            if(error){
-//                console.log(error);
-//            }
-//        })
-//        query.on('row', function(row){
-//            console.log('BAAAH: ', row);
-//        })
-//        query.on('end',function(result){
-//            client.end();
-//            res.send('forsatanda');
-//        })
-//    })
-//
-//});
-//
 module.exports = router;

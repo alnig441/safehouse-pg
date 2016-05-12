@@ -9,6 +9,7 @@ router.post('/authenticate',
         user.username = req.user.username;
         user.acct_type = req.user.acct_type;
         user.lang = req.user.lang;
+        user.storages = req.user.storages;
         res.send(user);
 });
 

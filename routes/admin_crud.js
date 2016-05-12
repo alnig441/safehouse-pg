@@ -15,7 +15,7 @@ router.post('/add', call.isAuthenticated, function(req, res){
         if(err){console.log(err);}
         var hash = bcrypt.hashSync(req.body.password, 12);
 
-        var query = client.query("INSERT INTO users(username, password, acct_type, lang) values($1, $2, $3, $4)", [req.body.username.toLowerCase(), hash, req.body.acct_type, req.body.lang], function(error, result){
+        var query = client.query("INSERT INTO users(username, password, acct_type, lang, storages) values($1, $2, $3, $4, '{"+req.body.folder+"}')", [req.body.username.toLowerCase(), hash, req.body.acct_type, req.body.lang], function(error, result){
             if(error){console.log(error.detail);}
         });
 
@@ -209,5 +209,20 @@ router.get('/images/new_files', call.isAuthenticated, function(req, res, next){
     });
 
 });
+
+router.get('/acct_adm/storages', call.isAuthenticated, function(req, res, next){
+
+    pg.connect(connectionString, function(err, client, done){
+        var query=client.query("select folder from storages order by folder asc", function(error, result){
+            if(err){
+                console.log(error);
+            }
+            query.on('end', function(result){
+                client.end();
+                res.status(200).send(result.rows);
+            })
+        })
+    })
+})
 
 module.exports = router;

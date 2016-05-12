@@ -62,6 +62,15 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     //IMAGE BATCH UPDATE TOOL
 
     update_files();
+    getStorages();
+
+    function getStorages(){
+        $http.get('/admin_crud/acct_adm/storages')
+            .then(function(response){
+                console.log('storage: ', response.data);
+                $scope.folders = response.data;
+            });
+    }
 
     function update_files(){
 
@@ -120,33 +129,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                 });
 
         }, 5000);
-
-        console.log('..updating images..');
-        //API CALL TO UPDATE IMAGES file_name
-/*
-        var stop = $interval(function(){
-
-            $http.get('/event_crud/img_all')
-                .then(function(response){
-                    var img = response.data;
-                    if(img.file_name !== null){
-                        $interval.cancel(stop);
-                    }
-
-                    else{
-                        var temp = img.url.split('/');
-                        img.name = temp[3];
-                        $http.put('/event_crud/img_url', img)
-                            .then(function(response){
-                                console.log(response);
-                            });
-                    }
-
-                });
-
-        }, 250);
-*/
-
 
     };
 
@@ -306,6 +288,8 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 }]);
 
 app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
+
+    console.log('in privctrl: ', this);
 
     $http.get('/admin_crud/images/count')
         .then(function(result){

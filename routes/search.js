@@ -31,11 +31,6 @@ router.get('/latest', call.isAuthenticated, function(req, res){
 
 router.post('/query', call.isAuthenticated, function(req, res){
 
-    console.log('...search/query.. ', req.body);
-
-    //var year = false;
-    //var month = false;
-    //var day = false;
     var search = "";
 
     if(typeof req.body.year === 'number' && !req.body.date){
@@ -71,8 +66,6 @@ router.post('/query', call.isAuthenticated, function(req, res){
         query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
-    console.log('..seach/query query string: ', query_string);
-
     pg.connect(connectionString, function(error, client, done){
         //var array = [];
         var query = client.query(query_string, function(error, result){
@@ -89,8 +82,6 @@ router.post('/query', call.isAuthenticated, function(req, res){
 });
 
 router.post('/dropdown', call.isAuthenticated, function(req, res, next){
-
-    console.log('..building dropdwon..', req.body);
 
     if(req.body.month === 12){
         req.body.month = 0;
@@ -127,8 +118,6 @@ router.post('/dropdown', call.isAuthenticated, function(req, res, next){
 
     db === 'events' ? query_string = 'SELECT DISTINCT '+ option +' FROM events CROSS JOIN images where id = img_id'+ filter +' ORDER BY '+ option +' asc' : query_string = 'SELECT DISTINCT '+ option +' FROM images '+ filter +' ORDER BY '+ option +' asc' ;
 
-    console.log(query_string);
-
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(query_string, function(error, result){
             if(error){
@@ -136,7 +125,6 @@ router.post('/dropdown', call.isAuthenticated, function(req, res, next){
             }
         })
         query.on('end', function(result){
-            console.log('printing '+ option +'s:', result.rows);
             client.end();
 
             if(option === 'month'){
@@ -151,8 +139,6 @@ router.post('/dropdown', call.isAuthenticated, function(req, res, next){
                     })
                 })
             }
-
-            console.log('sending rows: ', result.rows);
             res.status(200).send(result.rows);
 
         })

@@ -26,39 +26,31 @@ var uploadFnct = function(dest){
 router.post('/add_img', call.isAuthenticated, function(req, res) {
 
     console.log('/add_img: ', req.body);
-    var cols = "created, year, month, day, file, storage, latitude, longitude";
-    var vals = "$1, $2, $3, $4, $5, 'James', $6, $7";
+    var cols = "created, year, month, day, file, storage";
+    var vals = "$1, $2, $3, $4, $5, 'James'";
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.url }, function (error, exifData) {
+            var created = call.setDate(req.body.url);
+
             if (exifData === undefined){
-                req.body.created === undefined ? req.body.created = new Date(): req.body.created = new Date(req.body.created);
+                console.log('exif data FALSE');
+                if(created == 'Invalid Date'){
+                    req.body.created === undefined ? req.body.created = new Date(): req.body.created = new Date(req.body.created);
+                }
+                else{
+                    req.body.created = created;
+                }
             }
             else{
-                console.log('all exif: ', exifData);
-                var dto = exifData.exif.DateTimeOriginal;
-                var make = exifData.image.Make.toLowerCase();
-
-                if(exifData.gps !== undefined){
-                    req.body.latitude = exifData.gps.GPSLatitude;
-                    req.body.longitude = exifData.gps.GPSLongitude;
-                } else{
-                    req.body.latitude = null;
-                    req.body.longitude = null;
-                }
-
-                if(dto !== undefined){
-                    var arr = dto.split(' ');
-                    var arr1 = arr[0].split(':');
-                    var tempStr = arr1.join('-') + ' ' + arr[1];
-                    req.body.created = new Date(tempStr);
-                }
-                else if(exifData.image !== undefined && (make === 'motorola' || make === 'apple')){
-                    req.body.created = call.setDate(req.body.url);
-                }
+                console.log('exif data TRUE', exifData);
+                var dto = exifData.exif.DateTimeOriginal.split(' ');
+                var dto_0 = dto[0].split(':');
+                var timestamp = dto_0.join('-') + ' ' + dto[1];
+                req.body.created = new Date(timestamp);
             }
 
             pg.connect(connectionString, function (err, client, done) {
-                var query = client.query("INSERT INTO images("+cols+") values("+vals+")",[req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url, req.body.latitude, req.body.longitude] , function (error, result) {
+                var query = client.query("INSERT INTO images("+cols+") values("+vals+")",[req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url] , function (error, result) {
 
                     if (error) {
                         console.log(error);

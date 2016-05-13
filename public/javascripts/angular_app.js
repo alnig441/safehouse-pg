@@ -148,7 +148,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     $scope.acct = [
-        {name: 'acct_type', value: null},
+        {name: 'select acct_type', value: null},
         {name: 'Private', value: 'private'},
         {name: 'Public', value: 'public'},
         {name: 'Admin', value: 'admin'},
@@ -532,20 +532,12 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http){
 
 app.controller('AddStorageModalCtrl', function($scope, $modalInstance, $http){
 
-    //$scope.folders = $scope.$parent.$parent.user.storages;
-
-    console.log('add storage: ', $scope.user);
-
-
     $scope.submit = function(option){
 
         this.user.option = option;
 
-        console.log('submittal: ', this.user, $scope);
-
         $http.put('/admin_crud/acct_adm/modify_storage',this.user)
             .then(function(response){
-                console.log(response);
                 $scope.viewAcct(response.config.data.acct_type);
             });
 

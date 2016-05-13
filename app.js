@@ -27,8 +27,8 @@ var login = require('./routes/login');
 var logout = require('./routes/logout');
 var admin = require('./routes/admin_crud');
 var event = require('./routes/event_crud');
-var download = require('./routes/download');
 var search = require('./routes/search');
+var storages = require('./routes/storages');
 
 
 var app = express();
@@ -114,8 +114,8 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/admin_crud', admin);
 app.use('/event_crud', event);
-app.use('/download', download);
 app.use('/search', search);
+app.use('/storages', storages);
 
 app.use(express.static(path.join(__dirname, 'public')));
 

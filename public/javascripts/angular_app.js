@@ -57,20 +57,11 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 });
 
-app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval){
+app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','storageService', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval, storageService){
 
     //IMAGE BATCH UPDATE TOOL
 
     update_files();
-    getStorages();
-
-    function getStorages(){
-        $http.get('/admin_crud/acct_adm/storages')
-            .then(function(response){
-                console.log('storage: ', response.data);
-                $scope.folders = response.data;
-            });
-    }
 
     function update_files(){
 
@@ -81,17 +72,17 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             .then(function(result){
                 $scope.img_db = result.data;
 
-                console.log('images in db: ', $scope.img_db.size);
+                //console.log('images in db: ', $scope.img_db.size);
 
                 $http.get('/admin_crud/images/new_files/')
                     .then(function(result){
                         if(parseInt(result.data.amount)  > parseInt($scope.img_db.size)){
-                            console.log('new files in directory', result.data.amount);
+                            //console.log('new files in directory', result.data.amount);
                             angular.element(elem).removeClass('ng-hide');
                             angular.element(elem).addClass(show);
                         }
                         else{
-                            console.log('no new files in directory', result.data.amount);
+                            //console.log('no new files in directory', result.data.amount);
                         }
                     });
             });
@@ -99,7 +90,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
 
     }
-
 
     $scope.update_images = function(){
 
@@ -160,6 +150,22 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         {name: 'Danish', value: 'da'}
     ];
 
+    $scope.addStorage = function(){
+
+        $http.post('/storages/add', this.form)
+            .then(function(response){
+            });
+    };
+
+    $scope.deleteStorage = function(){
+
+        console.log('scope deleteStorage: ', $scope, this);
+
+        $http.put('/storages/delete', this.storage)
+            .then(function(response){
+                storageService.getStorages();
+        });
+    };
 
     $scope.addAcct = function(){
         var type = this.form.acct_type;
@@ -176,40 +182,62 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
         var x = 'active';
         var y = 'ng-hide';
+
         var list = document.getElementById('list');
         var add = document.getElementById('add');
+        var store = document.getElementById('store');
+
         var list_div = document.getElementById('list_div');
         var add_div = document.getElementById('add_div');
+        var store_div = document.getElementById('store_div');
 
         $scope.selected = opt;
+
         if(opt === 'list'){
             angular.element(list).addClass(x);
             angular.element(add).removeClass(x);
             angular.element(add_div).addClass(y);
             angular.element(list_div).removeClass(y);
+            //storageService.getStorages();
         }
         else if(opt === 'add'){
             angular.element(add).addClass(x);
             angular.element(list).removeClass(x);
             angular.element(list_div).addClass(y);
             angular.element(add_div).removeClass(y);
+            storageService.getStorages();
         }
         else if(opt === 'image'){
             angular.element(list).addClass(x);
             angular.element(add).removeClass(x);
+            angular.element(store).removeClass(x);
             angular.element(add_div).addClass(y);
+            angular.element(store_div).addClass(y);
             angular.element(list_div).removeClass(y);
+
         }
         else if(opt === 'event'){
             angular.element(add).addClass(x);
+            angular.element(store).removeClass(x);
             angular.element(list).removeClass(x);
             angular.element(list_div).addClass(y);
+            angular.element(store_div).addClass(y);
             angular.element(add_div).removeClass(y);
             $http.get('/event_crud/img_all')
                 .then(function(response){
                     $scope.images = response.data;
                 });
         }
+        else if(opt === 'storage'){
+            angular.element(store).addClass(x);
+            angular.element(add).removeClass(x);
+            angular.element(store).removeClass(x);
+            angular.element(list_div).addClass(y);
+            angular.element(add_div).addClass(y);
+            angular.element(store_div).removeClass(y);
+            storageService.getStorages();
+        }
+
 
     };
 
@@ -341,7 +369,7 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
         }
         else if(option === 'modify'){
             contr = 'ModifyAcctModalCtrl';
-            templ = 'modifyAcctModal.html';
+            templ = 'changePWModal.html';
         }
         else if(option === 'file'){
             contr = 'SaveImgModalCtrl';
@@ -352,8 +380,16 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             templ = 'addTagsModal.html';
         }
         else if(option === 'storage'){
-            contr = 'AddStorageModalCtrl';
-            templ = 'modifyAcctStorageModal.html';
+            contr = 'ModifyAcctModalCtrl';
+            templ = 'manageStoragesModal.html';
+        }
+        else if(option === 'modify_storage'){
+            contr = 'ModifyStorageModalCtrl';
+            templ = 'modifyStorageModal.html';
+        }
+        else if(option === 'add_storage'){
+            contr = 'ModifyStorageModalCtrl';
+            templ = 'addStorageModal.html';
         }
         else {
             angular.element(menu).collapse('hide');
@@ -506,22 +542,43 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
 
 });
 
-app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http){
+app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, storageService){
 
-    $scope.submit = function(){
+    storageService.getStorages();
 
-        if(this.user.new_password === $scope.user.confirm_password){
-            $http.put('/admin_crud/chg', $scope.user)
+    $scope.submit = function(option){
+
+        console.log('haer er vi: ', this);
+
+        if(option !== undefined){
+
+            this.user.option = option;
+
+            $http.put('/admin_crud/acct_adm/modify_storage',this.user)
                 .then(function(response){
-                    var alert = document.getElementById('alerts');
-                    angular.element(alert).html(response.data);
+                    $scope.viewAcct(response.config.data.acct_type);
                 });
-        }
-        else {
-            angular.element(document.getElementById('alerts')).html('password mismatch');
+
+            $modalInstance.dismiss('cancel');
         }
 
-        $modalInstance.dismiss('cancel');
+        else{
+
+            if(this.user.new_password === $scope.user.confirm_password){
+                $http.put('/admin_crud/chg', $scope.user)
+                    .then(function(response){
+                        var alert = document.getElementById('alerts');
+                        angular.element(alert).html(response.data);
+                    });
+            }
+            else {
+                angular.element(document.getElementById('alerts')).html('password mismatch');
+            }
+
+            $modalInstance.dismiss('cancel');
+
+        }
+
     };
 
     $scope.cancel = function(){
@@ -530,16 +587,26 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http){
 
 });
 
-app.controller('AddStorageModalCtrl', function($scope, $modalInstance, $http){
+app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http, $rootScope, storageService){
 
     $scope.submit = function(option){
 
-        this.user.option = option;
+        console.log('adding: ', $scope.form);
 
-        $http.put('/admin_crud/acct_adm/modify_storage',this.user)
-            .then(function(response){
-                $scope.viewAcct(response.config.data.acct_type);
-            });
+        if(option === 'add'){
+            $http.post('/storages/add', $scope.storage)
+                .then(function(response){
+                    storageService.getStorages();
+                });
+        }
+
+        if(option === 'modify'){
+            console.log('modifying this ', this.form);
+            $http.put('/storages/update', this.storage)
+                .then(function(response){
+                    storageService.getStorages();
+                });
+        }
 
         $modalInstance.dismiss('cancel');
     };
@@ -646,7 +713,18 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
     };
 });
 
-app.controller('publicCtrl', ['$scope', '$http', function($scope, $http){
-    $scope.message = 'velkommen til den offentlige afdeling';
-}]);
+app.factory('storageService', ['$http', '$rootScope', function($http, $rootScope){
 
+    var _storageFactory = {};
+
+    _storageFactory.getStorages = function(){
+
+        $http.get('/storages/all')
+            .then(function(response){
+                $rootScope.storages = response.data;
+            });
+    };
+
+    return _storageFactory;
+
+}]);

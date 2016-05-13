@@ -34,18 +34,15 @@ router.post('/query', call.isAuthenticated, function(req, res){
     var search = "";
 
     if(typeof req.body.year === 'number' && !req.body.date){
-        //year = true;
         search = search + " AND YEAR = " + req.body.year;
     }
     if(typeof req.body.month === 'number'){
         if(req.body.month === 12){
             req.body.month = 0;
         }
-        //month = true;
         search = search + " AND MONTH = "+ req.body.month;
     }
     if(typeof req.body.day === 'number'){
-        //day = true;
         search = search + " AND DAY = " + req.body.day;
     }
 

@@ -326,7 +326,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload){
     var menu = document.getElementsByClassName('collapse');
 
-
     $scope.animationsEnabled = true;
     $scope.open = function (size, option) {
 
@@ -352,10 +351,14 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             contr = 'AddTagsModalCtrl';
             templ = 'addTagsModal.html';
         }
+        else if(option === 'storage'){
+            contr = 'AddStorageModalCtrl';
+            templ = 'modifyAcctStorageModal.html';
+        }
         else {
             angular.element(menu).collapse('hide');
             contr = 'ModalInstanceCtrl';
-            templ ='myModalContent.html';
+            templ = 'myModalContent.html';
         }
 
         var modalInstance = $modal.open({
@@ -517,6 +520,34 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http){
         else {
             angular.element(document.getElementById('alerts')).html('password mismatch');
         }
+
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
+
+app.controller('AddStorageModalCtrl', function($scope, $modalInstance, $http){
+
+    //$scope.folders = $scope.$parent.$parent.user.storages;
+
+    console.log('add storage: ', $scope.user);
+
+
+    $scope.submit = function(option){
+
+        this.user.option = option;
+
+        console.log('submittal: ', this.user, $scope);
+
+        $http.put('/admin_crud/acct_adm/modify_storage',this.user)
+            .then(function(response){
+                console.log(response);
+                $scope.viewAcct(response.config.data.acct_type);
+            });
 
         $modalInstance.dismiss('cancel');
     };

@@ -27,6 +27,8 @@ router.post('/add', call.isAuthenticated, function(req, res){
     })
 });
 
+
+
 //View account
 router.get('/:acct_type?', call.isAuthenticated, function(req, res){
 
@@ -35,7 +37,7 @@ router.get('/:acct_type?', call.isAuthenticated, function(req, res){
     pg.connect(connectionString, function(err, client, done){
 
         var user = [];
-        var query = client.query("SELECT * FROM users WHERE acct_type='" + req.params.acct_type + "'", function(error, result){
+        var query = client.query("SELECT username, acct_type, lang, storages  FROM users WHERE acct_type='" + req.params.acct_type + "'", function(error, result){
             if(error){console.log('there was an error ', error.detail);}
         })
 
@@ -224,5 +226,25 @@ router.get('/acct_adm/storages', call.isAuthenticated, function(req, res, next){
         })
     })
 })
+
+router.put('/acct_adm/modify_storage', function(req, res, next){
+
+    console.log('storage add/remove: ', req.body);
+
+    var folder;
+    req.body.option === 'array_append' ? folder = req.body.storages_new: folder = req.body.storage;
+
+    pg.connect(connectionString,function(err,client,done){
+        var query=client.query("UPDATE users SET storages ="+ req.body.option +"(storages, '"+ folder +"') WHERE username='" + req.body.username + "'", function(error, result){
+            if(error){
+                console.log(error);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result);
+        })
+    })
+});
 
 module.exports = router;

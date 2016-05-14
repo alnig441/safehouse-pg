@@ -322,6 +322,11 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     $rootScope.active_storage = $rootScope.storages[0];
 
+    //$scope.change_db = function(){
+    //    console.log('changing db: ', this);
+    //    $rootScope.active_storage = this.storage;
+    //};
+
     $http.get('/admin_crud/images/count')
         .then(function(result){
            $scope.img_db = result.data;

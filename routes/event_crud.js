@@ -25,7 +25,7 @@ var uploadFnct = function(dest){
 
 router.post('/add_img', call.isAuthenticated, function(req, res) {
 
-    console.log('/add_img: ', req.body);
+    console.log('/add_img: ', req.body, req.user);
     var cols = "created, year, month, day, file, storage";
     var vals = "$1, $2, $3, $4, $5, 'James'";
 
@@ -86,7 +86,7 @@ router.post('/add_event', call.isAuthenticated, function(req, res, next){
 
 router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
-    console.log('in new upload: ', req.params);
+    console.log('in new upload: ', req.params, req.user);
 
     var currUpload = uploadFnct(req.params.dest);
     currUpload(req,res,function(err){

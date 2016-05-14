@@ -60,6 +60,7 @@ app.controller('switchCtrl', function($scope, $rootScope){
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','storageService', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval, storageService){
 
     //IMAGE BATCH UPDATE TOOL
+    //console.log('james dog: ', $rootScope);
 
     update_files();
 
@@ -205,7 +206,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             angular.element(list).removeClass(x);
             angular.element(list_div).addClass(y);
             angular.element(add_div).removeClass(y);
-            storageService.getStorages();
+            //storageService.getStorages();
         }
         else if(opt === 'image'){
             angular.element(list).addClass(x);
@@ -235,7 +236,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             angular.element(list_div).addClass(y);
             angular.element(add_div).addClass(y);
             angular.element(store_div).removeClass(y);
-            storageService.getStorages();
+            //storageService.getStorages();
         }
 
 
@@ -317,7 +318,9 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
 app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
 
-    console.log('in privctrl: ', this);
+    console.log('in privctrl: ', $rootScope.storages);
+
+    $rootScope.active_storage = $rootScope.storages[0];
 
     $http.get('/admin_crud/images/count')
         .then(function(result){
@@ -429,7 +432,7 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 });
 
 
-app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope) {
+app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, storageService) {
 
     $rootScope.new_files = {};
 
@@ -438,12 +441,15 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
             $http.post('/login/authenticate', $scope.form)
                 .then(function(response){
                     if(response.data.acct_type === 'admin'){
+                        storageService.getStorages();
                         $location.path('/admin/diary');
                     }
                     else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
+                        $rootScope.storages = response.data.storages;
                         $location.path('/priv_uk');
                     }
                     else if(response.data.acct_type === 'private' && response.data.lang === 'da'){
+                        $rootScope.storages = response.data.storages;
                         $location.path('/priv_dk');
                     }
                     else if(response.data.acct_type === 'public'){
@@ -717,7 +723,7 @@ app.factory('storageService', ['$http', '$rootScope', function($http, $rootScope
 
     var _storageFactory = {};
 
-    _storageFactory.getStorages = function(){
+    _storageFactory.getStorages = function(x){
 
         $http.get('/storages/all')
             .then(function(response){

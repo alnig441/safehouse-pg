@@ -182,10 +182,12 @@ router.post('/images', call.isAuthenticated, function(req, res, next){
 
 });
 
-router.get('/images/count', call.isAuthenticated, function(req, res, next){
+router.get('/images/count/:active_storage?', call.isAuthenticated, function(req, res, next){
+
+    console.log('in images count: ', req.params);
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query("update storages set size = (select count(*) from images) where folder = 'James'; select size from storages where folder='James'", function(error, result){
+        var query = client.query("update storages set size = (select count(*) from images where storage = '"+ req.params.active_storage + "') where folder = '"+ req.params.active_storage +"'; select size from storages where folder='"+ req.params.active_storage +"'", function(error, result){
             if(error){
                 console.log(error);
             }

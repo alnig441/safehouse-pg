@@ -199,14 +199,12 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             angular.element(add).removeClass(x);
             angular.element(add_div).addClass(y);
             angular.element(list_div).removeClass(y);
-            //storageService.getStorages();
         }
         else if(opt === 'add'){
             angular.element(add).addClass(x);
             angular.element(list).removeClass(x);
             angular.element(list_div).addClass(y);
             angular.element(add_div).removeClass(y);
-            //storageService.getStorages();
         }
         else if(opt === 'image'){
             angular.element(list).addClass(x);
@@ -236,7 +234,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             angular.element(list_div).addClass(y);
             angular.element(add_div).addClass(y);
             angular.element(store_div).removeClass(y);
-            //storageService.getStorages();
         }
 
 
@@ -320,18 +317,22 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     console.log('in privctrl: ', $rootScope.storages);
 
-    $rootScope.active_storage = $rootScope.storages[0];
+    $scope.selected_db = $rootScope.storages[0];
 
-    //$scope.change_db = function(){
-    //    console.log('changing db: ', this);
-    //    $rootScope.active_storage = this.storage;
-    //};
+    getCount($scope.selected_db);
 
-    $http.get('/admin_crud/images/count')
-        .then(function(result){
-           $scope.img_db = result.data;
-            console.log(result.data);
-        });
+    $scope.setActive = function(){
+        getCount($scope.selected_db);
+    };
+
+    function getCount(db){
+        console.log('getCount for ', db);
+        $http.get('/admin_crud/images/count/' + db)
+            .then(function(result){
+                $scope.img_db = result.data;
+                console.log(result.data);
+            });
+    }
 
     $scope.years = {};
     $scope.days = {};

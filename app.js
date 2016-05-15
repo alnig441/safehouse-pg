@@ -25,11 +25,13 @@ var pg = require('pg'),
 var routes = require('./routes/index');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
-var admin = require('./routes/admin_crud');
-var event = require('./routes/event_crud');
-var search = require('./routes/search');
-var storages = require('./routes/storages');
-
+var img_jobs = require('./routes/image_jobs');
+var images = require('./routes/images_mgmt');
+var dropdowns = require('./routes/dropdowns');
+var storages = require('./routes/storages_mgmt');
+var accounts = require('./routes/accounts_mgmt');
+var events = require('./routes/events_mgmt');
+var queries = require('./routes/queries');
 
 var app = express();
 
@@ -112,10 +114,14 @@ passport.deserializeUser(function(id, done){
 app.use('/', routes);
 app.use('/login', login);
 app.use('/logout', logout);
-app.use('/admin_crud', admin);
-app.use('/event_crud', event);
-app.use('/search', search);
-app.use('/storages', storages);
+app.use('/image_jobs', img_jobs);
+app.use('/images_mgmt', images);
+app.use('/dropdowns', dropdowns);
+app.use('/storages_mgmt', storages);
+app.use('/accounts_mgmt', accounts);
+app.use('/events_mgmt', events);
+app.use('/queries', queries);
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 

@@ -60,8 +60,6 @@ app.controller('switchCtrl', function($scope, $rootScope){
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','storageService', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval, storageService){
 
     //IMAGE BATCH UPDATE TOOL
-    //console.log('james dog: ', $rootScope);
-
     update_files();
 
     function update_files(){
@@ -69,21 +67,19 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         var elem =  document.getElementById('new_files');
         var show = 'ng-show';
 
-        $http.get('/admin_crud/images/count')
+        $http.get('/image_jobs/count/' + $rootScope.default_storage)
             .then(function(result){
                 $scope.img_db = result.data;
 
-                //console.log('images in db: ', $scope.img_db.size);
-
-                $http.get('/admin_crud/images/new_files/')
+                $http.get('/image_jobs/new_files/')
                     .then(function(result){
                         if(parseInt(result.data.amount)  > parseInt($scope.img_db.size)){
-                            //console.log('new files in directory', result.data.amount);
+                            console.log('new files in directory', result.data.amount);
                             angular.element(elem).removeClass('ng-hide');
                             angular.element(elem).addClass(show);
                         }
                         else{
-                            //console.log('no new files in directory', result.data.amount);
+                            console.log('no new files in directory', result.data.amount);
                         }
                     });
             });
@@ -97,7 +93,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         //BATCH UPLOAD OF FILES
         var stop = $interval(function(){
 
-            $http.get('/admin_crud/images/files')
+            $http.get('/image_jobs/files')
                 .then(function(response){
                     console.log(response);
                     response.data.forEach(function(elem, ind, arr){
@@ -109,7 +105,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                         console.log('FILE_NAME: ', image);
 
                         var stop2 = $timeout(function(){
-                            $http.post('/admin_crud/images', image)
+                            $http.post('/image_jobs/load', image)
                                 .then(function(response){
                                     console.log(response.data);
                                 });
@@ -153,7 +149,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.addStorage = function(){
 
-        $http.post('/storages/add', this.form)
+        $http.post('/storages_mgmt/add', this.form)
             .then(function(response){
             });
     };
@@ -162,7 +158,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
         console.log('scope deleteStorage: ', $scope, this);
 
-        $http.put('/storages/delete', this.storage)
+        $http.put('/storages_mgmt/delete', this.storage)
             .then(function(response){
                 storageService.getStorages();
         });
@@ -170,7 +166,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.addAcct = function(){
         var type = this.form.acct_type;
-        $http.post('/admin_crud/add', this.form)
+        $http.post('/accounts_mgmt/add', this.form)
             .then(function(response){
                 $scope.viewAcct(type, 'list');
                 $scope.select('list');
@@ -222,7 +218,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             angular.element(list_div).addClass(y);
             angular.element(store_div).addClass(y);
             angular.element(add_div).removeClass(y);
-            $http.get('/event_crud/img_all')
+            $http.get('/images_mgmt/get_all')
                 .then(function(response){
                     $scope.images = response.data;
                 });
@@ -241,7 +237,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.viewAcct = function(acct, show){
         var type = acct || this.form.acct_type;
-        $http.get('/admin_crud/'+ type)
+        $http.get('/accounts_mgmt/'+ type)
             .then(function(response){
                 $scope.users = response.data;
             });
@@ -249,7 +245,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.delAcct = function(){
         var type = this.user.acct_type;
-        $http.delete('/admin_crud/' + this.user.username)
+        $http.delete('/accounts_mgmt/' + this.user.username)
             .then(function(response){
                 $scope.viewAcct(type);
             });
@@ -263,7 +259,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
         this.form.img_id = $rootScope.img.id || this.selected_id;
         this.form.updated = new Date();
 
-        $http.post('/event_crud/add_event', this.form)
+        $http.post('/events_mgmt/add', this.form)
             .then(function(response){
                 console.log(response.data);
             });
@@ -279,14 +275,14 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             $scope.select('event');
         }
         else{
-            $http.get('/event_crud/img_get_one/' + id)
+            $http.get('/images_mgmt/get_one/' + id)
                 .then(function(response){
                     $rootScope.img = response.data[0];
                 });
         }
         var img_id = id;
 
-        $http.get('/event_crud/get_one/' + img_id)
+        $http.get('/events_mgmt/' + img_id)
             .then(function(response){
                 if(response.data.length !== 0){
                     $rootScope.event_form = response.data[0];
@@ -317,7 +313,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     console.log('in privctrl: ', $rootScope.storages);
 
-    $scope.selected_db = $rootScope.storages[0];
+    $scope.selected_db = $rootScope.default_storage;
 
     getCount($scope.selected_db);
 
@@ -327,7 +323,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     function getCount(db){
         console.log('getCount for ', db);
-        $http.get('/admin_crud/images/count/' + db)
+        $http.get('/image_jobs/count/' + db)
             .then(function(result){
                 $scope.img_db = result.data;
                 console.log(result.data);
@@ -348,7 +344,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         $scope.query.option = 'year';
         $scope.query.database = x;
 
-        $http.post('/search/dropdown', $scope.query)
+        $http.post('/dropdowns/build', $scope.query)
             .then(function(response){
                 $scope.years = response.data;
             });
@@ -425,7 +421,7 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
 
 app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
-    $http.get('/search/latest')
+    $http.get('/queries/latest')
         .then(function(response){
             $scope.event = response.data;
             console.log('this event: ', response.data);
@@ -448,14 +444,17 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
                 .then(function(response){
                     if(response.data.acct_type === 'admin'){
                         storageService.getStorages();
+                        $rootScope.default_storage = response.data.storages[0];
                         $location.path('/admin/diary');
                     }
                     else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
                         $rootScope.storages = response.data.storages;
+                        $rootScope.default_storage = $rootScope.storages[0];
                         $location.path('/priv_uk');
                     }
                     else if(response.data.acct_type === 'private' && response.data.lang === 'da'){
                         $rootScope.storages = response.data.storages;
+                        $rootScope.default_storage = $rootScope.storages[0];
                         $location.path('/priv_dk');
                     }
                     else if(response.data.acct_type === 'public'){
@@ -489,7 +488,7 @@ app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $root
 
     $scope.submit = function(){
 
-        $http.put('/event_crud/img_meta', $rootScope.img)
+        $http.put('/images_mgmt/add_meta', $rootScope.img)
             .then(function(response){
             });
 
@@ -518,7 +517,7 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
 
         if(file && !file.$error && opt) {
             file.upload = Upload.upload({
-                url: '/event_crud/upload/' + 'James',
+                url: '/images_mgmt/upload/' + 'James',
                 data: {file: file},
                 method: 'PUT'
             });
@@ -535,12 +534,12 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
             });
         }
 
-        $http.post('/event_crud/add_img', $scope.img)
+        $http.post('/images_mgmt/add', $scope.img)
             .then(function(response){
-                $http.get('/event_crud/img')
+                $http.get('/images_mgmt/get_latest')
                     .then(function(response){
                         $rootScope.img = response.data[0];
-                        $http.get('/event_crud/img_all')
+                        $http.get('/images_mgmt/get_all')
                             .then(function(response){
                                 $scope.images = response.data;
                             });
@@ -566,7 +565,7 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, st
 
             this.user.option = option;
 
-            $http.put('/admin_crud/acct_adm/modify_storage',this.user)
+            $http.put('/accounts_mgmt/modify_storage',this.user)
                 .then(function(response){
                     $scope.viewAcct(response.config.data.acct_type);
                 });
@@ -577,7 +576,7 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, st
         else{
 
             if(this.user.new_password === $scope.user.confirm_password){
-                $http.put('/admin_crud/chg', $scope.user)
+                $http.put('/accounts_mgmt/chg', $scope.user)
                     .then(function(response){
                         var alert = document.getElementById('alerts');
                         angular.element(alert).html(response.data);
@@ -606,7 +605,7 @@ app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http,
         console.log('adding: ', $scope.form);
 
         if(option === 'add'){
-            $http.post('/storages/add', $scope.storage)
+            $http.post('/storages_mgmt/add', $scope.storage)
                 .then(function(response){
                     storageService.getStorages();
                 });
@@ -614,7 +613,7 @@ app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http,
 
         if(option === 'modify'){
             console.log('modifying this ', this.form);
-            $http.put('/storages/update', this.storage)
+            $http.put('/storages_mgmt/update', this.storage)
                 .then(function(response){
                     storageService.getStorages();
                 });
@@ -636,7 +635,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
         $scope.form.database = db;
         var temp = [];
 
-        $http.post('/search/query', $scope.form)
+        $http.post('/queries', $scope.form)
             .then(function(response){
                 $rootScope.events = response.data;
 
@@ -673,7 +672,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
         $scope.query.option = option;
         $scope.query.database = db;
 
-        $http.post('/search/dropdown', $scope.query)
+        $http.post('/dropdowns/build', $scope.query)
             .then(function(response){
                 if(response.data[0].da !== undefined){
                     $scope.months = response.data;
@@ -729,10 +728,12 @@ app.factory('storageService', ['$http', '$rootScope', function($http, $rootScope
 
     var _storageFactory = {};
 
-    _storageFactory.getStorages = function(x){
+    _storageFactory.getStorages = function(){
+        console.log('in factory');
 
-        $http.get('/storages/all')
+        $http.get('/storages_mgmt/all')
             .then(function(response){
+                console.log('getstorages: ', response.data);
                 $rootScope.storages = response.data;
             });
     };

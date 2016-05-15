@@ -23,7 +23,7 @@ var uploadFnct = function(dest){
     return upload;
 };
 
-router.post('/add_img', call.isAuthenticated, function(req, res) {
+router.post('/add', call.isAuthenticated, function(req, res) {
 
     console.log('/add_img: ', req.body, req.user);
     var cols = "created, year, month, day, file, storage";
@@ -66,24 +66,6 @@ router.post('/add_img', call.isAuthenticated, function(req, res) {
 
 });
 
-router.post('/add_event', call.isAuthenticated, function(req, res, next){
-
-    pg.connect(connectionString, function (err, client, done) {
-
-        var query = client.query("INSERT INTO events (event_da, event_en, img_id, updated) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, req.body.img_id, req.body.updated], function (error, result) {
-            if (error) {
-                console.log('there was an error ', error);
-                res.status(200).send(error.error);
-            }
-        })
-        query.on('end', function (result) {
-            client.end();
-            res.status(200).send(result);
-        })
-    })
-
-});
-
 router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
     console.log('in new upload: ', req.params, req.user);
@@ -99,7 +81,7 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
 });
 
-router.get('/img', call.isAuthenticated, function(req, res, next){
+router.get('/get_latest', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query("SELECT *, path || folder || '/' || file AS url FROM images CROSS JOIN storages WHERE storage = folder AND id = (SELECT max(id) FROM images)", function(error, result){
@@ -114,25 +96,8 @@ router.get('/img', call.isAuthenticated, function(req, res, next){
     })
 });
 
-router.get('/get_one/:img_id?', call.isAuthenticated, function(req, res, next){
 
-    console.log('getting event by img_id: ', req.params);
-
-    pg.connect(connectionString, function(error, client, done){
-        var query = client.query('SELECT * FROM events WHERE img_id=' + parseInt(req.params.img_id), function(error, result){
-
-           if(error){
-               console.log(error);
-           }
-        });
-        query.on('end', function(result){
-            client.end();
-            res.status(200).send(result.rows);
-        })
-    })
-});
-
-router.get('/img_get_one/:id?', call.isAuthenticated, function(req, res, next){
+router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query("SELECT *, path || folder || '/' || file AS url FROM images CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
@@ -149,7 +114,7 @@ router.get('/img_get_one/:id?', call.isAuthenticated, function(req, res, next){
     })
 });
 
-router.get('/img_all', call.isAuthenticated, function(req, res, next){
+router.get('/get_all', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query('SELECT * FROM images order by id asc', function(error, result){
@@ -166,24 +131,8 @@ router.get('/img_all', call.isAuthenticated, function(req, res, next){
     })
 });
 
-router.put('/', call.isAuthenticated, function(req, res, next){
 
-    pg.connect(connectionString, function(error, client, done){
-        var query = client.query('UPDATE events SET (event_da, event_en) =($1, $2) WHERE img_id= $3 ', [req.body.event_da, req.body.event_en, req.body.img_id], function(error, result){
-            if(error){
-                console.log(error);
-                res.status(200).send(error);
-            }
-        })
-        query.on('end', function(result){
-            client.end();
-            res.status(200).send(result.rows);
-        })
-    })
-
-});
-
-router.put('/img_meta', call.isAuthenticated, function(req, res, next){
+router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
     var array = call.splitString(req.body.meta);
 

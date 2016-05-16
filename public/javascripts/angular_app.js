@@ -57,7 +57,7 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 });
 
-app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','storageService', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval, storageService){
+app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
     //IMAGE BATCH UPDATE TOOL
     update_files();
@@ -156,11 +156,9 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.deleteStorage = function(){
 
-        console.log('scope deleteStorage: ', $scope, this);
-
         $http.put('/storages_mgmt/delete', this.storage)
             .then(function(response){
-                storageService.getStorages();
+                appServices.getStorages();
         });
     };
 
@@ -298,7 +296,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.updateEvent = function(){
 
-        $http.put('/event_crud', $rootScope.event_form)
+        $http.put('/events_mgmt', $rootScope.event_form)
             .then(function(response){
             });
 
@@ -356,57 +354,23 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
-app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload){
+app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices){
     var menu = document.getElementsByClassName('collapse');
 
     $scope.animationsEnabled = true;
     $scope.open = function (size, option) {
 
-        var contr;
-        var templ;
-        if(option === 'login'){
-            contr = 'LoginModalCtrl';
-            templ = 'loginModal.html';
-        }
-        else if(option === 'resume'){
-            contr = 'ResumeModalCtrl';
-            templ = 'resumeModal.html';
-        }
-        else if(option === 'modify'){
-            contr = 'ModifyAcctModalCtrl';
-            templ = 'changePWModal.html';
-        }
-        else if(option === 'file'){
-            contr = 'SaveImgModalCtrl';
-            templ = 'saveImgModal.html';
-        }
-        else if(option === 'meta'){
-            contr = 'AddTagsModalCtrl';
-            templ = 'addTagsModal.html';
-        }
-        else if(option === 'storage'){
-            contr = 'ModifyAcctModalCtrl';
-            templ = 'manageStoragesModal.html';
-        }
-        else if(option === 'modify_storage'){
-            contr = 'ModifyStorageModalCtrl';
-            templ = 'modifyStorageModal.html';
-        }
-        else if(option === 'add_storage'){
-            contr = 'ModifyStorageModalCtrl';
-            templ = 'addStorageModal.html';
-        }
-        else {
+        var modal = appServices.setModal(option);
+
+        if(option === 'event'){
             angular.element(menu).collapse('hide');
-            contr = 'ModalInstanceCtrl';
-            templ = 'myModalContent.html';
         }
 
         var modalInstance = $modal.open({
             scope: $scope,
             animation: $scope.animationsEnabled,
-            templateUrl: templ,
-            controller: contr,
+            templateUrl: modal.templ,
+            controller: modal.contr,
             size: size,
             resolve: {
                 events: function () {
@@ -434,7 +398,7 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 });
 
 
-app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, storageService) {
+app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices) {
 
     $rootScope.new_files = {};
 
@@ -443,7 +407,7 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
             $http.post('/login/authenticate', $scope.form)
                 .then(function(response){
                     if(response.data.acct_type === 'admin'){
-                        storageService.getStorages();
+                        appServices.getStorages();
                         $rootScope.default_storage = response.data.storages[0];
                         $location.path('/admin/diary');
                     }
@@ -517,7 +481,7 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
 
         if(file && !file.$error && opt) {
             file.upload = Upload.upload({
-                url: '/images_mgmt/upload/' + 'James',
+                url: '/images_mgmt/upload/' + $rootScope.default_storage,
                 data: {file: file},
                 method: 'PUT'
             });
@@ -553,9 +517,9 @@ app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, 
 
 });
 
-app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, storageService){
+app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, appServices){
 
-    storageService.getStorages();
+    appServices.getStorages();
 
     $scope.submit = function(option){
 
@@ -598,7 +562,7 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, st
 
 });
 
-app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http, $rootScope, storageService){
+app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http, $rootScope, appServices){
 
     $scope.submit = function(option){
 
@@ -607,7 +571,7 @@ app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http,
         if(option === 'add'){
             $http.post('/storages_mgmt/add', $scope.storage)
                 .then(function(response){
-                    storageService.getStorages();
+                    appServices.getStorages();
                 });
         }
 
@@ -615,7 +579,7 @@ app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http,
             console.log('modifying this ', this.form);
             $http.put('/storages_mgmt/update', this.storage)
                 .then(function(response){
-                    storageService.getStorages();
+                    appServices.getStorages();
                 });
         }
 
@@ -724,20 +688,38 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
     };
 });
 
-app.factory('storageService', ['$http', '$rootScope', function($http, $rootScope){
+app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
-    var _storageFactory = {};
+    var _appServicesFactory = {};
 
-    _storageFactory.getStorages = function(){
-        console.log('in factory');
+    var modals = {
+        login: {contr: 'LoginModalCtrl', templ: 'loginModal.html'},
+        modify: {contr:'ModifyAcctModalCtrl', templ: 'changePWModal.html'},
+        resume: {contr: 'ResumeModalCtrl', templ: 'resumeModal.html'},
+        file: {contr : 'SaveImgModalCtrl', templ: 'saveImgModal.html'},
+        meta: {contr: 'AddTagsModalCtrl', templ: 'addTagsModal.html'},
+        storage: {contr: 'ModifyAcctModalCtrl', templ: 'manageStoragesModal.html'},
+        modify_storage: {contr: 'ModifyStorageModalCtrl', templ: 'modifyStorageModal.html'},
+        add_storage: {contr: 'ModifyStorageModalCtrl', templ: 'addStorageModal.html'},
+        event: {contr: 'ModalInstanceCtrl', templ: 'myModalContent.html'}
+    };
+
+
+    _appServicesFactory.getStorages = function(){
 
         $http.get('/storages_mgmt/all')
             .then(function(response){
-                console.log('getstorages: ', response.data);
                 $rootScope.storages = response.data;
             });
     };
 
-    return _storageFactory;
+    _appServicesFactory.setModal = function(option){
+
+        return modals[option];
+
+    };
+
+    return _appServicesFactory;
 
 }]);
+

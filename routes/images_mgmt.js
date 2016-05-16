@@ -134,11 +134,58 @@ router.get('/get_all', call.isAuthenticated, function(req, res, next){
 
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
-    var array = call.splitString(req.body.meta);
+    console.log('add_meta: ', req.body);
+
+    var obj = {};
+    obj.meta = '';
+    obj.names = '';
+    var m = call.splitString(req.body.meta);
+    var n = call.splitString(req.body.names);
+    var incr = 0;
+
+    m.forEach(function(elem, ind, arr){
+
+        obj.meta += "'" + elem + "'";
+        if(ind < m.length -1){
+            obj.meta += ",";
+        }
+    });
+
+    n.forEach(function(elem, ind, arr){
+
+        obj.names += "'" + elem + "'";
+        if(ind < n.length -1){
+            obj.names += ",";
+        }
+
+    });
+
+    var cols = [];
+    var vals = '';
+
+    for(var prop in req.body){
+        incr ++;
+        if(prop === 'names' || prop === 'meta'){
+            cols.push(prop);
+            vals += "array["+ obj[prop] + "]";
+            if(incr !== Object.keys(req.body).length -1){
+                vals += ",";
+            }
+        }
+        else if(prop !== 'id'){
+            cols.push(prop);
+            vals += "'" + req.body[prop] + "'";
+            if(incr !== Object.keys(req.body).length -1){
+                vals += ",";
+            }
+        }
+    }
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query('UPDATE images SET meta = $1 WHERE id = $2', [array, req.body.id], function(error, result){
-            if(error){
+        //var query = client.query("UPDATE images SET meta = $1 WHERE id = $2", [meta, req.body.id], function(error, result){
+        var query = client.query("UPDATE images SET("+ cols +") = ("+ vals +") WHERE id = '"+ req.body.id +"'", function(error, result){
+
+                if(error){
                 console.log(error);
                 res.status(200).send(error);
             }

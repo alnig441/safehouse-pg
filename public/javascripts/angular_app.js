@@ -173,8 +173,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.select = function(opt){
 
-        console.log('selecting: ', opt);
-
         var elem = {list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div'};
 
         for(var prop in elem){
@@ -372,19 +370,16 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
             $http.post('/login/authenticate', $scope.form)
                 .then(function(response){
                     if(response.data.acct_type === 'admin'){
-                        console.log('login: ', response.data);
                         appServices.getStorages();
                         $rootScope.default_storage = response.data.storages[0];
                         $location.path('/admin/diary');
                     }
                     else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
-                        console.log('login: ', response.data);
                         $rootScope.storages = response.data.storages;
                         $rootScope.default_storage = $rootScope.storages[0];
                         $location.path('/priv_uk');
                     }
                     else if(response.data.acct_type === 'private' && response.data.lang === 'da'){
-                        console.log('login: ', response.data);
                         $rootScope.storages = response.data.storages;
                         $rootScope.default_storage = $rootScope.storages[0];
                         $location.path('/priv_dk');
@@ -418,9 +413,20 @@ app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
 
 app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $rootScope){
 
+
     $scope.submit = function(){
 
-        $http.put('/images_mgmt/add_meta', $rootScope.img)
+        $scope.obj = {};
+        $scope.obj.meta = $rootScope.img.meta;
+        $scope.obj.names = $rootScope.img.names;
+        $scope.obj.country = $rootScope.img.country;
+        $scope.obj.state = $rootScope.img.state;
+        $scope.obj.city = $rootScope.img.city;
+        $scope.obj.id = $rootScope.img.id;
+
+        //console.log('adding meta: ', $scope.meta);
+
+        $http.put('/images_mgmt/add_meta', $scope.obj)
             .then(function(response){
             });
 
@@ -490,8 +496,6 @@ app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, ap
     appServices.getStorages();
 
     $scope.submit = function(option){
-
-        console.log('haer er vi: ', this);
 
         if(option !== undefined){
 

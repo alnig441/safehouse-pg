@@ -372,16 +372,19 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
             $http.post('/login/authenticate', $scope.form)
                 .then(function(response){
                     if(response.data.acct_type === 'admin'){
+                        console.log('login: ', response.data);
                         appServices.getStorages();
                         $rootScope.default_storage = response.data.storages[0];
                         $location.path('/admin/diary');
                     }
                     else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
+                        console.log('login: ', response.data);
                         $rootScope.storages = response.data.storages;
                         $rootScope.default_storage = $rootScope.storages[0];
                         $location.path('/priv_uk');
                     }
                     else if(response.data.acct_type === 'private' && response.data.lang === 'da'){
+                        console.log('login: ', response.data);
                         $rootScope.storages = response.data.storages;
                         $rootScope.default_storage = $rootScope.storages[0];
                         $location.path('/priv_dk');

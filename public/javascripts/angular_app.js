@@ -173,61 +173,26 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.select = function(opt){
 
-        //console.log('selecting: ', $rootScope.selected_id, this.selected_id, $scope.selected_id);
+        console.log('selecting: ', opt);
 
-        var x = 'active';
-        var y = 'ng-hide';
+        var elem = {list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div'};
 
-        var list = document.getElementById('list');
-        var add = document.getElementById('add');
-        var store = document.getElementById('store');
-
-        var list_div = document.getElementById('list_div');
-        var add_div = document.getElementById('add_div');
-        var store_div = document.getElementById('store_div');
-
-        $scope.selected = opt;
-
-        if(opt === 'list'){
-            angular.element(list).addClass(x);
-            angular.element(add).removeClass(x);
-            angular.element(add_div).addClass(y);
-            angular.element(list_div).removeClass(y);
+        for(var prop in elem){
+            if(prop !== opt){
+                angular.element(document.getElementById(prop)).removeClass('active');
+                angular.element(document.getElementById(elem[prop])).addClass('ng-hide');
+            }
+            else{
+                angular.element(document.getElementById(prop)).addClass('active');
+                angular.element(document.getElementById(elem[prop])).removeClass('ng-hide');
+            }
         }
-        else if(opt === 'add'){
-            angular.element(add).addClass(x);
-            angular.element(list).removeClass(x);
-            angular.element(list_div).addClass(y);
-            angular.element(add_div).removeClass(y);
-        }
-        else if(opt === 'image'){
-            angular.element(list).addClass(x);
-            angular.element(add).removeClass(x);
-            angular.element(store).removeClass(x);
-            angular.element(add_div).addClass(y);
-            angular.element(store_div).addClass(y);
-            angular.element(list_div).removeClass(y);
 
-        }
-        else if(opt === 'event'){
-            angular.element(add).addClass(x);
-            angular.element(store).removeClass(x);
-            angular.element(list).removeClass(x);
-            angular.element(list_div).addClass(y);
-            angular.element(store_div).addClass(y);
-            angular.element(add_div).removeClass(y);
+        if(opt === 'event'){
             $http.get('/images_mgmt/get_all')
                 .then(function(response){
                     $scope.images = response.data;
                 });
-        }
-        else if(opt === 'storage'){
-            angular.element(store).addClass(x);
-            angular.element(add).removeClass(x);
-            angular.element(store).removeClass(x);
-            angular.element(list_div).addClass(y);
-            angular.element(add_div).addClass(y);
-            angular.element(store_div).removeClass(y);
         }
 
 

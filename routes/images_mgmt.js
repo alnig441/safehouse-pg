@@ -100,7 +100,7 @@ router.get('/get_latest', call.isAuthenticated, function(req, res, next){
 router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query("SELECT *, path || folder || '/' || file AS url FROM images CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
+        var query = client.query("SELECT meta, names, country, state, city, occasions, id, path || folder || '/' || file AS url FROM images CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
 
                 if(error){
                 console.log(error);
@@ -134,55 +134,57 @@ router.get('/get_all', call.isAuthenticated, function(req, res, next){
 
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
-    console.log('add_meta: ', req.body);
-
-    var obj = {};
-    obj.meta = '';
-    obj.names = '';
-    var m = call.splitString(req.body.meta);
-    var n = call.splitString(req.body.names);
+    var body = {};
     var incr = 0;
-
-    m.forEach(function(elem, ind, arr){
-
-        obj.meta += "'" + elem + "'";
-        if(ind < m.length -1){
-            obj.meta += ",";
-        }
-    });
-
-    n.forEach(function(elem, ind, arr){
-
-        obj.names += "'" + elem + "'";
-        if(ind < n.length -1){
-            obj.names += ",";
-        }
-
-    });
-
     var cols = [];
     var vals = '';
 
+    function build(array){
+        var str = '';
+        array.forEach(function(elem, ind, arr){
+            str += "'" + elem + "'";
+            if(ind < array.length -1){
+                str += ",";
+            }
+        });
+        return str;
+    }
+
     for(var prop in req.body){
+        if(prop !== 'id' && prop !== 'url' && req.body[prop] !== null && req.body[prop] !== 'null'){
+            body[prop] = req.body[prop];
+        }
+    }
+
+    if(body.meta !== undefined){
+        body.meta = build(call.splitString(req.body.meta));
+    }
+
+    if(body.names !== undefined){
+        body.names = build(call.splitString(req.body.names));
+    }
+
+    for(var prop in body){
         incr ++;
         if(prop === 'names' || prop === 'meta'){
             cols.push(prop);
-            vals += "array["+ obj[prop] + "]";
-            if(incr !== Object.keys(req.body).length -1){
+            vals += "array["+ body[prop] + "]";
+            if(incr < Object.keys(body).length){
                 vals += ",";
             }
         }
-        else if(prop !== 'id'){
+        else{
             cols.push(prop);
-            vals += "'" + req.body[prop] + "'";
-            if(incr !== Object.keys(req.body).length -1){
+            vals += "'" + body[prop] + "'";
+            if(incr < Object.keys(body).length){
                 vals += ",";
             }
         }
     }
 
+    console.log("Columns: " + cols + "\nValues: "+ vals + "\nReq body length: " + Object.keys(body).length);
+
     pg.connect(connectionString, function(error, client, done){
-        //var query = client.query("UPDATE images SET meta = $1 WHERE id = $2", [meta, req.body.id], function(error, result){
         var query = client.query("UPDATE images SET("+ cols +") = ("+ vals +") WHERE id = '"+ req.body.id +"'", function(error, result){
 
                 if(error){

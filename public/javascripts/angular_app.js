@@ -416,17 +416,9 @@ app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $root
 
     $scope.submit = function(){
 
-        $scope.obj = {};
-        $scope.obj.meta = $rootScope.img.meta;
-        $scope.obj.names = $rootScope.img.names;
-        $scope.obj.country = $rootScope.img.country;
-        $scope.obj.state = $rootScope.img.state;
-        $scope.obj.city = $rootScope.img.city;
-        $scope.obj.id = $rootScope.img.id;
+        console.log('adding meta: ', $rootScope.img);
 
-        //console.log('adding meta: ', $scope.meta);
-
-        $http.put('/images_mgmt/add_meta', $scope.obj)
+        $http.put('/images_mgmt/add_meta', $rootScope.img)
             .then(function(response){
             });
 

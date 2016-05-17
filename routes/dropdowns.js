@@ -70,4 +70,61 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
 
 });
 
+router.get('/:value?', function(req, res, next){
+
+    var temp=[];
+
+    pg.connect(connectionString, function(error, client, done){
+
+        var query = client.query("SELECT DISTINCT " + req.params.value + " FROM images WHERE "+ req.params.value + " IS NOT NULL ORDER BY " + req.params.value + " ASC", function(error, result){
+            if(error){
+                res.status(200).send(error);
+            }
+        })
+        query.on('row', function(row){
+            if(req.params.value === 'names' || req.params.value === 'meta'){
+                temp.push(row[req.params.value]);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+
+            if(req.params.value === 'meta' || req.params.value === 'names'){
+                var x = [];
+                var length = temp.length;
+
+                temp.forEach(function(elem, ind, arr){
+                    if(arr.length === length){
+                        x = elem.concat(arr[arr.length -1]);
+                        arr.pop();
+                    }
+                    else if(ind + 1 < arr.length){
+                        x = x.concat(elem.concat(arr[arr.length] -1));
+                        arr.pop();
+                    }
+                    else if(arr.length === 1){
+                        x = x.concat(elem);
+                    }
+                });
+
+                x.sort();
+                x.push('zzz');
+                var y = [];
+
+                x.reduce(function(prev, curr, ind, arr){
+                    if(arr[ind-1]!== curr && typeof arr[ind-1] === 'string'){
+                        y.push(arr[ind-1]);
+                    }
+                });
+
+                res.status(200).send(y);
+            }
+            else{
+                res.status(200).send(result.rows);
+            }
+        })
+    })
+
+});
+
 module.exports = router;

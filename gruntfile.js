@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         jshint: {
-            files: ['gruntfile.js', paths.from.scripts, '/routes/*.js'],
+            files: ['gruntfile.js', paths.from.scripts, '/routes/*.js', paths.from.modules],
             options: {
                 globals: {
                     jquery: true
@@ -88,19 +88,6 @@ module.exports = function(grunt) {
             }
         },
 
-        //FOR GRUNT-JADE
-
-        //jade: {
-        //    //html: {
-        //        files: {
-        //            './public/views/': [paths.from.templates]
-        //        },
-        //        options: {
-        //            client: false
-        //        //}
-        //    }
-        //},
-
         concat: {
             options: {
                 separator: ';'
@@ -120,7 +107,8 @@ module.exports = function(grunt) {
             my_target: {
                 files: {
                     './public/scripts/angular_app.min.js': ['./public/scripts/app.js'],
-                    './public/scripts/myFunctions.min.js': ['./development/modules/myFunctions.js']
+                    //'./public/scripts/myFunctions.min.js': ['./development/modules/myFunctions.js'],
+                    './public/javascripts/myFunctions.min.js': ['./development/modules/myFunctions.js']
                 }
             }
         },
@@ -141,7 +129,6 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-jade-tasks');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    //grunt.loadNpmTasks('grunt-jade');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -153,5 +140,5 @@ module.exports = function(grunt) {
 
 var paths = {
     from: {scripts: './development/javascripts/*.js', templates: './development/templates/*.jade', styles: './development/styles/*.css', icons: './development/icons/*.svg', modules: './development/modules/*.js'},
-    to: {scripts: './public/javascripts/angular_app.js', templates: './public/views/', styles: './public/stylesheets/', icons: './public/icons/', modules: './public/scripts/', vendors: './public/vendors/'}
+    to: {scripts: './public/javascripts/angular_app.js', templates: './public/views/', styles: './public/stylesheets/', icons: './public/icons/', modules: './public/javascripts/', vendors: './public/vendors/'}
 };

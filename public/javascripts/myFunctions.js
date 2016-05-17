@@ -1,1 +1,137 @@
-var call={setDate:function(e){var t;if(e=e.toLowerCase(),"i"==e.charAt(0)&&"m"==e.charAt(1)&&"g"==e.charAt(2)&&e.length>=23){var a=[];e=e.slice(4,19);var n=e.split("_");a.push(n[0].slice(0,4)),a.push(n[0].slice(4,6)),a.push(n[0].slice(6,8)),a.push(n[1].slice(0,2)),a.push(n[1].slice(2,4)),a.push(n[1].slice(4,6)),t=new Date([a.slice(0,3).join("-"),a.slice(3,6).join(":")].join("T")),t.setHours(t.getHours()+5)}else if(e.length>=19){e=e.slice(0,19),e=e.split(" ");var n=e[1].split(".");n=n.join(":"),e.pop(),e.push(n),t=new Date(e.join("T")),t.setHours(t.getHours()+5)}else t=new Date;return t},parser:function(e){var t=e.slice(1,11),a={},n=t.split("-"),s=["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"],i=["Jan","Feb","Mar","Apr","May","Juni","Juli","Aug","Sep","Oct","Nov","Dec"];return a.en=n[2]+" "+s[parseInt(n[1]-1)]+" "+n[0],a.da=n[2]+" "+i[parseInt(n[1]-1)]+" "+n[0],a},splitString:function(e){var t=" ",a=e.toLowerCase().split(t);return a},isAuthenticated:function(e,t,a){return e.isAuthenticated()?a():void t.send("unauthorized OR session expired - log in again")},selection:function(e,t){var a=[];return"events"==t.database?(e.forEach(function(e,n,s){var i=e.created;i.getMonth()+1==t.month&&i.getFullYear()==t.year&&a.push(e)}),a):"images"==t.database?(e.forEach(function(e,n,s){var i=0;e.meta.forEach(function(n,s,r){for(var o=0;o<t.meta.length;o++)n==t.meta[o]&&(i++,i==t.meta.length&&a.push(e))})}),a):void 0}};module.exports=call;
+var call = {
+    setDate: function(string){
+        var date;
+        var tmp;
+        string = string.toLowerCase();
+
+        if(string.charAt(0)=='i' && string.charAt(1)=='m' && string.charAt(2)=='g' && string.length >= 23 ){
+            var arr = [];
+            string = string.slice(4,19);
+            tmp = string.split('_');
+            arr.push(tmp[0].slice(0,4));
+            arr.push(tmp[0].slice(4,6));
+            arr.push(tmp[0].slice(6,8));
+            arr.push(tmp[1].slice(0,2));
+            arr.push(tmp[1].slice(2,4));
+            arr.push(tmp[1].slice(4,6));
+            date = new Date([arr.slice(0,3).join('-'), arr.slice(3,6).join(':')].join(' '));
+        }
+        else if (string.length >=19) {
+            string = string.slice(0,19);
+            string = string.split(' ');
+            tmp = string[1].split('.');
+            tmp = tmp.join(':');
+            string.pop();
+            string.push(tmp);
+            date = new Date(string.join(' '));
+        }
+        else {
+            date = new Date();
+        }
+
+        console.log('setDate: ', date);
+        return date;
+    },
+    parser: function(string){
+        var temp = string.slice(1,11);
+        var created = {};
+        var arr = temp.split('-');
+        var months =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var months_da =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Juni', 'Juli', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        created.en = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];
+        created.da = arr[2] + ' ' + months_da[parseInt(arr[1]-1)] + ' ' + arr[0];
+        return created;
+    },
+    splitString: function(meta){
+        console.log('..splitstring..', meta);
+        var separator = ' ';
+        var temp = meta.toLowerCase().split(separator);
+        return temp;
+        },
+    isAuthenticated: function(req, res, next){
+        if(req.isAuthenticated()){
+            return next();
+            }
+        res.send('unauthorized OR session expired - log in again');
+
+        },
+    selection: function(dbDump , query){
+        console.log('..myfunctions..', dbDump, query);
+        var temp =[];
+        if(query.database == 'events'){
+            dbDump.forEach(function(element, index, array){
+                var date = element.created;
+                if((date.getMonth()+1 == query.month) && (date.getFullYear() == query.year)){
+                    temp.push(element);
+                }
+            });
+            return temp;
+
+        }
+        if(query.database == 'images'){
+            console.log('SES DETTE??');
+            dbDump.forEach(function(element, index, array){
+                var incr = 0;
+
+                    element.meta.forEach(function(elem, index, array){
+
+                        for(var i = 0; i<query.meta.length; i++ ){
+                            if(elem == query.meta[i]){
+                                incr++;
+                                if(incr == query.meta.length){
+                                    temp.push(element);
+                                }
+
+                            }
+                        }
+
+                    });
+
+
+            });
+            return temp;
+
+        }
+
+    },
+
+    build_set: function(obj, date){
+
+        var mySet = new Set();
+
+        switch (obj.option) {
+            case 'year':
+                mySet.add(date.getUTCFullYear());
+                break;
+            case 'month':
+                if(date.getUTCFullYear() === req.body.year){
+                    mySet.add(date.getUTCMonth());
+                }
+                break;
+            case 'day':
+                if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month){
+                    mySet.add(date.getUTCDate());
+                }
+                break;
+        }
+
+        return mySet;
+
+    },
+
+    build_obj: function(array){
+
+        var str = '';
+        array.forEach(function(elem, ind, arr){
+            str += "'" + elem + "'";
+            if(ind < array.length -1){
+                str += ",";
+            }
+        });
+        return str;
+
+    }
+
+};
+
+module.exports = call;

@@ -84,7 +84,7 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 router.get('/get_latest', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query("SELECT *, path || folder || '/' || file AS url FROM images CROSS JOIN storages WHERE storage = folder AND id = (SELECT max(id) FROM images)", function(error, result){
+        var query = client.query("SELECT meta, names, country, state, city, occasions, id, path || folder || '/' || file AS url FROM images CROSS JOIN storages WHERE storage = folder AND id = (SELECT max(id) FROM images)", function(error, result){
                 if(error){
                 console.log(error);
             }
@@ -139,17 +139,6 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
     var cols = [];
     var vals = '';
 
-    function build(array){
-        var str = '';
-        array.forEach(function(elem, ind, arr){
-            str += "'" + elem + "'";
-            if(ind < array.length -1){
-                str += ",";
-            }
-        });
-        return str;
-    }
-
     for(var prop in req.body){
         if(prop !== 'id' && prop !== 'url' && req.body[prop] !== null && req.body[prop] !== 'null'){
             body[prop] = req.body[prop];
@@ -157,11 +146,11 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
     }
 
     if(body.meta !== undefined){
-        body.meta = build(call.splitString(req.body.meta));
+        body.meta = call.build_obj(call.splitString(req.body.meta));
     }
 
     if(body.names !== undefined){
-        body.names = build(call.splitString(req.body.names));
+        body.names = call.build_obj(call.splitString(req.body.names));
     }
 
     for(var prop in body){

@@ -270,9 +270,12 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
 }]);
 
-app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location', function($scope, $rootScope, $http, $log, $modal, $location){
+app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function($scope, $rootScope, $http, $log, $modal, $location, appServices){
 
-    console.log('in privctrl: ', $rootScope.storages);
+
+    appServices.buildMeta();
+
+    console.log('in privctrl: ', $rootScope);
 
     $scope.selected_db = $rootScope.default_storage;
 
@@ -680,6 +683,21 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
     _appServicesFactory.setModal = function(option){
 
         return modals[option];
+
+    };
+
+    _appServicesFactory.buildMeta = function(){
+
+        var arr = ['names', 'meta', 'country', 'state', 'city', 'occasions'];
+
+        arr.forEach(function(elem, ind, arr){
+
+            $http.get('/dropdowns/' + elem)
+                .then(function(result){
+                    $rootScope[elem] = result.data;
+                });
+
+        });
 
     };
 

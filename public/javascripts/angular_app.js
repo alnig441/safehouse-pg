@@ -264,6 +264,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
 
     appServices.buildMeta();
+    //$scope.form.and = true;
 
     console.log('in privctrl: ', $rootScope);
 
@@ -285,6 +286,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
     }
 
     $scope.switch = function(option){
+        $scope.form.and = true;
         var elements = {meta: 'meta_div', time: 'time_div'};
         appServices.selectTab(elements, option);
     };

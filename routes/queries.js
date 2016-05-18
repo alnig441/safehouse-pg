@@ -31,6 +31,8 @@ router.get('/latest', call.isAuthenticated, function(req, res){
 
 router.post('/', call.isAuthenticated, function(req, res){
 
+    console.log('enter query: ', req.body);
+
     var search = "";
 
     if(typeof req.body.year === 'number' && !req.body.date){
@@ -63,8 +65,9 @@ router.post('/', call.isAuthenticated, function(req, res){
         query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
+    console.log('query string: ', query_string);
+
     pg.connect(connectionString, function(error, client, done){
-        //var array = [];
         var query = client.query(query_string, function(error, result){
 
             if(error){console.log(error);}

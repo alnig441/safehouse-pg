@@ -171,22 +171,12 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             });
     };
 
-    $scope.select = function(opt){
+    $scope.select = function(option){
 
-        var elem = {list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div'};
+        var elements = {list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div'};
+        appServices.selectTab(elements, option);
 
-        for(var prop in elem){
-            if(prop !== opt){
-                angular.element(document.getElementById(prop)).removeClass('active');
-                angular.element(document.getElementById(elem[prop])).addClass('ng-hide');
-            }
-            else{
-                angular.element(document.getElementById(prop)).addClass('active');
-                angular.element(document.getElementById(elem[prop])).removeClass('ng-hide');
-            }
-        }
-
-        if(opt === 'event'){
+        if(option === 'event'){
             $http.get('/images_mgmt/get_all')
                 .then(function(response){
                     $scope.images = response.data;
@@ -293,6 +283,11 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
                 console.log(result.data);
             });
     }
+
+    $scope.switch = function(option){
+        var elements = {meta: 'meta_div', time: 'time_div'};
+        appServices.selectTab(elements, option);
+    };
 
     $scope.years = {};
     $scope.days = {};
@@ -698,6 +693,21 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
                 });
 
         });
+
+    };
+
+    _appServicesFactory.selectTab = function(elements, option){
+
+        for(var prop in elements){
+            if(prop !== option){
+                angular.element(document.getElementById(prop)).removeClass('active');
+                angular.element(document.getElementById(elements[prop])).addClass('ng-hide');
+            }
+            else{
+                angular.element(document.getElementById(prop)).addClass('active');
+                angular.element(document.getElementById(elements[prop])).removeClass('ng-hide');
+            }
+        }
 
     };
 

@@ -266,6 +266,8 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
     appServices.buildMeta();
     //$scope.form.and = true;
 
+    $rootScope.search_query = {meta: [], names: [], occasion: [], country: [], state: [], city: []};
+
     console.log('in privctrl: ', $rootScope);
 
     $scope.selected_db = $rootScope.default_storage;
@@ -280,13 +282,16 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         console.log('getCount for ', db);
         $http.get('/image_jobs/count/' + db)
             .then(function(result){
-                $scope.img_db = result.data;
+                $rootScope.img_db = result.data;
                 console.log(result.data);
             });
     }
 
     $scope.switch = function(option){
-        $scope.form.and = true;
+
+        $scope.images = {};
+        $scope.images = $rootScope.img_db;
+        $scope.form.type_and = true;
         var elements = {meta: 'meta_div', time: 'time_div'};
         appServices.selectTab(elements, option);
     };
@@ -309,6 +314,14 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
             .then(function(response){
                 $scope.years = response.data;
             });
+    };
+
+    $scope.build_query = function(x){
+
+        $rootScope.search_query[x].push(this.form[x]);
+        $rootScope.search_query.type_and = this.form.type_and;
+        $rootScope.search_query.type_or = this.form.type_or;
+        console.log('hvad kommer ind? ,', $rootScope.search_query);
     };
 
 }]);
@@ -558,7 +571,12 @@ app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http,
 
 app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal){
     $scope.animationsEnabled = true;
-    $scope.open2 = function (size, db) {
+    $scope.open2 = function (size, db, query) {
+
+        if(query){
+            console.log('in open2: ', query);
+            $scope.form = query;
+        }
 
         $scope.form.database = db;
         var temp = [];
@@ -584,6 +602,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
             });
 
         $scope.form = {};
+        $scope.form.type_and = true;
 
     };
 
@@ -685,7 +704,7 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
     _appServicesFactory.buildMeta = function(){
 
-        var arr = ['names', 'meta', 'country', 'state', 'city', 'occasions'];
+        var arr = ['names', 'meta', 'country', 'state', 'city', 'occasion'];
 
         arr.forEach(function(elem, ind, arr){
 

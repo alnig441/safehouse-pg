@@ -35,28 +35,63 @@ router.post('/', call.isAuthenticated, function(req, res){
 
     var search = "";
 
-    if(typeof req.body.year === 'number' && !req.body.date){
+    if(req.body.type_and || req.body.type_or){
+        for(var prop in req.body){
+            if(typeof req.body[prop] === 'object' && req.body[prop].length > 0){
+                if(req.body.type_and){
+                    if(prop === 'meta' || prop === 'names'){
+                        req.body[prop].forEach(function(elem, ind, arr){
+                            search += " AND '"+ elem +"'= ANY("+prop+")";
+                        })
+                    }
+                    else{
+                        req.body[prop].forEach(function(elem, ind, arr){
+                            search += " AND "+ prop + "='"+elem+"'";
+                        })
+                    }
+                }
+                if(req.body.type_or){
+                    if(prop === 'meta' || prop === 'names'){
+                        req.body[prop].forEach(function(elem, ind, arr){
+                            search += " OR '"+ elem +"'= ANY("+prop+")";
+                        })
+                    }
+                    else{
+                        req.body[prop].forEach(function(elem, ind, arr){
+                            search += " OR "+ prop + "='"+elem+"'";
+                        })
+                    }
+                }
+            }
+        }
+    }
+
+    console.log('give me search string: ', search);
+
+
+    if (typeof req.body.year === 'number' && !req.body.date) {
         search = search + " AND YEAR = " + req.body.year;
     }
-    if(typeof req.body.month === 'number'){
-        if(req.body.month === 12){
+    if (typeof req.body.month === 'number') {
+        if (req.body.month === 12) {
             req.body.month = 0;
         }
-        search = search + " AND MONTH = "+ req.body.month;
+        search = search + " AND MONTH = " + req.body.month;
     }
-    if(typeof req.body.day === 'number'){
+    if (typeof req.body.day === 'number') {
         search = search + " AND DAY = " + req.body.day;
     }
 
-    if(req.body.meta !== undefined){
-        var arr = req.body.meta.split(' ');
-        arr.forEach(function(elem, ind, arr){
-            search += " and '"+ elem.toLowerCase() +"'= any (meta)";
-        })
-
-    }
+    //if (req.body.meta !== undefined) {
+    //    var arr = req.body.meta.split(' ');
+    //    arr.forEach(function (elem, ind, arr) {
+    //        search += " and '" + elem.toLowerCase() + "'= any (meta)";
+    //    })
+    //
+    //}
 
     var query_string;
+
     if(req.body.database === 'events'){
         query_string ="SELECT ID, EVENT_DA, EVENT_EN, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
 
@@ -81,5 +116,11 @@ router.post('/', call.isAuthenticated, function(req, res){
     })
 });
 
+
+router.put('/type', call.isAuthenticated, function(req, res, next){
+
+    console.log('in type: ', req.body);
+
+});
 
 module.exports = router;

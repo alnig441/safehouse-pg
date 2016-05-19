@@ -264,11 +264,10 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
 
     appServices.buildMeta();
-    //$scope.form.and = true;
 
-    $rootScope.search_query = {meta: [], names: [], occasion: [], country: [], state: [], city: []};
-
-    console.log('in privctrl: ', $rootScope);
+    //var meta = {meta: [], names: [], occasion: [], country: [], state: [], city: []};
+    $rootScope.search_query = {baseline: {meta: [], names: [], occasion: [], country: [], state: [], city: []}, expand: {meta: [], names: [], occasion: [], country: [], state: [], city: []}};
+    //$rootScope.search_query = {meta: [], names: [], occasion: [], country: [], state: [], city: []};
 
     $scope.selected_db = $rootScope.default_storage;
 
@@ -279,19 +278,16 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
     };
 
     function getCount(db){
-        console.log('getCount for ', db);
         $http.get('/image_jobs/count/' + db)
             .then(function(result){
                 $rootScope.img_db = result.data;
-                console.log(result.data);
             });
     }
 
     $scope.switch = function(option){
-
+        $scope.form.type_and = true;
         $scope.images = {};
         $scope.images = $rootScope.img_db;
-        $scope.form.type_and = true;
         var elements = {meta: 'meta_div', time: 'time_div'};
         appServices.selectTab(elements, option);
     };
@@ -318,10 +314,36 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     $scope.build_query = function(x){
 
-        $rootScope.search_query[x].push(this.form[x]);
-        $rootScope.search_query.type_and = this.form.type_and;
-        $rootScope.search_query.type_or = this.form.type_or;
-        console.log('hvad kommer ind? ,', $rootScope.search_query);
+        console.log('hvad kommer ind? ', this.form, $rootScope.search_query);
+
+        if(this.form.type_and){
+            $rootScope.search_query.baseline[x].push(this.form[x]);
+        }
+        if(this.form.type_or){
+            $rootScope.search_query.expand[x].push(this.form[x]);
+        }
+
+
+        //if(this.form.type_or && $rootScope.search_query.baseline === undefined){
+        //    $rootScope.search_query.baseline = {};
+        //    $rootScope.search_query.baseline[x] = this.form[x];
+        //    $rootScope.search_query.type_or = this.form.type_or || true;
+        //}
+        //else{
+        //    $rootScope.search_query[x].push(this.form[x]);
+        //    $rootScope.search_query.type_and = this.form.type_and;
+        //}
+    };
+
+    $scope.clear = function(){
+
+        for(var prop in $rootScope.search_query){
+            $rootScope.search_query[prop] = [];
+        }
+
+        $scope.form = {};
+        $scope.form.type_and = true;
+        $scope.form.type_or = false;
     };
 
 }]);

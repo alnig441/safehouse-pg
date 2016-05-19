@@ -51,7 +51,14 @@ router.post('/', call.isAuthenticated, function(req, res){
                     }
                 }
                 if(req.body.type_or){
-                    if(prop === 'meta' || prop === 'names'){
+                    if(prop === 'baseline'){
+                        for(var key in req.body[prop]){
+                            if(key === 'names' || key === 'meta'){
+                                search += " AND '"+ req.body[prop][key] +"' = ANY("+key+")"
+                            }
+                        }
+                    }
+                    else if(prop === 'meta' || prop === 'names'){
                         req.body[prop].forEach(function(elem, ind, arr){
                             search += " OR '"+ elem +"'= ANY("+prop+")";
                         })

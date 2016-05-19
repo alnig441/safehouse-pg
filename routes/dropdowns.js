@@ -89,18 +89,25 @@ router.get('/:value?', function(req, res, next){
         query.on('end', function(result){
             client.end();
 
+            //console.log('names in temp: ', temp );
+
             if(req.params.value === 'meta' || req.params.value === 'names'){
                 var x = [];
                 var length = temp.length;
 
                 temp.forEach(function(elem, ind, arr){
+                    console.log('lige her: ', ind, arr);
                     if(arr.length === length){
                         x = elem.concat(arr[arr.length -1]);
                         arr.pop();
+                        arr.shift()
                     }
-                    else if(ind + 1 < arr.length){
+                    else if(ind + 1 <= arr.length){
+                        var y = [];
+                        y = elem.concat(arr[arr.length] -1);
                         x = x.concat(elem.concat(arr[arr.length] -1));
                         arr.pop();
+                        arr.shift();
                     }
                     else if(arr.length === 1){
                         x = x.concat(elem);
@@ -109,6 +116,9 @@ router.get('/:value?', function(req, res, next){
 
                 x.sort();
                 x.push('zzz');
+
+                console.log('names in sorted array: ', x);
+
                 var y = [];
 
                 x.reduce(function(prev, curr, ind, arr){
@@ -124,6 +134,103 @@ router.get('/:value?', function(req, res, next){
             }
         })
     })
+
+});
+
+router.put('/meta', call.isAuthenticated, function(req, res, next){
+
+    var baseline = req.body.baseline;
+    var contract = req.body.contract;
+    var conditions = "";
+    var query_string = '';
+    var temp = [];
+
+    for(var prop in contract){
+        contract[prop].forEach(function(elem, ind, arr){
+            if(prop === 'names' || prop === 'meta'){
+                conditions += " AND '"+ contract[prop] +"'=ANY("+ prop+")";
+            }
+            else{
+                conditions += " AND "+ prop + " = '"+ contract[prop] +"'";
+            }
+        })
+    }
+
+    if(baseline === 'meta' || baseline === 'names'){
+        query_string = "SELECT "+ baseline +" FROM images WHERE " + baseline + " IS NOT NULL " + conditions;
+    }
+    else{
+        query_string = "SELECT DISTINCT "+ baseline +" FROM images WHERE " + baseline + " IS NOT NULL " + conditions;
+    }
+
+    //console.log(query_string);
+
+    pg.connect(connectionString, function(err, client, done){
+        var query = client.query(query_string, function(error, result){
+            if(error){
+                console.log(error);
+            }
+        })
+        query.on('row', function(row){
+            if(baseline === 'names' || baseline === 'meta'){
+                temp.push(row[baseline]);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+            console.log('show me temp: ', temp);
+
+            if(baseline === 'meta' || baseline === 'names'){
+                var x = [];
+                var length = temp.length;
+
+                temp.forEach(function(elem, ind, arr){
+                    //console.log('lige her: ', ind, arr);
+                    if(arr.length === length){
+                        x = elem.concat(arr[arr.length -1]);
+                        arr.pop();
+                        arr.shift()
+                    }
+                    else if(ind + 1 <= arr.length){
+                        var y = [];
+                        y = elem.concat(arr[arr.length] -1);
+                        x = x.concat(elem.concat(arr[arr.length] -1));
+                        arr.pop();
+                        arr.shift();
+                    }
+                    else if(arr.length === 1){
+                        x = x.concat(elem);
+                    }
+                });
+
+                x.sort();
+                x.push('zzz');
+
+                //console.log('names in sorted array: ', x);
+
+                var y = [];
+
+                x.reduce(function(prev, curr, ind, arr){
+                    console.log('reducing: ', curr, arr[ind-1], typeof arr[ind-1]);
+                    if(arr[ind-1]!== curr && typeof arr[ind-1] === 'string'){
+                        y.push(arr[ind-1]);
+                    }
+                });
+
+                console.log('show me y: ', y, x);
+
+                res.status(200).send(y);
+            }
+
+            else{
+                res.status(200).send(result.rows);
+
+            }
+
+        })
+    })
+
+    //res.status(200).send('BASELINE: ' + req.body.baseline);
 
 });
 

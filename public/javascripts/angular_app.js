@@ -264,10 +264,15 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
 
     appServices.buildMeta();
+    resetSQ();
 
-    //var meta = {meta: [], names: [], occasion: [], country: [], state: [], city: []};
-    $rootScope.search_query = {baseline: {meta: [], names: [], occasion: [], country: [], state: [], city: []}, expand: {meta: [], names: [], occasion: [], country: [], state: [], city: []}};
-    //$rootScope.search_query = {meta: [], names: [], occasion: [], country: [], state: [], city: []};
+    function resetSQ(){
+        $rootScope.search_query = {
+            contract: {},
+            expand: {}
+        };
+    }
+
 
     $scope.selected_db = $rootScope.default_storage;
 
@@ -314,36 +319,45 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     $scope.build_query = function(x){
 
-        console.log('hvad kommer ind? ', this.form, $rootScope.search_query);
+        console.log('hvad kommer ind? ', this.form, $rootScope.search_query.baseline);
+        var fresh;
+
+        if($rootScope.search_query.baseline === undefined){
+            $rootScope.search_query.baseline = x;
+            fresh = true;
+        }
+        else{
+            $rootScope.search_query.baseline = x;
+            fresh = false;
+        }
 
         if(this.form.type_and){
-            $rootScope.search_query.baseline[x].push(this.form[x]);
+            if($rootScope.search_query.contract[x] === undefined){
+                $rootScope.search_query.contract[x] = [];
+                $rootScope.search_query.contract[x].push(this.form[x]);
+            }
+            else{
+                $rootScope.search_query.contract[x].push(this.form[x]);
+            }
+            appServices.buildMeta($rootScope.search_query, fresh);
         }
         if(this.form.type_or){
-            $rootScope.search_query.expand[x].push(this.form[x]);
+            if($rootScope.search_query.expand[x] === undefined){
+                $rootScope.search_query.expand[x] = [];
+                $rootScope.search_query.expand[x].push(this.form[x]);
+            }
+            else{
+                $rootScope.search_query.expand[x].push(this.form[x]);
+            }
         }
-
-
-        //if(this.form.type_or && $rootScope.search_query.baseline === undefined){
-        //    $rootScope.search_query.baseline = {};
-        //    $rootScope.search_query.baseline[x] = this.form[x];
-        //    $rootScope.search_query.type_or = this.form.type_or || true;
-        //}
-        //else{
-        //    $rootScope.search_query[x].push(this.form[x]);
-        //    $rootScope.search_query.type_and = this.form.type_and;
-        //}
     };
 
     $scope.clear = function(){
-
-        for(var prop in $rootScope.search_query){
-            $rootScope.search_query[prop] = [];
-        }
-
+        resetSQ();
         $scope.form = {};
         $scope.form.type_and = true;
         $scope.form.type_or = false;
+        appServices.buildMeta();
     };
 
 }]);
@@ -724,18 +738,44 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
     };
 
-    _appServicesFactory.buildMeta = function(){
+    _appServicesFactory.buildMeta = function(obj, fresh){
 
         var arr = ['names', 'meta', 'country', 'state', 'city', 'occasion'];
+        var arr2 = ['country', 'state', 'city', 'occasion'];
 
-        arr.forEach(function(elem, ind, arr){
+        if(obj){
 
-            $http.get('/dropdowns/' + elem)
-                .then(function(result){
-                    $rootScope[elem] = result.data;
+            console.log('jensen her: ', obj, fresh);
+            var x;
+            var query = {};
+
+            //if(fresh && (obj.baseline === 'names' || obj.baseline === 'meta')){
+            //    x = true;
+            //}
+
+            //if(!x){
+                arr.forEach(function(elem, ind, arr){
+                    $http.put('/dropdowns/meta', {baseline: elem, contract: obj.contract})
+                        .then(function(response){
+                            console.log(response.data);
+                            $rootScope[elem] = response.data;
+                        });
                 });
+            //}
+        }
 
-        });
+        else{
+
+            arr.forEach(function(elem, ind, arr){
+
+                $http.get('/dropdowns/' + elem)
+                    .then(function(result){
+                        $rootScope[elem] = result.data;
+                    });
+
+            });
+
+        }
 
     };
 

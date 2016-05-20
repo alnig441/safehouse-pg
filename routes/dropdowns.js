@@ -72,6 +72,8 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
 
 router.get('/:value?', function(req, res, next){
 
+    console.log('dropdowns/value: ', req.params);
+
     var temp=[];
 
     pg.connect(connectionString, function(error, client, done){
@@ -84,23 +86,32 @@ router.get('/:value?', function(req, res, next){
         query.on('row', function(row){
             if(req.params.value === 'names' || req.params.value === 'meta'){
                 temp.push(row[req.params.value]);
+                if(req.params.value === 'meta'){
+                    console.log('show me row: ', row[req.params.value]);
+                }
             }
         })
         query.on('end', function(result){
             client.end();
 
-            //console.log('names in temp: ', temp );
+            if(req.params.value === 'meta') {
+
+                console.log('vis mig temp array: ', temp);
+            }
+
 
             if(req.params.value === 'meta' || req.params.value === 'names'){
                 var x = [];
                 var length = temp.length;
 
                 temp.forEach(function(elem, ind, arr){
-                    console.log('lige her: ', ind, arr);
+                    if(req.params.value === 'meta') {
+                        console.log('show me array length: ' + arr.length + '\nand temp length: '+ length+ '\nand element: '+ elem);
+                    }
                     if(arr.length === length){
                         x = elem.concat(arr[arr.length -1]);
                         arr.pop();
-                        arr.shift()
+                        //arr.shift()
                     }
                     else if(ind + 1 <= arr.length){
                         var y = [];
@@ -112,12 +123,21 @@ router.get('/:value?', function(req, res, next){
                     else if(arr.length === 1){
                         x = x.concat(elem);
                     }
+
+                    if(req.params.value === 'meta') {
+
+                        console.log('vis mig x: ', x);
+                    }
+
                 });
 
                 x.sort();
                 x.push('zzz');
 
-                console.log('names in sorted array: ', x);
+                if(req.params.value === 'meta') {
+
+                    console.log('vis mig x: ', x);
+                }
 
                 var y = [];
 
@@ -126,6 +146,11 @@ router.get('/:value?', function(req, res, next){
                         y.push(arr[ind-1]);
                     }
                 });
+
+                if(req.params.value === 'meta') {
+
+                    console.log('vis mig y: ', y);
+                }
 
                 res.status(200).send(y);
             }
@@ -139,11 +164,19 @@ router.get('/:value?', function(req, res, next){
 
 router.put('/meta', call.isAuthenticated, function(req, res, next){
 
+    //console.log('dropdowns/meta: ',req.body);
+    var temp_str = "";
+    temp_str = req.body.query_string.replace(/xxx/g, "'");
+    //console.log(temp_str, typeof temp_str);
+    var column = req.body.column;
+    var temp = [];
+
+/*
     var baseline = req.body.baseline;
     var contract = req.body.contract;
+    var expand = req.body.expand;
     var conditions = "";
     var query_string = '';
-    var temp = [];
 
     for(var prop in contract){
         contract[prop].forEach(function(elem, ind, arr){
@@ -156,40 +189,52 @@ router.put('/meta', call.isAuthenticated, function(req, res, next){
         })
     }
 
-    if(baseline === 'meta' || baseline === 'names'){
-        query_string = "SELECT "+ baseline +" FROM images WHERE " + baseline + " IS NOT NULL " + conditions;
-    }
-    else{
-        query_string = "SELECT DISTINCT "+ baseline +" FROM images WHERE " + baseline + " IS NOT NULL " + conditions;
+    for(var prop in expand){
+        expand[prop].forEach(function(elem, ind, arr){
+            if(prop === 'names' || prop === 'meta'){
+                conditions += " OR '"+ contract[prop] +"'=ANY("+ prop+")";
+            }
+            else{
+                conditions += " OR "+ prop + " = '"+ expand[prop] +"'";
+            }
+        })
     }
 
-    //console.log(query_string);
+
+    //if(column === 'meta' || column === 'names'){
+    //    query_string = "SELECT "+ column +" FROM images WHERE " + column + " IS NOT NULL " + conditions;
+    //}
+    //else{
+        query_string = "SELECT DISTINCT "+ column +" FROM images WHERE " + column + " IS NOT NULL " + conditions;
+    //}
+
+    console.log(query_string);
+*/
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query(query_string, function(error, result){
+        var query = client.query(temp_str, function(error, result){
             if(error){
                 console.log(error);
             }
         })
         query.on('row', function(row){
-            if(baseline === 'names' || baseline === 'meta'){
-                temp.push(row[baseline]);
+            if(column === 'names' || column === 'meta'){
+                temp.push(row[column]);
             }
         })
         query.on('end', function(result){
             client.end();
-            console.log('show me temp: ', temp);
+            console.log('show me results: ', result.rows);
 
-            if(baseline === 'meta' || baseline === 'names'){
+            if(column === 'meta' || column === 'names'){
                 var x = [];
                 var length = temp.length;
 
                 temp.forEach(function(elem, ind, arr){
-                    //console.log('lige her: ', ind, arr);
                     if(arr.length === length){
                         x = elem.concat(arr[arr.length -1]);
                         arr.pop();
-                        arr.shift()
+                        //arr.shift()
                     }
                     else if(ind + 1 <= arr.length){
                         var y = [];
@@ -206,18 +251,16 @@ router.put('/meta', call.isAuthenticated, function(req, res, next){
                 x.sort();
                 x.push('zzz');
 
-                //console.log('names in sorted array: ', x);
-
                 var y = [];
 
                 x.reduce(function(prev, curr, ind, arr){
-                    console.log('reducing: ', curr, arr[ind-1], typeof arr[ind-1]);
+                    //console.log('reducing: ', curr, arr[ind-1], typeof arr[ind-1]);
                     if(arr[ind-1]!== curr && typeof arr[ind-1] === 'string'){
                         y.push(arr[ind-1]);
                     }
                 });
 
-                console.log('show me y: ', y, x);
+                //console.log('show me y: ', y, x);
 
                 res.status(200).send(y);
             }
@@ -227,10 +270,12 @@ router.put('/meta', call.isAuthenticated, function(req, res, next){
 
             }
 
+            //res.status(200).send(result.rows);
+
         })
     })
 
-    //res.status(200).send('BASELINE: ' + req.body.baseline);
+    //res.status(200).send('query: ' + req.body);
 
 });
 

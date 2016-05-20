@@ -262,8 +262,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
 app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function($scope, $rootScope, $http, $log, $modal, $location, appServices){
 
-
-    appServices.buildMeta();
+    //appServices.buildMeta();
     resetSQ();
 
     function resetSQ(){
@@ -271,6 +270,8 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
             contract: {},
             expand: {}
         };
+
+        $rootScope.baseline = {};
     }
 
 
@@ -295,6 +296,10 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         $scope.images = $rootScope.img_db;
         var elements = {meta: 'meta_div', time: 'time_div'};
         appServices.selectTab(elements, option);
+
+        if(option === 'meta'){
+            appServices.buildMeta();
+        }
     };
 
     $scope.years = {};
@@ -319,37 +324,88 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     $scope.build_query = function(x){
 
-        console.log('hvad kommer ind? ', this.form, $rootScope.search_query.baseline);
-        var fresh;
+        console.log('hvad kommer ind? ', this.form, x);
+        var query = {};
 
-        if($rootScope.search_query.baseline === undefined){
-            $rootScope.search_query.baseline = x;
-            fresh = true;
+
+        if(Object.keys($rootScope.baseline).length === 0){
+            $rootScope.baseline[x] = this.form[x];
+            if(this.form.type_and){
+                //query.contract = {};
+                //query.contract[x] = this.form[x];
+            }
+            if(this.form.type_or){
+                //query.expand = {};
+                //query.expand[x] = this.form[x];
+            }
+            console.log('BINGO: ',$rootScope.baseline);
         }
         else{
-            $rootScope.search_query.baseline = x;
-            fresh = false;
+            if(this.form.type_and){
+                query.contract = {};
+                query.contract[x] = this.form[x];
+            }
+            if(this.form.type_or){
+                query.expand = {};
+                query.expand[x] = this.form[x];
+            }
+            console.log('BINGO: ',$rootScope.baseline);
         }
 
-        if(this.form.type_and){
-            if($rootScope.search_query.contract[x] === undefined){
-                $rootScope.search_query.contract[x] = [];
-                $rootScope.search_query.contract[x].push(this.form[x]);
-            }
-            else{
-                $rootScope.search_query.contract[x].push(this.form[x]);
-            }
-            appServices.buildMeta($rootScope.search_query, fresh);
-        }
-        if(this.form.type_or){
-            if($rootScope.search_query.expand[x] === undefined){
-                $rootScope.search_query.expand[x] = [];
-                $rootScope.search_query.expand[x].push(this.form[x]);
-            }
-            else{
-                $rootScope.search_query.expand[x].push(this.form[x]);
-            }
-        }
+        query.baseline = $rootScope.baseline;
+        console.log('this is my query', query);
+        appServices.buildMeta(query);
+
+        //if($rootScope.search_query.baseline === undefined && this.form.type_or){
+        //    //$rootScope.search_query.baseline = x;
+        //    $rootScope.search_query.baseline = {};
+        //    $rootScope.search_query.baseline[x] = this.form[x];
+        //    $rootScope.search_query.type_or = true;
+        //    $rootScope.search_query.type_and = false;
+        //    fresh = true;
+        //
+        //    if($rootScope.search_query.contract[x] === undefined){
+        //        $rootScope.search_query.contract[x] = [];
+        //        $rootScope.search_query.contract[x].push(this.form[x]);
+        //    }
+        //    else{
+        //        $rootScope.search_query.contract[x].push(this.form[x]);
+        //    }
+        //    appServices.buildMeta($rootScope.search_query, fresh);
+        //
+        //}
+        //else if(this.form.type_or){
+        //    //$rootScope.search_query.baseline = x;
+        //    $rootScope.search_query.type_or = true;
+        //    $rootScope.search_query.type_and = false;
+        //    fresh = false;
+        //
+        //    if($rootScope.search_query.expand[x] === undefined){
+        //        $rootScope.search_query.expand[x] = [];
+        //        $rootScope.search_query.expand[x].push(this.form[x]);
+        //    }
+        //    else{
+        //        $rootScope.search_query.expand[x].push(this.form[x]);
+        //    }
+        //    appServices.buildMeta($rootScope.search_query, fresh);
+        //
+        //}
+        //else{
+        //    $rootScope.search_query.baseline = {};
+        //    $rootScope.search_query.baseline[x] = this.form[x];
+        //    $rootScope.search_query.type_and = true;
+        //    $rootScope.search_query.type_or = false;
+        //
+        //    if($rootScope.search_query.contract[x] === undefined){
+        //        $rootScope.search_query.contract[x] = [];
+        //        $rootScope.search_query.contract[x].push(this.form[x]);
+        //    }
+        //    else{
+        //        $rootScope.search_query.contract[x].push(this.form[x]);
+        //    }
+        //    appServices.buildMeta($rootScope.search_query);
+        //}
+
     };
 
     $scope.clear = function(){
@@ -357,6 +413,9 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         $scope.form = {};
         $scope.form.type_and = true;
         $scope.form.type_or = false;
+        $rootScope.query_string = '';
+        $rootScope.conditions = '';
+        $rootScope.baseline_condition = '';
         appServices.buildMeta();
     };
 
@@ -723,6 +782,10 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         event: {contr: 'ModalInstanceCtrl', templ: 'myModalContent.html'}
     };
 
+    $rootScope.query_string = '';
+    $rootScope.conditions = '';
+    $rootScope.baseline_condition = '';
+
 
     _appServicesFactory.getStorages = function(){
 
@@ -741,35 +804,87 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
     _appServicesFactory.buildMeta = function(obj, fresh){
 
         var arr = ['names', 'meta', 'country', 'state', 'city', 'occasion'];
-        var arr2 = ['country', 'state', 'city', 'occasion'];
+
+        var column = Object.keys($rootScope.baseline).toString();
+        var type;
+        var key_value;
+        var baseline_col = Object.keys($rootScope.baseline).toString();
+
+        for(var prop in obj){
+            if(prop !== 'baseline'){
+                column = Object.keys(obj[prop]).toString();
+                //console.log('pis og lort: ', column);
+                type = prop;
+                key_value = obj[prop];
+                //console.log('this is my column: ', column);
+            }
+        }
+
+        //if(column === 'undefined'){
+        //    column = baseline_col;
+        //}
+
+        //$rootScope.query_string = 'SELECT DISTINCT '+ column + ' FROM images WHERE ' + column + ' IS NOT NULL ';
+
+        if(baseline_col==='names' || baseline_col==='meta'){
+            $rootScope.baseline_condition = ' AND xxx'+ $rootScope.baseline[baseline_col] +'xxx = ANY('+ baseline_col +')';
+        }
+        else{
+            $rootScope.baseline_condition = ' AND ' +baseline_col+ ' = xxx'+ $rootScope.baseline[baseline_col] +'xxx';
+        }
+
+
+        if(type === 'contract'){
+            if(Object.keys(key_value).toString() !== 'names' && Object.keys(key_value).toString() !== 'meta'){
+                $rootScope.conditions += ' AND '+ Object.keys(key_value).toString() +' = xxx'+ key_value[Object.keys(key_value).toString()] +'xxx';
+            }
+            else{
+                $rootScope.conditions += ' AND xxx'+ key_value[Object.keys(key_value).toString()] +'xxx = ANY('+ Object.keys(key_value).toString() +')';
+            }
+        }
+        if(type === 'expand') {
+            if (Object.keys(key_value).toString() !== 'names ' && Object.keys(key_value).toString() !== 'meta') {
+                $rootScope.conditions += ' OR '+ Object.keys(key_value).toString() +' = xxx'+ key_value[Object.keys(key_value).toString()] +'xxx';
+            }
+            else{
+                $rootScope.conditions += ' OR xxx'+ key_value[Object.keys(key_value).toString()] +'xxx = ANY('+ Object.keys(key_value).toString() +')';
+            }
+        }
+
+        //console.log('kan dette ses?', obj, column);
+
+       $rootScope.baseline_condition += $rootScope.conditions;
+
 
         if(obj){
 
-            console.log('jensen her: ', obj, fresh);
+            //console.log('nyt trin: ', $rootScope.query_string);
+
+
+            //console.log('buildMeta w/ obj: ', obj, fresh);
             var x;
             var query = {};
 
-            //if(fresh && (obj.baseline === 'names' || obj.baseline === 'meta')){
-            //    x = true;
-            //}
+            arr.forEach(function(elem, ind, arr){
+                $rootScope.query_string = 'SELECT DISTINCT '+ elem + ' FROM images WHERE ' + elem + ' IS NOT NULL' + $rootScope.baseline_condition;
+                //$http.put('/dropdowns/meta', {column: elem, contract: obj.contract, expand: obj.expand, baseline: obj.baseline})
+                $http.put('/dropdowns/meta', {query_string: $rootScope.query_string, column: elem})
+                    .then(function(response){
+                        console.log('result meta: ', response.data);
+                        $rootScope[elem] = response.data;
+                    });
+            });
 
-            //if(!x){
-                arr.forEach(function(elem, ind, arr){
-                    $http.put('/dropdowns/meta', {baseline: elem, contract: obj.contract})
-                        .then(function(response){
-                            console.log(response.data);
-                            $rootScope[elem] = response.data;
-                        });
-                });
-            //}
         }
 
         else{
+            console.log('buildMeta w/o obj: ', obj, fresh);
 
             arr.forEach(function(elem, ind, arr){
 
                 $http.get('/dropdowns/' + elem)
                     .then(function(result){
+                        console.log('result build: ', result.data);
                         $rootScope[elem] = result.data;
                     });
 

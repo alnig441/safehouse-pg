@@ -33,6 +33,9 @@ router.post('/', call.isAuthenticated, function(req, res){
 
     console.log('enter query: ', req.body);
 
+    var expand = req.body.expand;
+    var contract = req.body.contract;
+
     var search = "";
 
     if(req.body.type_and || req.body.type_or){
@@ -88,14 +91,6 @@ router.post('/', call.isAuthenticated, function(req, res){
     if (typeof req.body.day === 'number') {
         search = search + " AND DAY = " + req.body.day;
     }
-
-    //if (req.body.meta !== undefined) {
-    //    var arr = req.body.meta.split(' ');
-    //    arr.forEach(function (elem, ind, arr) {
-    //        search += " and '" + elem.toLowerCase() + "'= any (meta)";
-    //    })
-    //
-    //}
 
     var query_string;
 

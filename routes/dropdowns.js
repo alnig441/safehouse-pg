@@ -164,52 +164,12 @@ router.get('/:value?', function(req, res, next){
 
 router.put('/meta', call.isAuthenticated, function(req, res, next){
 
-    //console.log('dropdowns/meta: ',req.body);
+    //console.log('dropdowns/meta: ', req.body);
+
     var temp_str = "";
     temp_str = req.body.query_string.replace(/xxx/g, "'");
-    //console.log(temp_str, typeof temp_str);
     var column = req.body.column;
     var temp = [];
-
-/*
-    var baseline = req.body.baseline;
-    var contract = req.body.contract;
-    var expand = req.body.expand;
-    var conditions = "";
-    var query_string = '';
-
-    for(var prop in contract){
-        contract[prop].forEach(function(elem, ind, arr){
-            if(prop === 'names' || prop === 'meta'){
-                conditions += " AND '"+ contract[prop] +"'=ANY("+ prop+")";
-            }
-            else{
-                conditions += " AND "+ prop + " = '"+ contract[prop] +"'";
-            }
-        })
-    }
-
-    for(var prop in expand){
-        expand[prop].forEach(function(elem, ind, arr){
-            if(prop === 'names' || prop === 'meta'){
-                conditions += " OR '"+ contract[prop] +"'=ANY("+ prop+")";
-            }
-            else{
-                conditions += " OR "+ prop + " = '"+ expand[prop] +"'";
-            }
-        })
-    }
-
-
-    //if(column === 'meta' || column === 'names'){
-    //    query_string = "SELECT "+ column +" FROM images WHERE " + column + " IS NOT NULL " + conditions;
-    //}
-    //else{
-        query_string = "SELECT DISTINCT "+ column +" FROM images WHERE " + column + " IS NOT NULL " + conditions;
-    //}
-
-    console.log(query_string);
-*/
 
     pg.connect(connectionString, function(err, client, done){
         var query = client.query(temp_str, function(error, result){
@@ -224,7 +184,7 @@ router.put('/meta', call.isAuthenticated, function(req, res, next){
         })
         query.on('end', function(result){
             client.end();
-            console.log('show me results: ', result.rows);
+            //console.log('show me results: ', result.rows);
 
             if(column === 'meta' || column === 'names'){
                 var x = [];
@@ -260,8 +220,6 @@ router.put('/meta', call.isAuthenticated, function(req, res, next){
                     }
                 });
 
-                //console.log('show me y: ', y, x);
-
                 res.status(200).send(y);
             }
 
@@ -270,12 +228,8 @@ router.put('/meta', call.isAuthenticated, function(req, res, next){
 
             }
 
-            //res.status(200).send(result.rows);
-
         })
     })
-
-    //res.status(200).send('query: ' + req.body);
 
 });
 

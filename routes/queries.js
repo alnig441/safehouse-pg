@@ -32,11 +32,17 @@ router.get('/latest', call.isAuthenticated, function(req, res){
 router.post('/', call.isAuthenticated, function(req, res){
 
     console.log('enter query: ', req.body);
+    var search = "";
+    var query_string;
+
+    if(req.body.query !== undefined){
+        query_string = req.body.query.replace(/xxx/g, "'");
+    }
+
 
     var expand = req.body.expand;
     var contract = req.body.contract;
 
-    var search = "";
 
     if(req.body.type_and || req.body.type_or){
         for(var prop in req.body){
@@ -76,7 +82,7 @@ router.post('/', call.isAuthenticated, function(req, res){
         }
     }
 
-    console.log('give me search string: ', search);
+    //console.log('give me search string: ', search);
 
 
     if (typeof req.body.year === 'number' && !req.body.date) {
@@ -91,8 +97,6 @@ router.post('/', call.isAuthenticated, function(req, res){
     if (typeof req.body.day === 'number') {
         search = search + " AND DAY = " + req.body.day;
     }
-
-    var query_string;
 
     if(req.body.database === 'events'){
         query_string ="SELECT ID, EVENT_DA, EVENT_EN, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";

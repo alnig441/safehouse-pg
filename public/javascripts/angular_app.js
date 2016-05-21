@@ -266,12 +266,11 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
     resetSQ();
 
     function resetSQ(){
-        $rootScope.search_query = {
-            contract: {},
-            expand: {}
-        };
-
         $rootScope.baseline = {};
+        $rootScope.query_meta = '';
+        $rootScope.conditions = '';
+        $rootScope.baseline_condition = '';
+        $rootScope.query_img = 'SELECT ID, CREATED, PATH || FOLDER || xxx/xxx || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL';
     }
 
 
@@ -330,15 +329,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
         if(Object.keys($rootScope.baseline).length === 0){
             $rootScope.baseline[x] = this.form[x];
-            if(this.form.type_and){
-                //query.contract = {};
-                //query.contract[x] = this.form[x];
-            }
-            if(this.form.type_or){
-                //query.expand = {};
-                //query.expand[x] = this.form[x];
-            }
-            console.log('BINGO: ',$rootScope.baseline);
         }
         else{
             if(this.form.type_and){
@@ -349,62 +339,10 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
                 query.expand = {};
                 query.expand[x] = this.form[x];
             }
-            console.log('BINGO: ',$rootScope.baseline);
         }
 
         query.baseline = $rootScope.baseline;
-        console.log('this is my query', query);
         appServices.buildMeta(query);
-
-        //if($rootScope.search_query.baseline === undefined && this.form.type_or){
-        //    //$rootScope.search_query.baseline = x;
-        //    $rootScope.search_query.baseline = {};
-        //    $rootScope.search_query.baseline[x] = this.form[x];
-        //    $rootScope.search_query.type_or = true;
-        //    $rootScope.search_query.type_and = false;
-        //    fresh = true;
-        //
-        //    if($rootScope.search_query.contract[x] === undefined){
-        //        $rootScope.search_query.contract[x] = [];
-        //        $rootScope.search_query.contract[x].push(this.form[x]);
-        //    }
-        //    else{
-        //        $rootScope.search_query.contract[x].push(this.form[x]);
-        //    }
-        //    appServices.buildMeta($rootScope.search_query, fresh);
-        //
-        //}
-        //else if(this.form.type_or){
-        //    //$rootScope.search_query.baseline = x;
-        //    $rootScope.search_query.type_or = true;
-        //    $rootScope.search_query.type_and = false;
-        //    fresh = false;
-        //
-        //    if($rootScope.search_query.expand[x] === undefined){
-        //        $rootScope.search_query.expand[x] = [];
-        //        $rootScope.search_query.expand[x].push(this.form[x]);
-        //    }
-        //    else{
-        //        $rootScope.search_query.expand[x].push(this.form[x]);
-        //    }
-        //    appServices.buildMeta($rootScope.search_query, fresh);
-        //
-        //}
-        //else{
-        //    $rootScope.search_query.baseline = {};
-        //    $rootScope.search_query.baseline[x] = this.form[x];
-        //    $rootScope.search_query.type_and = true;
-        //    $rootScope.search_query.type_or = false;
-        //
-        //    if($rootScope.search_query.contract[x] === undefined){
-        //        $rootScope.search_query.contract[x] = [];
-        //        $rootScope.search_query.contract[x].push(this.form[x]);
-        //    }
-        //    else{
-        //        $rootScope.search_query.contract[x].push(this.form[x]);
-        //    }
-        //    appServices.buildMeta($rootScope.search_query);
-        //}
 
     };
 
@@ -413,9 +351,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         $scope.form = {};
         $scope.form.type_and = true;
         $scope.form.type_or = false;
-        $rootScope.query_string = '';
-        $rootScope.conditions = '';
-        $rootScope.baseline_condition = '';
         appServices.buildMeta();
     };
 
@@ -666,17 +601,26 @@ app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http,
 
 app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal){
     $scope.animationsEnabled = true;
-    $scope.open2 = function (size, db, query) {
+    $scope.open2 = function (size, db, type) {
 
-        if(query){
-            console.log('in open2: ', query);
-            $scope.form = query;
+        var obj = {};
+
+        if(type === 'meta'){
+            $rootScope.query_img += $rootScope.baseline_condition += ' order by created asc';
+            console.log('open2: ', $rootScope.query_img, type);
+            obj.query = $rootScope.query_img;
+        }
+        else{
+            $scope.form.database = db;
+            obj = $scope.form;
         }
 
-        $scope.form.database = db;
+
+
+        //$scope.form.database = db;
         var temp = [];
 
-        $http.post('/queries', $scope.form)
+        $http.post('/queries', obj)
             .then(function(response){
                 $rootScope.events = response.data;
 
@@ -728,7 +672,9 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
     };
 });
 
-app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
+app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $rootScope) {
+
+    console.log('ModalInstanceCtrl2 - $rootscope.query_img: ', $rootScope.query_img);
 
     $scope.selector = 0;
 
@@ -741,6 +687,7 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events) {
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
     };
+
     $scope.next = function(){
         if($scope.selector < events.length - 1){
             $scope.selector ++;
@@ -782,9 +729,9 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         event: {contr: 'ModalInstanceCtrl', templ: 'myModalContent.html'}
     };
 
-    $rootScope.query_string = '';
-    $rootScope.conditions = '';
-    $rootScope.baseline_condition = '';
+    //$rootScope.query_string = '';
+    //$rootScope.conditions = '';
+    //$rootScope.baseline_condition = '';
 
 
     _appServicesFactory.getStorages = function(){
@@ -813,18 +760,10 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         for(var prop in obj){
             if(prop !== 'baseline'){
                 column = Object.keys(obj[prop]).toString();
-                //console.log('pis og lort: ', column);
                 type = prop;
                 key_value = obj[prop];
-                //console.log('this is my column: ', column);
             }
         }
-
-        //if(column === 'undefined'){
-        //    column = baseline_col;
-        //}
-
-        //$rootScope.query_string = 'SELECT DISTINCT '+ column + ' FROM images WHERE ' + column + ' IS NOT NULL ';
 
         if(baseline_col==='names' || baseline_col==='meta'){
             $rootScope.baseline_condition = ' AND xxx'+ $rootScope.baseline[baseline_col] +'xxx = ANY('+ baseline_col +')';
@@ -851,24 +790,17 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
             }
         }
 
-        //console.log('kan dette ses?', obj, column);
-
        $rootScope.baseline_condition += $rootScope.conditions;
 
 
         if(obj){
 
-            //console.log('nyt trin: ', $rootScope.query_string);
-
-
-            //console.log('buildMeta w/ obj: ', obj, fresh);
             var x;
             var query = {};
 
             arr.forEach(function(elem, ind, arr){
-                $rootScope.query_string = 'SELECT DISTINCT '+ elem + ' FROM images WHERE ' + elem + ' IS NOT NULL' + $rootScope.baseline_condition;
-                //$http.put('/dropdowns/meta', {column: elem, contract: obj.contract, expand: obj.expand, baseline: obj.baseline})
-                $http.put('/dropdowns/meta', {query_string: $rootScope.query_string, column: elem})
+                $rootScope.query_meta = 'SELECT DISTINCT '+ elem + ' FROM images WHERE ' + elem + ' IS NOT NULL' + $rootScope.baseline_condition;
+                $http.put('/dropdowns/meta', {query_string: $rootScope.query_meta, column: elem})
                     .then(function(response){
                         console.log('result meta: ', response.data);
                         $rootScope[elem] = response.data;

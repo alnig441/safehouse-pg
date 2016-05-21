@@ -31,7 +31,6 @@ router.get('/latest', call.isAuthenticated, function(req, res){
 
 router.post('/', call.isAuthenticated, function(req, res){
 
-    console.log('enter query: ', req.body);
     var search = "";
     var query_string;
 
@@ -103,8 +102,6 @@ router.post('/', call.isAuthenticated, function(req, res){
         query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
-    console.log('query string: ', query_string);
-
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(query_string, function(error, result){
 
@@ -123,8 +120,6 @@ router.post('/', call.isAuthenticated, function(req, res){
 router.put('/count', call.isAuthenticated, function(req, res, next){
 
     var search = 'SELECT COUNT(*) FROM IMAGES WHERE META IS NOT NULL ' + req.body.conditions.replace(/xxx/g, "'");
-
-    console.log('in count: ', search);
 
     pg.connect(connectionString, function(err, client, done){
         var query = client.query(search, function(error, result){

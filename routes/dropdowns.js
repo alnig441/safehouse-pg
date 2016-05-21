@@ -77,8 +77,6 @@ router.get('/:conditions?', function(req, res, next){
     var temp = {meta: [], names: [], country: [], state: [], city: [], occasion: []};
     var query_string = "";
 
-    console.log('dropdowns: ', req.params.conditions);
-
     cols.forEach(function(elem,ind,arr){
         if(req.params.conditions !== 'undefined'){
             query_string += "SELECT DISTINCT "+elem+" FROM images WHERE "+elem+" IS NOT NULL "+ req.params.conditions.replace(/xxx/g, "'") +" ORDER BY "+elem+ " ASC; "

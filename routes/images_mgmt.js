@@ -84,7 +84,7 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 router.get('/get_latest', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query("SELECT meta, names, country, state, city, occasions, id, path || folder || '/' || file AS url FROM images CROSS JOIN storages WHERE storage = folder AND id = (SELECT max(id) FROM images)", function(error, result){
+        var query = client.query("SELECT meta, names, country, state, city, occasion, id, path || folder || '/' || file AS url FROM images CROSS JOIN storages WHERE storage = folder AND id = (SELECT max(id) FROM images)", function(error, result){
                 if(error){
                 console.log(error);
             }
@@ -100,7 +100,7 @@ router.get('/get_latest', call.isAuthenticated, function(req, res, next){
 router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query("SELECT meta, names, country, state, city, occasions, id, path || folder || '/' || file AS url FROM images CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
+        var query = client.query("SELECT meta, names, country, state, city, occasion, id, path || folder || '/' || file AS url FROM images CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
 
                 if(error){
                 console.log(error);

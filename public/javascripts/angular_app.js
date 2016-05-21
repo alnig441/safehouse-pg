@@ -721,11 +721,6 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         event: {contr: 'ModalInstanceCtrl', templ: 'myModalContent.html'}
     };
 
-    //$rootScope.query_string = '';
-    //$rootScope.conditions = '';
-    //$rootScope.baseline_condition = '';
-
-
     _appServicesFactory.getStorages = function(){
 
         $http.get('/storages_mgmt/all')
@@ -748,6 +743,7 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         var type;
         var key_value;
         var baseline_col = Object.keys($rootScope.baseline).toString();
+        var conditions;
 
         for(var prop in obj){
             if(prop !== 'baseline'){
@@ -785,39 +781,25 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
        $rootScope.baseline_condition += $rootScope.conditions;
 
 
-        if(obj){
+        console.log('buildMeta w/o obj: ', $rootScope.baseline_condition, baseline_col);
 
-            arr.forEach(function(elem, ind, arr){
-                $rootScope.query_meta = 'SELECT DISTINCT '+ elem + ' FROM images WHERE ' + elem + ' IS NOT NULL' + $rootScope.baseline_condition;
-                $http.put('/dropdowns/meta', {query_string: $rootScope.query_meta, column: elem})
-                    .then(function(response){
-                        console.log('result meta: ', response.data);
-                        $rootScope[elem] = response.data;
-                    });
-            });
-
-            $http.put('/queries/count', {conditions: $rootScope.baseline_condition})
-                .then(function(response){
-                    console.log('count: ', response.data[0].count);
-                    $rootScope.queries_count = response.data[0].count;
-                });
-
+        if(baseline_col !== ''){
+            conditions = $rootScope.baseline_condition;
         }
 
-        else{
-            console.log('buildMeta w/o obj: ', obj, fresh);
-
-            arr.forEach(function(elem, ind, arr){
-
-                $http.get('/dropdowns/' + elem)
-                    .then(function(result){
-                        console.log('result build: ', result.data);
-                        $rootScope[elem] = result.data;
-                    });
+        $http.get('/dropdowns/' + conditions)
+            .then(function(result){
+                $rootScope.meta = result.data;
+                console.log('result build: ', $rootScope.meta);
 
             });
 
-        }
+        $http.put('/queries/count', {conditions: $rootScope.baseline_condition})
+            .then(function(response){
+                console.log('count: ', response.data[0].count);
+                $rootScope.queries_count = response.data[0].count;
+            });
+
 
     };
 

@@ -70,164 +70,65 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
 
 });
 
-router.get('/:value?', function(req, res, next){
+router.get('/:conditions?', function(req, res, next){
 
-    console.log('dropdowns/value: ', req.params);
 
-    var temp=[];
+    var cols = ['meta', 'names', 'occasion', 'country', 'state', 'city'];
+    var temp = {meta: [], names: [], country: [], state: [], city: [], occasion: []};
+    var query_string = "";
+
+    console.log('dropdowns: ', req.params.conditions);
+
+    cols.forEach(function(elem,ind,arr){
+        if(req.params.conditions !== 'undefined'){
+            query_string += "SELECT DISTINCT "+elem+" FROM images WHERE "+elem+" IS NOT NULL "+ req.params.conditions.replace(/xxx/g, "'") +" ORDER BY "+elem+ " ASC; "
+        }
+        else{
+            query_string += "SELECT DISTINCT "+elem+" FROM images WHERE "+elem+" IS NOT NULL ORDER BY "+elem+ " ASC; "
+        }
+    });
+
+
+    console.log(query_string);
 
     pg.connect(connectionString, function(error, client, done){
 
-        var query = client.query("SELECT DISTINCT " + req.params.value + " FROM images WHERE "+ req.params.value + " IS NOT NULL ORDER BY " + req.params.value + " ASC", function(error, result){
+        var query = client.query(query_string, function(error, result){
             if(error){
                 res.status(200).send(error);
             }
         })
         query.on('row', function(row){
-            if(req.params.value === 'names' || req.params.value === 'meta'){
-                temp.push(row[req.params.value]);
-                if(req.params.value === 'meta'){
-                    console.log('show me row: ', row[req.params.value]);
-                }
+            console.log('testing: ', row);
+            if(Object.keys(row).toString() === 'names' || Object.keys(row).toString() === 'meta'){
+                temp[Object.keys(row).toString()] = temp[Object.keys(row).toString()].concat(row[Object.keys(row).toString()]);
+
+            }else {
+                temp[Object.keys(row).toString()].push(row[Object.keys(row).toString()]);
             }
         })
+
         query.on('end', function(result){
             client.end();
 
-            if(req.params.value === 'meta') {
+            for(var prop in temp){
+                if(prop === 'names' || prop === 'meta'){
+                    temp[prop].sort();
+                    temp[prop].push('zzz');
+                    var y = [];
 
-                console.log('vis mig temp array: ', temp);
-            }
+                    temp[prop].reduce(function(prev, curr, ind, arr){
+                        if(arr[ind-1]!== curr && typeof arr[ind-1] === 'string'){
+                            y.push(arr[ind-1]);
+                        }
+                    });
 
+                    temp[prop] = y;
 
-            if(req.params.value === 'meta' || req.params.value === 'names'){
-                var x = [];
-                var length = temp.length;
-
-                temp.forEach(function(elem, ind, arr){
-                    if(req.params.value === 'meta') {
-                        console.log('show me array length: ' + arr.length + '\nand temp length: '+ length+ '\nand element: '+ elem);
-                    }
-                    if(arr.length === length){
-                        x = elem.concat(arr[arr.length -1]);
-                        arr.pop();
-                        //arr.shift()
-                    }
-                    else if(ind + 1 <= arr.length){
-                        var y = [];
-                        y = elem.concat(arr[arr.length] -1);
-                        x = x.concat(elem.concat(arr[arr.length] -1));
-                        arr.pop();
-                        arr.shift();
-                    }
-                    else if(arr.length === 1){
-                        x = x.concat(elem);
-                    }
-
-                    if(req.params.value === 'meta') {
-
-                        console.log('vis mig x: ', x);
-                    }
-
-                });
-
-                x.sort();
-                x.push('zzz');
-
-                if(req.params.value === 'meta') {
-
-                    console.log('vis mig x: ', x);
                 }
-
-                var y = [];
-
-                x.reduce(function(prev, curr, ind, arr){
-                    if(arr[ind-1]!== curr && typeof arr[ind-1] === 'string'){
-                        y.push(arr[ind-1]);
-                    }
-                });
-
-                if(req.params.value === 'meta') {
-
-                    console.log('vis mig y: ', y);
-                }
-
-                res.status(200).send(y);
-            }
-            else{
-                res.status(200).send(result.rows);
-            }
-        })
-    })
-
-});
-
-router.put('/meta', call.isAuthenticated, function(req, res, next){
-
-    //console.log('dropdowns/meta: ', req.body);
-
-    var temp_str = "";
-    temp_str = req.body.query_string.replace(/xxx/g, "'");
-    var column = req.body.column;
-    var temp = [];
-
-    pg.connect(connectionString, function(err, client, done){
-        var query = client.query(temp_str, function(error, result){
-            if(error){
-                console.log(error);
-            }
-        })
-        query.on('row', function(row){
-            if(column === 'names' || column === 'meta'){
-                temp.push(row[column]);
-            }
-        })
-        query.on('end', function(result){
-            client.end();
-            //console.log('show me results: ', result.rows);
-
-            if(column === 'meta' || column === 'names'){
-                var x = [];
-                var length = temp.length;
-
-                temp.forEach(function(elem, ind, arr){
-                    if(arr.length === length){
-                        x = elem.concat(arr[arr.length -1]);
-                        arr.pop();
-                        //arr.shift()
-                    }
-                    else if(ind + 1 <= arr.length){
-                        var y = [];
-                        y = elem.concat(arr[arr.length] -1);
-                        x = x.concat(elem.concat(arr[arr.length] -1));
-                        arr.pop();
-                        arr.shift();
-                    }
-                    else if(arr.length === 1){
-                        x = x.concat(elem);
-                    }
-                });
-
-                x.sort();
-                x.push('zzz');
-
-                var y = [];
-
-                x.reduce(function(prev, curr, ind, arr){
-                    //console.log('reducing: ', curr, arr[ind-1], typeof arr[ind-1]);
-                    if(arr[ind-1]!== curr && typeof arr[ind-1] === 'string'){
-                        y.push(arr[ind-1]);
-                    }
-                });
-
-                res.status(200).send(y);
             }
 
-            else{
-                res.status(200).send(result.rows);
-
-            }
-
+            res.status(200).send(temp);
         })
     })
 

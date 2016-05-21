@@ -82,9 +82,6 @@ router.post('/', call.isAuthenticated, function(req, res){
         }
     }
 
-    //console.log('give me search string: ', search);
-
-
     if (typeof req.body.year === 'number' && !req.body.date) {
         search = search + " AND YEAR = " + req.body.year;
     }
@@ -136,6 +133,7 @@ router.put('/count', call.isAuthenticated, function(req, res, next){
             }
         })
         query.on('end', function(result){
+            client.end();
             res.status(200).send(result.rows);
         })
     })

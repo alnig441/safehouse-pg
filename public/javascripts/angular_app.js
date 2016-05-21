@@ -262,16 +262,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
 app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function($scope, $rootScope, $http, $log, $modal, $location, appServices){
 
-    //appServices.buildMeta();
-    resetSQ();
-
-    function resetSQ(){
-        $rootScope.baseline = {};
-        $rootScope.query_meta = '';
-        $rootScope.conditions = '';
-        $rootScope.baseline_condition = '';
-        $rootScope.query_img = 'SELECT ID, CREATED, PATH || FOLDER || xxx/xxx || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL';
-    }
+    appServices.resetSQ();
 
 
     $scope.selected_db = $rootScope.default_storage;
@@ -347,7 +338,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
     };
 
     $scope.clear = function(){
-        resetSQ();
+        appServices.resetSQ();
         $scope.form = {};
         $scope.form.type_and = true;
         $scope.form.type_or = false;
@@ -599,7 +590,7 @@ app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http,
 
 });
 
-app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal){
+app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, appServices){
     $scope.animationsEnabled = true;
     $scope.open2 = function (size, db, type) {
 
@@ -642,6 +633,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal)
 
         $scope.form = {};
         $scope.form.type_and = true;
+        appServices.resetSQ();
 
     };
 
@@ -795,9 +787,6 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
         if(obj){
 
-            var x;
-            var query = {};
-
             arr.forEach(function(elem, ind, arr){
                 $rootScope.query_meta = 'SELECT DISTINCT '+ elem + ' FROM images WHERE ' + elem + ' IS NOT NULL' + $rootScope.baseline_condition;
                 $http.put('/dropdowns/meta', {query_string: $rootScope.query_meta, column: elem})
@@ -806,6 +795,12 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
                         $rootScope[elem] = response.data;
                     });
             });
+
+            $http.put('/queries/count', {conditions: $rootScope.baseline_condition})
+                .then(function(response){
+                    console.log('count: ', response.data[0].count);
+                    $rootScope.queries_count = response.data[0].count;
+                });
 
         }
 
@@ -839,6 +834,15 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
             }
         }
 
+    };
+
+    _appServicesFactory.resetSQ = function(){
+        $rootScope.baseline = {};
+        $rootScope.query_meta = '';
+        $rootScope.conditions = '';
+        $rootScope.baseline_condition = '';
+        $rootScope.query_img = 'SELECT DISTINCT ON (CREATED) ID, PATH || FOLDER || xxx/xxx || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL';
+        $rootScope.queries_count = '';
     };
 
     return _appServicesFactory;

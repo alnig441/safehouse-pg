@@ -123,9 +123,24 @@ router.post('/', call.isAuthenticated, function(req, res){
 });
 
 
-router.put('/type', call.isAuthenticated, function(req, res, next){
+router.put('/count', call.isAuthenticated, function(req, res, next){
 
-    console.log('in type: ', req.body);
+    var search = 'SELECT COUNT(*) FROM IMAGES WHERE META IS NOT NULL ' + req.body.conditions.replace(/xxx/g, "'");
+
+    console.log('in count: ', search);
+
+    pg.connect(connectionString, function(err, client, done){
+        var query = client.query(search, function(error, result){
+            if(error){
+                console.log(error);
+            }
+        })
+        query.on('end', function(result){
+            res.status(200).send(result.rows);
+        })
+    })
+
+
 
 });
 

@@ -781,11 +781,13 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
        $rootScope.baseline_condition += $rootScope.conditions;
 
 
-        console.log('buildMeta w/o obj: ', $rootScope.baseline_condition, baseline_col);
 
         if(baseline_col !== ''){
             conditions = $rootScope.baseline_condition;
         }
+
+        console.log('buildMeta w/o obj: ', $rootScope.baseline_condition, baseline_col);
+
 
         $http.get('/dropdowns/' + conditions)
             .then(function(result){
@@ -794,7 +796,7 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
             });
 
-        $http.put('/queries/count', {conditions: $rootScope.baseline_condition})
+        $http.put('/queries/count', {conditions: conditions})
             .then(function(response){
                 console.log('count: ', response.data[0].count);
                 $rootScope.queries_count = response.data[0].count;

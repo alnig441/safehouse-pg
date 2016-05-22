@@ -7,6 +7,8 @@ var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/sa
 
 router.post('/build', call.isAuthenticated, function(req, res, next){
 
+    console.log('hvad sker der? ', req.body);
+
     if(req.body.month === 12){
         req.body.month = 0;
     }
@@ -33,14 +35,16 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
 
     switch (option) {
         case 'month':
-            db === 'images' ? filter += " where year = "+ req.body.year : filter += " and year = "+ req.body.year;
+            filter += " and year = "+ req.body.year;
             break;
         case 'day':
-            db === 'images' ? filter += " where year = "+ req.body.year +" and month = "+req.body.month : filter += " and year = "+ req.body.year +" and month = "+req.body.month;
+            filter += " and year = "+ req.body.year +" and month = "+req.body.month;
             break;
     }
 
-    db === 'events' ? query_string = 'SELECT DISTINCT '+ option +' FROM events CROSS JOIN images where id = img_id'+ filter +' ORDER BY '+ option +' asc' : query_string = 'SELECT DISTINCT '+ option +' FROM images '+ filter +' ORDER BY '+ option +' asc' ;
+    db === 'events' ? query_string = 'SELECT DISTINCT '+ option +' FROM events CROSS JOIN images where id = img_id'+ filter +' ORDER BY '+ option +' asc' : query_string = 'SELECT DISTINCT '+ option +' FROM images WHERE META IS NOT NULL '+ filter +' ORDER BY '+ option +' asc' ;
+
+    console.log('query string: ', query_string);
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(query_string, function(error, result){

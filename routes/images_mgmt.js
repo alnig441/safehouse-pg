@@ -147,11 +147,11 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
         }
     }
 
-    if(body.meta !== undefined){
+    if(body.meta !== undefined && typeof body.meta === 'string'){
         body.meta = call.build_obj(call.splitString(req.body.meta));
     }
 
-    if(body.names !== undefined){
+    if(body.names !== undefined && typeof body.names === 'string'){
         body.names = call.build_obj(call.splitString(req.body.names));
     }
 

@@ -134,6 +134,8 @@ router.get('/get_all', call.isAuthenticated, function(req, res, next){
 
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
+    console.log('adding meta: ', req.body);
+
     var body = {};
     var incr = 0;
     var cols = [];

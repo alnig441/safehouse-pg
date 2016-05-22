@@ -157,14 +157,14 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
     for(var prop in body){
         incr ++;
-        if(prop === 'names' || prop === 'meta'){
+        if(typeof body[prop] === 'string' && (prop === 'names' || prop === 'meta')){
             cols.push(prop);
             vals += "array["+ body[prop] + "]";
             if(incr < Object.keys(body).length){
                 vals += ",";
             }
         }
-        else{
+        else if(prop !== 'names' && prop !=='meta'){
             cols.push(prop);
             vals += "'" + body[prop] + "'";
             if(incr < Object.keys(body).length){

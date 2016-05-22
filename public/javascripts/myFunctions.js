@@ -45,7 +45,7 @@ var call = {
     splitString: function(meta){
         console.log('..splitstring..', meta);
         var separator = ' ';
-        var temp = meta.toLowerCase().split(separator);
+        var temp = meta.split(separator);
         return temp;
         },
     isAuthenticated: function(req, res, next){

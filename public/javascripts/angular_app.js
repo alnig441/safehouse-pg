@@ -264,7 +264,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     appServices.resetSQ();
 
-
     $scope.selected_db = $rootScope.default_storage;
 
     getCount($scope.selected_db);
@@ -317,7 +316,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         console.log('hvad kommer ind? ', this.form, x);
         var query = {};
 
-
         if(Object.keys($rootScope.baseline).length === 0){
             $rootScope.baseline[x] = this.form[x];
         }
@@ -333,6 +331,30 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         }
 
         query.baseline = $rootScope.baseline;
+
+        console.log(' show me ', $rootScope.search_terms.expand[x], $rootScope.search_terms.contract[x], this.form.type_or, this.form.type_and);
+
+        if($rootScope.search_terms.contract[x] === undefined || $rootScope.search_terms.expand[x] === undefined){
+            if(this.form.type_and){
+                $rootScope.search_terms.contract[x] = [];
+                $rootScope.search_terms.contract[x].push(this.form[x]);
+            }
+            if(this.form.type_or){
+                $rootScope.search_terms.expand[x] = [];
+                $rootScope.search_terms.expand[x].push(this.form[x]);
+            }
+        }
+        else{
+            if(this.form.type_and){
+                $rootScope.search_terms.contract[x].push(this.form[x]);
+            }
+            if(this.form.type_or){
+                $rootScope.search_terms.expand[x].push(this.form[x]);
+            }
+        }
+
+        console.log('search terms: ', $rootScope.search_terms);
+
         appServices.buildMeta(query);
 
     };
@@ -827,6 +849,9 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         $rootScope.baseline_condition = '';
         $rootScope.query_img = 'SELECT DISTINCT ON (CREATED) ID, PATH || FOLDER || xxx/xxx || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL';
         $rootScope.queries_count = '';
+        $rootScope.search_terms = {};
+        $rootScope.search_terms.contract = {};
+        $rootScope.search_terms.expand = {};
     };
 
     return _appServicesFactory;

@@ -76,6 +76,7 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
 
 router.get('/:conditions?', function(req, res, next){
 
+    console.log('dropdwons/conditions: ', req.params);
 
     var cols = ['meta', 'names', 'occasion', 'country', 'state', 'city'];
     var temp = {meta: [], names: [], country: [], state: [], city: [], occasion: []};

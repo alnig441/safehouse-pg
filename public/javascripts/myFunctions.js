@@ -44,7 +44,7 @@ var call = {
     },
     splitString: function(meta){
         console.log('..splitstring..', meta);
-        var separator = ' ';
+        var separator = ',';
         var temp = meta.split(separator);
         return temp;
         },

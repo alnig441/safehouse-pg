@@ -264,6 +264,8 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     appServices.resetSQ();
 
+
+    /*BLOCKED OUT FUNTIONALITY FOR USE WHEN MORE STORAGE FOLDERS ARE ACTIVE PER USER*/
     $scope.selected_db = $rootScope.default_storage;
 
     getCount($scope.selected_db);
@@ -281,8 +283,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     $scope.switch = function(option){
         $scope.form.type_and = true;
-        $scope.images = {};
-        $scope.images = $rootScope.img_db;
         var elements = {meta: 'meta_div', time: 'time_div'};
         appServices.selectTab(elements, option);
 
@@ -313,7 +313,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     $scope.build_query = function(x){
 
-        console.log('hvad kommer ind? ', this.form, x);
         var query = {};
 
         if(Object.keys($rootScope.baseline).length === 0){
@@ -331,8 +330,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         }
 
         query.baseline = $rootScope.baseline;
-
-        console.log(' show me ', $rootScope.search_terms.expand[x], $rootScope.search_terms.contract[x], this.form.type_or, this.form.type_and);
 
         if($rootScope.search_terms.contract[x] === undefined || $rootScope.search_terms.expand[x] === undefined){
             if(this.form.type_and){
@@ -353,18 +350,8 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
             }
         }
 
-        console.log('search terms: ', $rootScope.search_terms);
-
         appServices.buildMeta(query);
 
-    };
-
-    $scope.clear = function(){
-        appServices.resetSQ();
-        $scope.form = {};
-        $scope.form.type_and = true;
-        $scope.form.type_or = false;
-        appServices.buildMeta();
     };
 
 }]);
@@ -653,9 +640,8 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal,
 
             });
 
-        $scope.form = {};
-        $scope.form.type_and = true;
-        appServices.resetSQ();
+        $scope.clear();
+
 
     };
 
@@ -682,6 +668,15 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal,
                 }
 
             });
+
+    };
+
+    $scope.clear = function(){
+
+        $scope.form = {};
+        $scope.form.type_and = true;
+        appServices.resetSQ();
+        appServices.buildMeta();
 
     };
 });
@@ -778,7 +773,7 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         if(baseline_col==='names' || baseline_col==='meta'){
             $rootScope.baseline_condition = ' AND xxx'+ $rootScope.baseline[baseline_col] +'xxx = ANY('+ baseline_col +')';
         }
-        else{
+        else if(baseline_col){
             $rootScope.baseline_condition = ' AND ' +baseline_col+ ' = xxx'+ $rootScope.baseline[baseline_col] +'xxx';
         }
 
@@ -808,7 +803,7 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
             conditions = $rootScope.baseline_condition;
         }
 
-        console.log('buildMeta w/o obj: ', $rootScope.baseline_condition, baseline_col);
+        console.log('buildMeta w/o obj: \nbaseline condition: '+ $rootScope.baseline_condition +'\nbasline_col: '+ baseline_col);
 
 
         $http.get('/dropdowns/' + conditions)

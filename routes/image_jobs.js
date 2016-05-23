@@ -92,12 +92,14 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
 });
 
+/* FOR CASES WHERE MORE STORAGES ARE ACTIVE PER USER - NOT IMPLEMENTED YET */
+
 router.get('/count/:active_storage?', call.isAuthenticated, function(req, res, next){
 
     console.log('in images count: ', req.params);
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query("update storages set size = (select count(*) from images where storage = '"+ req.params.active_storage + "') where folder = '"+ req.params.active_storage +"'; select size from storages where folder='"+ req.params.active_storage +"'", function(error, result){
+        var query = client.query("update storages set size = (select count(*) from images where storage = '"+ req.params.active_storage + "' AND META IS NOT NULL AND NAMES IS NOT NULL AND OCCASION IS NOT NULL AND COUNTRY IS NOT NULL AND STATE IS NOT NULL AND CITY IS NOT NULL) where folder = '"+ req.params.active_storage +"'; select size from storages where folder='"+ req.params.active_storage +"'", function(error, result){
             if(error){
                 console.log(error);
             }

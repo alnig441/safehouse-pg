@@ -313,6 +313,8 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
     $scope.build_query = function(x){
 
+        console.log('hvad kommer ind: ', this.form);
+
         var query = {};
 
         if(Object.keys($rootScope.baseline).length === 0){
@@ -327,11 +329,16 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
                 query.expand = {};
                 query.expand[x] = this.form[x];
             }
+            if(this.form.exclude){
+                query.exclude = {};
+                query.exclude[x] = this.form[x];
+            }
+
         }
 
         query.baseline = $rootScope.baseline;
 
-        if(($rootScope.search_terms.contract[x] === undefined && this.form.type_and) || ($rootScope.search_terms.expand[x] === undefined && this.form.type_or)){
+        if(($rootScope.search_terms.contract[x] === undefined && this.form.type_and) || ($rootScope.search_terms.expand[x] === undefined && this.form.type_or) || ($rootScope.search_terms.exclude[x] === undefined && this.form.exclude) ){
             if(this.form.type_and){
                 $rootScope.search_terms.contract[x] = [];
                 $rootScope.search_terms.contract[x].push(this.form[x]);
@@ -340,6 +347,11 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
                 $rootScope.search_terms.expand[x] = [];
                 $rootScope.search_terms.expand[x].push(this.form[x]);
             }
+            if(this.form.exclude){
+                $rootScope.search_terms.exclude[x] = [];
+                $rootScope.search_terms.exclude[x].push(this.form[x]);
+            }
+
         }
         else{
             if(this.form.type_and){
@@ -347,6 +359,9 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
             }
             if(this.form.type_or){
                 $rootScope.search_terms.expand[x].push(this.form[x]);
+            }
+            if(this.form.exclude){
+                $rootScope.search_terms.exclude[x].push(this.form[x]);
             }
         }
 
@@ -603,6 +618,7 @@ app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http,
 
 app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, appServices){
     $scope.animationsEnabled = true;
+
     $scope.open2 = function (size, db, type) {
 
         var obj = {};
@@ -796,6 +812,14 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
                 $rootScope.conditions += ' OR xxx'+ key_value[Object.keys(key_value).toString()] +'xxx = ANY('+ Object.keys(key_value).toString() +')';
             }
         }
+        if(type === 'exclude') {
+            if (Object.keys(key_value).toString() !== 'names' && Object.keys(key_value).toString() !== 'meta') {
+                $rootScope.conditions += ' AND '+ Object.keys(key_value).toString() +' != xxx'+ key_value[Object.keys(key_value).toString()] +'xxx';
+            }
+            else{
+                $rootScope.conditions += ' AND xxx'+ key_value[Object.keys(key_value).toString()] +'xxx != ANY('+ Object.keys(key_value).toString() +')';
+            }
+        }
 
        $rootScope.baseline_condition += $rootScope.conditions;
 
@@ -849,6 +873,7 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         $rootScope.search_terms = {};
         $rootScope.search_terms.contract = {};
         $rootScope.search_terms.expand = {};
+        $rootScope.search_terms.exclude = {};
     };
 
     return _appServicesFactory;

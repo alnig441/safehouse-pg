@@ -331,7 +331,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
         query.baseline = $rootScope.baseline;
 
-        if($rootScope.search_terms.contract[x] === undefined || $rootScope.search_terms.expand[x] === undefined){
+        if(($rootScope.search_terms.contract[x] === undefined && this.form.type_and) || ($rootScope.search_terms.expand[x] === undefined && this.form.type_or)){
             if(this.form.type_and){
                 $rootScope.search_terms.contract[x] = [];
                 $rootScope.search_terms.contract[x].push(this.form[x]);
@@ -349,6 +349,8 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
                 $rootScope.search_terms.expand[x].push(this.form[x]);
             }
         }
+
+        console.log('search terms: ', $rootScope.search_terms);
 
         appServices.buildMeta(query);
 
@@ -787,7 +789,7 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
             }
         }
         if(type === 'expand') {
-            if (Object.keys(key_value).toString() !== 'names ' && Object.keys(key_value).toString() !== 'meta') {
+            if (Object.keys(key_value).toString() !== 'names' && Object.keys(key_value).toString() !== 'meta') {
                 $rootScope.conditions += ' OR '+ Object.keys(key_value).toString() +' = xxx'+ key_value[Object.keys(key_value).toString()] +'xxx';
             }
             else{

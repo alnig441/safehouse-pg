@@ -33,6 +33,9 @@ router.post('/', call.isAuthenticated, function(req, res){
 
     console.log('queries/post: ', req.body);
 
+    //BUILD QUERY AROUND:
+    //'SELECT RES.ID, PATH || FOLDER || '/' || RES.FILE FROM (' + EXCLUDE-QUERY-CONDITIONS-WHEN-META/NAMES + ') AS RES CROSS JOIN STORAGES WHERE FOLDER = RES.STORAGE;
+
     var search = "";
     var query_string;
 
@@ -126,15 +129,21 @@ router.post('/', call.isAuthenticated, function(req, res){
 
 router.put('/count', call.isAuthenticated, function(req, res, next){
 
-    //console.log('queries/count: ', req.body.conditions);
+    //console.log('queries/count: ', req.body);
 
     var search = 'SELECT COUNT(*) FROM IMAGES WHERE NAMES IS NOT NULL AND META IS NOT NULL AND OCCASION IS NOT NULL AND COUNTRY IS NOT NULL AND STATE IS NOT NULL AND CITY IS NOT NULL';
+    var arr = [];
 
     if(req.body.conditions !== undefined){
-        console.log('hallo');
-        search +=req.body.conditions.replace(/xxx/g, "'");
+        arr = req.body.conditions.split(' ');
+        if(arr[0].toLowerCase() !== 'select'){
+            search +=req.body.conditions.replace(/xxx/g, "'");
+        }
+        else{
+            search = req.body.conditions.replace(/xxx/g, "'");
+            search = search.replace(/RES.COLUMN/g, "COUNT(*)");
+        }
     }
-
 
     pg.connect(connectionString, function(err, client, done){
         var query = client.query(search, function(error, result){

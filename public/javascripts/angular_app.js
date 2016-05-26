@@ -311,25 +311,32 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
             });
     };
 
-    $scope.build_query = function(x){
+    $scope.noReload = function(meta){
+        if(this.form[meta] !== null){
+            $scope.build_query(meta);
+        }
+    };
 
-        console.log('hvad kommer ind: ', this.form);
+    $scope.build_query = function(x) {
+
+        console.log('hvad kommer ind: ',this.form);
 
         var query = {};
 
-        if(Object.keys($rootScope.baseline).length === 0){
+
+        if (Object.keys($rootScope.baseline).length === 0) {
             $rootScope.baseline[x] = this.form[x];
         }
-        else{
-            if(this.form.type_and){
+        else {
+            if (this.form.type_and && this.form[x] !== null) {
                 query.contract = {};
                 query.contract[x] = this.form[x];
             }
-            if(this.form.type_or){
+            if (this.form.type_or && this.form[x] !== null) {
                 query.expand = {};
                 query.expand[x] = this.form[x];
             }
-            if(this.form.exclude){
+            if (this.form.exclude && this.form[x] !== null) {
                 query.exclude = {};
                 query.exclude[x] = this.form[x];
             }
@@ -338,29 +345,29 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
         query.baseline = $rootScope.baseline;
 
-        if(($rootScope.search_terms.contract[x] === undefined && this.form.type_and) || ($rootScope.search_terms.expand[x] === undefined && this.form.type_or) || ($rootScope.search_terms.exclude[x] === undefined && this.form.exclude) ){
-            if(this.form.type_and){
+        if (($rootScope.search_terms.contract[x] === undefined && this.form.type_and) || ($rootScope.search_terms.expand[x] === undefined && this.form.type_or) || ($rootScope.search_terms.exclude[x] === undefined && this.form.exclude)) {
+            if (this.form.type_and && this.form[x] !== null) {
                 $rootScope.search_terms.contract[x] = [];
                 $rootScope.search_terms.contract[x].push(this.form[x]);
             }
-            if(this.form.type_or){
+            if (this.form.type_or && this.form[x] !== null) {
                 $rootScope.search_terms.expand[x] = [];
                 $rootScope.search_terms.expand[x].push(this.form[x]);
             }
-            if(this.form.exclude){
+            if (this.form.exclude && this.form[x] !== null) {
                 $rootScope.search_terms.exclude[x] = [];
                 $rootScope.search_terms.exclude[x].push(this.form[x]);
             }
 
         }
-        else{
-            if(this.form.type_and){
+        else {
+            if (this.form.type_and && this.form[x] !== null) {
                 $rootScope.search_terms.contract[x].push(this.form[x]);
             }
-            if(this.form.type_or){
+            if (this.form.type_or && this.form[x] !== null) {
                 $rootScope.search_terms.expand[x].push(this.form[x]);
             }
-            if(this.form.exclude){
+            if (this.form.exclude && this.form[x] !== null) {
                 $rootScope.search_terms.exclude[x].push(this.form[x]);
             }
         }
@@ -368,7 +375,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
         console.log('search terms: ', $rootScope.search_terms);
 
         appServices.buildMeta(query);
-
     };
 
 }]);
@@ -621,12 +627,24 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal,
 
     $scope.open2 = function (size, db, type) {
 
+       /* SELECT RES.ID, PATH || FOLDER || '/' || RES.FILE FROM (SELECT BASE.* FROM (SELECT * FROM IMAGES WHERE COUNTRY = 'USA' OR OCCASION = 'none') AS BASE CROSS JOIN (SELECT * FROM IMAGES WHERE 'headshot' = ANY(META)) AS COMP WHERE BASE.ID != COMP.ID) AS RES CROSS JOIN STORAGES WHERE FOLDER = RES.STORAGE */
+
+        console.log('open2 no-reload: ', $rootScope.no_reload, $rootScope.query_img_excl);
+
         var obj = {};
 
         if(type === 'meta'){
-            $rootScope.query_img += $rootScope.baseline_condition += ' order by created asc';
-            console.log('open2: ', $rootScope.query_img, type);
-            obj.query = $rootScope.query_img;
+            if($rootScope.no_reload){
+                console.log('open2 bingo : ', $rootScope.query_img_excl, type);
+                $rootScope.query_img_excl = "SELECT RES.ID, PATH || FOLDER || '/' || RES.FILE FROM (" + $rootScope.exclude;
+                $rootScope.query_img_excl += ") AS RES CROSS JOIN STORAGES WHERE FOLDER = RES.STORAGE";
+                obj.query = $rootScope.query_img_excl;
+            }
+            else{
+                $rootScope.query_img += $rootScope.baseline_condition += ' order by created asc';
+                console.log('open2 banko : ', $rootScope.query_img, type);
+                obj.query = $rootScope.query_img;
+            }
         }
         else{
             $scope.form.database = db;
@@ -770,15 +788,16 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
     };
 
-    _appServicesFactory.buildMeta = function(obj, fresh){
+    _appServicesFactory.buildMeta = function(obj){
 
         var arr = ['names', 'meta', 'country', 'state', 'city', 'occasion'];
 
-        var column = Object.keys($rootScope.baseline).toString();
+        var column;
         var type;
         var key_value;
         var baseline_col = Object.keys($rootScope.baseline).toString();
         var conditions;
+        var query_obj = {};
 
         for(var prop in obj){
             if(prop !== 'baseline'){
@@ -787,6 +806,8 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
                 key_value = obj[prop];
             }
         }
+
+        console.log('give me type: ', typeof obj);
 
         if(baseline_col==='names' || baseline_col==='meta'){
             $rootScope.baseline_condition = ' AND xxx'+ $rootScope.baseline[baseline_col] +'xxx = ANY('+ baseline_col +')';
@@ -813,30 +834,30 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
             }
         }
         if(type === 'exclude') {
-            if (Object.keys(key_value).toString() !== 'names' && Object.keys(key_value).toString() !== 'meta') {
-                $rootScope.conditions += ' AND '+ Object.keys(key_value).toString() +' != xxx'+ key_value[Object.keys(key_value).toString()] +'xxx';
-            }
-            else{
-                $rootScope.conditions += ' AND xxx'+ key_value[Object.keys(key_value).toString()] +'xxx != ANY('+ Object.keys(key_value).toString() +')';
+            if(column !== 'names' && column !== 'meta'){
+                $rootScope.baseline_condition += $rootScope.conditions;
+                $rootScope.exclude = 'SELECT DISTINCT RES.COLUMN FROM (SELECT * FROM IMAGES WHERE META IS NOT NULL '+$rootScope.baseline_condition+') AS RES WHERE '+column+' != xxx'+key_value[column]+'xxx';
             }
         }
-
-       $rootScope.baseline_condition += $rootScope.conditions;
-
-
 
         if(baseline_col !== ''){
-            conditions = $rootScope.baseline_condition;
+            if(type === 'exclude'){
+                console.log('sending exclude');
+                conditions = $rootScope.exclude;
+            }
+            else{
+                console.log('sending non-exlclude');
+                $rootScope.baseline_condition += $rootScope.conditions;
+                conditions = $rootScope.baseline_condition;
+            }
         }
 
-        console.log('buildMeta w/o obj: \nbaseline condition: '+ $rootScope.baseline_condition +'\nbasline_col: '+ baseline_col);
+        console.log('buildMeta OBJ: \nobject: '+JSON.stringify(obj)+'\ntype: '+type+'\nbaseline-conditions: '+$rootScope.baseline_condition+'\nconditions: '+$rootScope.conditions+'\nexclude conditions: '+$rootScope.exclude+'\ncolumn: '+column+'\nbasline_col: '+ baseline_col +'\nsending conditions: '+JSON.stringify(conditions));
 
-
-        $http.get('/dropdowns/' + conditions)
+        $http.get('/dropdowns/'+ conditions)
             .then(function(result){
                 $rootScope.meta = result.data;
                 console.log('result build: ', $rootScope.meta);
-
             });
 
         $http.put('/queries/count', {conditions: conditions})
@@ -844,7 +865,6 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
                 console.log('count: ', response.data[0].count);
                 $rootScope.queries_count = response.data[0].count;
             });
-
 
     };
 
@@ -874,6 +894,10 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         $rootScope.search_terms.contract = {};
         $rootScope.search_terms.expand = {};
         $rootScope.search_terms.exclude = {};
+        $rootScope.exclude = '';
+        $rootScope.exclude_arg = '';
+        //$rootScope.no_reload = false;
+        //$rootScope.query_img_excl = 'SELECT RES.ID, PATH || FOLDER || '/' || RES.FILE FROM (';
     };
 
     return _appServicesFactory;

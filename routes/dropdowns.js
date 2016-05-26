@@ -76,23 +76,40 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
 
 router.get('/:conditions?', function(req, res, next){
 
-    console.log('dropdwons/conditions: ', req.params);
+    console.log('dropdowns/conditions : ', req.params.conditions);
 
     var cols = ['meta', 'names', 'occasion', 'country', 'state', 'city'];
     var temp = {meta: [], names: [], country: [], state: [], city: [], occasion: []};
     var query_string = "";
+    var arr;
 
-    cols.forEach(function(elem,ind,arr){
-        if(req.params.conditions !== 'undefined'){
-            query_string += "SELECT DISTINCT "+elem+" FROM images WHERE "+elem+" IS NOT NULL "+ req.params.conditions.replace(/xxx/g, "'") +" ORDER BY "+elem+ " ASC; "
-        }
-        else{
-            query_string += "SELECT DISTINCT "+elem+" FROM images WHERE "+elem+" IS NOT NULL ORDER BY "+elem+ " ASC; "
-        }
-    });
+    if(req.params.conditions !== 'undefined'){
+        arr = req.params.conditions.split(' ');
+        console.log('arr[0]: ', arr[0]);
+    }
+    else{
+        arr = ['ignore']
+    }
+
+    if(arr[0].toLowerCase() !== 'select'){
+        cols.forEach(function(elem,ind,arr){
+            if(req.params.conditions !== 'undefined'){
+                query_string += "SELECT DISTINCT "+elem+" FROM images WHERE "+elem+" IS NOT NULL "+ req.params.conditions.replace(/xxx/g, "'") +" ORDER BY "+elem+ " ASC; "
+            }
+            else{
+                query_string += "SELECT DISTINCT "+elem+" FROM images WHERE "+elem+" IS NOT NULL ORDER BY "+elem+ " ASC; "
+            }
+        });
+    }
+    if(arr[0].toLowerCase() === 'select'){
+        cols.forEach(function(elem, ind, arr){
+            query_string += req.params.conditions.replace(/COLUMN/g, elem)+';';
+            query_string = query_string.replace(/xxx/g, "'");
+        })
+    }
 
 
-    //console.log(query_string);
+    console.log(query_string);
 
     pg.connect(connectionString, function(error, client, done){
 
@@ -102,7 +119,6 @@ router.get('/:conditions?', function(req, res, next){
             }
         })
         query.on('row', function(row){
-            //console.log('testing: ', row);
             if(Object.keys(row).toString() === 'names' || Object.keys(row).toString() === 'meta'){
                 temp[Object.keys(row).toString()] = temp[Object.keys(row).toString()].concat(row[Object.keys(row).toString()]);
 

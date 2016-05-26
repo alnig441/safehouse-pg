@@ -129,7 +129,7 @@ router.post('/', call.isAuthenticated, function(req, res){
 
 router.put('/count', call.isAuthenticated, function(req, res, next){
 
-    //console.log('queries/count: ', req.body);
+    console.log('queries/count: ', req.body);
 
     var search = 'SELECT COUNT(*) FROM IMAGES WHERE NAMES IS NOT NULL AND META IS NOT NULL AND OCCASION IS NOT NULL AND COUNTRY IS NOT NULL AND STATE IS NOT NULL AND CITY IS NOT NULL';
     var arr = [];
@@ -141,9 +141,11 @@ router.put('/count', call.isAuthenticated, function(req, res, next){
         }
         else{
             search = req.body.conditions.replace(/xxx/g, "'");
-            search = search.replace(/RES.COLUMN/g, "COUNT(*)");
+            search = search.replace(/DISTINCT RES\w.COLUMN/g, "COUNT(*)");
         }
     }
+
+    console.log('queries/count search string: ', search);
 
     pg.connect(connectionString, function(err, client, done){
         var query = client.query(search, function(error, result){

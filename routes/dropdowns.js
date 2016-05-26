@@ -109,7 +109,7 @@ router.get('/:conditions?', function(req, res, next){
     }
 
 
-    console.log(query_string);
+    //console.log(query_string);
 
     pg.connect(connectionString, function(error, client, done){
 

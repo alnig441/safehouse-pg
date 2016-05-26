@@ -761,6 +761,8 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $r
 app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
     var _appServicesFactory = {};
+    var excl_incr;
+    var conditions;
 
     var modals = {
         login: {contr: 'LoginModalCtrl', templ: 'loginModal.html'},
@@ -796,7 +798,6 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         var type;
         var key_value;
         var baseline_col = Object.keys($rootScope.baseline).toString();
-        var conditions;
         var query_obj = {};
 
         for(var prop in obj){
@@ -807,52 +808,44 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
             }
         }
 
-        console.log('give me type: ', typeof obj);
+        console.log('give me type: ', type);
 
-        if(baseline_col==='names' || baseline_col==='meta'){
-            $rootScope.baseline_condition = ' AND xxx'+ $rootScope.baseline[baseline_col] +'xxx = ANY('+ baseline_col +')';
-        }
-        else if(baseline_col){
-            $rootScope.baseline_condition = ' AND ' +baseline_col+ ' = xxx'+ $rootScope.baseline[baseline_col] +'xxx';
+        if(type === undefined){
+            if(baseline_col==='names' || baseline_col==='meta'){
+                conditions = ' AND xxx'+ $rootScope.baseline[baseline_col] +'xxx = ANY('+ baseline_col +')';
+            }
+            else if(baseline_col){
+                conditions = ' AND ' +baseline_col+ ' = xxx'+ $rootScope.baseline[baseline_col] +'xxx';
+            }
         }
 
 
         if(type === 'contract'){
             if(Object.keys(key_value).toString() !== 'names' && Object.keys(key_value).toString() !== 'meta'){
-                $rootScope.conditions += ' AND '+ Object.keys(key_value).toString() +' = xxx'+ key_value[Object.keys(key_value).toString()] +'xxx';
+                conditions += ' AND '+ Object.keys(key_value).toString() +' = xxx'+ key_value[Object.keys(key_value).toString()] +'xxx';
             }
             else{
-                $rootScope.conditions += ' AND xxx'+ key_value[Object.keys(key_value).toString()] +'xxx = ANY('+ Object.keys(key_value).toString() +')';
+                conditions += ' AND xxx'+ key_value[Object.keys(key_value).toString()] +'xxx = ANY('+ Object.keys(key_value).toString() +')';
             }
+            //console.log('CONTRACT: ', conditions);
         }
         if(type === 'expand') {
             if (Object.keys(key_value).toString() !== 'names' && Object.keys(key_value).toString() !== 'meta') {
-                $rootScope.conditions += ' OR '+ Object.keys(key_value).toString() +' = xxx'+ key_value[Object.keys(key_value).toString()] +'xxx';
+                conditions+= ' OR '+ Object.keys(key_value).toString() +' = xxx'+ key_value[Object.keys(key_value).toString()] +'xxx';
             }
             else{
-                $rootScope.conditions += ' OR xxx'+ key_value[Object.keys(key_value).toString()] +'xxx = ANY('+ Object.keys(key_value).toString() +')';
+                conditions+= ' OR xxx'+ key_value[Object.keys(key_value).toString()] +'xxx = ANY('+ Object.keys(key_value).toString() +')';
             }
         }
+
         if(type === 'exclude') {
             if(column !== 'names' && column !== 'meta'){
-                $rootScope.baseline_condition += $rootScope.conditions;
-                $rootScope.exclude = 'SELECT DISTINCT RES.COLUMN FROM (SELECT * FROM IMAGES WHERE META IS NOT NULL '+$rootScope.baseline_condition+') AS RES WHERE '+column+' != xxx'+key_value[column]+'xxx';
+                conditions = 'SELECT DISTINCT RES'+excl_incr+'.COLUMN FROM (SELECT * FROM IMAGES WHERE META IS NOT NULL '+conditions+') AS RES'+excl_incr+' WHERE '+column+' != xxx'+key_value[column]+'xxx';
+                excl_incr ++;
             }
         }
 
-        if(baseline_col !== ''){
-            if(type === 'exclude'){
-                console.log('sending exclude');
-                conditions = $rootScope.exclude;
-            }
-            else{
-                console.log('sending non-exlclude');
-                $rootScope.baseline_condition += $rootScope.conditions;
-                conditions = $rootScope.baseline_condition;
-            }
-        }
-
-        console.log('buildMeta OBJ: \nobject: '+JSON.stringify(obj)+'\ntype: '+type+'\nbaseline-conditions: '+$rootScope.baseline_condition+'\nconditions: '+$rootScope.conditions+'\nexclude conditions: '+$rootScope.exclude+'\ncolumn: '+column+'\nbasline_col: '+ baseline_col +'\nsending conditions: '+JSON.stringify(conditions));
+        console.log('buildMeta OBJ: \nobject: '+JSON.stringify(obj)+'\ntype: '+type+'\nexclude conditions: '+$rootScope.exclude+'\ncolumn: '+column+'\nbasline_col: '+ baseline_col +'\nsending conditions: '+JSON.stringify(conditions));
 
         $http.get('/dropdowns/'+ conditions)
             .then(function(result){
@@ -887,17 +880,13 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         $rootScope.baseline = {};
         $rootScope.query_meta = '';
         $rootScope.conditions = '';
-        $rootScope.baseline_condition = '';
         $rootScope.query_img = 'SELECT DISTINCT ON (CREATED) ID, PATH || FOLDER || xxx/xxx || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL';
         $rootScope.queries_count = '';
         $rootScope.search_terms = {};
         $rootScope.search_terms.contract = {};
         $rootScope.search_terms.expand = {};
         $rootScope.search_terms.exclude = {};
-        $rootScope.exclude = '';
-        $rootScope.exclude_arg = '';
-        //$rootScope.no_reload = false;
-        //$rootScope.query_img_excl = 'SELECT RES.ID, PATH || FOLDER || '/' || RES.FILE FROM (';
+        excl_incr = 0;
     };
 
     return _appServicesFactory;

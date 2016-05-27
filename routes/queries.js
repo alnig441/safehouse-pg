@@ -38,6 +38,7 @@ router.post('/', call.isAuthenticated, function(req, res){
 
     if(req.body.query !== undefined){
         query_string = req.body.query.replace(/xxx/g, "'");
+        query_string = query_string.replace(/ASTERIX/g, "*");
     }
 
 
@@ -138,11 +139,13 @@ router.put('/count', call.isAuthenticated, function(req, res, next){
         }
         else{
             search = req.body.conditions.replace(/xxx/g, "'");
-            search = search.replace(/DISTINCT RES\w.COLUMN/g, "COUNT(*)");
+            search = search.replace(/DISTINCT RES\w.COLUMN/, "COUNT(*)");
+            search = search.replace(/RES\w.\*/, "COUNT(*)");
+            search = search.replace(/ASTERIX/, "*");
         }
     }
 
-    //console.log('queries/count search string: ', search);
+    console.log('queries/count search string: ', search);
 
     pg.connect(connectionString, function(err, client, done){
         var query = client.query(search, function(error, result){

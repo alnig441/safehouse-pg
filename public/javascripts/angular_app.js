@@ -626,8 +626,6 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal,
 
     $scope.open2 = function (size, db, type) {
 
-       /* SELECT RES.ID, PATH || FOLDER || '/' || RES.FILE FROM (SELECT BASE.* FROM (SELECT * FROM IMAGES WHERE COUNTRY = 'USA' OR OCCASION = 'none') AS BASE CROSS JOIN (SELECT * FROM IMAGES WHERE 'headshot' = ANY(META)) AS COMP WHERE BASE.ID != COMP.ID) AS RES CROSS JOIN STORAGES WHERE FOLDER = RES.STORAGE */
-
         var obj = {};
         var arr = [];
 
@@ -825,8 +823,16 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
                 }
                 break;
             case 'exclude':
-                if(column !== 'names' && column !== 'meta'){
+                if(column !== 'names' && column !== 'meta' && excl_incr <1){
                     conditions = 'SELECT DISTINCT RES'+excl_incr+'.COLUMN FROM (SELECT * FROM IMAGES WHERE META IS NOT NULL '+conditions+') AS RES'+excl_incr+' WHERE '+column+' != xxx'+key_value[column]+'xxx';
+                    excl_incr ++;
+                    $rootScope.exlc_incr ++;
+                }
+                else{
+                    //conditions = 'SELECT DISTINCT RES'+excl_incr+'.COLUMN FROM(SELECT DISTINCT * FROM ('+conditions+') AS RES'+excl_incr+' WHERE '+column+' != xxx'+key_value[column]+'xxx';
+                    conditions = conditions.replace(/RES\w.COLUMN/g, "ASTERIX");
+                    console.log('hansen cond: ', conditions);
+                    conditions = 'SELECT DISTINCT RES'+excl_incr+'.* FROM ('+conditions+') as RES'+excl_incr+' where '+column+ ' != xxx'+key_value[column]+'xxx';
                     excl_incr ++;
                 }
                 break;
@@ -880,6 +886,7 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         $rootScope.search_terms.exclude = {};
         conditions = undefined;
         excl_incr = 0;
+        $rootScope.exlc_incr = 0;
     };
 
     _appServicesFactory.getConditions = function(){

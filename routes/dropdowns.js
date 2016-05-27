@@ -76,7 +76,7 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
 
 router.get('/:conditions?', function(req, res, next){
 
-    //console.log('dropdowns/conditions : ', req.params.conditions);
+    console.log('dropdowns/conditions : ', req.params.conditions);
 
     var cols = ['meta', 'names', 'occasion', 'country', 'state', 'city'];
     var temp = {meta: [], names: [], country: [], state: [], city: [], occasion: []};
@@ -104,12 +104,14 @@ router.get('/:conditions?', function(req, res, next){
     if(arr[0].toLowerCase() === 'select'){
         cols.forEach(function(elem, ind, arr){
             query_string += req.params.conditions.replace(/COLUMN/g, elem)+';';
+            query_string = query_string.replace(/RES\w.\*/, elem);
+            query_string = query_string.replace(/ASTERIX/ig, "*");
             query_string = query_string.replace(/xxx/g, "'");
         })
     }
 
 
-    //console.log(query_string);
+    console.log('dropdown search string: ', query_string);
 
     pg.connect(connectionString, function(error, client, done){
 

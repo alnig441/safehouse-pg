@@ -76,7 +76,7 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
 
 router.get('/:conditions?', function(req, res, next){
 
-    console.log('dropdowns/conditions : ', req.params.conditions);
+    //console.log('dropdowns/conditions : ', req.params.conditions);
 
     var cols = ['meta', 'names', 'occasion', 'country', 'state', 'city'];
     var temp = {meta: [], names: [], country: [], state: [], city: [], occasion: []};
@@ -85,7 +85,7 @@ router.get('/:conditions?', function(req, res, next){
 
     if(req.params.conditions !== 'undefined'){
         arr = req.params.conditions.split(' ');
-        console.log('arr[0]: ', arr[0]);
+        //console.log('arr[0]: ', arr[0]);
     }
     else{
         arr = ['ignore']

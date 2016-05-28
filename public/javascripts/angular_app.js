@@ -322,6 +322,9 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
             if (Object.keys($rootScope.baseline).length === 0) {
                 $rootScope.baseline[x] = this.form[x];
+                if(this.form.exclude){
+                    $rootScope.baseline_type = 'exclude';
+                }
             }
             else {
                 if (this.form.type_and && this.form[x] !== null) {
@@ -836,11 +839,16 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
                 }
                 break;
             case undefined:
-                if(baseline_col==='names' || baseline_col==='meta'){
-                    conditions = ' AND xxx'+ $rootScope.baseline[baseline_col] +'xxx = ANY('+ baseline_col +')';
+                if($rootScope.baseline_type === 'exclude'){
+                    conditions = ' AND ' +baseline_col+ ' != xxx'+ $rootScope.baseline[baseline_col] +'xxx';
                 }
-                else if(baseline_col){
-                    conditions = ' AND ' +baseline_col+ ' = xxx'+ $rootScope.baseline[baseline_col] +'xxx';
+                else{
+                    if(baseline_col==='names' || baseline_col==='meta'){
+                        conditions = ' AND xxx'+ $rootScope.baseline[baseline_col] +'xxx = ANY('+ baseline_col +')';
+                    }
+                    else if(baseline_col){
+                        conditions = ' AND ' +baseline_col+ ' = xxx'+ $rootScope.baseline[baseline_col] +'xxx';
+                    }
                 }
                 break;
         }
@@ -878,6 +886,7 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
     _appServicesFactory.resetSQ = function(){
         $rootScope.baseline = {};
+        $rootScope.baseline_type = '';
         $rootScope.queries_count = '';
         $rootScope.search_terms = {};
         $rootScope.search_terms.contract = {};

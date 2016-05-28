@@ -635,7 +635,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal,
 
         if(type === 'meta' && arr[0] !== undefined){
             if(arr[0].toLowerCase() !== 'select'){
-                obj.query = "select id, path || folder || '/' || file as url from (select * from images where "+ Object.keys($rootScope.baseline)+ " = xxx"+ $rootScope.baseline[Object.keys($rootScope.baseline)] +"xxx     "+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
+                obj.query = "select id, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
             }
             else{
                 obj.query = "select id, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
@@ -829,7 +829,6 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
                     $rootScope.exlc_incr ++;
                 }
                 else{
-                    //conditions = 'SELECT DISTINCT RES'+excl_incr+'.COLUMN FROM(SELECT DISTINCT * FROM ('+conditions+') AS RES'+excl_incr+' WHERE '+column+' != xxx'+key_value[column]+'xxx';
                     conditions = conditions.replace(/RES\w.COLUMN/g, "ASTERIX");
                     console.log('hansen cond: ', conditions);
                     conditions = 'SELECT DISTINCT RES'+excl_incr+'.* FROM ('+conditions+') as RES'+excl_incr+' where '+column+ ' != xxx'+key_value[column]+'xxx';

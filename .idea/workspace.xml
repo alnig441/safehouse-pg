@@ -4,9 +4,6 @@
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/angular_app.js" afterPath="$PROJECT_DIR$/public/javascripts/angular_app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/priv_da.html" afterPath="$PROJECT_DIR$/public/views/priv_da.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/dropdowns.js" afterPath="$PROJECT_DIR$/routes/dropdowns.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/queries.js" afterPath="$PROJECT_DIR$/routes/queries.js" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,31 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="angular_app.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="angular_app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="832" column="59" selection-start-line="832" selection-start-column="59" selection-end-line="832" selection-end-column="59" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="queries.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/routes/queries.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.02173913">
-              <caret line="40" column="61" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dropdowns.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/dropdowns.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="109" column="10" selection-start-line="109" selection-start-column="10" selection-end-line="109" selection-end-column="10" />
+            <state vertical-scroll-proportion="3.0869565">
+              <caret line="834" column="33" selection-start-line="834" selection-start-column="33" selection-end-line="834" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -70,7 +47,7 @@
       <file leaf-file-name="priv_da.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/development/templates/priv_da.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.351852">
+            <state vertical-scroll-proportion="6.0">
               <caret line="104" column="22" selection-start-line="104" selection-start-column="22" selection-end-line="104" selection-end-column="22" />
               <folding />
             </state>
@@ -144,8 +121,8 @@
         <option value="$PROJECT_DIR$/development/templates/priv_en.jade" />
         <option value="$PROJECT_DIR$/development/templates/priv_da.jade" />
         <option value="$PROJECT_DIR$/routes/dropdowns.js" />
-        <option value="$PROJECT_DIR$/development/javascripts/angular_app.js" />
         <option value="$PROJECT_DIR$/routes/queries.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/angular_app.js" />
       </list>
     </option>
   </component>
@@ -893,10 +870,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/templates/priv_da.jade">
+    <entry file="file://$PROJECT_DIR$/routes/queries.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.351852">
-          <caret line="104" column="22" selection-start-line="104" selection-start-column="22" selection-end-line="104" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="61" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
           <folding />
         </state>
       </provider>
@@ -909,18 +886,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
+    <entry file="file://$PROJECT_DIR$/development/templates/priv_da.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="832" column="59" selection-start-line="832" selection-start-column="59" selection-end-line="832" selection-end-column="59" />
+        <state vertical-scroll-proportion="6.0">
+          <caret line="104" column="22" selection-start-line="104" selection-start-column="22" selection-end-line="104" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/queries.js">
+    <entry file="file://$PROJECT_DIR$/development/javascripts/angular_app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.02173913">
-          <caret line="40" column="61" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
+        <state vertical-scroll-proportion="3.0869565">
+          <caret line="834" column="33" selection-start-line="834" selection-start-column="33" selection-end-line="834" selection-end-column="33" />
           <folding />
         </state>
       </provider>

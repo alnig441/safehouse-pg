@@ -132,6 +132,30 @@ router.get('/get_all', call.isAuthenticated, function(req, res, next){
 });
 
 
+router.get('/get_new', call.isAuthenticated, function(req, res, next){
+
+    console.log('hans hansen her!');
+
+    pg.connect(connectionString, function(error, client, done){
+        //var query = client.query('SELECT id, path || folder || '/' || file AS url FROM (select * from IMAGES where meta is null) as x CROSS JOIN (select * from storages STORAGES) as y WHERE y.FOLDER = x.STORAGE AND x.META IS NULL', function(err, result){
+    var query = client.query("SELECT id, path || folder || '/' || file as url FROM IMAGES CROSS JOIN STORAGES WHERE FOLDER = STORAGE AND META IS NULL", function(err, result){
+
+            if(error){
+                console.log(error);
+                res.status(200).send(error);
+            }
+        })
+        query.on('row', function(row){
+            console.log('this is a row: ', row);
+        })
+        query.on('end', function(result){
+            client.end();
+            console.log('this is the result: ', result.rows);
+            res.status(200).send(result.rows);
+        })
+    })
+})
+
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
     console.log('adding meta: ', req.body);

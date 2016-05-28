@@ -61,6 +61,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     //IMAGE BATCH UPDATE TOOL
     update_files();
+    getUncategorisedImg();
 
     function update_files(){
 
@@ -120,6 +121,14 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     };
 
     var menu = document.getElementsByClassName('collapse');
+
+    function getUncategorisedImg(){
+        $http.get('/images_mgmt/get_new')
+            .then(function(response){
+                $scope.uncategorized = response.data;
+                console.log('uncategorised: ', response);
+            });
+    }
 
     $rootScope.img = {};
     $rootScope.event_form = {};

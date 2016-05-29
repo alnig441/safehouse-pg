@@ -501,11 +501,11 @@ app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $root
 
         $http.put('/images_mgmt/add_meta', $rootScope.img)
             .then(function(response){
+                appServices.getUncategorisedImg('add tags');
             });
 
         $rootScope.img = {};
         $modalInstance.dismiss('cancel');
-        appServices.getUncategorisedImg('add tags');
 
     };
 

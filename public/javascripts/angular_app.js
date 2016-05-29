@@ -505,7 +505,7 @@ app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $root
 
         $rootScope.img = {};
         $modalInstance.dismiss('cancel');
-        appServices.getUncategorisedImg();
+        appServices.getUncategorisedImg('add tags');
 
     };
 
@@ -918,7 +918,9 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
         return conditions;
     };
 
-    _appServicesFactory.getUncategorisedImg = function(){
+    _appServicesFactory.getUncategorisedImg = function(str){
+
+        console.log('get uncategorised img - called by', str);
 
         $http.get('/images_mgmt/get_new')
             .then(function(response){

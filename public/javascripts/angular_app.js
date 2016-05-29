@@ -61,7 +61,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     //IMAGE BATCH UPDATE TOOL
     update_files();
-    getUncategorisedImg();
+    appServices.getUncategorisedImg();
 
     function update_files(){
 
@@ -122,13 +122,13 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     var menu = document.getElementsByClassName('collapse');
 
-    function getUncategorisedImg(){
-        $http.get('/images_mgmt/get_new')
-            .then(function(response){
-                $scope.uncategorized = response.data;
-                console.log('uncategorised: ', response);
-            });
-    }
+    //function getUncategorisedImg(){
+    //    $http.get('/images_mgmt/get_new')
+    //        .then(function(response){
+    //            $scope.uncategorized = response.data;
+    //            console.log('uncategorised: ', response);
+    //        });
+    //}
 
     $rootScope.img = {};
     $rootScope.event_form = {};
@@ -488,22 +488,29 @@ app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
 
 });
 
-app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $rootScope){
+app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $rootScope, appServices){
 
 
     $scope.submit = function(){
 
-        console.log('adding meta: ', $rootScope.img);
+        console.log('adding meta: ', $rootScope.img, this.uncategorized);
+
+        if(!$rootScope.img.id){
+            $rootScope.img.id = this.uncategorized.id;
+        }
 
         $http.put('/images_mgmt/add_meta', $rootScope.img)
             .then(function(response){
             });
 
+        $rootScope.img = {};
         $modalInstance.dismiss('cancel');
+        appServices.getUncategorisedImg();
 
     };
 
     $scope.cancel = function(){
+        $rootScope.img = {};
         $modalInstance.dismiss('cancel');
     };
 });
@@ -909,6 +916,15 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
     _appServicesFactory.getConditions = function(){
 
         return conditions;
+    };
+
+    _appServicesFactory.getUncategorisedImg = function(){
+
+        $http.get('/images_mgmt/get_new')
+            .then(function(response){
+                $rootScope.uncategorized = response.data;
+                console.log('uncategorised: ', response);
+            });
     };
 
     return _appServicesFactory;

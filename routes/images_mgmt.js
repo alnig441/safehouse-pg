@@ -214,5 +214,23 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
     })
 });
 
+router.delete('/:id?', call.isAuthenticated, function(req, res, next){
+
+    console.log('in images delete: ', req.body, req.params);
+
+    pg.connect(connectionString, function(error, client, done){
+        var query = client.query("DELETE FROM IMAGES * WHERE ID="+ req.params.id, function(err, result){
+            if(err){
+                res.status(200).send(err);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result);
+        }
+        )
+    })
+});
+
 module.exports = router;
 

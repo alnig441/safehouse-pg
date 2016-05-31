@@ -63,6 +63,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
     update_files();
     appServices.getUncategorisedImg();
 
+
     function update_files(){
 
         var elem =  document.getElementById('new_files');
@@ -122,14 +123,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     var menu = document.getElementsByClassName('collapse');
 
-    //function getUncategorisedImg(){
-    //    $http.get('/images_mgmt/get_new')
-    //        .then(function(response){
-    //            $scope.uncategorized = response.data;
-    //            console.log('uncategorised: ', response);
-    //        });
-    //}
-
     $rootScope.img = {};
     $rootScope.event_form = {};
 
@@ -182,7 +175,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.select = function(option){
 
-        var elements = {list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div'};
+        var elements = {list: ['list_div','new_image_div'], add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div'};
         appServices.selectTab(elements, option);
 
         if(option === 'event'){
@@ -272,7 +265,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function($scope, $rootScope, $http, $log, $modal, $location, appServices){
 
     appServices.resetSQ();
-
 
     /*BLOCKED OUT FUNTIONALITY FOR USE WHEN MORE STORAGE FOLDERS ARE ACTIVE PER USER*/
     $scope.selected_db = $rootScope.default_storage;
@@ -419,6 +411,14 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             }
         });
 
+    };
+
+    $scope.deleteImg = function(){
+        $http.delete('/images_mgmt/' + this.uncategorized.id)
+            .then(function(response){
+                console.log('response from delete call: ', response);
+                appServices.getUncategorisedImg();
+            });
     };
 
 });
@@ -920,12 +920,9 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
     _appServicesFactory.getUncategorisedImg = function(str){
 
-        console.log('get uncategorised img - called by', str);
-
         $http.get('/images_mgmt/get_new')
             .then(function(response){
                 $rootScope.uncategorized = response.data;
-                console.log('uncategorised: ', response);
             });
     };
 

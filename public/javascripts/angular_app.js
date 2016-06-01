@@ -60,35 +60,35 @@ app.controller('switchCtrl', function($scope, $rootScope){
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
     //IMAGE BATCH UPDATE TOOL
-    update_files();
+    appServices.update_files();
     appServices.getUncategorisedImg();
 
 
-    function update_files(){
-
-        var elem =  document.getElementById('new_files');
-        var show = 'ng-show';
-
-        $http.get('/image_jobs/count/' + $rootScope.default_storage)
-            .then(function(result){
-                $scope.img_db = result.data;
-
-                $http.get('/image_jobs/new_files/')
-                    .then(function(result){
-                        if(parseInt(result.data.amount)  > parseInt($scope.img_db.size)){
-                            console.log('new files in directory', result.data.amount);
-                            angular.element(elem).removeClass('ng-hide');
-                            angular.element(elem).addClass(show);
-                        }
-                        else{
-                            console.log('no new files in directory', result.data.amount);
-                        }
-                    });
-            });
-
-
-
-    }
+    //function update_files(){
+    //
+    //    var elem =  document.getElementById('new_files');
+    //    var show = 'ng-show';
+    //
+    //    $http.get('/image_jobs/count/' + $rootScope.default_storage)
+    //        .then(function(result){
+    //            $scope.img_db = result.data;
+    //
+    //            $http.get('/image_jobs/new_files/')
+    //                .then(function(result){
+    //                    if(parseInt(result.data.amount)  > parseInt($scope.img_db.size)){
+    //                        console.log('new files in directory', result.data.amount);
+    //                        angular.element(elem).removeClass('ng-hide');
+    //                        angular.element(elem).addClass(show);
+    //                    }
+    //                    else{
+    //                        console.log('no new files in directory', result.data.amount);
+    //                    }
+    //                });
+    //        });
+    //
+    //
+    //
+    //}
 
     $scope.update_images = function(){
 
@@ -110,6 +110,8 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                             $http.post('/image_jobs/load', image)
                                 .then(function(response){
                                     console.log(response.data);
+                                    appServices.getUncategorisedImg();
+
                                 });
                             $timeout.cancel(stop2);
                         },500);
@@ -418,6 +420,7 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             .then(function(response){
                 console.log('response from delete call: ', response);
                 appServices.getUncategorisedImg();
+                appServices.update_files();
             });
     };
 
@@ -920,11 +923,40 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
     _appServicesFactory.getUncategorisedImg = function(str){
 
+        console.log(str);
+
         $http.get('/images_mgmt/get_new')
             .then(function(response){
                 $rootScope.uncategorized = response.data;
             });
     };
+
+    _appServicesFactory.update_files = function(){
+
+        var elem =  document.getElementById('new_files');
+        var show = 'ng-show';
+
+        $http.get('/image_jobs/count/' + $rootScope.default_storage)
+            .then(function(result){
+                $rootScope.img_db = result.data;
+
+                $http.get('/image_jobs/new_files/')
+                    .then(function(result){
+                        if(parseInt(result.data.amount)  > parseInt($rootScope.img_db.size)){
+                            console.log('new files in directory', result.data.amount);
+                            angular.element(elem).removeClass('ng-hide');
+                            angular.element(elem).addClass(show);
+                        }
+                        else{
+                            console.log('no new files in directory', result.data.amount);
+                        }
+                    });
+            });
+
+
+
+    };
+
 
     return _appServicesFactory;
 

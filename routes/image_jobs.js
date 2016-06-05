@@ -5,6 +5,8 @@ var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/sa
 var bcrypt = require('bcrypt');
 var call = require('../public/javascripts/myFunctions.js');
 var fs = require('fs');
+var crg = require('country-reverse-geocoding').country_reverse_geocoding();
+var ExifImage = require('exif').ExifImage;
 
 router.get('/files', call.isAuthenticated, function(req, res, next){
 
@@ -60,35 +62,76 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 router.post('/load', call.isAuthenticated, function(req, res, next){
 
     console.log('in images: ', req.body.file);
-
-    req.body.file = req.body.file.toLowerCase();
-
     var arr = req.body.file.split('_');
     var arr2 = req.body.file.split('-');
     var created;
+    var country;
+    var cols = "file, created, year, month, day, storage";
+    var vals;
 
-    if(arr[0] !== 'img' && isNaN(arr2[0])){
-        res.status(400).send('bad file');
-        console.log('bad file', req.body.file);
-    }
-    else{
+    new ExifImage({ image : './public/buffalo/James/'+ req.body.file }, function (error, exifData) {
 
-        created = call.setDate(req.body.file);
+        if(req.body.file !== 'zzz'){
 
-        pg.connect(connectionString, function(error, client, done){
-            var query = client.query("INSERT INTO images(file, created, year, month, day, storage) values($1, $2, $3, $4, $5, 'James')", [req.body.file, created, created.getUTCFullYear(), created.getUTCMonth(), created.getUTCDate()],function(error, result){
-                if(error){
-                    console.log(error);
+            if (exifData === undefined){
+                if(arr[0] !== 'img' && isNaN(arr2[0])){
+                    res.status(400).send('bad file');
                 }
-            })
-            query.on('end', function(result){
-                client.end();
-                res.send(result);
+                else {
+                    created = call.setDate(req.body.file);
+                    vals = "'"+ req.body.file + "', '"+ created.toJSON() + "', '"+ created.getUTCFullYear() + "', '"+ created.getUTCMonth() +"', '"+ created.getUTCDate() +"', 'James'";
+                }
+            }
+            else{
+                var dto = exifData.exif.DateTimeOriginal.split(' ');
+                var dto_0 = dto[0].split(':');
+                var timestamp = dto_0.join('-') + ' ' + dto[1];
+                created = new Date(timestamp);
+                vals = "'"+ req.body.file + "', '"+ timestamp + "', '"+ created.getUTCFullYear() + "', '"+ created.getUTCMonth() +"', '"+ created.getUTCDate() +"', 'James'";
 
-            })
-        })
+                if(exifData.gps.GPSLongitude !== undefined){
+                    var lng = exifData.gps.GPSLongitude.slice(0,2);
+                    var lng_str = lng.join('.');
+                    var lat = exifData.gps.GPSLatitude.slice(0,2);
+                    var lat_str = lat.join('.');
+                    if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
+                        lng_str = '-'+lng_str;
+                    }
+                    country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
+                    cols += ", country";
+                    vals += ", '" + country.name + "'";
+                    if(country.code.toLowerCase() !== 'usa'){
+                        cols += ", state";
+                        vals += ", 'n/a'";
+                    }
 
-    }
+                }
+
+            }
+
+            console.log('COLS: '+ cols + '\nVALS: '+vals+ '\nTimestamp: '+ timestamp);
+
+            pg.connect(connectionString, function(error, client, done){
+                var query = client.query("INSERT INTO images("+cols+") values("+vals+")", function(error, result){
+
+                    if(error){
+                        console.log(error);
+                    }
+                })
+                query.on('end', function(result){
+                    client.end();
+                    res.send(result);
+
+                })
+            })
+
+        }
+
+        else{
+            res.status(200).send('end of new files');
+        }
+
+    });
 
 });
 

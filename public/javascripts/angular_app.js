@@ -392,12 +392,16 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
     var menu = document.getElementsByClassName('collapse');
 
     $scope.animationsEnabled = true;
-    $scope.open = function (size, option) {
+    $scope.open = function (size, option, status) {
 
         var modal = appServices.setModal(option);
 
         if(option === 'event'){
             angular.element(menu).collapse('hide');
+        }
+
+        if(status === 'new'){
+            $scope.img = this.uncategorized;
         }
 
         var modalInstance = $modal.open({
@@ -500,6 +504,10 @@ app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $root
 
         if(!$rootScope.img.id){
             $rootScope.img.id = this.uncategorized.id;
+        }
+
+        if($rootScope.img.state === undefined){
+            $rootScope.img.state = 'n/a';
         }
 
         $http.put('/images_mgmt/add_meta', $rootScope.img)

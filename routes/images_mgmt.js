@@ -5,6 +5,7 @@ var call = require('../public/javascripts/myFunctions.js');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var ExifImage = require('exif').ExifImage;
 var multer = require('multer');
+var crg = require('country-reverse-geocoding').country_reverse_geocoding();
 
 var uploadFnct = function(dest){
     var storage = multer.diskStorage({ //multers disk storage settings
@@ -43,10 +44,30 @@ router.post('/add', call.isAuthenticated, function(req, res) {
             }
             else{
                 console.log('exif data TRUE', exifData);
+
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
                 var dto_0 = dto[0].split(':');
                 var timestamp = dto_0.join('-') + ' ' + dto[1];
                 req.body.created = new Date(timestamp);
+
+                if(exifData.gps.GPSLongitude !== undefined){
+                    var lng = exifData.gps.GPSLongitude.slice(0,2);
+                    var lng_str = lng.join('.');
+                    var lat = exifData.gps.GPSLatitude.slice(0,2);
+                    var lat_str = lat.join('.');
+                    if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
+                        lng_str = '-'+lng_str;
+                    }
+                    country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
+                    cols += ", country";
+                    vals += ", '" + country.name + "'";
+                    if(country.code.toLowerCase() !== 'usa'){
+                        cols += ", state";
+                        vals += ", 'n/a'";
+                    }
+
+                }
+
             }
 
             pg.connect(connectionString, function (err, client, done) {
@@ -134,10 +155,7 @@ router.get('/get_all', call.isAuthenticated, function(req, res, next){
 
 router.get('/get_new', call.isAuthenticated, function(req, res, next){
 
-    console.log('hans hansen her!');
-
     pg.connect(connectionString, function(error, client, done){
-        //var query = client.query('SELECT id, path || folder || '/' || file AS url FROM (select * from IMAGES where meta is null) as x CROSS JOIN (select * from storages STORAGES) as y WHERE y.FOLDER = x.STORAGE AND x.META IS NULL', function(err, result){
     var query = client.query("SELECT *, path || folder || '/' || file as url FROM IMAGES CROSS JOIN STORAGES WHERE FOLDER = STORAGE AND META IS NULL", function(err, result){
 
             if(error){
@@ -146,11 +164,9 @@ router.get('/get_new', call.isAuthenticated, function(req, res, next){
             }
         })
         query.on('row', function(row){
-            console.log('this is a row: ', row);
         })
         query.on('end', function(result){
             client.end();
-            console.log('this is the result: ', result.rows);
             res.status(200).send(result.rows);
         })
     })
@@ -231,6 +247,8 @@ router.delete('/:id?', call.isAuthenticated, function(req, res, next){
         )
     })
 });
+
+
 
 module.exports = router;
 

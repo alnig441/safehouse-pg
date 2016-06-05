@@ -14,7 +14,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
     fs.readdir('./public/buffalo/James/', function(err, files){
 
-        console.log('original files: ', files.slice(0,5));
+        //console.log('original files: ', files.slice(0,5));
 
         files.forEach(function(elem, ind, array){
 
@@ -51,7 +51,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
                 })
                 files.sort();
                 files = files.slice(0,5);
-                console.log('sending files: ',files);
+                //console.log('sending files: ',files);
                 res.send(files.slice(0,5));
             })
         })
@@ -87,7 +87,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
                 vals = "'"+ req.body.file + "', '"+ created.toJSON() + "', '"+ created.getUTCFullYear() + "', '"+ created.getUTCMonth() +"', '"+ created.getUTCDate() +"', 'James'";
             }
             else{
-                console.log('show me exifdata: ', exifData);
+                //console.log('show me exifdata: ', exifData);
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
                 var dto_0 = dto[0].split(':');
                 var timestamp = dto_0.join('-') + ' ' + dto[1];

@@ -82,6 +82,10 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
                     vals = "'"+ req.body.file + "', '"+ created.toJSON() + "', '"+ created.getUTCFullYear() + "', '"+ created.getUTCMonth() +"', '"+ created.getUTCDate() +"', 'James'";
                 }
             }
+            else if(exifData.exif.DateTimeOriginal === undefined){
+                created = call.setDate(req.body.file);
+                vals = "'"+ req.body.file + "', '"+ created.toJSON() + "', '"+ created.getUTCFullYear() + "', '"+ created.getUTCMonth() +"', '"+ created.getUTCDate() +"', 'James'";
+            }
             else{
                 console.log('show me exifdata: ', exifData);
                 var dto = exifData.exif.DateTimeOriginal.split(' ');

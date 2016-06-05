@@ -102,19 +102,21 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                         if(elem === 'zzz'){
                             $interval.cancel(stop);
                         }
-                        var image = {};
-                        image.file = elem;
-                        console.log('FILE_NAME: ', image);
+                        else{
+                            var image = {};
+                            image.file = elem;
+                            console.log('FILE_NAME: ', image);
 
-                        var stop2 = $timeout(function(){
-                            $http.post('/image_jobs/load', image)
-                                .then(function(response){
-                                    console.log(response.data);
-                                    appServices.getUncategorisedImg();
+                            var stop2 = $timeout(function(){
+                                $http.post('/image_jobs/load', image)
+                                    .then(function(response){
+                                        console.log(response.data);
+                                        appServices.getUncategorisedImg();
 
-                                });
-                            $timeout.cancel(stop2);
-                        },500);
+                                    });
+                                $timeout.cancel(stop2);
+                            },500);
+                        }
 
                     });
                 });

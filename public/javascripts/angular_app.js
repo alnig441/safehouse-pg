@@ -121,7 +121,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
                     });
                 });
 
-        }, 5000);
+        }, 10000);
 
     };
 

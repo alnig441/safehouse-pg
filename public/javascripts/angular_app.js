@@ -502,7 +502,7 @@ app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $root
 
     $scope.submit = function(){
 
-        console.log('in adding meta. \nrootscope.img: '+  JSON.parse($rootScope.img) + '\nthis.uncategorzised: '+ JSON.parse(this.uncategorized));
+        console.log('in adding meta. \nrootscope.img: '+  $rootScope.img + '\nthis.uncategorzised: '+ this.uncategorized);
 
         if(!$rootScope.img.id){
             $rootScope.img.id = this.uncategorized.id;

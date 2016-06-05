@@ -83,6 +83,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
                 }
             }
             else{
+                console.log('show me exifdata: ', exifData);
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
                 var dto_0 = dto[0].split(':');
                 var timestamp = dto_0.join('-') + ' ' + dto[1];

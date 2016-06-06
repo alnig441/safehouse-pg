@@ -26,21 +26,50 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    console.log('/add_img: ', req.body, req.user);
+    console.log('/add_img: ', call.setDate(req.body.url));
     var cols = "created, year, month, day, file, storage";
     var vals = "$1, $2, $3, $4, $5, 'James'";
+    var created = call.setDate(req.body.url);
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.url }, function (error, exifData) {
-            var created = call.setDate(req.body.url);
 
             if (exifData === undefined){
                 console.log('exif data FALSE');
-                if(created == 'Invalid Date'){
-                    req.body.created === undefined ? req.body.created = new Date(): req.body.created = new Date(req.body.created);
+                if(created === 'Invalid Date' && req.body.created === undefined){
+                    req.body.created = new Date();
                 }
                 else{
                     req.body.created = created;
                 }
+                vals = "'"+ JSON.stringify(req.body.created) + "', '"+ req.body.created.getUTCFullYear() + "', '"+ req.body.created.getUTCMonth() +"', '"+ req.body.created.getUTCDate() +"', '"+req.body.url+"', 'James'";
+            }
+            else if(exifData.exif.DateTimeOriginal === undefined){
+                if(created === 'Invalid Date' && req.body.created === undefined){
+                    req.body.created = new Date();
+                }
+                else{
+                    req.body.created = created;
+                }
+                vals = "'"+ JSON.stringify(req.body.created) + "', '"+ req.body.created.getUTCFullYear() + "', '"+ req.body.created.getUTCMonth() +"', '"+ req.body.created.getUTCDate() +"', '"+req.body.url+"', 'James'";
+
+                if(exifData.gps.GPSLongitude !== undefined){
+                    var lng = exifData.gps.GPSLongitude.slice(0,2);
+                    var lng_str = lng.join('.');
+                    var lat = exifData.gps.GPSLatitude.slice(0,2);
+                    var lat_str = lat.join('.');
+                    if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
+                        lng_str = '-'+lng_str;
+                    }
+                    country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
+                    cols += ", country";
+                    vals += ", '" + country.name + "'";
+                    if(country.code.toLowerCase() !== 'usa'){
+                        cols += ", state";
+                        vals += ", 'n/a'";
+                    }
+
+                }
+
             }
             else{
                 console.log('exif data TRUE', exifData);
@@ -49,6 +78,8 @@ router.post('/add', call.isAuthenticated, function(req, res) {
                 var dto_0 = dto[0].split(':');
                 var timestamp = dto_0.join('-') + ' ' + dto[1];
                 req.body.created = new Date(timestamp);
+
+                vals = "'"+ JSON.stringify(req.body.created) + "', '"+ req.body.created.getUTCFullYear() + "', '"+ req.body.created.getUTCMonth() +"', '"+ req.body.created.getUTCDate() +"', '"+req.body.url+"', 'James'";
 
                 if(exifData.gps.GPSLongitude !== undefined){
                     var lng = exifData.gps.GPSLongitude.slice(0,2);
@@ -70,8 +101,10 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
             }
 
+            console.log('Columns: ' + cols + '\nValues: '+ vals);
+
             pg.connect(connectionString, function (err, client, done) {
-                var query = client.query("INSERT INTO images("+cols+") values("+vals+")",[req.body.created, req.body.created.getUTCFullYear(), req.body.created.getUTCMonth(), req.body.created.getUTCDate(), req.body.url] , function (error, result) {
+                var query = client.query("INSERT INTO images("+cols+") values("+vals+")", function (error, result) {
 
                     if (error) {
                         console.log(error);
@@ -89,7 +122,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
 router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
-    console.log('in new upload: ', req.params, req.user);
+    //console.log('in new upload: ', req.params, req.user);
 
     var currUpload = uploadFnct(req.params.dest);
     currUpload(req,res,function(err){

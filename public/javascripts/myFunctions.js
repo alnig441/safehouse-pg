@@ -2,6 +2,7 @@ var call = {
     setDate: function(string){
         var date;
         var tmp;
+        var date_str;
         string = string.toLowerCase();
 
         if(string.charAt(0)=='i' && string.charAt(1)=='m' && string.charAt(2)=='g' && string.length >= 23 ){

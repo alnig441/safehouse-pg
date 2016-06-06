@@ -27,7 +27,6 @@ var uploadFnct = function(dest){
 router.post('/add', call.isAuthenticated, function(req, res) {
 
     console.log('/add_img: ', req.body.url);
-
     var cols = "created, year, month, day, file, storage";
     var vals = [];
     var created ;
@@ -55,10 +54,12 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
                 country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
                 cols += ", country";
+                //vals += ", '" + country.name + "'";
                 vals.push("'"+country.name+"'");
 
                 if(country.code.toLowerCase() !== 'usa'){
                     cols += ", state";
+                    //vals += ", 'n/a'";
                     vals.push("'n/a'");
                 }
             }

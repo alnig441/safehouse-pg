@@ -14,20 +14,20 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
     fs.readdir('./public/buffalo/James/', function(err, files){
 
-        //console.log('original files: ', files.slice(0,5));
-
         files.forEach(function(elem, ind, array){
 
             array[ind] = elem.toLowerCase();
             var x = array[ind].split('_');
             var y = array[ind].split('-');
 
+/*
             if(elem.length < 23){
                 array[ind] = 'zzz';
             }
             else if(isNaN(y[0]) && x[0] !== 'img'){
                 array[ind] = 'zzz';
             }
+*/
         });
         files.sort();
 
@@ -43,7 +43,6 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
                 result.rows.forEach(function(elem,ind,arr){
                     for(var i = 0 ; i < files.length ; i ++){
-                        //if(elem.file.slice(-23).toLowerCase() === files[i].toLowerCase()){
                         if(elem.file.toLowerCase() === files[i].toLowerCase()){
                             files[i] = 'zzz';
                         }
@@ -51,7 +50,6 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
                 })
                 files.sort();
                 files = files.slice(0,5);
-                //console.log('sending files: ',files);
                 res.send(files.slice(0,5));
             })
         })
@@ -66,54 +64,67 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
     var arr2 = req.body.file.split('-');
     var created;
     var country;
-    var cols = "file, created, year, month, day, storage";
-    var vals;
+    var cols = "created, year, month, day, file, storage";
+    var vals = [];
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.file }, function (error, exifData) {
 
-        if(req.body.file !== 'zzz'){
+        if(req.body.file !== 'zzz' && exifData !== undefined){
 
-            if (exifData === undefined){
-                if(arr[0] !== 'img' && isNaN(arr2[0])){
-                    res.status(400).send('bad file');
+            console.log('this is the exifdata: ', exifData);
+
+            if(exifData.gps.GPSDateStamp !== undefined){
+
+                var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
+                var time_str = exifData.gps.GPSTimeStamp.join(':');
+                created = new Date(date_str + 'Z' + time_str);
+
+                var lng = exifData.gps.GPSLongitude.slice(0,2);
+                var lng_str = lng.join('.');
+                var lat = exifData.gps.GPSLatitude.slice(0,2);
+                var lat_str = lat.join('.');
+
+                if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
+                    lng_str = '-'+lng_str;
                 }
-                else {
-                    created = call.setDate(req.body.file);
-                    vals = "'"+ req.body.file + "', '"+ created.toJSON() + "', '"+ created.getUTCFullYear() + "', '"+ created.getUTCMonth() +"', '"+ created.getUTCDate() +"', 'James'";
+
+                country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
+                cols += ", country";
+                vals.push("'"+country.name+"'");
+
+                if(country.code.toLowerCase() !== 'usa'){
+                    cols += ", state";
+                    vals.push("'n/a'");
                 }
             }
-            else if(exifData.exif.DateTimeOriginal === undefined){
-                created = call.setDate(req.body.file);
-                vals = "'"+ req.body.file + "', '"+ created.toJSON() + "', '"+ created.getUTCFullYear() + "', '"+ created.getUTCMonth() +"', '"+ created.getUTCDate() +"', 'James'";
-            }
-            else{
+
+            else if(exifData.exif.DateTimeOriginal !== undefined){
+
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
                 var dto_0 = dto[0].split(':');
                 var timestamp = dto_0.join('-') + ' ' + dto[1];
                 created = new Date(timestamp);
-                vals = "'"+ req.body.file + "', '"+ timestamp + "', '"+ created.getUTCFullYear() + "', '"+ created.getUTCMonth() +"', '"+ created.getUTCDate() +"', 'James'";
-
-                if(exifData.gps.GPSLongitude !== undefined){
-                    var lng = exifData.gps.GPSLongitude.slice(0,2);
-                    var lng_str = lng.join('.');
-                    var lat = exifData.gps.GPSLatitude.slice(0,2);
-                    var lat_str = lat.join('.');
-                    if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
-                        lng_str = '-'+lng_str;
-                    }
-                    country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
-                    cols += ", country";
-                    vals += ", '" + country.name + "'";
-                    if(country.code.toLowerCase() !== 'usa'){
-                        cols += ", state";
-                        vals += ", 'n/a'";
-                    }
-
-                }
 
             }
 
-            console.log('COLS: '+ cols + '\nVALS: '+vals+ '\nTimestamp: '+ timestamp);
+            else if(call.setDate(req.body.file) !== 'Invalid Date'){
+
+                created = new Date(call.setDate(req.body.file));
+
+            }
+
+            console.log('TIME CREATED \nLocal: '+ created + '\nZulu: ' + created.toJSON());
+
+            vals.unshift("'James'");
+            vals.unshift("'"+req.body.file+"'");
+            vals.unshift("'"+created.getUTCDate()+"'");
+            vals.unshift("'"+created.getUTCMonth()+"'");
+            vals.unshift("'"+created.getUTCFullYear()+"'");
+            vals.unshift("'"+created.toJSON()+"'");
+            vals = vals.toString();
+
+            console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
+
 
             pg.connect(connectionString, function(error, client, done){
                 var query = client.query("INSERT INTO images("+cols+") values("+vals+")", function(error, result){
@@ -132,7 +143,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
         }
 
         else{
-            res.status(200).send('end of new files');
+            res.status(200).send('File not entered: '+ req.body.file);
         }
 
     });

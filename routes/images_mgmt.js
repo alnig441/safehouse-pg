@@ -33,8 +33,9 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.url }, function (error, exifData) {
 
+        console.log('This is the exifdata: ', exifData);
+
             if (exifData === undefined){
-                console.log('exif data FALSE');
                 if(created === 'Invalid Date' && req.body.created === undefined){
                     req.body.created = new Date();
                 }
@@ -72,7 +73,6 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
             }
             else{
-                console.log('exif data TRUE', exifData);
 
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
                 var dto_0 = dto[0].split(':');
@@ -100,8 +100,6 @@ router.post('/add', call.isAuthenticated, function(req, res) {
                 }
 
             }
-
-            console.log('Columns: ' + cols + '\nValues: '+ vals);
 
             pg.connect(connectionString, function (err, client, done) {
                 var query = client.query("INSERT INTO images("+cols+") values("+vals+")", function (error, result) {

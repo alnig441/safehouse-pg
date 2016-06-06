@@ -15,6 +15,7 @@ var call = {
             arr.push(tmp[1].slice(0,2));
             arr.push(tmp[1].slice(2,4));
             arr.push(tmp[1].slice(4,6));
+            date_str = [arr.slice(0,3).join('-'), arr.slice(3,6).join(':')].join(' ');
             date = new Date([arr.slice(0,3).join('-'), arr.slice(3,6).join(':')].join(' '));
         }
         else if (string.length >=19) {
@@ -24,6 +25,7 @@ var call = {
             tmp = tmp.join(':');
             string.pop();
             string.push(tmp);
+            date_str = string.join(' ');
             date = new Date(string.join(' '));
         }
         else {
@@ -31,7 +33,7 @@ var call = {
         }
 
         console.log('setDate: ', date);
-        return date;
+        return date_str;
     },
     parser: function(string){
         var temp = string.slice(1,11);

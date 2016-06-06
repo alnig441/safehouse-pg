@@ -26,80 +26,78 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    console.log('/add_img: ', call.setDate(req.body.url));
+    console.log('/add_img: ', req.body.url);
+
     var cols = "created, year, month, day, file, storage";
-    var vals = "$1, $2, $3, $4, $5, 'James'";
-    var created = call.setDate(req.body.url);
+    var vals = [];
+    var created ;
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.url }, function (error, exifData) {
 
         console.log('This is the exifdata: ', exifData);
 
-            if (exifData === undefined){
-                if(created === 'Invalid Date' && req.body.created === undefined){
-                    req.body.created = new Date();
+        if(exifData !== undefined){
+
+            if(exifData.gps.GPSDateStamp !== undefined){
+
+                var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
+                var time_str = exifData.gps.GPSTimeStamp.join(':');
+                created = new Date(date_str + 'Z' + time_str);
+
+                var lng = exifData.gps.GPSLongitude.slice(0,2);
+                var lng_str = lng.join('.');
+                var lat = exifData.gps.GPSLatitude.slice(0,2);
+                var lat_str = lat.join('.');
+
+                if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
+                    lng_str = '-'+lng_str;
                 }
-                else{
-                    req.body.created = created;
+
+                country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
+                cols += ", country";
+                vals.push("'"+country.name+"'");
+
+                if(country.code.toLowerCase() !== 'usa'){
+                    cols += ", state";
+                    vals.push("'n/a'");
                 }
-                vals = "'"+ JSON.stringify(req.body.created) + "', '"+ req.body.created.getUTCFullYear() + "', '"+ req.body.created.getUTCMonth() +"', '"+ req.body.created.getUTCDate() +"', '"+req.body.url+"', 'James'";
             }
-            else if(exifData.exif.DateTimeOriginal === undefined){
-                if(created === 'Invalid Date' && req.body.created === undefined){
-                    req.body.created = new Date();
-                }
-                else{
-                    req.body.created = created;
-                }
-                vals = "'"+ JSON.stringify(req.body.created) + "', '"+ req.body.created.getUTCFullYear() + "', '"+ req.body.created.getUTCMonth() +"', '"+ req.body.created.getUTCDate() +"', '"+req.body.url+"', 'James'";
 
-                if(exifData.gps.GPSLongitude !== undefined){
-                    var lng = exifData.gps.GPSLongitude.slice(0,2);
-                    var lng_str = lng.join('.');
-                    var lat = exifData.gps.GPSLatitude.slice(0,2);
-                    var lat_str = lat.join('.');
-                    if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
-                        lng_str = '-'+lng_str;
-                    }
-                    country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
-                    cols += ", country";
-                    vals += ", '" + country.name + "'";
-                    if(country.code.toLowerCase() !== 'usa'){
-                        cols += ", state";
-                        vals += ", 'n/a'";
-                    }
-
-                }
-
-            }
-            else{
+            else if(exifData.exif.DateTimeOriginal !== undefined){
 
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
                 var dto_0 = dto[0].split(':');
                 var timestamp = dto_0.join('-') + ' ' + dto[1];
-                req.body.created = new Date(timestamp);
-
-                vals = "'"+ JSON.stringify(req.body.created) + "', '"+ req.body.created.getUTCFullYear() + "', '"+ req.body.created.getUTCMonth() +"', '"+ req.body.created.getUTCDate() +"', '"+req.body.url+"', 'James'";
-
-                if(exifData.gps.GPSLongitude !== undefined){
-                    var lng = exifData.gps.GPSLongitude.slice(0,2);
-                    var lng_str = lng.join('.');
-                    var lat = exifData.gps.GPSLatitude.slice(0,2);
-                    var lat_str = lat.join('.');
-                    if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
-                        lng_str = '-'+lng_str;
-                    }
-                    country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
-                    cols += ", country";
-                    vals += ", '" + country.name + "'";
-                    if(country.code.toLowerCase() !== 'usa'){
-                        cols += ", state";
-                        vals += ", 'n/a'";
-                    }
-
-                }
+                created = new Date(timestamp);
 
             }
+
+            else if(call.setDate(req.body.url) !== 'Invalid Date'){
+
+                created = new Date(call.setDate(req.body.url));
+
+            }
+
+            console.log('TIME CREATED \nLocal: '+ created + '\nZulu: ' + created.toJSON());
+
+        }
+        else{
+
+            created = new Date(req.body.created);
+
+        }
+
+        vals.unshift("'James'");
+        vals.unshift("'"+req.body.url+"'");
+        vals.unshift("'"+created.getUTCDate()+"'");
+        vals.unshift("'"+created.getUTCMonth()+"'");
+        vals.unshift("'"+created.getUTCFullYear()+"'");
+        vals.unshift("'"+created.toJSON()+"'");
+        vals = vals.toString();
+
+        console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
+
+
 
             pg.connect(connectionString, function (err, client, done) {
                 var query = client.query("INSERT INTO images("+cols+") values("+vals+")", function (error, result) {

@@ -115,7 +115,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
                                     });
                                 $timeout.cancel(stop2);
-                            },500);
+                            },750);
                         }
 
                     });
@@ -502,14 +502,10 @@ app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $root
 
     $scope.submit = function(){
 
-        console.log('in adding meta. \nrootscope.img: '+  $rootScope.img + '\nthis.uncategorzised: '+ this.uncategorized);
-
-        if(!$rootScope.img.id){
-            $rootScope.img.id = this.uncategorized.id;
-        }
-
-        if($rootScope.img.state === undefined){
-            $rootScope.img.state = 'n/a';
+        for(var prop in this.img){
+            if(prop !== 'folder' && prop !== 'path' && prop !== 'owner' && prop !== 'size'){
+                $rootScope.img[prop] = this.img[prop];
+            }
         }
 
         $http.put('/images_mgmt/add_meta', $rootScope.img)

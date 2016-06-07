@@ -503,7 +503,7 @@ app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $root
     $scope.submit = function(){
 
         for(var prop in this.img){
-            if(prop !== 'folder' && prop !== 'path' && prop !== 'owner' && prop !== 'size'){
+            if(prop !== 'url' && prop !== 'folder' && prop !== 'path' && prop !== 'file' && prop !== 'owner' && prop !== 'size' && prop !== 'created' && prop !== 'year' && prop !== 'month' && prop !== 'day'){
                 $rootScope.img[prop] = this.img[prop];
             }
         }

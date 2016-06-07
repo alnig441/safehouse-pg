@@ -60,8 +60,6 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 router.post('/load', call.isAuthenticated, function(req, res, next){
 
     console.log('in images: ', req.body.file);
-    var arr = req.body.file.split('_');
-    var arr2 = req.body.file.split('-');
     var created;
     var country;
     var cols = "created, year, month, day, file, storage";
@@ -131,6 +129,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
                     if(error){
                         console.log(error);
+                        res.status(200).send(error);
                     }
                 })
                 query.on('end', function(result){

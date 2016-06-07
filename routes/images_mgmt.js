@@ -28,6 +28,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
     console.log('/add_img: ', req.body.url);
     var cols = "created, year, month, day, file, storage";
+    //var vals = "$1, $2, $3, $4, $5, 'James'";
     var vals = [];
     var created ;
 
@@ -95,7 +96,6 @@ router.post('/add', call.isAuthenticated, function(req, res) {
         vals.unshift("'"+created.getUTCFullYear()+"'");
         vals.unshift("'"+created.toJSON()+"'");
         vals = vals.toString();
-
         console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
 
 
@@ -212,7 +212,7 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
     var vals = '';
 
     for(var prop in req.body){
-        if(prop !== 'id' && prop !== 'url' && req.body[prop] !== null && req.body[prop] !== 'null'){
+        if(prop !== 'file' && prop !== 'created' && prop !== 'id' && prop !== 'url' && req.body[prop] !== null && req.body[prop] !== 'null'){
             body[prop] = req.body[prop];
         }
     }

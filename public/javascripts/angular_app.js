@@ -1,11 +1,22 @@
-var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFileUpload']);
+var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFileUpload', 'simpleAngularTicker']);
 
 app.config(function($routeProvider, $locationProvider){
+
+    console.log('IS THIS LOADING FIRST');
+
     $locationProvider.html5Mode(true);
     $routeProvider
         .when('/login', {
             templateUrl: 'views/login.html',
-            controller: 'singleViewModalCtrl'
+            controller: 'singleViewModalCtrl',
+            resolve: {
+                getTickers: function($http, $rootScope){
+                    $http.get('/landing_mgmt')
+                        .then(function(response){
+                            $rootScope.myTickerItems = response.data;
+                        });
+                }
+            }
         })
         .when('/admin/btle', {
             templateUrl: 'views/btle.html',
@@ -47,7 +58,8 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
     $scope.templates = {
         accounts: './views/accounts.html',
-        images: './views/images.html'
+        images: './views/images.html',
+        landing: './views/landing-page.html'
     };
 
     $scope.switch = function(option){
@@ -59,36 +71,37 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
+    console.log('ON LOAD??');
     //IMAGE BATCH UPDATE TOOL
     appServices.update_files();
     appServices.getUncategorisedImg();
 
 
-    //function update_files(){
-    //
-    //    var elem =  document.getElementById('new_files');
-    //    var show = 'ng-show';
-    //
-    //    $http.get('/image_jobs/count/' + $rootScope.default_storage)
-    //        .then(function(result){
-    //            $scope.img_db = result.data;
-    //
-    //            $http.get('/image_jobs/new_files/')
-    //                .then(function(result){
-    //                    if(parseInt(result.data.amount)  > parseInt($scope.img_db.size)){
-    //                        console.log('new files in directory', result.data.amount);
-    //                        angular.element(elem).removeClass('ng-hide');
-    //                        angular.element(elem).addClass(show);
-    //                    }
-    //                    else{
-    //                        console.log('no new files in directory', result.data.amount);
-    //                    }
-    //                });
-    //        });
-    //
-    //
-    //
-    //}
+    function update_files(){
+
+        var elem =  document.getElementById('new_files');
+        var show = 'ng-show';
+
+        $http.get('/image_jobs/count/' + $rootScope.default_storage)
+            .then(function(result){
+                $scope.img_db = result.data;
+
+                $http.get('/image_jobs/new_files/')
+                    .then(function(result){
+                        if(parseInt(result.data.amount)  > parseInt($scope.img_db.size)){
+                            console.log('new files in directory', result.data.amount);
+                            angular.element(elem).removeClass('ng-hide');
+                            angular.element(elem).addClass(show);
+                        }
+                        else{
+                            console.log('no new files in directory', result.data.amount);
+                        }
+                    });
+            });
+
+
+
+    }
 
     $scope.update_images = function(){
 
@@ -179,7 +192,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.select = function(option){
 
-        var elements = {list: ['list_div','new_image_div'], add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div'};
+        var elements = {list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div', resume: 'resume_div', ticker: 'ticker_div'};
         appServices.selectTab(elements, option);
 
         if(option === 'event'){
@@ -386,6 +399,41 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
 }]);
 
+app.controller('tickerCtrl', function($scope, $http){
+
+    $scope.myTickerItems = function(){
+
+        $http.get('/landing_mgmt')
+            .then(function(response){
+                console.log('printing tikcer itmes: ', response);
+            });
+    };
+
+    $scope.postItem = function(){
+
+        console.log('posting ticker item: ', this.form);
+
+        $http.post('/landing_mgmt/', this.form)
+            .then(function(response){
+               console.log(response);
+            });
+    };
+
+    //$scope.myTickerItems = [
+    //    {
+    //        title: 'item 1',
+    //        copy: 'amazing copy here'
+    //    },
+    //    {
+    //        title: 'item 2',
+    //        copy: 'wow, this is great'
+    //    },
+    //    {
+    //        title: 'item 3',
+    //        copy: 'hello angular'
+    //    }
+    //];
+});
 
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.

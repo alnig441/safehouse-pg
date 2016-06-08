@@ -1,0 +1,23 @@
+{
+  "name": "starting_over",
+  "description": "family web",
+  "main": "angular-app.js",
+  "authors": [
+    "alnig441 <alnig441@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "cleland-nielsen"
+  ],
+  "homepage": "https://github.com/alnig441/safehouse-pg",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ticker": "simple-angular-ticker#^1.0.4"
+  }
+}

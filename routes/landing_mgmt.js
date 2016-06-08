@@ -6,10 +6,10 @@ var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/sa
 
 router.post('/', call.isAuthenticated, function(req, res, next){
 
-    //console.log('in landing_mgmt', req.body);
+    console.log('in landing_mgmt', req.body);
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query('INSERT INTO tickers (created, headline, copy) VALUES ($1, $2, $3)', [req.body.date, req.body.headline, req.body.copy], function(error, result){
+        var query = client.query('INSERT INTO tickers (created, created_str, headline, copy, owner) VALUES ($1, $2, $3, $4, $5)', [req.body.date, req.body.date_str, req.body.headline, req.body.copy, req.body.owner.name], function(error, result){
             if(error){
                 res.status(200).send(error);
             }
@@ -22,14 +22,15 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 });
 
 
-router.get('/', function(req, res, next){
+router.get('/:owner?', function(req, res, next){
 
-    console.log('getting all tickers');
+    console.log('getting all tickers', req.params.owner);
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query('SELECT * FROM tickers ORDER BY CREATED DESC', function(error, result){
+        var query = client.query("SELECT * FROM tickers WHERE OWNER = '"+ req.params.owner + "' ORDER BY CREATED DESC", function(error, result){
             if(error){
                 res.status(200).send(error);
+                console.log('show me the error: ', error);
             }
         })
         query.on('end', function(result){

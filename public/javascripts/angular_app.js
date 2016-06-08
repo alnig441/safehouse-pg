@@ -2,19 +2,27 @@ var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFi
 
 app.config(function($routeProvider, $locationProvider){
 
-    console.log('IS THIS LOADING FIRST');
-
     $locationProvider.html5Mode(true);
     $routeProvider
         .when('/login', {
             templateUrl: 'views/login.html',
             controller: 'singleViewModalCtrl',
             resolve: {
-                getTickers: function($http, $rootScope){
-                    $http.get('/landing_mgmt')
-                        .then(function(response){
-                            $rootScope.myTickerItems = response.data;
-                        });
+                appTickers: function($http, $rootScope){
+
+                    if($rootScope.load === undefined){
+
+                        $http.get('/landing_mgmt/'+ 'Allan')
+                            .then(function(response){
+                                $rootScope.al_TickerItems = response.data;
+                                $http.get('/landing_mgmt/' + 'Fiona')
+                                    .then(function(response){
+                                        $rootScope.fo_TickerItems = response.data;
+                                    });
+                            });
+                    }
+
+                    $rootScope.load = true;
                 }
             }
         })
@@ -71,7 +79,6 @@ app.controller('switchCtrl', function($scope, $rootScope){
 
 app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function($scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
-    console.log('ON LOAD??');
     //IMAGE BATCH UPDATE TOOL
     appServices.update_files();
     appServices.getUncategorisedImg();
@@ -401,38 +408,25 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
 app.controller('tickerCtrl', function($scope, $http){
 
-    $scope.myTickerItems = function(){
-
-        $http.get('/landing_mgmt')
-            .then(function(response){
-                console.log('printing tikcer itmes: ', response);
-            });
-    };
-
     $scope.postItem = function(){
 
-        console.log('posting ticker item: ', this.form);
+        if(this.form.date === null){
+            this.form.date = new Date();
+        }
+
+        this.form.date_str = this.form.date.toDateString();
 
         $http.post('/landing_mgmt/', this.form)
             .then(function(response){
-               console.log(response);
+                $scope.form = {};
             });
     };
 
-    //$scope.myTickerItems = [
-    //    {
-    //        title: 'item 1',
-    //        copy: 'amazing copy here'
-    //    },
-    //    {
-    //        title: 'item 2',
-    //        copy: 'wow, this is great'
-    //    },
-    //    {
-    //        title: 'item 3',
-    //        copy: 'hello angular'
-    //    }
-    //];
+    $scope.owners = [
+        {name: 'Allan'},
+        {name: 'Fiona'}
+    ];
+
 });
 
 // Please note that $modalInstance represents a modal window (instance) dependency.

@@ -8,21 +8,39 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/login.html',
             controller: 'singleViewModalCtrl',
             resolve: {
-                appTickers: function($http, $rootScope){
+                dynamicInfo: function($http, $rootScope){
 
                     if($rootScope.load === undefined){
 
-                        $http.get('/landing_mgmt/'+ 'Allan')
+                        $http.get('/landing_mgmt/tickers/'+ 'Allan')
                             .then(function(response){
                                 $rootScope.al_TickerItems = response.data;
-                                $http.get('/landing_mgmt/' + 'Fiona')
+                                $http.get('/landing_mgmt/tickers/' + 'Fiona')
                                     .then(function(response){
                                         $rootScope.fo_TickerItems = response.data;
                                     });
                             });
-                    }
 
+                        $http.get('/landing_mgmt/bios/'+ 'Allan')
+                            .then(function(response){
+                                $rootScope.al_bio = response.data;
+                                $http.get('/landing_mgmt/bios/'+ 'Fiona')
+                                    .then(function(response){
+                                       $rootScope.fo_bio = response.data;
+                                    });
+                            });
+
+                        $http.get('/landing_mgmt/projects/'+ 'Allan')
+                            .then(function(response){
+                               $rootScope.al_resume = response.data;
+                                $http.get('/landing_mgmt/projects/'+'Fiona')
+                                    .then(function(response){
+                                       $rootScope.fo_resume = response.data;
+                                    });
+                            });
+                    }
                     $rootScope.load = true;
+                    console.log($rootScope);
                 }
             }
         })
@@ -46,6 +64,11 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/public.html',
             controller: 'publicCtrl'
         })
+        .when('/login#about_allan', {
+            templateUrl: 'views/login#about_allan',
+            controller: 'singleViewModalCtrl'
+        })
+
         .otherwise({redirectTo: '/login'});
 });
 
@@ -199,7 +222,7 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
 
     $scope.select = function(option){
 
-        var elements = {list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div', resume: 'resume_div', ticker: 'ticker_div'};
+        var elements = {list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div', resume: 'resume_div', ticker: 'ticker_div', biography: 'biography_div'};
         appServices.selectTab(elements, option);
 
         if(option === 'event'){
@@ -406,7 +429,7 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
 }]);
 
-app.controller('tickerCtrl', function($scope, $http){
+app.controller('landingPageCtrl', function($scope, $http){
 
     $scope.postItem = function(){
 
@@ -416,8 +439,36 @@ app.controller('tickerCtrl', function($scope, $http){
 
         this.form.date_str = this.form.date.toDateString();
 
-        $http.post('/landing_mgmt/', this.form)
+        $http.post('/landing_mgmt/tickers', this.form)
             .then(function(response){
+                $scope.form = {};
+            });
+    };
+
+    $scope.postProject = function(){
+
+        this.form.owner = this.form.owner.name;
+
+        $http.post('/landing_mgmt/projects', this.form)
+            .then(function(response){
+                $scope.form = {};
+            });
+    };
+
+    $scope.getBio = function(){
+
+        $http.get('/landing_mgmt/bios/' + this.form.getOwner.name)
+            .then(function(response){
+                console.log('show me bio: ', response.data);
+               $scope.form = response.data;
+            });
+    };
+
+    $scope.addBio = function(){
+
+        $http.put('/landing_mgmt/bios', this.form)
+            .then(function(response){
+               console.log(response.data);
                 $scope.form = {};
             });
     };
@@ -436,7 +487,7 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
     var menu = document.getElementsByClassName('collapse');
 
     $scope.animationsEnabled = true;
-    $scope.open = function (size, option, status) {
+    $scope.open = function (size, option, misc) {
 
         var modal = appServices.setModal(option);
 
@@ -444,8 +495,16 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             angular.element(menu).collapse('hide');
         }
 
-        if(status === 'new'){
+        if(misc === 'new'){
             $scope.img = this.uncategorized;
+        }
+
+        if(misc === 'Allan'){
+            $scope.projects = $rootScope.al_resume;
+        }
+
+        if(misc === 'Fiona'){
+            $scope.projects = $rootScope.fo_resume;
         }
 
         var modalInstance = $modal.open({
@@ -528,6 +587,8 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
 });
 
 app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
+
+
 
     $scope.download = function(){
 

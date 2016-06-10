@@ -64,11 +64,6 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/public.html',
             controller: 'publicCtrl'
         })
-        .when('/login#about_allan', {
-            templateUrl: 'views/login#about_allan',
-            controller: 'singleViewModalCtrl'
-        })
-
         .otherwise({redirectTo: '/login'});
 });
 
@@ -484,6 +479,9 @@ app.controller('landingPageCtrl', function($scope, $http){
 // It is not the same as the $modal service used above.
 
 app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices){
+
+
+
     var menu = document.getElementsByClassName('collapse');
 
     $scope.animationsEnabled = true;
@@ -501,10 +499,12 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
 
         if(misc === 'Allan'){
             $scope.projects = $rootScope.al_resume;
+            $scope.resume = 'Allan.txt';
         }
 
         if(misc === 'Fiona'){
             $scope.projects = $rootScope.fo_resume;
+            $scope.resume = 'Fiona.txt';
         }
 
         var modalInstance = $modal.open({
@@ -588,7 +588,18 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
 
 app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
 
+    console.log('in resume modal printing scope: ', $scope);
 
+    var id = 'svin';
+
+    var elem = document.getElementById(id);
+
+    var url = "/resumes/" + $scope.resume;
+    var attr = "href";
+
+    console.log('In resume modal.\nURL: '+ url + '\nATTR: '+ attr + '\nELEM: '+ elem);
+
+    angular.element(elem).attr(attr, url);
 
     $scope.download = function(){
 
@@ -1070,4 +1081,53 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
     return _appServicesFactory;
 
 }]);
+
+/*
+app.directive('pdfDownload', function() {
+
+    console.log('HERE I AM!!');
+
+    return {
+        restrict: 'E',
+        templateUrl: '/resumes/fiona.txt',
+        scope: true,
+        link: function (scope, element, attr) {
+            var anchor = element.children()[0];
+
+            // When the download starts, disable the link
+            scope.$on('download-start', function () {
+                $(anchor).attr('disabled', 'disabled');
+            });
+
+            // When the download finishes, attach the data to the link. Enable the link and change its appearance.
+            scope.$on('downloaded', function (event, data) {
+                $(anchor).attr({
+                        href: 'data:application/pdf;base64,',
+                        data: data,
+                        download: attr.filename
+                    })
+                    .removeAttr('disabled')
+                    .text('Save')
+                    .removeClass('btn-primary')
+                    .addClass('btn-success');
+
+                // Also overwrite the download pdf function to do nothing.
+                scope.downloadPdf = function () {
+                };
+            });
+        },
+        controller: ['$scope', '$attrs', '$http', '$rootScope', function ($scope, $attrs, $http, $rootScope) {
+            $scope.downloadPdf = function () {
+
+                console.log('in download directive: ', $scope, $rootScope);
+
+                $scope.$emit('download-start');
+                $http.get($attrs.url).then(function (response) {
+                    $scope.$emit('downloaded', response.data);
+                });
+            };
+        }]
+    };
+});
+*/
 

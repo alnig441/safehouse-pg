@@ -588,23 +588,6 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
 
 app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
 
-    console.log('in resume modal printing scope: ', $scope);
-
-    var id = 'svin';
-
-    var elem = document.getElementById(id);
-
-    var url = "/resumes/" + $scope.resume;
-    var attr = "href";
-
-    console.log('In resume modal.\nURL: '+ url + '\nATTR: '+ attr + '\nELEM: '+ elem);
-
-    angular.element(elem).attr(attr, url);
-
-    $scope.download = function(){
-
-    };
-
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
     };

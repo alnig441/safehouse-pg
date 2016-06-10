@@ -10,6 +10,8 @@ app.config(function($routeProvider, $locationProvider){
             resolve: {
                 dynamicInfo: function($http, $rootScope){
 
+                    console.log('hvordan ser load ud? ',$rootScope.load);
+
                     if($rootScope.load === undefined){
 
                         $http.get('/landing_mgmt/tickers/'+ 'Allan')
@@ -424,9 +426,11 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
 
 }]);
 
-app.controller('landingPageCtrl', function($scope, $http){
+app.controller('landingPageCtrl', function($scope, $http, $rootScope){
 
     $scope.postItem = function(){
+
+        $rootScope.load = undefined;
 
         if(this.form.date === null){
             this.form.date = new Date();
@@ -441,6 +445,8 @@ app.controller('landingPageCtrl', function($scope, $http){
     };
 
     $scope.postProject = function(){
+
+        $rootScope.load = undefined;
 
         this.form.owner = this.form.owner.name;
 
@@ -460,6 +466,8 @@ app.controller('landingPageCtrl', function($scope, $http){
     };
 
     $scope.addBio = function(){
+
+        $rootScope.load = undefined;
 
         $http.put('/landing_mgmt/bios', this.form)
             .then(function(response){

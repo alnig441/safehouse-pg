@@ -544,11 +544,11 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             resolve: {
                 events: function () {
                     return $scope.event;
-                },
-                anchors: function(){
-                    document.getElementById("4417ellsworthdrive").innerHTML = document.getElementById("4417ellsworthdrive").innerHTML.replace(/href="\/resumes\/"/, "href='/resumes/test.pdf'" );
-                    console.log('blah: ', document.getElementById("4417ellsworthdrive").innerHTML);
                 }
+                //anchors: function(){
+                //    document.getElementById("4417ellsworthdrive").innerHTML = document.getElementById("4417ellsworthdrive").innerHTML.replace(/href="\/resumes\/"/, "href='/resumes/test.pdf'" );
+                //    console.log('blah: ', document.getElementById("4417ellsworthdrive").innerHTML);
+                //}
             }
         });
 

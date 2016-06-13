@@ -8,9 +8,7 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/login.html',
             controller: 'singleViewModalCtrl',
             resolve: {
-                dynamicInfo: function($http, $rootScope){
-
-                    console.log('hvordan ser load ud? ',$rootScope.load);
+                dynamicInfo: function($http, $rootScope, $location){
 
                     if($rootScope.load === undefined){
 
@@ -42,7 +40,6 @@ app.config(function($routeProvider, $locationProvider){
                             });
                     }
                     $rootScope.load = true;
-                    console.log($rootScope);
                 }
             }
         })
@@ -66,7 +63,30 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/public.html',
             controller: 'publicCtrl'
         })
-        .otherwise({redirectTo: '/login'});
+        .otherwise({
+            redirectTo: '/login'
+        });
+});
+
+app.controller('mainCtrl', function($location){
+
+        switch ($location.$$hash) {
+            case 'Allan':
+                console.log('getting allans info', $location);
+                angular.element(document.getElementsByClassName('intro-header')).css('display', 'none');
+                angular.element(document.getElementsByClassName('fiona')).css('display', 'none');
+                break;
+            case 'Fiona':
+                console.log('getting fionas info');
+                angular.element(document.getElementsByClassName('intro-header')).css('display', 'none');
+                angular.element(document.getElementsByClassName('allan')).css('display', 'none');
+                break;
+            default :
+                $location.path('/login');
+                break;
+        }
+    //}
+
 });
 
 app.controller('logoutCtrl', function($scope, $location, $http){
@@ -524,6 +544,10 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             resolve: {
                 events: function () {
                     return $scope.event;
+                },
+                anchors: function(){
+                    document.getElementById("4417ellsworthdrive").innerHTML = document.getElementById("4417ellsworthdrive").innerHTML.replace(/href="\/resumes\/"/, "href='/resumes/test.pdf'" );
+                    console.log('blah: ', document.getElementById("4417ellsworthdrive").innerHTML);
                 }
             }
         });
@@ -594,7 +618,9 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
 
 });
 
-app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http){
+app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http, appServices, $location){
+
+    appServices.getResume();
 
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
@@ -1068,57 +1094,15 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
     };
 
+    _appServicesFactory.getResume = function(){
+
+        var elem = document.getElementById("resume_anchor");
+        console.log('show me the href: ', elem);
+    };
+
 
     return _appServicesFactory;
 
 }]);
 
-/*
-app.directive('pdfDownload', function() {
-
-    console.log('HERE I AM!!');
-
-    return {
-        restrict: 'E',
-        templateUrl: '/resumes/fiona.txt',
-        scope: true,
-        link: function (scope, element, attr) {
-            var anchor = element.children()[0];
-
-            // When the download starts, disable the link
-            scope.$on('download-start', function () {
-                $(anchor).attr('disabled', 'disabled');
-            });
-
-            // When the download finishes, attach the data to the link. Enable the link and change its appearance.
-            scope.$on('downloaded', function (event, data) {
-                $(anchor).attr({
-                        href: 'data:application/pdf;base64,',
-                        data: data,
-                        download: attr.filename
-                    })
-                    .removeAttr('disabled')
-                    .text('Save')
-                    .removeClass('btn-primary')
-                    .addClass('btn-success');
-
-                // Also overwrite the download pdf function to do nothing.
-                scope.downloadPdf = function () {
-                };
-            });
-        },
-        controller: ['$scope', '$attrs', '$http', '$rootScope', function ($scope, $attrs, $http, $rootScope) {
-            $scope.downloadPdf = function () {
-
-                console.log('in download directive: ', $scope, $rootScope);
-
-                $scope.$emit('download-start');
-                $http.get($attrs.url).then(function (response) {
-                    $scope.$emit('downloaded', response.data);
-                });
-            };
-        }]
-    };
-});
-*/
 

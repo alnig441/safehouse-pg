@@ -70,6 +70,8 @@ app.config(function($routeProvider, $locationProvider){
 
 app.controller('mainCtrl', function($location){
 
+    console.log('hallo: ', $location.$$hash);
+
         switch ($location.$$hash) {
             case 'Allan':
                 console.log('getting allans info', $location);
@@ -81,6 +83,9 @@ app.controller('mainCtrl', function($location){
                 angular.element(document.getElementsByClassName('intro-header')).css('display', 'none');
                 angular.element(document.getElementsByClassName('allan')).css('display', 'none');
                 break;
+            //case 'home':
+            //    $location.path('/login');
+            //    break;
             default :
                 $location.path('/login');
                 break;

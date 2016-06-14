@@ -75,17 +75,13 @@ app.controller('mainCtrl', function($location){
         switch ($location.$$hash) {
             case 'Allan':
                 console.log('getting allans info', $location);
-                angular.element(document.getElementsByClassName('intro-header')).css('display', 'none');
+                angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
                 angular.element(document.getElementsByClassName('fiona')).css('display', 'none');
                 break;
             case 'Fiona':
                 console.log('getting fionas info');
-                angular.element(document.getElementsByClassName('intro-header')).css('display', 'none');
                 angular.element(document.getElementsByClassName('allan')).css('display', 'none');
                 break;
-            //case 'home':
-            //    $location.path('/login');
-            //    break;
             default :
                 $location.path('/login');
                 break;

@@ -546,10 +546,6 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
                 events: function () {
                     return $scope.event;
                 }
-                //anchors: function(){
-                //    document.getElementById("4417ellsworthdrive").innerHTML = document.getElementById("4417ellsworthdrive").innerHTML.replace(/href="\/resumes\/"/, "href='/resumes/test.pdf'" );
-                //    console.log('blah: ', document.getElementById("4417ellsworthdrive").innerHTML);
-                //}
             }
         });
 
@@ -807,9 +803,6 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal,
             obj = $scope.form;
         }
 
-        console.log('open2 - query object: ', JSON.stringify(obj.query));
-
-        //$scope.form.database = db;
         var temp = [];
 
         $http.post('/queries', obj)
@@ -875,7 +868,7 @@ app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal,
     };
 });
 
-app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $rootScope) {
+app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $rootScope, $interval) {
 
     $scope.selector = 0;
 
@@ -887,6 +880,29 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $r
 
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
+    };
+
+    $scope.play = function(){
+
+        var elem = document.getElementById('play');
+
+        if(angular.element(elem).hasClass("fa-play")){
+
+            angular.element(elem).addClass('fa-pause').removeClass('fa-play');
+
+            $scope.interval = $interval(function() {
+
+                $scope.next();
+
+            }, 4000);
+
+        }
+        else if(angular.element(elem).hasClass("fa-pause")){
+
+            angular.element(elem).addClass('fa-play').removeClass('fa-pause');
+
+            $interval.cancel($scope.interval);
+        }
     };
 
     $scope.next = function(){

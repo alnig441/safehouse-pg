@@ -68,6 +68,47 @@ app.config(function($routeProvider, $locationProvider){
         });
 });
 
+app.filter('capInitial', function(){
+
+    return function(input) {
+
+        var output;
+        var outArr = [];
+
+        input = input.toLowerCase();
+        var inputArr = input.split(',');
+
+        inputArr.forEach(function(elem, ind){
+
+            elem = elem.trim();
+
+            var tmp = [];
+            var x = '';
+
+            for(var i = 0 ; i <= elem.length ; i ++){
+                tmp.push(elem[i]);
+            }
+
+            x = tmp[0].toUpperCase();
+            tmp.shift();
+            tmp.unshift(x);
+            elem = tmp.join('');
+            outArr.push(elem);
+
+        });
+
+        if(outArr.length > 1){
+            output = outArr.join(',');
+        }
+        else{
+            output = outArr.toString();
+        }
+
+        return output;
+    };
+
+});
+
 app.controller('mainCtrl', function($location){
 
     console.log('hallo: ', $location.$$hash);
@@ -488,6 +529,8 @@ app.controller('landingPageCtrl', function($scope, $http, $rootScope){
 
     $scope.addBio = function(){
 
+        console.log('adding bio: ', this.form);
+
         $rootScope.load = undefined;
 
         $http.put('/landing_mgmt/bios', this.form)
@@ -567,7 +610,7 @@ app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
     $http.get('/queries/latest')
         .then(function(response){
             $scope.event = response.data;
-            console.log('this event: ', response.data);
+            console.log('this event: ', $scope.event);
 
         });
     $scope.cancel = function(){
@@ -625,14 +668,19 @@ app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http, appSer
 
 });
 
-app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $rootScope, appServices){
+app.controller('AddTagsModalCtrl', ['capInitialFilter', '$scope', '$modalInstance', '$http', '$rootScope', 'appServices', function(capInitialFilter, $scope, $modalInstance, $http, $rootScope, appServices){
 
 
     $scope.submit = function(){
 
         for(var prop in this.img){
             if(prop !== 'url' && prop !== 'folder' && prop !== 'path' && prop !== 'file' && prop !== 'owner' && prop !== 'size' && prop !== 'created' && prop !== 'year' && prop !== 'month' && prop !== 'day'){
-                $rootScope.img[prop] = this.img[prop];
+                if(prop === 'city' || prop === 'state' || prop === 'names'){
+                    $rootScope.img[prop] = capInitialFilter(this.img[prop]);
+                }
+                else{
+                    $rootScope.img[prop] = this.img[prop];
+                }
             }
         }
 
@@ -650,7 +698,7 @@ app.controller('AddTagsModalCtrl', function($scope, $modalInstance, $http, $root
         $rootScope.img = {};
         $modalInstance.dismiss('cancel');
     };
-});
+}]);
 
 app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, $http, Upload, $timeout){
 
@@ -894,7 +942,7 @@ app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $r
 
                 $scope.next();
 
-            }, 4000);
+            }, 5000);
 
         }
         else if(angular.element(elem).hasClass("fa-pause")){
@@ -1122,4 +1170,27 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
 }]);
 
+app.directive('myResumeModal', function(){
 
+    return {
+        restrict: 'E',
+        templateUrl: 'views/resume.html'
+    };
+
+});
+
+app.directive('latestEventModal', function(){
+
+    return {
+        restrict: 'E',
+        templateUrl: 'views/latestEvent.html'
+    };
+});
+
+app.directive('multiViewModal', function(){
+
+    return {
+        restrict: 'E',
+        templateUrl: 'views/multiView.html'
+    };
+});

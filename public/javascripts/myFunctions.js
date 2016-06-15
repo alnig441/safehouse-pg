@@ -35,14 +35,22 @@ var call = {
         console.log('setDate: ', date);
         return date_str;
     },
-    parser: function(string){
+    parser: function(string, lang){
         var temp = string.slice(1,11);
         var created = {};
         var arr = temp.split('-');
         var months =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var months_da =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Juni', 'Juli', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        created.en = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];
-        created.da = arr[2] + ' ' + months_da[parseInt(arr[1]-1)] + ' ' + arr[0];
+        //created.en = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];
+        //created.da = arr[2] + ' ' + months_da[parseInt(arr[1]-1)] + ' ' + arr[0];
+        switch (lang) {
+            case 'en':
+                created = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];
+                break;
+            case 'da':
+                created = arr[2] + ' ' + months_da[parseInt(arr[1]-1)] + ' ' + arr[0];
+                break;
+        }
         return created;
     },
     splitString: function(meta){

@@ -117,7 +117,7 @@ router.get('/bios/:owner?', function(req, res, next){
 
 router.put('/bios', call.isAuthenticated, function(req, res, next){
 
-    //console.log('updating bio for ', req.body.owner);
+    console.log('updating bio for ', req.body.owner);
 
     var cols = [];
     var vals_arr = [];

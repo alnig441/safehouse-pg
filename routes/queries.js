@@ -4,19 +4,32 @@ var pg = require('pg');
 var call = require('../public/javascripts/myFunctions.js');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 
-router.get('/latest', call.isAuthenticated, function(req, res){
+router.get('/latest', call.isAuthenticated, function(req, res, next){
+
+    console.log('getting latest: ', req.user);
+
+    var descr;
+
+    switch (req.user.lang) {
+        case 'en':
+            descr = 'event_en';
+            break;
+        case 'da':
+            descr = 'event_da';
+            break;
+    }
 
     //POSTGRES REFACTOR GET LATEST EVENT
     pg.connect(connectionString, function(error, client, done){
 
         var event;
-        var query = client.query("declare geturl cursor for select id, created, event_da, event_en, path || folder || '/' || file as url from events cross join images cross join storages where img_id = id and storage = folder order by created desc; fetch first from geturl", function(error, result){
+        var query = client.query("declare geturl cursor for select id, created, "+descr+" as description, path || folder || '/' || file as url from events cross join images cross join storages where img_id = id and storage = folder order by created desc; fetch first from geturl", function(error, result){
 
             if(error){ console.log('theres was an error ', error.detail);}
         })
         query.on('row', function(row){
             event = row;
-            event.created = call.parser(JSON.stringify(row.created));
+            event.created = call.parser(JSON.stringify(row.created), req.user.lang);
         })
 
         query.on('end', function(result){
@@ -29,9 +42,20 @@ router.get('/latest', call.isAuthenticated, function(req, res){
 });
 
 
-router.post('/', call.isAuthenticated, function(req, res){
+router.post('/', call.isAuthenticated, function(req, res, next){
 
     console.log('queries/post: ', req.body);
+
+    var descr;
+
+    switch (req.user.lang) {
+        case 'en':
+            descr = 'event_en';
+            break;
+        case 'da':
+            descr = 'event_da';
+            break;
+    }
 
     var search = "";
     var query_string;
@@ -98,8 +122,7 @@ router.post('/', call.isAuthenticated, function(req, res){
     }
 
     if(req.body.database === 'events'){
-        query_string ="SELECT ID, EVENT_DA, EVENT_EN, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
-
+        query_string ="SELECT ID, "+descr+" AS DESCRIPTION, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
     }
     if(req.body.database === 'images'){
         query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";

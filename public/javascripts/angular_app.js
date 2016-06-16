@@ -74,26 +74,22 @@ app.filter('capInitial', function(){
 
 });
 
-app.controller('indexCtrl', function($location, $http, $rootScope){
+app.controller('indexCtrl', function($location, $http, $rootScope, $scope){
 
-    if($rootScope.load === undefined){
+    $rootScope.tickers = {Allan: [{headline: '<<headline>>', copy: '<<copy>>', created_str: '<<date>>'}], Fiona: [{headline: '<<headline>>', copy: '<<copy>>', created_str: '<<date>>'}]};
 
-        getBios();
-        getTickers();
-        getProjects();
-
-        $rootScope.load = true;
-    }
+    getBios();
+    getTickers();
+    getProjects();
 
     switch ($location.$$hash) {
-        case 'Allan':
-            console.log('getting allans info', $location);
+        case 'about_allan':
             angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
-            angular.element(document.getElementsByClassName('fiona')).css('display', 'none');
+            angular.element(document.getElementsByClassName('fiona')).addClass('ng-hide');
             break;
-        case 'Fiona':
-            console.log('getting fionas info');
-            angular.element(document.getElementsByClassName('allan')).css('display', 'none');
+        case 'about_fiona':
+            angular.element(document.getElementsByClassName('allan')).addClass('ng-hide');
+
             break;
         default :
             $location.path('/login');

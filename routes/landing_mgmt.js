@@ -80,14 +80,14 @@ router.get('/projects/:owner?', function(req, res, next){
 
     pg.connect(connectionString, function(err, client, done){
         var query = client.query("SELECT * FROM resumes WHERE OWNER = '"+ req.params.owner + "' ORDER BY begin_date DESC", function(error, result){
-            if(error){
+
+                if(error){
                 res.status(200).send(error);
                 console.log('show me the error: ', error);
             }
         })
         query.on('end', function(result){
             client.end();
-            //console.log('show me bio: ', result.rows);
             res.status(200).send(result.rows);
         })
     })
@@ -95,21 +95,25 @@ router.get('/projects/:owner?', function(req, res, next){
 });
 
 
-router.get('/bios/:owner?', function(req, res, next){
+router.get('/bios/', function(req, res, next){
 
-    console.log('getting bio for ', req.params.owner);
+    var subjects = {};
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query("SELECT * FROM biographies WHERE OWNER = '"+ req.params.owner + "'", function(error, result){
-            if(error){
+        var query = client.query("SELECT * FROM biographies ORDER BY OWNER ASC", function(error, result){
+
+                if(error){
                 res.status(200).send(error);
-                //console.log('show me the error: ', error);
             }
+        })
+        query.on('row', function(row){
+            console.log('in bios getting gotting rows: ',row );
+            subjects[row.owner] = row;
         })
         query.on('end', function(result){
             client.end();
-            //console.log('show me bio: ', result.rows);
-            res.status(200).send(result.rows[0]);
+            res.status(200).send(subjects);
+
         })
     })
 

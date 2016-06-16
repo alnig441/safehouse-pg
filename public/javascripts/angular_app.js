@@ -8,7 +8,7 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/login.html',
             controller: 'singleViewModalCtrl',
             resolve: {
-                dynamicInfo: function($http, $rootScope, $location){
+                dynamicInfo: function($http, $rootScope){
 
                     if($rootScope.load === undefined){
 
@@ -21,13 +21,9 @@ app.config(function($routeProvider, $locationProvider){
                                     });
                             });
 
-                        $http.get('/landing_mgmt/bios/'+ 'Allan')
+                        $http.get('/landing_mgmt/bios/')
                             .then(function(response){
-                                $rootScope.al_bio = response.data;
-                                $http.get('/landing_mgmt/bios/'+ 'Fiona')
-                                    .then(function(response){
-                                       $rootScope.fo_bio = response.data;
-                                    });
+                                $rootScope.subjects = response.data;
                             });
 
                         $http.get('/landing_mgmt/projects/'+ 'Allan')
@@ -127,7 +123,6 @@ app.controller('mainCtrl', function($location){
                 $location.path('/login');
                 break;
         }
-    //}
 
 });
 
@@ -279,21 +274,6 @@ app.controller('adminCtrl', ['$scope', '$rootScope', '$http', 'Upload', '$timeou
             });
     };
 
-    $scope.select = function(option){
-
-        var elements = {list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div', resume: 'resume_div', ticker: 'ticker_div', biography: 'biography_div'};
-        appServices.selectTab(elements, option);
-
-        if(option === 'event'){
-            $http.get('/images_mgmt/get_all')
-                .then(function(response){
-                    $scope.images = response.data;
-                });
-        }
-
-
-    };
-
     $scope.viewAcct = function(acct, show){
         var type = acct || this.form.acct_type;
         $http.get('/accounts_mgmt/'+ type)
@@ -387,16 +367,6 @@ app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$
                 $rootScope.img_db = result.data;
             });
     }
-
-    $scope.switch = function(option){
-        $scope.form.type_and = true;
-        var elements = {meta: 'meta_div', time: 'time_div'};
-        appServices.selectTab(elements, option);
-
-        if(option === 'meta'){
-            appServices.buildMeta();
-        }
-    };
 
     $scope.years = {};
     $scope.days = {};
@@ -584,12 +554,12 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             animation: $scope.animationsEnabled,
             templateUrl: modal.templ,
             controller: modal.contr,
-            size: size,
-            resolve: {
-                events: function () {
-                    return $scope.event;
-                }
-            }
+            size: size
+            //resolve: {
+            //    events: function () {
+            //        return $scope.event;
+            //    }
+            //}
         });
 
     };
@@ -1173,16 +1143,15 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 app.directive('myResumeModal', function(){
 
     return {
-        restrict: 'E',
+        restrict: 'EA',
         templateUrl: 'views/resume.html'
     };
-
 });
 
 app.directive('latestEventModal', function(){
 
     return {
-        restrict: 'E',
+        restrict: 'EA',
         templateUrl: 'views/latestEvent.html'
     };
 });
@@ -1190,7 +1159,52 @@ app.directive('latestEventModal', function(){
 app.directive('multiViewModal', function(){
 
     return {
-        restrict: 'E',
+        restrict: 'EA',
         templateUrl: 'views/multiView.html'
     };
+});
+
+app.directive('switchTab',['appServices', '$http', function(appServices, $http){
+
+    return {
+        restrict: 'EA',
+        transclude: true,
+        templateUrl: 'views/switchTab.html',
+        newTab:'&',
+        controller: function($scope){
+
+            $scope.select = function(option, str){
+
+                console.log('print this!!!', str);
+
+                var elements = {meta: 'meta_div', time: 'time_div', list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div', resume: 'resume_div', ticker: 'ticker_div', biography: 'biography_div'};
+                appServices.selectTab(elements, option);
+
+                if(option === 'event'){
+                    $http.get('/images_mgmt/get_all')
+                        .then(function(response){
+                            $scope.images = response.data;
+                        });
+                }
+
+                if(option === 'meta'){
+                    $scope.form.type_and = true;
+                    appServices.buildMeta();
+                }
+
+            };
+        }
+    };
+}]);
+
+app.directive('insertBio', function(){
+
+    return {
+        restrict: 'EA',
+        templateUrl: 'views/biography.html',
+        scope: {
+          subject: '='
+        }
+    };
+
 });

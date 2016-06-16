@@ -77,7 +77,7 @@ app.filter('capInitial', function(){
 app.controller('indexCtrl', function($location, $http, $rootScope, $scope){
 
     if($rootScope.load === undefined){
-        $rootScope.tickers = {Allan: [{headline: '<<headline>>', copy: '<<copy>>', created_str: '<<date>>'}], Fiona: [{headline: '<<headline>>', copy: '<<copy>>', created_str: '<<date>>'}]};
+        $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
         $rootScope.load = true;
     }
 

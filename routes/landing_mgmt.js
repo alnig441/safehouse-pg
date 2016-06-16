@@ -95,7 +95,7 @@ router.get('/projects/:owner?', function(req, res, next){
 });
 
 
-router.get('/bios/', function(req, res, next){
+router.get('/bios/all', function(req, res, next){
 
     var subjects = {};
 
@@ -118,6 +118,25 @@ router.get('/bios/', function(req, res, next){
     })
 
 });
+
+router.get('/bios/:owner?', function(req, res, next){
+
+    pg.connect(connectionString, function(err, client, done){
+        var query = client.query("SELECT * FROM biographies WHERE owner = '"+req.params.owner+"'", function(error, result){
+
+            if(error){
+                res.status(200).send(error);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result.rows[0]);
+
+        })
+    })
+
+});
+
 
 router.put('/bios', call.isAuthenticated, function(req, res, next){
 

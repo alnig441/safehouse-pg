@@ -21,7 +21,7 @@ app.config(function($routeProvider, $locationProvider){
                                     });
                             });
 
-                        $http.get('/landing_mgmt/bios/')
+                        $http.get('/landing_mgmt/bios/all')
                             .then(function(response){
                                 $rootScope.subjects = response.data;
                             });
@@ -555,11 +555,6 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
             templateUrl: modal.templ,
             controller: modal.contr,
             size: size
-            //resolve: {
-            //    events: function () {
-            //        return $scope.event;
-            //    }
-            //}
         });
 
     };

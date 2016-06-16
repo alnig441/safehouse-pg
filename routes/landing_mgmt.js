@@ -27,17 +27,45 @@ router.get('/tickers/:owner?', function(req, res, next){
 
     console.log('getting all tickers', req.params.owner);
 
+    var query_str;
+    var tickers = {};
+
+    switch (req.params.owner) {
+        case undefined:
+            query_str = "SELECT * FROM tickers ORDER BY created DESC";
+            break;
+        default:
+            query_str = "SELECT * FROM tickers WHERE OWNER = '"+ req.params.owner + "' ORDER BY created DESC";
+            break;
+    }
+
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query("SELECT * FROM tickers WHERE OWNER = '"+ req.params.owner + "' ORDER BY CREATED DESC", function(error, result){
+        var query = client.query(query_str, function(error, result){
             if(error){
-                res.status(200).send(error);
-                console.log('show me the error: ', error);
+            res.status(200).send(error);
+            console.log('show me the error: ', error);
+            }
+        })
+        query.on('row', function(row){
+            if(req.params.owner === undefined){
+                if(tickers[row.owner] === undefined){
+                    tickers[row.owner] = [];
+                    tickers[row.owner].push(row);
+                }
+                else{
+                    tickers[row.owner].push(row);
+                }
             }
         })
         query.on('end', function(result){
             client.end();
             console.log('show me tickers: ', result.rows);
-            res.status(200).send(result.rows);
+            if(req.params.owner === undefined){
+                res.status(200).send(tickers);
+            }
+            else{
+                res.status(200).send(result.rows);
+            }
         })
     })
 });
@@ -77,18 +105,46 @@ router.post('/projects', call.isAuthenticated, function(req, res, next){
 router.get('/projects/:owner?', function(req, res, next){
 
     console.log('getting projects for ', req.params.owner);
+    var query_str;
+    var resumes = {};
+
+    switch (req.params.owner) {
+        case undefined:
+            query_str = "SELECT * FROM resumes ORDER BY begin_date DESC";
+            break;
+        default:
+            query_str = "SELECT * FROM resumes WHERE OWNER = '"+ req.params.owner + "' ORDER BY begin_date DESC";
+            break;
+    }
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query("SELECT * FROM resumes WHERE OWNER = '"+ req.params.owner + "' ORDER BY begin_date DESC", function(error, result){
+        //var query = client.query("SELECT * FROM resumes WHERE OWNER = '"+ req.params.owner + "' ORDER BY begin_date DESC", function(error, result){
+        var query = client.query(query_str, function(error, result){
 
                 if(error){
                 res.status(200).send(error);
                 console.log('show me the error: ', error);
             }
         })
+        query.on('row', function(row){
+            if(req.params.owner === undefined){
+                if(resumes[row.owner] === undefined){
+                    resumes[row.owner] = [];
+                    resumes[row.owner].push(row);
+                }
+                else{
+                    resumes[row.owner].push(row);
+                }
+            }
+        })
         query.on('end', function(result){
             client.end();
-            res.status(200).send(result.rows);
+            if(req.params.owner === undefined){
+                res.status(200).send(resumes);
+            }
+            else{
+                res.status(200).send(result.rows);
+            }
         })
     })
 

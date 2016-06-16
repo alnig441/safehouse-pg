@@ -6,38 +6,7 @@ app.config(function($routeProvider, $locationProvider){
     $routeProvider
         .when('/login', {
             templateUrl: 'views/login.html',
-            controller: 'singleViewModalCtrl',
-            resolve: {
-                dynamicInfo: function($http, $rootScope){
-
-                    if($rootScope.load === undefined){
-
-                        $http.get('/landing_mgmt/tickers/'+ 'Allan')
-                            .then(function(response){
-                                $rootScope.al_TickerItems = response.data;
-                                $http.get('/landing_mgmt/tickers/' + 'Fiona')
-                                    .then(function(response){
-                                        $rootScope.fo_TickerItems = response.data;
-                                    });
-                            });
-
-                        $http.get('/landing_mgmt/bios/all')
-                            .then(function(response){
-                                $rootScope.subjects = response.data;
-                            });
-
-                        $http.get('/landing_mgmt/projects/'+ 'Allan')
-                            .then(function(response){
-                               $rootScope.al_resume = response.data;
-                                $http.get('/landing_mgmt/projects/'+'Fiona')
-                                    .then(function(response){
-                                       $rootScope.fo_resume = response.data;
-                                    });
-                            });
-                    }
-                    $rootScope.load = true;
-                }
-            }
+            controller: 'singleViewModalCtrl'
         })
         .when('/admin/btle', {
             templateUrl: 'views/btle.html',
@@ -105,24 +74,56 @@ app.filter('capInitial', function(){
 
 });
 
-app.controller('mainCtrl', function($location){
+app.controller('indexCtrl', function($location, $http, $rootScope){
 
-    console.log('hallo: ', $location.$$hash);
+    if($rootScope.load === undefined){
 
-        switch ($location.$$hash) {
-            case 'Allan':
-                console.log('getting allans info', $location);
-                angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
-                angular.element(document.getElementsByClassName('fiona')).css('display', 'none');
-                break;
-            case 'Fiona':
-                console.log('getting fionas info');
-                angular.element(document.getElementsByClassName('allan')).css('display', 'none');
-                break;
-            default :
-                $location.path('/login');
-                break;
-        }
+        getBios();
+        getTickers();
+        getProjects();
+
+        $rootScope.load = true;
+    }
+
+    switch ($location.$$hash) {
+        case 'Allan':
+            console.log('getting allans info', $location);
+            angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
+            angular.element(document.getElementsByClassName('fiona')).css('display', 'none');
+            break;
+        case 'Fiona':
+            console.log('getting fionas info');
+            angular.element(document.getElementsByClassName('allan')).css('display', 'none');
+            break;
+        default :
+            $location.path('/login');
+            break;
+    }
+
+    function getBios(){
+
+        $http.get('landing_mgmt/bios/all')
+            .then(function(response){
+                $rootScope.subjects = response.data;
+
+            });
+    }
+
+    function getTickers(){
+
+        $http.get('/landing_mgmt/tickers')
+            .then(function(response){
+                $rootScope.tickers = response.data;
+            });
+    }
+
+    function getProjects(){
+
+        $http.get('/landing_mgmt/projects')
+            .then(function(response){
+                $rootScope.resumes = response.data;
+            });
+    }
 
 });
 
@@ -522,8 +523,6 @@ app.controller('landingPageCtrl', function($scope, $http, $rootScope){
 
 app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices){
 
-
-
     var menu = document.getElementsByClassName('collapse');
 
     $scope.animationsEnabled = true;
@@ -540,12 +539,12 @@ app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope
         }
 
         if(misc === 'Allan'){
-            $scope.projects = $rootScope.al_resume;
+            $scope.projects = $rootScope.resumes.Allan;
             $scope.resume = 'Allan.txt';
         }
 
         if(misc === 'Fiona'){
-            $scope.projects = $rootScope.fo_resume;
+            $scope.projects = $rootScope.resumes.Fiona;
             $scope.resume = 'Fiona.txt';
         }
 
@@ -625,8 +624,6 @@ app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $locat
 
 app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http, appServices, $location){
 
-    appServices.getResume();
-
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
     };
@@ -668,8 +665,6 @@ app.controller('AddTagsModalCtrl', ['capInitialFilter', '$scope', '$modalInstanc
 app.controller('SaveImgModalCtrl', function($scope, $rootScope, $modalInstance, $http, Upload, $timeout){
 
     $scope.uploadFiles = function(file, opt){
-
-        //console.log('uplaoding file: ', $scope, $rootScope, this);
 
         $scope.img = {};
         $scope.img.url = file.name;
@@ -1124,13 +1119,6 @@ app.factory('appServices', ['$http', '$rootScope', function($http, $rootScope){
 
     };
 
-    _appServicesFactory.getResume = function(){
-
-        var elem = document.getElementById("resume_anchor");
-        console.log('show me the href: ', elem);
-    };
-
-
     return _appServicesFactory;
 
 }]);
@@ -1196,10 +1184,10 @@ app.directive('insertBio', function(){
 
     return {
         restrict: 'EA',
-        templateUrl: 'views/biography.html',
         scope: {
-          subject: '='
-        }
+            subject: '='
+        },
+        templateUrl: 'views/biography.html'
     };
 
 });

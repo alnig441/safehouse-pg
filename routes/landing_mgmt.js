@@ -9,7 +9,7 @@ router.post('/tickers', call.isAuthenticated, function(req, res, next){
     console.log('in landing_mgmt', req.body);
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query('INSERT INTO tickers (created, created_str, headline, copy, owner) VALUES ($1, $2, $3, $4, $5)', [req.body.date, req.body.date_str, req.body.headline, req.body.copy, req.body.owner.name], function(error, result){
+        var query = client.query('INSERT INTO tickers (created, created_str, headline, copy, owner) VALUES ($1, $2, $3, $4, $5)', [req.body.date, req.body.date_str, req.body.headline, req.body.copy, req.body.owner], function(error, result){
             if(error){
                 res.status(200).send(error);
             }
@@ -118,7 +118,6 @@ router.get('/projects/:owner?', function(req, res, next){
     }
 
     pg.connect(connectionString, function(err, client, done){
-        //var query = client.query("SELECT * FROM resumes WHERE OWNER = '"+ req.params.owner + "' ORDER BY begin_date DESC", function(error, result){
         var query = client.query(query_str, function(error, result){
 
                 if(error){
@@ -211,8 +210,6 @@ router.put('/bios', call.isAuthenticated, function(req, res, next){
 
     vals = vals_arr.join(',');
 
-    //console.log('COLS: '+ cols + '\nVALS: '+ vals);
-
     pg.connect(connectionString, function(err, client, done){
         var query = client.query("UPDATE biographies SET("+ cols +") = ("+ vals +") WHERE owner = '"+ req.body.owner +"'", function(error, result){
             if(error){
@@ -222,7 +219,6 @@ router.put('/bios', call.isAuthenticated, function(req, res, next){
         })
         query.on('end', function(result){
             client.end();
-            //console.log('show me bio: ', result.rows);
             res.status(200).send(result.rows);
         })
     })

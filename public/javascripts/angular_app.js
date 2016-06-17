@@ -462,6 +462,8 @@ app.controller('landingPageCtrl', function($scope, $http, $rootScope){
 
     $scope.postItem = function(){
 
+        console.log('posting ticker: ', this.form);
+
         $rootScope.load = undefined;
 
         if(this.form.date === null){
@@ -480,8 +482,6 @@ app.controller('landingPageCtrl', function($scope, $http, $rootScope){
 
         $rootScope.load = undefined;
 
-        this.form.owner = this.form.owner.name;
-
         $http.post('/landing_mgmt/projects', this.form)
             .then(function(response){
                 $scope.form = {};
@@ -490,10 +490,10 @@ app.controller('landingPageCtrl', function($scope, $http, $rootScope){
 
     $scope.getBio = function(){
 
-        $http.get('/landing_mgmt/bios/' + this.form.getOwner.name)
+        $http.get('/landing_mgmt/bios/' + this.form.owner)
             .then(function(response){
                 console.log('show me bio: ', response.data);
-               $scope.form = response.data;
+                $scope.form = response.data;
             });
     };
 
@@ -511,8 +511,8 @@ app.controller('landingPageCtrl', function($scope, $http, $rootScope){
     };
 
     $scope.owners = [
-        {name: 'Allan'},
-        {name: 'Fiona'}
+        {name: 'Allan', value: 'Allan'},
+        {name: 'Fiona', value: 'Fiona'}
     ];
 
 });

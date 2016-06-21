@@ -15,7 +15,10 @@ router.post('/add', call.isAuthenticated, function(req, res){
         var hash = bcrypt.hashSync(req.body.password, 12);
 
         var query = client.query("INSERT INTO users(username, password, acct_type, lang, storages) values($1, $2, $3, $4, '{"+req.body.storage.folder+"}')", [req.body.username.toLowerCase(), hash, req.body.acct_type, req.body.lang], function(error, result){
-            if(error){console.log(error.detail);}
+            if(error){
+                console.log('show me the error: ', error);
+                res.status(200).send(error);
+            }
         });
 
         query.on('end', function(result){

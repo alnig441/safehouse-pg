@@ -1,5 +1,11 @@
 module.exports = function(grunt) {
 
+    var ctrl= './development/javascripts/controllers/';
+    var conf= './development/javascripts/configuration/';
+    var filter= './development/javascripts/filters/';
+    var fact='./development/javascripts/factories/';
+    var dirs='./development/javascripts/directives/';
+
     grunt.initConfig({
         jshint: {
             files: ['gruntfile.js', paths.from.scripts, '/routes/*.js', paths.from.modules],
@@ -45,6 +51,13 @@ module.exports = function(grunt) {
                 options: {
                     spawn: false
                 }
+            },
+            script_elements: {
+                files: [conf +'*,js', filter + '*.js', ctrl + '*.js', fact + '*.js', dirs + '*.js'],
+                tasks: ['concat', 'uglify'],
+                options: {
+                    spawn: false
+                }
             }
         },
 
@@ -57,7 +70,9 @@ module.exports = function(grunt) {
                     {expand: true, cwd: './development/templates/' ,src: '*.html', dest: paths.to.templates, filter: 'isFile'},
                     {expand: true, cwd: './node_modules/font_awesome/css/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'},
                     {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.js', dest: paths.to.vendors, filter: 'isFile'},
-                    {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'}
+                    {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'},
+                    {expand: true, cwd: './development/javascripts/' ,src: '*.js', dest: './public/javascripts/', filter: 'isFile'}
+
                 ]
             }
         },
@@ -95,22 +110,48 @@ module.exports = function(grunt) {
                 separator: ';'
             },
             dist: {
-                src: paths.from.scripts, /*['./development/scripts/1_angular_app.js', './development/scripts/adminCtrl.js', './development/scripts/panelViewCtrl.js'],*/
-                dest: paths.to.scripts
+                src: [
+                    conf+ 'config.js',
+                    filter+ 'filters.js',
+                    ctrl+ 'index.js',
+                    ctrl+ 'switch.js',
+                    ctrl+ 'image.js',
+                    ctrl+ 'accts.js',
+                    ctrl+ 'landingPage.js',
+                    ctrl+ 'priv.js',
+                    ctrl+ 'logout.js',
+                    ctrl+ 'singleViewModal.js',
+                    ctrl+ 'modalInstance.js',
+                    ctrl+ 'multiViewModal.js',
+                    ctrl+ 'modalInstance2.js',
+                    ctrl+ 'loginModal.js',
+                    ctrl+ 'resumeModal.js',
+                    ctrl+ 'saveImageModal.js',
+                    ctrl+ 'addTagsModal.js',
+                    ctrl+ 'modifyStorageModal.js',
+                    ctrl+ 'modifyAccountModal.js',
+                    fact+ 'factories.js',
+                    dirs+ 'insertBio.js',
+                    dirs+ 'latestEvent.js',
+                    dirs+ 'multiView.js',
+                    dirs+ 'myResume.js'
+                ],
+                dest: './public/javascripts/concatenated_app_file.js'
             }
         },
 
         uglify: {
-            //options: {
-            //    compress: {
-            //        drop_console: true
-            //    }
-            //},
+            options: {
+                compress: {
+                    drop_console: true
+                }
+            },
             my_target: {
                 files: {
-                    './public/scripts/angular_app.min.js': ['./public/scripts/app.js'],
+                    //'./public/scripts/angular_app.min.js': ['./public/scripts/app.js'],
                     //'./public/scripts/myFunctions.min.js': ['./development/modules/myFunctions.js'],
-                    './public/javascripts/myFunctions.min.js': ['./development/modules/myFunctions.js']
+                    './public/javascripts/myFunctions.min.js': ['./development/modules/myFunctions.js'],
+                    './public/javascripts/app.min.js': ['./public/javascripts/concatenated_app_file.js']
                 }
             }
         },

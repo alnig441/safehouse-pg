@@ -1,10 +1,10 @@
 module.exports = function(grunt) {
 
-    var ctrl= './development/javascripts/controllers/';
-    var conf= './development/javascripts/configuration/';
-    var filter= './development/javascripts/filters/';
-    var fact='./development/javascripts/factories/';
-    var dirs='./development/javascripts/directives/';
+    var controllers ='./development/javascripts/controllers/*.js';
+    var services = './development/javascripts/factories/*.js';
+    var directives = './development/javascripts/directives/*.js';
+    var configuration = './development/javascripts/configuration/*.js';
+    var filters = './development/javascripts/filters/*.js';
 
     grunt.initConfig({
         jshint: {
@@ -53,7 +53,7 @@ module.exports = function(grunt) {
                 }
             },
             script_elements: {
-                files: [conf +'*,js', filter + '*.js', ctrl + '*.js', fact + '*.js', dirs + '*.js'],
+                files: [configuration, filters, controllers, services, directives],
                 tasks: ['concat', 'uglify'],
                 options: {
                     spawn: false
@@ -71,8 +71,6 @@ module.exports = function(grunt) {
                     {expand: true, cwd: './node_modules/font_awesome/css/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'},
                     {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.js', dest: paths.to.vendors, filter: 'isFile'},
                     {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'},
-                    {expand: true, cwd: './development/javascripts/' ,src: '*.js', dest: './public/javascripts/', filter: 'isFile'}
-
                 ]
             }
         },
@@ -111,35 +109,14 @@ module.exports = function(grunt) {
             },
             dist: {
                 src: [
-                    conf+ 'config.js',
-                    filter+ 'filters.js',
-                    ctrl+ 'indexCtrl.js',
-                    ctrl+ 'imageCtrl.js',
-                    ctrl+ 'acctsCtrl.js',
-                    ctrl+ 'landingPageCtrl.js',
-                    ctrl+ 'privCtrl.js',
-                    ctrl+ 'logoutCtrl.js',
-                    ctrl+ 'singleViewModalCtrl.js',
-                    ctrl+ 'modalInstanceCtrl.js',
-                    ctrl+ 'multiViewModalCtrl.js',
-                    ctrl+ 'modalInstance2Ctrl.js',
-                    ctrl+ 'loginModalCtrl.js',
-                    ctrl+ 'resumeModalCtrl.js',
-                    ctrl+ 'saveImageModalCtrl.js',
-                    ctrl+ 'addTagsModalCtrl.js',
-                    ctrl+ 'modifyStorageModalCtrl.js',
-                    ctrl+ 'modifyAccountModalCtrl.js',
-                    ctrl+ 'locationCtrl.js',
-                    fact+ 'factories.js',
-                    fact+ 'eventServices.js',
-                    fact+ 'imageServices.js',
-                    fact+ 'storageServices.js',
-                    dirs+ 'insertBio.js',
-                    dirs+ 'latestEvent.js',
-                    dirs+ 'multiView.js',
-                    dirs+ 'myResume.js'
+                    configuration,
+                    filters,
+                    controllers,
+                    services,
+                    directives
                 ],
                 dest: './public/javascripts/concatenated_app_file.js'
+
             }
         },
 

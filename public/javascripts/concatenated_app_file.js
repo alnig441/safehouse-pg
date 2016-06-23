@@ -31,7 +31,8 @@ app.config(function($routeProvider, $locationProvider){
         .otherwise({
             redirectTo: '/login'
         });
-});;app.filter('capInitial', function(){
+});
+;app.filter('capInitial', function(){
 
     return function(input) {
 
@@ -79,56 +80,73 @@ app.config(function($routeProvider, $locationProvider){
     };
 
 });
-;app.controller('indexCtrl', function($location, $http, $rootScope, $scope){
+;app.controller('acctsCtrl',['accountServices', '$scope', 'appServices', '$http', function(accountServices, $scope, appServices, $http){
 
-    if($rootScope.load === undefined){
-        $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
-        $rootScope.load = true;
-    }
+    console.log('accounts ctrl');
 
-    getBios();
-    getTickers();
-    getProjects();
+    $scope.acct = [
+        {name: '<<select acct_type>>', value: null},
+        {name: 'Private', value: 'private'},
+        {name: 'Public', value: 'public'},
+        {name: 'Admin', value: 'admin'},
+        {name: 'Superuser', value: 'superuser'}
+    ];
 
-    switch ($location.$$hash) {
-        case 'about_allan':
-            angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
-            angular.element(document.getElementsByClassName('fiona')).addClass('ng-hide');
-            break;
-        case 'about_fiona':
-            angular.element(document.getElementsByClassName('allan')).addClass('ng-hide');
-            break;
-        default :
-            $location.path('/login');
-            break;
-    }
+    $scope.lang = [
+        {name: '<<select language>>', value: null},
+        {name: 'English', value: 'en'},
+        {name: 'Danish', value: 'da'}
+    ];
 
-    function getBios(){
 
-        $http.get('landing_mgmt/bios/all')
-            .then(function(response){
-                $rootScope.subjects = response.data;
-                console.log('show me bios: ', $rootScope.subjects);
-            });
-    }
+    $scope.addAcct = function(){
 
-    function getTickers(){
+        accountServices.addAcct(this.form);
 
-        $http.get('/landing_mgmt/tickers')
-            .then(function(response){
-                $rootScope.tickers = response.data;
-            });
-    }
+        appServices.selectTab('list');
 
-    function getProjects(){
+    };
 
-        $http.get('/landing_mgmt/projects')
-            .then(function(response){
-                $rootScope.resumes = response.data;
-            });
-    }
+    $scope.viewAcct = function(acct, show){
 
-});
+        accountServices.viewAcct(this.form.acct_type);
+
+    };
+
+    $scope.delAcct = function(){
+
+        accountServices.deleteAcct(this.user);
+    };
+
+}]);
+;app.controller('AddTagsModalCtrl', ['imageServices', 'capInitialFilter', '$scope', '$modalInstance', '$http', '$rootScope', 'appServices', function(imageServices, capInitialFilter, $scope, $modalInstance, $http, $rootScope, appServices){
+
+    $scope.submit = function(){
+
+        console.log('AddTagsModalCtrl - submitting this img: ', this.img);
+
+        for(var prop in this.img){
+            if(prop !== 'url' && prop !== 'folder' && prop !== 'path' && prop !== 'file' && prop !== 'owner' && prop !== 'size' && prop !== 'created' && prop !== 'year' && prop !== 'month' && prop !== 'day'){
+                if(prop === 'city' || prop === 'state' || prop === 'names'){
+                    $rootScope.img[prop] = capInitialFilter(this.img[prop]);
+                }
+                else{
+                    $rootScope.img[prop] = this.img[prop];
+                }
+            }
+        }
+
+        imageServices.addTags($rootScope.img);
+
+        $modalInstance.dismiss('cancel');
+
+    };
+
+    $scope.cancel = function(){
+        $rootScope.img = {};
+        $modalInstance.dismiss('cancel');
+    };
+}]);
 ;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
     console.log('imageCtrl. \nscope.images:'+ $scope +'\nrootscope.images: '+ $rootScope.images);
@@ -220,8 +238,6 @@ app.config(function($routeProvider, $locationProvider){
 
     $scope.getEventById = function(id, bool){
 
-        console.log('imageCtrl - get event by id: ', id, bool);
-
         $rootScope.event_form = {};
 
         if(bool){
@@ -242,48 +258,53 @@ app.config(function($routeProvider, $locationProvider){
     };
 
 }]);
-;app.controller('acctsCtrl',['$scope', 'appServices', '$http', function($scope, appServices, $http){
+;app.controller('indexCtrl',['$location', '$http', '$rootScope', '$scope','$global','getGlobals', function($location, $http, $rootScope, $scope, $global, getGlobals){
 
-    console.log('accounts ctrl');
+    if($rootScope.load === undefined){
+        $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
+        $rootScope.load = true;
+    }
 
-    $scope.addAcct = function(){
-        var type = this.form.acct_type;
-        $http.post('/accounts_mgmt/add', this.form)
+    getBios();
+    getTickers();
+    getProjects();
+
+    switch ($location.$$hash) {
+        case 'about_allan':
+            angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
+            angular.element(document.getElementsByClassName('fiona')).addClass('ng-hide');
+            break;
+        case 'about_fiona':
+            angular.element(document.getElementsByClassName('allan')).addClass('ng-hide');
+            break;
+        default :
+            $location.path('/login');
+            break;
+    }
+
+    function getBios(){
+
+        $http.get('landing_mgmt/bios/all')
             .then(function(response){
-                $scope.viewAcct(type, 'list');
-                $scope.form = {};
-                appServices.selectTab('list');
+                $rootScope.subjects = response.data;
             });
-    };
+    }
 
-    $scope.viewAcct = function(acct, show){
-        var type = acct || this.form.acct_type;
-        $http.get('/accounts_mgmt/'+ type)
+    function getTickers(){
+
+        $http.get('/landing_mgmt/tickers')
             .then(function(response){
-                $scope.users = response.data;
+                $rootScope.tickers = response.data;
             });
-    };
+    }
 
-    $scope.delAcct = function(){
-        var type = this.user.acct_type;
-        $http.delete('/accounts_mgmt/' + this.user.username)
+    function getProjects(){
+
+        $http.get('/landing_mgmt/projects')
             .then(function(response){
-                $scope.viewAcct(type);
+                $rootScope.resumes = response.data;
             });
-    };
-
-    $scope.acct = [
-        {name: 'select acct_type', value: null},
-        {name: 'Private', value: 'private'},
-        {name: 'Public', value: 'public'},
-        {name: 'Admin', value: 'admin'},
-        {name: 'Superuser', value: 'superuser'}
-    ];
-
-    $scope.speak = [
-        {name: 'English', value: 'en'},
-        {name: 'Danish', value: 'da'}
-    ];
+    }
 
 }]);
 ;app.controller('landingPageCtrl', ['$scope', '$http', '$rootScope', 'appServices', function($scope, $http, $rootScope, appServices){
@@ -344,6 +365,314 @@ app.config(function($routeProvider, $locationProvider){
     ];
 
 }]);
+;app.controller('locationCtrl', ['$scope', '$rootScope', '$location', 'appServices',  function($scope, $rootScope, $location, appServices){
+
+    var menu = document.getElementsByClassName('collapse');
+
+    $rootScope.template = {};
+
+    $scope.templates = {
+        accounts: './views/accounts.html',
+        images: './views/images.html',
+        landing: './views/landing-page.html'
+    };
+
+    $scope.switch = function(option){
+
+        console.log('location ctrl swithing to ', option);
+
+        $rootScope.template.url = $scope.templates[option];
+        angular.element(menu).collapse('hide');
+    };
+
+    $scope.setLocation = function(option){
+
+        if(option === 'btle'){
+            $location.path('/admin/btle');
+        }
+        if(option === 'diary'){
+            $location.path('/admin/diary');
+        }
+    };
+
+    $scope.select = function(choice){
+
+        appServices.selectTab(choice);
+    };
+
+}]);
+;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices) {
+
+    $rootScope.new_files = {};
+
+    $scope.submit = function(){
+
+        $http.post('/login/authenticate', $scope.form)
+            .then(function(response){
+                if(response.data.acct_type === 'admin'){
+                    storageServices.getStorages();
+                    $rootScope.default_storage = response.data.storages[0];
+                    $location.path('/admin/diary');
+                }
+                else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
+                    $rootScope.storages = response.data.storages;
+                    $rootScope.default_storage = $rootScope.storages[0];
+                    $location.path('/priv_uk');
+                }
+                else if(response.data.acct_type === 'private' && response.data.lang === 'da'){
+                    $rootScope.storages = response.data.storages;
+                    $rootScope.default_storage = $rootScope.storages[0];
+                    $location.path('/priv_dk');
+                }
+                else if(response.data.acct_type === 'public'){
+                    $location.path('/public');
+                }
+                else{$location.path('/login');}
+            });
+
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
+;app.controller('logoutCtrl', function($scope, $location, $http){
+    $scope.logout = function(){
+        $http.get('/logout')
+            .then(function(response){
+                $location.path('/login');
+            });
+    };
+});
+;app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $rootScope, $interval) {
+
+    $scope.selector = 0;
+
+    $scope.events = events;
+    $scope.selected = {
+        event: $scope.events[$scope.selector]
+    };
+
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.play = function(){
+
+        var elem = document.getElementById('play');
+
+        if(angular.element(elem).hasClass("fa-play")){
+
+            angular.element(elem).addClass('fa-pause').removeClass('fa-play');
+
+            $scope.interval = $interval(function() {
+
+                $scope.next();
+
+            }, 5000);
+
+        }
+        else if(angular.element(elem).hasClass("fa-pause")){
+
+            angular.element(elem).addClass('fa-play').removeClass('fa-pause');
+
+            $interval.cancel($scope.interval);
+        }
+    };
+
+    $scope.next = function(){
+        if($scope.selector < events.length - 1){
+            $scope.selector ++;
+        }
+        else{
+            $scope.selector = 0;
+        }
+        $scope.selected = {
+            event: $scope.events[$scope.selector]
+        };
+    };
+
+    $scope.previous = function(){
+        if($scope.selector === 0){
+            $scope.selector = events.length -1;
+        }
+        else {
+            $scope.selector --;
+        }
+        $scope.selected = {
+            event: $scope.events[$scope.selector]
+        };
+    };
+});
+;app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
+
+    $http.get('/queries/latest')
+        .then(function(response){
+            $scope.event = response.data;
+            console.log('this event: ', $scope.event);
+
+        });
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
+;app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, appServices){
+
+    appServices.getStorages();
+
+    $scope.submit = function(option){
+
+        if(option !== undefined){
+
+            this.user.option = option;
+
+            $http.put('/accounts_mgmt/modify_storage',this.user)
+                .then(function(response){
+                    $scope.viewAcct(response.config.data.acct_type);
+                });
+
+            $modalInstance.dismiss('cancel');
+        }
+
+        else{
+
+            if(this.user.new_password === $scope.user.confirm_password){
+                $http.put('/accounts_mgmt/chg', $scope.user)
+                    .then(function(response){
+                        var alert = document.getElementById('alerts');
+                        angular.element(alert).html(response.data);
+                    });
+            }
+            else {
+                angular.element(document.getElementById('alerts')).html('password mismatch');
+            }
+
+            $modalInstance.dismiss('cancel');
+
+        }
+
+    };
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
+;app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http, $rootScope, appServices, storageServices){
+
+    $scope.submit = function(option){
+
+        if(option === 'add'){
+            storageServices.addStorage(this.storage);
+        }
+
+        if(option === 'modify'){
+            storageServices.modifyStorage(this.storage);
+        }
+
+        $modalInstance.dismiss('cancel');
+    };
+
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
+;app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, appServices){
+    $scope.animationsEnabled = true;
+
+    $scope.open2 = function (size, db, type) {
+
+        var obj = {};
+        var arr = [];
+
+        if(appServices.getConditions() !== undefined){
+            arr = appServices.getConditions().split(' ');
+        }
+
+        if(type === 'meta' && arr[0] !== undefined){
+            if(arr[0].toLowerCase() !== 'select'){
+                obj.query = "select id, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
+            }
+            else{
+                obj.query = "select id, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
+                obj.query = obj.query.replace(/COLUMN/g, "*");
+            }
+        }
+        else{
+            $scope.form.database = db;
+            obj = $scope.form;
+        }
+
+        var temp = [];
+
+        $http.post('/queries', obj)
+            .then(function(response){
+                $rootScope.events = response.data;
+
+            })
+            .then(function(){
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalContent2.html',
+                    controller: 'ModalInstanceCtrl2',
+                    size: size,
+                    resolve: {
+                        events: function () {
+                            return $rootScope.events;
+                        }
+                    }
+                });
+
+            });
+
+        $scope.clear();
+
+
+    };
+
+    $scope.getValues = function(option, db){
+
+        if(option === 'month') {
+            $scope.form.option = false;
+            $scope.form.day = false;
+            $scope.form.month = false;
+        }
+
+        $scope.query = {};
+        $scope.query = $scope.form;
+        $scope.query.option = option;
+        $scope.query.database = db;
+
+        $http.post('/dropdowns/build', $scope.query)
+            .then(function(response){
+                if(response.data[0].da !== undefined){
+                    $scope.months = response.data;
+                }
+                if(response.data[0].day !== undefined){
+                    $scope.days = response.data;
+                }
+
+            });
+
+    };
+
+    $scope.clear = function(){
+
+        $scope.form = {};
+        $scope.form.type_and = true;
+        $scope.form.type_or = false;
+        $scope.form.exclude = false;
+        appServices.resetSQ();
+        appServices.buildMeta();
+
+    };
+});
 ;app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function($scope, $rootScope, $http, $log, $modal, $location, appServices){
 
     appServices.resetSQ();
@@ -474,14 +803,51 @@ app.config(function($routeProvider, $locationProvider){
     };
 
 }]);
-;app.controller('logoutCtrl', function($scope, $location, $http){
-    $scope.logout = function(){
-        $http.get('/logout')
-            .then(function(response){
-                $location.path('/login');
-            });
+;app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http, appServices, $location){
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
     };
+
 });
+;app.controller('SaveImgModalCtrl', ['imageServices', '$scope', '$rootScope', '$modalInstance', '$http', 'Upload', '$timeout', function(imageServices, $scope, $rootScope, $modalInstance, $http, Upload, $timeout){
+
+    $scope.uploadFiles = function(file, opt){
+
+        $scope.img = {};
+        $scope.img.url = file.name;
+        $scope.img.meta = $scope.meta;
+        if($scope.created){
+            $scope.img.created = $scope.created;
+        }
+        $rootScope.f = file;
+
+        if(file && !file.$error && opt) {
+            file.upload = Upload.upload({
+                url: '/images_mgmt/upload/' + $rootScope.default_storage,
+                data: {file: file},
+                method: 'PUT'
+            });
+            file.upload.then(function(response){
+                $timeout(function(){
+                    file.result = response.data;
+                });
+            }, function(response){
+                if(response.status > 0)
+                    $scope.errorMsg = response.status + ': ' + response.data;
+            });
+            file.upload.progress(function(evt){
+                file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+            });
+        }
+
+        imageServices.addImg($scope.img);
+
+        $modalInstance.dismiss('cancel');
+
+    };
+
+}]);
 ;app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices){
 
     var menu = document.getElementsByClassName('collapse');
@@ -529,378 +895,95 @@ app.config(function($routeProvider, $locationProvider){
     };
 
 });
-;app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
+;app.service('accountServices', ['$http','$rootScope', function($http, $rootScope){
 
-    $http.get('/queries/latest')
-        .then(function(response){
-            $scope.event = response.data;
-            console.log('this event: ', $scope.event);
+    var _accountServiceFactory = {};
+    //var types = [
+    //    {name: 'select acct_type', value: null},
+    //    {name: 'Private', value: 'private'},
+    //    {name: 'Public', value: 'public'},
+    //    {name: 'Admin', value: 'admin'},
+    //    {name: 'Superuser', value: 'superuser'}
+    //];
+    //var lang = [
+    //    {name: 'English', value: 'en'},
+    //    {name: 'Danish', value: 'da'}
+    //];
 
-        });
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
+    _accountServiceFactory.addAcct = function(obj){
 
-});
-;app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, appServices){
-    $scope.animationsEnabled = true;
+        console.log('acct services adding ', obj);
 
-    $scope.open2 = function (size, db, type) {
-
-        var obj = {};
-        var arr = [];
-
-        if(appServices.getConditions() !== undefined){
-            arr = appServices.getConditions().split(' ');
-        }
-
-        if(type === 'meta' && arr[0] !== undefined){
-            if(arr[0].toLowerCase() !== 'select'){
-                obj.query = "select id, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
-            }
-            else{
-                obj.query = "select id, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
-                obj.query = obj.query.replace(/COLUMN/g, "*");
-            }
-        }
-        else{
-            $scope.form.database = db;
-            obj = $scope.form;
-        }
-
-        var temp = [];
-
-        $http.post('/queries', obj)
+        $http.post('/accounts_mgmt/add', obj)
             .then(function(response){
-                $rootScope.events = response.data;
-
-            })
-            .then(function(){
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: 'myModalContent2.html',
-                    controller: 'ModalInstanceCtrl2',
-                    size: size,
-                    resolve: {
-                        events: function () {
-                            return $rootScope.events;
-                        }
-                    }
-                });
-
+                _accountServiceFactory.viewAcct(obj.acct_type);
             });
-
-        $scope.clear();
-
-
     };
 
-    $scope.getValues = function(option, db){
+    _accountServiceFactory.deleteAcct = function(obj){
 
-        if(option === 'month') {
-            $scope.form.option = false;
-            $scope.form.day = false;
-            $scope.form.month = false;
-        }
+        console.log('acct services deleting: ', obj);
 
-        $scope.query = {};
-        $scope.query = $scope.form;
-        $scope.query.option = option;
-        $scope.query.database = db;
-
-        $http.post('/dropdowns/build', $scope.query)
+        $http.delete('/accounts_mgmt/' + obj.username)
             .then(function(response){
-                if(response.data[0].da !== undefined){
-                    $scope.months = response.data;
-                }
-                if(response.data[0].day !== undefined){
-                    $scope.days = response.data;
-                }
-
+                _accountServiceFactory.viewAcct(obj.acct_type);
             });
 
-    };
-
-    $scope.clear = function(){
-
-        $scope.form = {};
-        $scope.form.type_and = true;
-        $scope.form.type_or = false;
-        $scope.form.exclude = false;
-        appServices.resetSQ();
-        appServices.buildMeta();
 
     };
-});
-;app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $rootScope, $interval) {
 
-    $scope.selector = 0;
+    _accountServiceFactory.viewAcct = function(acct){
 
-    $scope.events = events;
-    $scope.selected = {
-        event: $scope.events[$scope.selector]
-    };
+        console.log('acct services viewing: ', acct);
 
-
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
-
-    $scope.play = function(){
-
-        var elem = document.getElementById('play');
-
-        if(angular.element(elem).hasClass("fa-play")){
-
-            angular.element(elem).addClass('fa-pause').removeClass('fa-play');
-
-            $scope.interval = $interval(function() {
-
-                $scope.next();
-
-            }, 5000);
-
-        }
-        else if(angular.element(elem).hasClass("fa-pause")){
-
-            angular.element(elem).addClass('fa-play').removeClass('fa-pause');
-
-            $interval.cancel($scope.interval);
-        }
-    };
-
-    $scope.next = function(){
-        if($scope.selector < events.length - 1){
-            $scope.selector ++;
-        }
-        else{
-            $scope.selector = 0;
-        }
-        $scope.selected = {
-            event: $scope.events[$scope.selector]
-        };
-    };
-
-    $scope.previous = function(){
-        if($scope.selector === 0){
-            $scope.selector = events.length -1;
-        }
-        else {
-            $scope.selector --;
-        }
-        $scope.selected = {
-            event: $scope.events[$scope.selector]
-        };
-    };
-});
-;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices) {
-
-    $rootScope.new_files = {};
-
-    $scope.submit = function(){
-
-        $http.post('/login/authenticate', $scope.form)
+        $http.get('/accounts_mgmt/'+ acct)
             .then(function(response){
-                if(response.data.acct_type === 'admin'){
-                    storageServices.getStorages();
-                    $rootScope.default_storage = response.data.storages[0];
-                    $location.path('/admin/diary');
-                }
-                else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
-                    $rootScope.storages = response.data.storages;
-                    $rootScope.default_storage = $rootScope.storages[0];
-                    $location.path('/priv_uk');
-                }
-                else if(response.data.acct_type === 'private' && response.data.lang === 'da'){
-                    $rootScope.storages = response.data.storages;
-                    $rootScope.default_storage = $rootScope.storages[0];
-                    $location.path('/priv_dk');
-                }
-                else if(response.data.acct_type === 'public'){
-                    $location.path('/public');
-                }
-                else{$location.path('/login');}
+                $rootScope.users = response.data;
             });
 
-        $modalInstance.dismiss('cancel');
     };
 
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
+    return _accountServiceFactory;
 
-});
-;app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http, appServices, $location){
+}]);;app.service('eventServices', ['$http', '$rootScope', function($http, $rootScope){
 
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
+    var _eventServiceFactory = {};
 
-});
-;app.controller('SaveImgModalCtrl', ['imageServices', '$scope', '$rootScope', '$modalInstance', '$http', 'Upload', '$timeout', function(imageServices, $scope, $rootScope, $modalInstance, $http, Upload, $timeout){
+    _eventServiceFactory.postEvent = function(obj){
 
-    $scope.uploadFiles = function(file, opt){
+        console.log('eventServices posting event: ', obj);
 
-        $scope.img = {};
-        $scope.img.url = file.name;
-        $scope.img.meta = $scope.meta;
-        if($scope.created){
-            $scope.img.created = $scope.created;
-        }
-        $rootScope.f = file;
-
-        if(file && !file.$error && opt) {
-            file.upload = Upload.upload({
-                url: '/images_mgmt/upload/' + $rootScope.default_storage,
-                data: {file: file},
-                method: 'PUT'
+        $http.post('/events_mgmt/add', obj)
+            .then(function(response){
+                $rootScope.img = {};
             });
-            file.upload.then(function(response){
-                $timeout(function(){
-                    file.result = response.data;
-                });
-            }, function(response){
-                if(response.status > 0)
-                    $scope.errorMsg = response.status + ': ' + response.data;
+
+    };
+
+    _eventServiceFactory.getEventById = function(id){
+
+        console.log('eventServices getting event by id: ', id);
+
+        $http.get('/events_mgmt/' + id)
+            .then(function(response){
+                $rootScope.event_form = response.data;
             });
-            file.upload.progress(function(evt){
-                file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+
+    };
+
+    _eventServiceFactory.updateEvent = function(obj){
+
+        $http.put('/events_mgmt', obj)
+            .then(function(response){
+                $rootScope.event_form = {};
+                $rootScope.img = {};
             });
-        }
 
-        imageServices.addImg($scope.img);
+    }
 
-        $modalInstance.dismiss('cancel');
+    return _eventServiceFactory;
 
-    };
-
-}]);
-;app.controller('AddTagsModalCtrl', ['imageServices', 'capInitialFilter', '$scope', '$modalInstance', '$http', '$rootScope', 'appServices', function(imageServices, capInitialFilter, $scope, $modalInstance, $http, $rootScope, appServices){
-
-    $scope.submit = function(){
-
-        console.log('AddTagsModalCtrl - submitting this img: ', this.img);
-
-        for(var prop in this.img){
-            if(prop !== 'url' && prop !== 'folder' && prop !== 'path' && prop !== 'file' && prop !== 'owner' && prop !== 'size' && prop !== 'created' && prop !== 'year' && prop !== 'month' && prop !== 'day'){
-                if(prop === 'city' || prop === 'state' || prop === 'names'){
-                    $rootScope.img[prop] = capInitialFilter(this.img[prop]);
-                }
-                else{
-                    $rootScope.img[prop] = this.img[prop];
-                }
-            }
-        }
-
-        imageServices.addTags($rootScope.img);
-
-        $modalInstance.dismiss('cancel');
-
-    };
-
-    $scope.cancel = function(){
-        $rootScope.img = {};
-        $modalInstance.dismiss('cancel');
-    };
-}]);
-;app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http, $rootScope, appServices, storageServices){
-
-    $scope.submit = function(option){
-
-        if(option === 'add'){
-            storageServices.addStorage(this.storage);
-        }
-
-        if(option === 'modify'){
-            storageServices.modifyStorage(this.storage);
-        }
-
-        $modalInstance.dismiss('cancel');
-    };
-
-
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
-
-});
-;app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, appServices){
-
-    appServices.getStorages();
-
-    $scope.submit = function(option){
-
-        if(option !== undefined){
-
-            this.user.option = option;
-
-            $http.put('/accounts_mgmt/modify_storage',this.user)
-                .then(function(response){
-                    $scope.viewAcct(response.config.data.acct_type);
-                });
-
-            $modalInstance.dismiss('cancel');
-        }
-
-        else{
-
-            if(this.user.new_password === $scope.user.confirm_password){
-                $http.put('/accounts_mgmt/chg', $scope.user)
-                    .then(function(response){
-                        var alert = document.getElementById('alerts');
-                        angular.element(alert).html(response.data);
-                    });
-            }
-            else {
-                angular.element(document.getElementById('alerts')).html('password mismatch');
-            }
-
-            $modalInstance.dismiss('cancel');
-
-        }
-
-    };
-
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
-
-});
-;app.controller('locationCtrl', ['$scope', '$rootScope', '$location', 'appServices',  function($scope, $rootScope, $location, appServices){
-
-    var menu = document.getElementsByClassName('collapse');
-
-    $rootScope.template = {};
-
-    $scope.templates = {
-        accounts: './views/accounts.html',
-        images: './views/images.html',
-        landing: './views/landing-page.html'
-    };
-
-    $scope.switch = function(option){
-
-        $rootScope.template.url = $scope.templates[option];
-        angular.element(menu).collapse('hide');
-    };
-
-    $scope.setLocation = function(option){
-
-        if(option === 'btle'){
-            $location.path('/admin/btle');
-        }
-        if(option === 'diary'){
-            $location.path('/admin/diary');
-        }
-    };
-
-    $scope.select = function(choice){
-
-        appServices.selectTab(choice);
-    };
-
-}]);
-;app.factory('appServices', ['$http', '$rootScope',  function($http, $rootScope){
+}]);;app.factory('appServices', ['$http', '$rootScope',  function($http, $rootScope){
 
     var _appServicesFactory = {};
     var excl_incr;
@@ -1066,43 +1149,70 @@ app.config(function($routeProvider, $locationProvider){
 
 }]);
 
-;app.service('eventServices', ['$http', '$rootScope', function($http, $rootScope){
+;app.factory('getGlobals', ['$global', function($global){
 
-    var _eventServiceFactory = {};
+    var _send = $global.request;
 
-    _eventServiceFactory.postEvent = function(obj){
-
-        console.log('eventServices posting event: ', obj);
-
-        $http.post('/events_mgmt/add', obj)
-            .then(function(response){
-                $rootScope.img = {};
-            });
-
-    };
-
-    _eventServiceFactory.getEventById = function(id){
-
-        console.log('eventServices getting event by id: ', id);
-
-        $http.get('/events_mgmt/' + id)
-            .then(function(response){
-                $rootScope.event_form = response.data;
-            });
-
-    };
-
-    _eventServiceFactory.updateEvent = function(obj){
-
-        $http.put('/events_mgmt', obj)
-            .then(function(response){
-                $rootScope.event_form = {};
-                $rootScope.img = {};
-            });
-
+    return {
+        tickers: function(){
+            return _send($global.url('tickers'));
+        },
+        biographies: function(){
+            return _send($global.url('biographies'));
+        },
+        resumes: function(){
+            return _send($global.url('resumes'));
+        }
     }
 
-    return _eventServiceFactory;
+}]);;app.factory('$global',['$http', function($http){
+
+    var _urls = {
+        biographies: '/landing_mgmt/bios/all',
+        tickers: '/landing_mgmt/tickers',
+        resumes: '/landing_mgmt/projects'
+    };
+
+    var _biographies = {};
+    var _tickers = {};
+    var _resumes = {};
+
+    var _globalFactory = {};
+
+
+        _globalFactory.request = function(str){
+            return $http.get(str);
+        };
+
+        _globalFactory.url = function(which){
+            return _urls[which];
+        };
+
+        _globalFactory.setBiographies = function(data){
+            _biographies = data;
+        };
+
+        _globalFactory.getBiographies = function(){
+            return _biographies;
+        };
+
+        _globalFactory.setTickers = function(data){
+            _tickers = data;
+        };
+
+        _globalFactory.getTickers = function(){
+            return _tickers;
+        };
+
+        _globalFactory.setResumes = function(data){
+            _resumes = data;
+        };
+
+        _globalFactory.getResumes = function(){
+            return _resumes;
+        };
+
+    return _globalFactory;
 
 }]);;app.service('imageServices', ['$http','$rootScope', 'appServices', function($http, $rootScope, appServices){
 
@@ -1184,6 +1294,7 @@ app.config(function($routeProvider, $locationProvider){
 
     var _storageServiceFactory = {};
 
+
     _storageServiceFactory.addStorage = function(form){
 
         $http.post('/storages_mgmt/add', form)
@@ -1192,6 +1303,7 @@ app.config(function($routeProvider, $locationProvider){
             });
 
     };
+
 
     _storageServiceFactory.deleteStorage = function(storage){
 
@@ -1203,16 +1315,15 @@ app.config(function($routeProvider, $locationProvider){
     };
 
     _storageServiceFactory.getStorages = function(){
+            var x = {};
 
-        $http.get('/storages_mgmt/all')
+            $http.get('/storages_mgmt/all')
             .then(function(response){
                 $rootScope.storages = response.data;
             });
-
     };
 
     _storageServiceFactory.modifyStorage = function(obj){
-
         $http.put('/storages_mgmt/update', obj)
             .then(function(response){
                 _storageServiceFactory.getStorages();

@@ -167,7 +167,6 @@ router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
         })
         query.on('end', function(result){
             client.end();
-            //res.status(200).send(result.rows);
         })
 
     })
@@ -200,8 +199,6 @@ router.get('/get_new', call.isAuthenticated, function(req, res, next){
                 console.log(error);
                 res.status(200).send(error);
             }
-        })
-        query.on('row', function(row){
         })
         query.on('end', function(result){
             client.end();

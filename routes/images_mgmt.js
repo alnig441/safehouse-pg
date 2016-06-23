@@ -76,6 +76,8 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
             else if(call.setDate(req.body.url) !== 'Invalid Date'){
 
+                console.log('kommer vi herind?', call.setDate(req.body.url));
+
                 created = new Date(call.setDate(req.body.url));
 
             }
@@ -96,6 +98,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
         vals.unshift("'"+created.getUTCFullYear()+"'");
         vals.unshift("'"+created.toJSON()+"'");
         vals = vals.toString();
+
         console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
 
 
@@ -140,9 +143,11 @@ router.get('/get_latest', call.isAuthenticated, function(req, res, next){
                 console.log(error);
             }
         })
+        query.on('row',function(row){
+            res.status(200).send(row);
+        })
         query.on('end', function(result){
             client.end();
-            res.status(200).send(result.rows);
         })
     })
 });
@@ -157,9 +162,12 @@ router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
                 console.log(error);
             }
         });
+        query.on('row', function(row){
+            res.status(200).send(row);
+        })
         query.on('end', function(result){
             client.end();
-            res.status(200).send(result.rows);
+            //res.status(200).send(result.rows);
         })
 
     })

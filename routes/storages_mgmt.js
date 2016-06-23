@@ -54,12 +54,14 @@ router.put('/update', call.isAuthenticated, function(req, res, next){
     })
 });
 
-router.put('/delete', call.isAuthenticated, function(req, res, next){
+//router.put('/delete', call.isAuthenticated, function(req, res, next){
+router.delete('/:folder?', call.isAuthenticated, function(req, res, next){
 
-    console.log('deleting ',req.body);
+
+        console.log('deleting ',req.params);
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query("DELETE FROM storages * WHERE folder = $1", [req.body.folder], function(error, result){
+        var query = client.query("DELETE FROM storages * WHERE folder = $1", [req.params.folder], function(error, result){
             if(error){
                 console.log(error);
             }

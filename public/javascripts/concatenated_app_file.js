@@ -32,7 +32,16 @@ app.config(function($routeProvider, $locationProvider){
             redirectTo: '/login'
         });
 });
-;app.filter('capInitial', function(){
+
+app.run(['indexServices','$rootScope',function(indexServices, $rootScope){
+
+    $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
+
+    indexServices.getBios();
+    indexServices.getTickers();
+    indexServices.getProjects();
+
+}]);;app.filter('capInitial', function(){
 
     return function(input) {
 
@@ -260,15 +269,6 @@ app.config(function($routeProvider, $locationProvider){
 }]);
 ;app.controller('indexCtrl',['$location', '$http', '$rootScope', '$scope','$global','getGlobals', function($location, $http, $rootScope, $scope, $global, getGlobals){
 
-    if($rootScope.load === undefined){
-        $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
-        $rootScope.load = true;
-    }
-
-    getBios();
-    getTickers();
-    getProjects();
-
     switch ($location.$$hash) {
         case 'about_allan':
             angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
@@ -282,38 +282,12 @@ app.config(function($routeProvider, $locationProvider){
             break;
     }
 
-    function getBios(){
-
-        $http.get('landing_mgmt/bios/all')
-            .then(function(response){
-                $rootScope.subjects = response.data;
-            });
-    }
-
-    function getTickers(){
-
-        $http.get('/landing_mgmt/tickers')
-            .then(function(response){
-                $rootScope.tickers = response.data;
-            });
-    }
-
-    function getProjects(){
-
-        $http.get('/landing_mgmt/projects')
-            .then(function(response){
-                $rootScope.resumes = response.data;
-            });
-    }
-
 }]);
 ;app.controller('landingPageCtrl', ['$scope', '$http', '$rootScope', 'appServices', function($scope, $http, $rootScope, appServices){
 
     console.log('landing page ctrl');
 
     $scope.postItem = function(){
-
-        $rootScope.load = undefined;
 
         if(this.form.date === null){
             this.form.date = new Date();
@@ -898,17 +872,6 @@ app.config(function($routeProvider, $locationProvider){
 ;app.service('accountServices', ['$http','$rootScope', function($http, $rootScope){
 
     var _accountServiceFactory = {};
-    //var types = [
-    //    {name: 'select acct_type', value: null},
-    //    {name: 'Private', value: 'private'},
-    //    {name: 'Public', value: 'public'},
-    //    {name: 'Admin', value: 'admin'},
-    //    {name: 'Superuser', value: 'superuser'}
-    //];
-    //var lang = [
-    //    {name: 'English', value: 'en'},
-    //    {name: 'Danish', value: 'da'}
-    //];
 
     _accountServiceFactory.addAcct = function(obj){
 
@@ -1289,6 +1252,29 @@ app.config(function($routeProvider, $locationProvider){
 
 
     return _imageServiceFactory;
+
+}]);;app.service('indexServices', ['$http', '$rootScope', function($http, $rootScope){
+
+    this.getBios = function(){
+        $http.get('landing_mgmt/bios/all')
+            .then(function(response){
+                $rootScope.subjects = response.data;
+            });
+    };
+
+    this.getTickers = function(){
+        $http.get('/landing_mgmt/tickers')
+            .then(function(response){
+                $rootScope.tickers = response.data;
+            });
+    };
+
+    this.getProjects = function(){
+        $http.get('/landing_mgmt/projects')
+            .then(function(response){
+                $rootScope.resumes = response.data;
+            });
+    }
 
 }]);;app.service('storageServices', ['$http','$rootScope', function($http, $rootScope){
 

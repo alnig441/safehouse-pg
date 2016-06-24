@@ -487,9 +487,9 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     };
 
 });
-;app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, appServices){
+;app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, storageServices){
 
-    appServices.getStorages();
+    storageServices.getStorages();
 
     $scope.submit = function(option){
 
@@ -555,6 +555,8 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     $scope.open2 = function (size, db, type) {
 
+        var modal = appServices.setModal('multi');
+
         var obj = {};
         var arr = [];
 
@@ -586,8 +588,8 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
             .then(function(){
                 var modalInstance = $modal.open({
                     animation: $scope.animationsEnabled,
-                    templateUrl: 'myModalContent2.html',
-                    controller: 'ModalInstanceCtrl2',
+                    templateUrl: modal.templ,
+                    controller: modal.contr,
                     size: size,
                     resolve: {
                         events: function () {
@@ -834,12 +836,10 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
         if(misc === 'Allan'){
             $scope.projects = $rootScope.resumes.Allan;
-            $scope.resume = 'Allan.txt';
         }
 
         if(misc === 'Fiona'){
             $scope.projects = $rootScope.resumes.Fiona;
-            $scope.resume = 'Fiona.txt';
         }
 
         var modalInstance = $modal.open({
@@ -855,7 +855,6 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     $scope.deleteImg = function(){
         $http.delete('/images_mgmt/' + this.uncategorized.id)
             .then(function(response){
-                console.log('response from delete call: ', response);
                 appServices.getUncategorisedImg();
                 appServices.update_files();
             });
@@ -947,15 +946,16 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     var elements = {meta: 'meta_div', time: 'time_div', list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div', resume: 'resume_div', ticker: 'ticker_div', biography: 'biography_div'};
 
     var modals = {
-        login: {contr: 'LoginModalCtrl', templ: 'loginModal.html'},
-        modify: {contr:'ModifyAcctModalCtrl', templ: 'changePWModal.html'},
-        resume: {contr: 'ResumeModalCtrl', templ: 'resumeModal.html'},
-        file: {contr : 'SaveImgModalCtrl', templ: 'saveImgModal.html'},
-        meta: {contr: 'AddTagsModalCtrl', templ: 'addTagsModal.html'},
-        storage: {contr: 'ModifyAcctModalCtrl', templ: 'manageStoragesModal.html'},
-        modify_storage: {contr: 'ModifyStorageModalCtrl', templ: 'modifyStorageModal.html'},
-        add_storage: {contr: 'ModifyStorageModalCtrl', templ: 'addStorageModal.html'},
-        event: {contr: 'ModalInstanceCtrl', templ: 'myModalContent.html'}
+        login: {contr: 'LoginModalCtrl', templ: './views/myLoginModal.html'},
+        modify: {contr:'ModifyAcctModalCtrl', templ: './views/myChangePWModal.html'},
+        resume: {contr: 'ResumeModalCtrl', templ: './views/myResumeModal.html'},
+        file: {contr : 'SaveImgModalCtrl', templ: './views/mySaveImgModal.html'},
+        meta: {contr: 'AddTagsModalCtrl', templ: './views/myAddTagsModal.html'},
+        storage: {contr: 'ModifyAcctModalCtrl', templ: './views/myManageStoragesModal.html'},
+        modify_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myModifyStorageModal.html'},
+        add_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myAddStorageModal.html'},
+        event: {contr: 'ModalInstanceCtrl', templ: './views/myLatestEventModal.html'},
+        multi: {contr: 'ModalInstanceCtrl2', templ: './views/myMultiViewModal.html'}
     };
 
     _appServicesFactory.setModal = function(option){
@@ -1356,13 +1356,44 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
         templateUrl: 'views/biography.html'
     };
 
-});;app.directive('latestEventModal', function(){
+});;app.directive('myAddStorageModal', function(){
+
+    return {
+        restrict: 'EA'
+    }
+});;app.directive('myAddTagsModal', function(){
+
+    return {
+        restrict: 'EA'
+    }
+});;app.directive('myChangePwModal', function(){
+
+    return {
+        restrict: 'EA'
+    }
+});;app.directive('myLatestEventModal', function(){
 
     return {
         restrict: 'EA',
         templateUrl: 'views/latestEvent.html'
     };
-});;app.directive('multiViewModal', function(){
+});;app.directive('myLoginModal', function(){
+
+    return {
+        restrict: 'EA'
+    };
+});
+;app.directive('myManageStoragesModal', function(){
+
+    return {
+        restrict: 'EA'
+    }
+});;app.directive('myModifyStorageModal', function(){
+
+    return {
+        restrict: 'EA'
+    }
+});;app.directive('myMultiViewModal', function(){
 
     return {
         restrict: 'EA',
@@ -1371,7 +1402,12 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 });;app.directive('myResumeModal', function(){
 
     return {
-        restrict: 'EA',
-        templateUrl: 'views/resume.html'
+        restrict: 'EA'
     };
+});
+;app.directive('mySaveImgModal', function(){
+
+    return {
+        restrict: 'EA'
+    }
 });

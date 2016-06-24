@@ -33,13 +33,13 @@ app.config(function($routeProvider, $locationProvider){
         });
 });
 
-app.run(['indexServices','$rootScope',function(indexServices, $rootScope){
+app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
 
-    indexServices.getBios();
-    indexServices.getTickers();
-    indexServices.getProjects();
+    loadServices.getBios();
+    loadServices.getTickers();
+    loadServices.getProjects();
 
 }]);;app.filter('capInitial', function(){
 
@@ -283,7 +283,7 @@ app.run(['indexServices','$rootScope',function(indexServices, $rootScope){
     }
 
 }]);
-;app.controller('landingPageCtrl', ['$scope', '$http', '$rootScope', 'appServices', function($scope, $http, $rootScope, appServices){
+;app.controller('landingPageCtrl', ['$scope', '$http', '$rootScope', 'appServices', 'landingPageServices', function($scope, $http, $rootScope, appServices, landingPageServices){
 
     console.log('landing page ctrl');
 
@@ -295,42 +295,35 @@ app.run(['indexServices','$rootScope',function(indexServices, $rootScope){
 
         this.form.date_str = this.form.date.toDateString();
 
-        $http.post('/landing_mgmt/tickers', this.form)
-            .then(function(response){
-                $scope.form = {};
-            });
+        landingPageServices.postTicker(this.form);
+
+        $scope.form = {};
+
     };
 
     $scope.postProject = function(){
 
         $rootScope.load = undefined;
 
-        $http.post('/landing_mgmt/projects', this.form)
-            .then(function(response){
-                $scope.form = {};
-            });
+        landingPageServices.postProject(this.form);
+
+        $scope.form = {};
+
     };
 
     $scope.getBio = function(){
 
-        $http.get('/landing_mgmt/bios/' + this.form.owner)
-            .then(function(response){
-                console.log('show me bio: ', response.data);
-                $scope.form = response.data;
-            });
+        landingPageServices.getBio(this.form.owner);
+
+        $scope.form = $rootScope.subjects[this.form.owner];
+
     };
 
     $scope.addBio = function(){
 
-        console.log('adding bio: ', this.form);
+        landingPageServices.postBio(this.form);
 
-        $rootScope.load = undefined;
-
-        $http.put('/landing_mgmt/bios', this.form)
-            .then(function(response){
-                console.log(response.data);
-                $scope.form = {};
-            });
+        $scope.form = {};
     };
 
     $scope.owners = [
@@ -1253,7 +1246,41 @@ app.run(['indexServices','$rootScope',function(indexServices, $rootScope){
 
     return _imageServiceFactory;
 
-}]);;app.service('indexServices', ['$http', '$rootScope', function($http, $rootScope){
+}]);;app.service('landingPageServices', ['$http', 'loadServices', function($http, loadServices){
+
+    this.postTicker = function(form){
+
+        $http.post('/landing_mgmt/tickers', form)
+            .then(function(response){
+                loadServices.getTickers();
+            });
+
+    };
+
+    this.postProject = function(form){
+
+        $http.post('/landing_mgmt/projects', form)
+            .then(function(response){
+                loadServices.getProjects();
+            });
+
+    };
+
+    this.postBio = function(form){
+
+        $http.put('/landing_mgmt/bios', form)
+            .then(function(response){
+                loadServices.getBios();
+            });
+
+    };
+
+    this.getBio = function(owner){
+
+        loadServices.getBios();
+
+    };
+}]);;app.service('loadServices', ['$http', '$rootScope', function($http, $rootScope){
 
     this.getBios = function(){
         $http.get('landing_mgmt/bios/all')

@@ -413,7 +413,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
             });
     };
 });
-;app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $rootScope, $interval) {
+;app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $interval) {
 
     $scope.selector = 0;
 
@@ -422,14 +422,15 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
         event: $scope.events[$scope.selector]
     };
 
-
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
     };
 
-    $scope.play = function(){
+    $scope.play = function(bool){
 
         var elem = document.getElementById('play');
+
+        console.log('show me element: ', elem);
 
         if(angular.element(elem).hasClass("fa-play")){
 
@@ -451,6 +452,8 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     };
 
     $scope.next = function(){
+
+
         if($scope.selector < events.length - 1){
             $scope.selector ++;
         }
@@ -460,6 +463,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
         $scope.selected = {
             event: $scope.events[$scope.selector]
         };
+
     };
 
     $scope.previous = function(){
@@ -551,9 +555,12 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
 });
 ;app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, appServices){
+
     $scope.animationsEnabled = true;
 
     $scope.open2 = function (size, db, type) {
+
+        console.log('multi view modal ctrl \nsize: '+size+'\ntable: '+db+'\ntype: '+type+ '\nform: ', this.form , '\nrootScope: ', $rootScope);
 
         var modal = appServices.setModal('multi');
 
@@ -605,44 +612,10 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     };
 
-    $scope.getValues = function(option, db){
-
-        if(option === 'month') {
-            $scope.form.option = false;
-            $scope.form.day = false;
-            $scope.form.month = false;
-        }
-
-        $scope.query = {};
-        $scope.query = $scope.form;
-        $scope.query.option = option;
-        $scope.query.database = db;
-
-        $http.post('/dropdowns/build', $scope.query)
-            .then(function(response){
-                if(response.data[0].da !== undefined){
-                    $scope.months = response.data;
-                }
-                if(response.data[0].day !== undefined){
-                    $scope.days = response.data;
-                }
-
-            });
-
-    };
-
-    $scope.clear = function(){
-
-        $scope.form = {};
-        $scope.form.type_and = true;
-        $scope.form.type_or = false;
-        $scope.form.exclude = false;
-        appServices.resetSQ();
-        appServices.buildMeta();
-
-    };
 });
 ;app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function($scope, $rootScope, $http, $log, $modal, $location, appServices){
+
+    console.log('priv ctrl - rootscope: ', $rootScope);
 
     appServices.resetSQ();
 
@@ -771,6 +744,44 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     };
 
+    $scope.getValues = function(option, db){
+
+        if(option === 'month') {
+            $scope.form.option = false;
+            $scope.form.day = false;
+            $scope.form.month = false;
+        }
+
+        $scope.query = {};
+        $scope.query = $scope.form;
+        $scope.query.option = option;
+        $scope.query.database = db;
+
+        $http.post('/dropdowns/build', $scope.query)
+            .then(function(response){
+                if(response.data[0].da !== undefined){
+                    $scope.months = response.data;
+                }
+                if(response.data[0].day !== undefined){
+                    $scope.days = response.data;
+                }
+
+            });
+
+    };
+
+    $scope.clear = function(){
+
+        $scope.form = {};
+        $scope.form.type_and = true;
+        $scope.form.type_or = false;
+        $scope.form.exclude = false;
+        appServices.resetSQ();
+        appServices.buildMeta();
+
+    };
+
+
 }]);
 ;app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http, appServices, $location){
 
@@ -822,6 +833,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     var menu = document.getElementsByClassName('collapse');
 
     $scope.animationsEnabled = true;
+
     $scope.open = function (size, option, misc) {
 
         var modal = appServices.setModal(option);

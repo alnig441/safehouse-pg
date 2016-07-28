@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "grunt-jade-tasks": "0.0.0",
+    "grunt-movehtml": "^0.1.4",
     "gulp-watch": "^4.3.5"
   }
 }

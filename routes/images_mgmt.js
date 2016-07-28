@@ -26,7 +26,7 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    console.log('/add_img: ', req.body.url);
+    //console.log('/add_img: ', req.body.url);
     var cols = "created, year, month, day, file, storage";
     //var vals = "$1, $2, $3, $4, $5, 'James'";
     var vals = [];
@@ -34,7 +34,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.url }, function (error, exifData) {
 
-        console.log('This is the exifdata: ', exifData);
+        //console.log('This is the exifdata: ', exifData);
 
         if(exifData !== undefined){
 
@@ -76,13 +76,13 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
             else if(call.setDate(req.body.url) !== 'Invalid Date'){
 
-                console.log('kommer vi herind?', call.setDate(req.body.url));
+                //console.log('kommer vi herind?', call.setDate(req.body.url));
 
                 created = new Date(call.setDate(req.body.url));
 
             }
 
-            console.log('TIME CREATED \nLocal: '+ created + '\nZulu: ' + created.toJSON());
+            //console.log('TIME CREATED \nLocal: '+ created + '\nZulu: ' + created.toJSON());
 
         }
         else{
@@ -99,7 +99,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
         vals.unshift("'"+created.toJSON()+"'");
         vals = vals.toString();
 
-        console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
+        //console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
 
 
 
@@ -209,7 +209,7 @@ router.get('/get_new', call.isAuthenticated, function(req, res, next){
 
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
-    console.log('adding meta: ', req.body);
+    //console.log('adding meta: ', req.body);
 
     var body = {};
     var incr = 0;
@@ -267,7 +267,7 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
 router.delete('/:id?', call.isAuthenticated, function(req, res, next){
 
-    console.log('in images delete: ', req.body, req.params);
+    //console.log('in images delete: ', req.body, req.params);
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query("DELETE FROM IMAGES * WHERE ID="+ req.params.id, function(err, result){

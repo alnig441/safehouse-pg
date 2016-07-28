@@ -29,87 +29,102 @@ router.post('/add', call.isAuthenticated, function(req, res) {
     console.log('/add_img: ', req.body);
 
     var cols = "created, year, month, day, file, storage";
-    //var vals = "$1, $2, $3, $4, $5, 'James'";
     var vals = [];
     var created ;
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.url }, function (error, exifData) {
 
-        //console.log('This is the exifdata: ', exifData);
+        if (req.body.created === undefined) {
 
-        if(exifData !== undefined){
+            if (exifData !== undefined) {
 
-            if(exifData.gps.GPSDateStamp !== undefined){
+                if (exifData.gps.GPSDateStamp !== undefined) {
 
-                console.log('we have exif gps data');
+                    var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
+                    var time_str = exifData.gps.GPSTimeStamp.join(':');
+                    created = new Date(date_str + 'Z' + time_str);
 
-                var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
-                var time_str = exifData.gps.GPSTimeStamp.join(':');
-                created = new Date(date_str + 'Z' + time_str);
+                    var lng = exifData.gps.GPSLongitude.slice(0, 2);
+                    var lng_str = lng.join('.');
+                    var lat = exifData.gps.GPSLatitude.slice(0, 2);
+                    var lat_str = lat.join('.');
 
-                var lng = exifData.gps.GPSLongitude.slice(0,2);
-                var lng_str = lng.join('.');
-                var lat = exifData.gps.GPSLatitude.slice(0,2);
-                var lat_str = lat.join('.');
+                    if (exifData.gps.GPSLongitudeRef.toLowerCase() === 'w') {
+                        lng_str = '-' + lng_str;
+                    }
 
-                if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
-                    lng_str = '-'+lng_str;
+                    country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
+                    cols += ", country";
+                    //vals += ", '" + country.name + "'";
+                    vals.push("'" + country.name + "'");
+
+                    if (country.code.toLowerCase() !== 'usa') {
+                        cols += ", state";
+                        //vals += ", 'n/a'";
+                        vals.push("'n/a'");
+                    }
                 }
 
-                country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
-                cols += ", country";
-                //vals += ", '" + country.name + "'";
-                vals.push("'"+country.name+"'");
+                else if (exifData.exif.DateTimeOriginal !== undefined) {
 
-                if(country.code.toLowerCase() !== 'usa'){
-                    cols += ", state";
-                    //vals += ", 'n/a'";
-                    vals.push("'n/a'");
+                    var dto = exifData.exif.DateTimeOriginal.split(' ');
+                    var dto_0 = dto[0].split(':');
+                    var timestamp = dto_0.join('-') + ' ' + dto[1];
+                    created = new Date(timestamp);
+
                 }
+
+                else if (exifData.image.Software.toLowerCase() === 'apple image capture') {
+
+                    created = new Date();
+
+                }
+
+                else {
+
+                    created = false;
+                }
+
+                //DEFUNCT: date creation based on file name (valid ONLY if file name translates to timestamp!!)
+
+                //else if (call.setDate(req.body.url) !== 'Invalid Date') {
+                //
+                //    console.log('step 3c');
+                //
+                //    console.log('we have an invalid date; ', call.setDate(req.body.url));
+                //
+                //    created = new Date(call.setDate(req.body.url));
+                //
+                //}
+
             }
-
-            else if(exifData.exif.DateTimeOriginal !== undefined){
-
-                console.log('we have exif datestamp data');
-
-                var dto = exifData.exif.DateTimeOriginal.split(' ');
-                var dto_0 = dto[0].split(':');
-                var timestamp = dto_0.join('-') + ' ' + dto[1];
-                created = new Date(timestamp);
-
-            }
-
-            else if(call.setDate(req.body.url) !== 'Invalid Date'){
-
-                console.log('we have an invalid date; ', call.setDate(req.body.url));
-
-                created = new Date(call.setDate(req.body.url));
-
-            }
-
-            //console.log('TIME CREATED \nLocal: '+ created + '\nZulu: ' + created.toJSON());
 
         }
-        else{
+
+        else {
 
             created = new Date(req.body.created);
 
         }
 
-        vals.unshift("'James'");
-        vals.unshift("'"+req.body.url+"'");
-        vals.unshift("'"+created.getUTCDate()+"'");
-        vals.unshift("'"+created.getUTCMonth()+"'");
-        vals.unshift("'"+created.getUTCFullYear()+"'");
-        vals.unshift("'"+created.toJSON()+"'");
-        vals = vals.toString();
+        if (!created) {
 
-        //console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
+            res.status(400).send('no valid date present');
+        }
 
+        else {
+
+            vals.unshift("'James'");
+            vals.unshift("'" + req.body.url + "'");
+            vals.unshift("'" + created.getUTCDate() + "'");
+            vals.unshift("'" + created.getUTCMonth() + "'");
+            vals.unshift("'" + created.getUTCFullYear() + "'");
+            vals.unshift("'" + created.toJSON() + "'");
+            vals = vals.toString();
 
 
             pg.connect(connectionString, function (err, client, done) {
-                var query = client.query("INSERT INTO images("+cols+") values("+vals+")", function (error, result) {
+                var query = client.query("INSERT INTO images(" + cols + ") values(" + vals + ")", function (error, result) {
 
                     if (error) {
                         console.log(error);
@@ -120,8 +135,9 @@ router.post('/add', call.isAuthenticated, function(req, res) {
                     res.status(200).send(result.rows);
                 })
             })
+        }
 
-        });
+    });
 
 });
 

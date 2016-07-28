@@ -26,7 +26,7 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    console.log('/add_img: ', req.body.url);
+    console.log('/add_img: ', req.body);
 
     var cols = "created, year, month, day, file, storage";
     //var vals = "$1, $2, $3, $4, $5, 'James'";
@@ -40,6 +40,8 @@ router.post('/add', call.isAuthenticated, function(req, res) {
         if(exifData !== undefined){
 
             if(exifData.gps.GPSDateStamp !== undefined){
+
+                console.log('we have exif gps data');
 
                 var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
                 var time_str = exifData.gps.GPSTimeStamp.join(':');
@@ -68,6 +70,8 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
             else if(exifData.exif.DateTimeOriginal !== undefined){
 
+                console.log('we have exif datestamp data');
+
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
                 var dto_0 = dto[0].split(':');
                 var timestamp = dto_0.join('-') + ' ' + dto[1];
@@ -77,7 +81,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
             else if(call.setDate(req.body.url) !== 'Invalid Date'){
 
-                //console.log('kommer vi herind?', call.setDate(req.body.url));
+                console.log('we have an invalid date; ', call.setDate(req.body.url));
 
                 created = new Date(call.setDate(req.body.url));
 

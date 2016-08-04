@@ -94,7 +94,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     console.log('accounts ctrl');
 
     $scope.acct = [
-        {name: '<<select acct_type>>', value: null},
+        {name: '<<acct_type>>', value: null},
         {name: 'Private', value: 'private'},
         {name: 'Public', value: 'public'},
         {name: 'Admin', value: 'admin'},
@@ -102,7 +102,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     ];
 
     $scope.lang = [
-        {name: '<<select language>>', value: null},
+        {name: '<<language>>', value: null},
         {name: 'English', value: 'en'},
         {name: 'Danish', value: 'da'}
     ];
@@ -1221,7 +1221,6 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
         $http.post('/images_mgmt/add', obj)
             .then(function(response){
-                _imageServiceFactory.getLatest();
                 _imageServiceFactory.getUncategorisedImg();
             })
             .then(function(response){
@@ -1244,6 +1243,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
         $http.get('/images_mgmt/get_new')
             .then(function(response){
                 $rootScope.uncategorized = response.data;
+                $rootScope.img = $rootScope.uncategorized[0];
             });
     };
 

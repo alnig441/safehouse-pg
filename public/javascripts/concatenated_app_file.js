@@ -1222,6 +1222,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
         $http.post('/images_mgmt/add', obj)
             .then(function(response){
                 _imageServiceFactory.getLatest();
+                _imageServiceFactory.getUncategorisedImg();
             })
             .then(function(response){
                 _imageServiceFactory.getAll()

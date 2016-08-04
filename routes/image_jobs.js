@@ -20,14 +20,10 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
             var x = array[ind].split('_');
             var y = array[ind].split('-');
 
-/*
-            if(elem.length < 23){
+            if(x[0].charAt(0) ==='.' || y[0].charAt(0) === '.'){
+                console.log(array[ind]);
                 array[ind] = 'zzz';
             }
-            else if(isNaN(y[0]) && x[0] !== 'img'){
-                array[ind] = 'zzz';
-            }
-*/
         });
         files.sort();
 
@@ -43,13 +39,18 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
                 result.rows.forEach(function(elem,ind,arr){
                     for(var i = 0 ; i < files.length ; i ++){
+                        //console.log(elem.file.toLowerCase(), files[i].toLowerCase());
                         if(elem.file.toLowerCase() === files[i].toLowerCase()){
                             files[i] = 'zzz';
                         }
                     }
                 })
                 files.sort();
+                console.log('show me files ', files);
+
                 files = files.slice(0,5);
+
+                //console.log('show me files ', files);
                 res.send(files.slice(0,5));
             })
         })
@@ -59,7 +60,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
 router.post('/load', call.isAuthenticated, function(req, res, next){
 
-    console.log('in images: ', req.body.file);
+    //console.log('in images: ', req.body.file);
     var created;
     var country;
     var cols = "created, year, month, day, file, storage";
@@ -69,7 +70,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
         if(req.body.file !== 'zzz' && exifData !== undefined){
 
-            console.log('this is the exifdata: ', exifData);
+            //console.log('this is the exifdata: ', exifData);
 
             if(exifData.gps.GPSDateStamp !== undefined){
 
@@ -115,7 +116,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
             vals.unshift("'"+created.toJSON()+"'");
             vals = vals.toString();
 
-            console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
+            //console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
 
 
             pg.connect(connectionString, function(error, client, done){
@@ -147,7 +148,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
 router.get('/count/:active_storage?', call.isAuthenticated, function(req, res, next){
 
-    console.log('in images count: ', req.params);
+    //console.log('in images count: ', req.params);
 
     pg.connect(connectionString, function(err, client, done){
         var query = client.query("update storages set size = (select count(*) from images where storage = '"+ req.params.active_storage + "' AND META IS NOT NULL AND NAMES IS NOT NULL AND OCCASION IS NOT NULL AND COUNTRY IS NOT NULL AND STATE IS NOT NULL AND CITY IS NOT NULL) where folder = '"+ req.params.active_storage +"'; select size from storages where folder='"+ req.params.active_storage +"'", function(error, result){

@@ -26,8 +26,6 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    console.log('/add_img: ', req.body);
-
     var cols = "created, year, month, day, file, storage";
     var vals = [];
     var created ;
@@ -36,7 +34,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
         if (req.body.created === undefined) {
 
-            console.log(exifData);
+            //console.log(exifData);
 
             if (exifData !== undefined) {
 
@@ -99,6 +97,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
         if (!created) {
 
+            console.log('no valid date present');
             res.status(400).send('no valid date present');
         }
 
@@ -133,7 +132,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
 router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
-    console.log('in new upload: ', req.params, req.user);
+    //console.log('in new upload: ', req.params, req.user);
 
     var currUpload = uploadFnct(req.params.dest);
     currUpload(req,res,function(err){
@@ -204,7 +203,7 @@ router.get('/get_all', call.isAuthenticated, function(req, res, next){
 router.get('/get_new', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-    var query = client.query("SELECT *, path || folder || '/' || file as url FROM IMAGES CROSS JOIN STORAGES WHERE FOLDER = STORAGE AND META IS NULL", function(err, result){
+    var query = client.query("SELECT *, path || folder || '/' || file as url FROM IMAGES CROSS JOIN STORAGES WHERE FOLDER = STORAGE AND META IS NULL ORDER BY ID DESC", function(err, result){
 
             if(error){
                 console.log(error);

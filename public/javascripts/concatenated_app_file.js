@@ -834,7 +834,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     };
 
 }]);
-;app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices){
+;app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices, imageServices){
 
     var menu = document.getElementsByClassName('collapse');
 
@@ -873,7 +873,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     $scope.deleteImg = function(){
         $http.delete('/images_mgmt/' + this.uncategorized.id)
             .then(function(response){
-                appServices.getUncategorisedImg();
+                imageServices.getUncategorisedImg();
                 appServices.update_files();
             });
     };

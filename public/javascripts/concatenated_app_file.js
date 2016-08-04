@@ -833,7 +833,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
             imageServices.addImg($scope.img);
             $timeout.cancel();
 
-        },2500);
+        },1500);
 
 
         $modalInstance.dismiss('cancel');

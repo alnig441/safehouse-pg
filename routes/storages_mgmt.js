@@ -3,12 +3,16 @@ var router = express.Router();
 var pg = require('pg');
 var call = require('../public/javascripts/myFunctions.js');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
+//var storagePath = process.env.STORAGE_PATH;
 var fs = require('fs');
+var qb = require('../public/javascripts/query_builder.js');
 
 router.get('/all', call.isAuthenticated, function(req, res, next){
 
+    var storage = new qb(req, 'storages');
+
     pg.connect(connectionString, function(err, client, done){
-        var query=client.query("select * from storages order by folder asc", function(error, result){
+        var query=client.query(storage.select(), function(error, result){
             if(err){
                 console.log(error);
             }
@@ -22,10 +26,10 @@ router.get('/all', call.isAuthenticated, function(req, res, next){
 
 router.post('/add', call.isAuthenticated, function(req, res, next){
 
-    console.log('adding storages: ', req.user, req.body);
+    var storage = new qb(req, 'storages');
 
     pg.connect(connectionString, function(err,  client, done){
-        var query = client.query("INSERT INTO storages (folder, path, owner) values ($1, './buffalo/', $2)", [req.body.folder, req.user.username], function(error, result){
+        var query = client.query(storage.insert(), function(error, result){
             if(error){
                 console.log(error);
             }
@@ -39,10 +43,10 @@ router.post('/add', call.isAuthenticated, function(req, res, next){
 
 router.put('/update', call.isAuthenticated, function(req, res, next){
 
-    console.log('updating: ', req.body);
+    var storage = new qb(req, 'storages', 'folder');
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query("UPDATE storages SET owner = $1 WHERE folder = $2", [req.body.new_owner, req.body.folder], function(error, result){
+        var query=client.query(storage.update(), function(error, result){
             if(error){
                 console.log(error);
             }
@@ -54,14 +58,12 @@ router.put('/update', call.isAuthenticated, function(req, res, next){
     })
 });
 
-//router.put('/delete', call.isAuthenticated, function(req, res, next){
 router.delete('/:folder?', call.isAuthenticated, function(req, res, next){
 
-
-        console.log('deleting ',req.params);
+    var storage = new qb(req, 'storages');
 
     pg.connect(connectionString, function(err, client, done){
-        var query = client.query("DELETE FROM storages * WHERE folder = $1", [req.params.folder], function(error, result){
+        var query = client.query(storage.delete(), function(error, result){
             if(error){
                 console.log(error);
             }

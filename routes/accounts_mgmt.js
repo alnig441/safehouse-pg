@@ -4,17 +4,17 @@ var pg = require('pg');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
 var bcrypt = require('bcrypt');
 var call = require('../public/javascripts/myFunctions.js');
+var qb = require('../public/javascripts/query_builder.js');
 
 
 router.post('/add', call.isAuthenticated, function(req, res){
 
-    console.log('admin crud add: ', req.body);
+    var hash = bcrypt.hashSync(req.body.password, 12);
 
     pg.connect(connectionString, function(err, client, done){
         if(err){console.log(err);}
-        var hash = bcrypt.hashSync(req.body.password, 12);
 
-        var query = client.query("INSERT INTO users(username, password, acct_type, lang, storages) values($1, $2, $3, $4, '{"+req.body.storage.folder+"}')", [req.body.username.toLowerCase(), hash, req.body.acct_type, req.body.lang], function(error, result){
+        var query = client.query("INSERT INTO users(username, password, acct_type, lang, storages) values($1, $2, $3, $4, '{"+req.body.storages.folder+"}')", [req.body.username.toLowerCase(), hash, req.body.acct_type, req.body.lang], function(error, result){
             if(error){
                 console.log('show me the error: ', error);
                 res.status(200).send(error);

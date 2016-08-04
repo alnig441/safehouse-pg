@@ -107,6 +107,12 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
         {name: 'Danish', value: 'da'}
     ];
 
+    $scope.getValues = function(){
+
+
+
+    };
+
 
     $scope.addAcct = function(){
 
@@ -210,7 +216,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
                                 $http.post('/image_jobs/load', image)
                                     .then(function(response){
                                         console.log(response.data);
-                                        appServices.getUncategorisedImg();
+                                        imageServices.getUncategorisedImg();
 
                                     });
                                 $timeout.cancel(stop2);
@@ -910,6 +916,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     };
 
+
     return _accountServiceFactory;
 
 }]);;app.service('eventServices', ['$http', '$rootScope', function($http, $rootScope){
@@ -1188,7 +1195,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     _imageServiceFactory.getAll = function(){
 
-        console.log('imageServices getting all images', $rootScope);
+        //console.log('imageServices getting all images', $rootScope);
 
         $http.get('/images_mgmt/get_all')
             .then(function(response){
@@ -1198,7 +1205,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     _imageServiceFactory.getLatest = function(){
 
-        console.log('imageServices getting latest image', $rootScope);
+        //console.log('imageServices getting latest image', $rootScope);
 
         $http.get('/images_mgmt/get_latest')
             .then(function(response){
@@ -1209,10 +1216,11 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     _imageServiceFactory.addImg = function(obj){
 
-        console.log('imageServices adding image');
+        //console.log('imageServices adding image');
 
         $http.post('/images_mgmt/add', obj)
             .then(function(response){
+                console.log('bennnnnnn: ', response);
                 _imageServiceFactory.getLatest();
             })
             .then(function(response){
@@ -1223,7 +1231,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     _imageServiceFactory.addTags = function(obj){
 
-        console.log('imageServices adding tags: ', obj);
+        //console.log('imageServices adding tags: ', obj);
 
         $http.put('/images_mgmt/add_meta', obj)
             .then(function(response){
@@ -1234,7 +1242,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     _imageServiceFactory.getUncategorisedImg = function(){
 
-        console.log('imageServices getting uncategorised');
+        //console.log('imageServices getting uncategorised');
 
         $http.get('/images_mgmt/get_new')
             .then(function(response){
@@ -1244,7 +1252,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     _imageServiceFactory.getImgById = function(id){
 
-        console.log('imageServices getting img by id: ', id);
+        //console.log('imageServices getting img by id: ', id);
 
         $http.get('/images_mgmt/get_one/' + id)
             .then(function(response){
@@ -1305,6 +1313,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
         $http.get('/landing_mgmt/tickers')
             .then(function(response){
                 $rootScope.tickers = response.data;
+                console.log('tickers: ', response.data);
             });
     };
 
@@ -1342,7 +1351,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     _storageServiceFactory.getStorages = function(){
             var x = {};
 
-            $http.get('/storages_mgmt/all')
+        $http.get('/storages_mgmt/all')
             .then(function(response){
                 $rootScope.storages = response.data;
             });

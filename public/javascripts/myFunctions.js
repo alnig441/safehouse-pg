@@ -35,6 +35,7 @@ var call = {
         console.log('setDate: ', date);
         return date_str;
     },
+
     parser: function(string, lang){
         var temp = string.slice(1,11);
         var created = {};
@@ -53,12 +54,14 @@ var call = {
         }
         return created;
     },
+
     splitString: function(meta){
         console.log('..splitstring..', meta);
         var separator = ',';
         var temp = meta.split(separator);
         return temp;
         },
+
     isAuthenticated: function(req, res, next){
         if(req.isAuthenticated()){
             return next();
@@ -66,6 +69,7 @@ var call = {
         res.send('unauthorized OR session expired - log in again');
 
         },
+
     selection: function(dbDump , query){
         console.log('..myfunctions..', dbDump, query);
         var temp =[];

@@ -3,14 +3,15 @@ var router = express.Router();
 var pg = require('pg');
 var call = require('../public/javascripts/myFunctions.js');
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/safehouse';
+var qb = require('../public/javascripts/query_builder.js');
 
 router.post('/add', call.isAuthenticated, function(req, res, next){
 
-    console.log('event post: ', req.body);
+    var event = new qb(req, 'events');
 
     pg.connect(connectionString, function (err, client, done) {
 
-        var query = client.query("INSERT INTO events (event_da, event_en, img_id, updated) values($1, $2, $3, $4)", [req.body.event_da, req.body.event_en, req.body.img_id, req.body.updated], function (error, result) {
+        var query = client.query(event.insert(), function(error, result){
             if (error) {
                 console.log('there was an error ', error);
                 res.status(200).send(error.error);
@@ -26,11 +27,11 @@ router.post('/add', call.isAuthenticated, function(req, res, next){
 
 router.get('/:img_id?', call.isAuthenticated, function(req, res, next){
 
-    console.log('getting event by img_id: ', req.params);
+    var event = new qb(req, 'events');
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query('SELECT * FROM events WHERE img_id=' + parseInt(req.params.img_id), function(error, result){
 
+        var query = client.query(event.select(), function(error,result){
             if(error){
                 console.log(error);
             }
@@ -46,10 +47,10 @@ router.get('/:img_id?', call.isAuthenticated, function(req, res, next){
 
 router.put('/', call.isAuthenticated, function(req, res, next){
 
-    console.log('events put: ', req.body);
+    var event = new qb(req, 'events', 'img_id');
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query('UPDATE events SET (event_da, event_en) =($1, $2) WHERE img_id= $3 ', [req.body.event_da, req.body.event_en, req.body.img_id], function(error, result){
+        var query = client.query(event.update(), function(error, result){
             if(error){
                 console.log(error);
                 res.status(200).send(error);

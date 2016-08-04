@@ -36,6 +36,8 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
         if (req.body.created === undefined) {
 
+            console.log(exifData);
+
             if (exifData !== undefined) {
 
                 if (exifData.gps.GPSDateStamp !== undefined) {

@@ -105,12 +105,6 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
             }
 
-            else if(call.setDate(req.body.file) !== 'Invalid Date'){
-
-                created = new Date(call.setDate(req.body.file));
-
-            }
-
             console.log('TIME CREATED \nLocal: '+ created + '\nZulu: ' + created.toJSON());
 
             vals.unshift("'James'");

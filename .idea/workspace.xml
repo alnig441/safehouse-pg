@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/app.min.js" afterPath="$PROJECT_DIR$/public/javascripts/app.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" afterPath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,21 +23,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="saveImageModalCtrl.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/saveImageModalCtrl.js">
+      <file leaf-file-name="images_mgmt.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7597684">
-              <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="images_mgmt.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
+      <file leaf-file-name="myFunctions.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/development/modules/myFunctions.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="38" column="34" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.6512301">
+              <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -118,12 +116,12 @@
         <option value="$PROJECT_DIR$/development/javascripts/factories/storageServices.js" />
         <option value="$PROJECT_DIR$/development/templates/accounts.jade" />
         <option value="$PROJECT_DIR$/routes/accounts_mgmt.js" />
-        <option value="$PROJECT_DIR$/routes/images_mgmt.js" />
         <option value="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/singleViewModalCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/factories/imageServices.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/saveImageModalCtrl.js" />
+        <option value="$PROJECT_DIR$/routes/images_mgmt.js" />
       </list>
     </option>
   </component>
@@ -400,9 +398,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1902" height="1053" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19936204" sideWeight="0.6157143" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19936204" sideWeight="0.6157143" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32914573" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2767624" sideWeight="0.51291794" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14007372" sideWeight="0.5126051" order="3" side_tool="true" content_ui="tabs" />
@@ -469,13 +467,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/grunt-movehtml/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27710843">
-          <caret line="35" column="3" selection-start-line="35" selection-start-column="3" selection-end-line="35" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/gulp-jade/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.6666665">
@@ -686,14 +677,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/modules/myFunctions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.78147614">
-          <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/dropdowns.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -846,14 +829,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="38" column="34" selection-start-line="38" selection-start-column="34" selection-end-line="38" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -864,8 +839,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/saveImageModalCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7597684">
-          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.67293775">
+          <caret line="31" column="78" selection-start-line="31" selection-start-column="78" selection-end-line="31" selection-end-column="78" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/myFunctions.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/modules/myFunctions.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6512301">
+          <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
           <folding />
         </state>
       </provider>

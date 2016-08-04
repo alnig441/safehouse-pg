@@ -87,18 +87,6 @@ router.post('/add', call.isAuthenticated, function(req, res) {
                     created = false;
                 }
 
-                //DEFUNCT: date creation based on file name (valid ONLY if file name translates to timestamp!!)
-
-                //else if (call.setDate(req.body.url) !== 'Invalid Date') {
-                //
-                //    console.log('step 3c');
-                //
-                //    console.log('we have an invalid date; ', call.setDate(req.body.url));
-                //
-                //    created = new Date(call.setDate(req.body.url));
-                //
-                //}
-
             }
 
         }

@@ -6,6 +6,7 @@ var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/sa
 var ExifImage = require('exif').ExifImage;
 var multer = require('multer');
 var crg = require('country-reverse-geocoding').country_reverse_geocoding();
+var qb = require('../public/javascripts/query_builder.js');
 
 var uploadFnct = function(dest){
     var storage = multer.diskStorage({ //multers disk storage settings
@@ -148,7 +149,7 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query("SELECT meta, names, country, state, city, occasion, id, path || folder || '/' || file AS url FROM images CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
+        var query = client.query("SELECT i.*, path || folder || '/' || file AS url FROM images AS i CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
 
                 if(error){
                 console.log(error);
@@ -166,8 +167,10 @@ router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 
 router.get('/get_all', call.isAuthenticated, function(req, res, next){
 
+    var images = new qb(req, 'images');
+
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query('SELECT * FROM images order by id asc', function(error, result){
+        var query = client.query(images.select({id: 'DESC'}), function(error, result){
 
                 if(error){
                 console.log(error);
@@ -185,7 +188,7 @@ router.get('/get_all', call.isAuthenticated, function(req, res, next){
 router.get('/get_new', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
-    var query = client.query("SELECT *, path || folder || '/' || file as url FROM IMAGES CROSS JOIN STORAGES WHERE FOLDER = STORAGE AND META IS NULL ORDER BY ID DESC", function(err, result){
+    var query = client.query("SELECT i.*, path || folder || '/' || file as url FROM IMAGES AS i CROSS JOIN STORAGES WHERE FOLDER = STORAGE AND META IS NULL ORDER BY ID DESC", function(err, result){
 
             if(error){
                 console.log(error);
@@ -201,49 +204,10 @@ router.get('/get_new', call.isAuthenticated, function(req, res, next){
 
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
-    //console.log('adding meta: ', req.body);
-
-    var body = {};
-    var incr = 0;
-    var cols = [];
-    var vals = '';
-
-    for(var prop in req.body){
-        if(prop !== 'file' && prop !== 'created' && prop !== 'id' && prop !== 'url' && req.body[prop] !== null && req.body[prop] !== 'null'){
-            body[prop] = req.body[prop];
-        }
-    }
-
-    if(body.meta !== undefined && typeof body.meta === 'string'){
-        body.meta = call.build_obj(call.splitString(req.body.meta));
-    }
-
-    if(body.names !== undefined && typeof body.names === 'string'){
-        body.names = call.build_obj(call.splitString(req.body.names));
-    }
-
-    for(var prop in body){
-        incr ++;
-        if(typeof body[prop] === 'string' && (prop === 'names' || prop === 'meta')){
-            cols.push(prop);
-            vals += "array["+ body[prop] + "]";
-            if(incr < Object.keys(body).length){
-                vals += ",";
-            }
-        }
-        else if(prop !== 'names' && prop !=='meta'){
-            cols.push(prop);
-            vals += "'" + body[prop] + "'";
-            if(incr < Object.keys(body).length){
-                vals += ",";
-            }
-        }
-    }
-
-    console.log("Columns: " + cols + "\nValues: "+ vals + "\nReq body length: " + Object.keys(body).length);
+    var image = new qb(req, 'images', 'id');
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query("UPDATE images SET("+ cols +") = ("+ vals +") WHERE id = '"+ req.body.id +"'", function(error, result){
+        var query = client.query(image.update(), function(error, result){
 
                 if(error){
                 console.log(error);
@@ -259,10 +223,10 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
 router.delete('/:id?', call.isAuthenticated, function(req, res, next){
 
-    //console.log('in images delete: ', req.body, req.params);
+    var image = new qb(req, 'images');
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query("DELETE FROM IMAGES * WHERE ID="+ req.params.id, function(err, result){
+        var query = client.query(image.delete(), function(err, result){
             if(err){
                 res.status(200).send(err);
             }

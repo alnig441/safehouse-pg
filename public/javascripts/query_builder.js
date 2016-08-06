@@ -32,7 +32,9 @@ function Record (req, table, primaryKey) {
         return query;
     };
 
-    this.select = function() {
+    this.select = function(sort) {
+
+        console.log('select: ', sort);
 
         var parms;
         var query;
@@ -42,6 +44,10 @@ function Record (req, table, primaryKey) {
             query = 'SELECT * FROM ' + this.table + ' WHERE ' + parms.cols + ' = ' + parms.vals + '';
         } else {
             query = 'SELECT * FROM ' + this.table + '';
+        }
+
+        if(sort !== undefined){
+            query += ' ORDER BY ' + Object.keys(sort) + ' ' + sort[Object.keys(sort)];
         }
 
         return query;
@@ -64,12 +70,22 @@ function parseObj (obj, str) {
 
     for(var prop in obj){
         if(obj[prop] !== null && obj[prop] !== 'null'){
-            if(str !== null && prop === str){
-                parms[str] = "'" + obj[str] + "'";
 
-            }else{
-                cols.push(prop);
-                vals.push("'" + obj[prop] + "'");
+            if((str !== null || str !== undefined) && prop === str){
+                parms[str] = "'" + obj[str] + "'";
+            }
+
+            else{
+
+                if(obj[prop].toString().split(',').length > 1){
+                    cols.push(prop);
+                    vals.push(breakout(obj[prop]));
+
+                }else {
+                    cols.push(prop);
+                    vals.push("'" + obj[prop] + "'");
+
+                }
             }
 
         }
@@ -79,4 +95,19 @@ function parseObj (obj, str) {
     parms.vals = vals.toString();
 
     return parms;
+}
+
+function breakout (str) {
+
+    var arr = str.split(',');
+    var tmpStr;
+    var tmpArr = [];
+
+    arr.forEach(function(elem, ind, arr){
+        tmpArr.push("'" + elem.trim() + "'");
+    });
+
+    tmpStr = "array[" + tmpArr.toString() +"]";
+
+    return tmpStr;
 }

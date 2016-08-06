@@ -89,7 +89,16 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     };
 
 });
-;app.controller('acctsCtrl',['accountServices', '$scope', 'appServices', '$http', function(accountServices, $scope, appServices, $http){
+
+app.filter('dotFilter', function(){
+
+    return function(input){
+
+        var str = input.replace(/,/g, /&sdot;/);
+
+        return str;
+    }
+});;app.controller('acctsCtrl',['accountServices', '$scope', 'appServices', '$http', function(accountServices, $scope, appServices, $http){
 
     console.log('accounts ctrl');
 
@@ -138,7 +147,9 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     $scope.submit = function(){
 
-        console.log('AddTagsModalCtrl - submitting this img: ', this.img);
+        //console.log('AddTagsModalCtrl - submitting this img: ', this.img);
+
+        this.img.url = null;
 
         for(var prop in this.img){
             if(prop !== 'url' && prop !== 'folder' && prop !== 'path' && prop !== 'file' && prop !== 'owner' && prop !== 'size' && prop !== 'created' && prop !== 'year' && prop !== 'month' && prop !== 'day'){
@@ -1351,6 +1362,7 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
     };
 
     _storageServiceFactory.modifyStorage = function(obj){
+
         $http.put('/storages_mgmt/update', obj)
             .then(function(response){
                 _storageServiceFactory.getStorages();

@@ -35,8 +35,6 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
         if (req.body.created === undefined) {
 
-            //console.log(exifData);
-
             if (exifData !== undefined) {
 
                 if (exifData.gps.GPSDateStamp !== undefined) {
@@ -132,8 +130,6 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 });
 
 router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
-
-    //console.log('in new upload: ', req.params, req.user);
 
     var currUpload = uploadFnct(req.params.dest);
     currUpload(req,res,function(err){

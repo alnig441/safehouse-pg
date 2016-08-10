@@ -1244,7 +1244,7 @@ app.filter('dotFilter', function(){
 
         $http.put('/images_mgmt/add_meta', obj)
             .then(function(response){
-                _imageServiceFactory.getUncategorisedImg('add tags');
+                _imageServiceFactory.getUncategorisedImg();
             });
 
     };
@@ -1255,6 +1255,7 @@ app.filter('dotFilter', function(){
             .then(function(response){
                 $rootScope.uncategorized = response.data;
                 $rootScope.img = $rootScope.uncategorized[0];
+
             });
     };
 
@@ -1310,6 +1311,7 @@ app.filter('dotFilter', function(){
         $http.get('landing_mgmt/bios/all')
             .then(function(response){
                 $rootScope.subjects = response.data;
+                console.log('subjects: ', $rootScope.subjects);
             });
     };
 
@@ -1317,7 +1319,6 @@ app.filter('dotFilter', function(){
         $http.get('/landing_mgmt/tickers')
             .then(function(response){
                 $rootScope.tickers = response.data;
-                console.log('tickers: ', response.data);
             });
     };
 

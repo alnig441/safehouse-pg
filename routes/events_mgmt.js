@@ -31,7 +31,7 @@ router.get('/:img_id?', call.isAuthenticated, function(req, res, next){
 
     pg.connect(connectionString, function(error, client, done){
 
-        var query = client.query("select i.*, path || folder || '/' || file as url from events as i  cross join images cross join storages  where id = 101  and img_id = id", function(error, result){
+        var query = client.query("select i.*, path || folder || '/' || file as url from events as i  cross join images cross join storages  where img_id = " + req.params.img_id + " and img_id = id", function(error, result){
         //var query = client.query(event.select(), function(error,result){
             if(error){
                 console.log(error);

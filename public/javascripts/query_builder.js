@@ -1,5 +1,5 @@
 
-function Record (req, table, primaryKey) {
+function Record (req, table, primaryKey, arrays) {
 
     this.request = req;
     this.table = table;
@@ -9,10 +9,11 @@ function Record (req, table, primaryKey) {
     }
 
     this.primaryKey = primaryKey;
+    this.arrays = arrays;
 
     this.insert = function() {
 
-        var parms = parseObj(this.request.body);
+        var parms = parseObj(this.request.body, this.primaryKey, this.arrays);
         var query = 'INSERT INTO '+ this.table + ' (' + parms.cols + ') VALUES (' + parms.vals + ')';
         return query;
     };
@@ -27,7 +28,7 @@ function Record (req, table, primaryKey) {
 
     this.update = function() {
 
-        var parms = parseObj(this.request.body, this.primaryKey);
+        var parms = parseObj(this.request.body, this.primaryKey, this.arrays);
         var query = 'UPDATE ' + this.table + ' SET (' + parms.cols + ') = (' + parms.vals + ') WHERE ' + this.primaryKey + ' = ' + parms[this.primaryKey] + '';
         return query;
     };
@@ -61,12 +62,11 @@ function Record (req, table, primaryKey) {
 
 module.exports = Record;
 
-function parseObj (obj, str) {
+function parseObj (obj, str, arr) {
 
     var cols = [];
     var vals = [];
     var parms = {};
-
 
     for(var prop in obj){
         if(obj[prop] !== null && obj[prop] !== 'null'){
@@ -77,15 +77,16 @@ function parseObj (obj, str) {
 
             else{
 
-                if(obj[prop].toString().split(',').length > 1){
+                if(compare(prop, arr)){
                     cols.push(prop);
                     vals.push(breakout(obj[prop]));
+                }
 
-                }else {
+                else {
                     cols.push(prop);
                     vals.push("'" + obj[prop] + "'");
-
                 }
+
             }
 
         }
@@ -99,6 +100,8 @@ function parseObj (obj, str) {
 
 function breakout (str) {
 
+    // TAKE INCOMING PARAMETER STR AND PARSE IT INTO AN ARRAY TO BE STRORED IN THE SPECIFIED TABLE COLUMN
+
     var arr = str.split(',');
     var tmpStr;
     var tmpArr = [];
@@ -110,4 +113,31 @@ function breakout (str) {
     tmpStr = "array[" + tmpArr.toString() +"]";
 
     return tmpStr;
+}
+
+function compare (prop, arr){
+
+    // DETERMINE IF PROP IS AN ARRAY, RETURN TRUE IF SO
+
+    var incr = 0;
+
+    console.log('prop: ' + prop + '\narr: ' + arr);
+
+    if(arr !== 'undefined' && arr !== undefined){
+
+        arr.forEach(function(elem, ind){
+            if(elem == prop){
+                incr ++;
+            }
+        });
+
+    }
+
+    if(incr > 0){
+        return true;
+    }
+    else {
+        return false;
+    }
+
 }

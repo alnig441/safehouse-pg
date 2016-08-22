@@ -1242,7 +1242,15 @@ app.filter('dotFilter', function(){
 
     _imageServiceFactory.addTags = function(obj){
 
-        $http.put('/images_mgmt/add_meta', obj)
+        var addObj = {};
+
+        for(var prop in obj){
+            if(prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id'){
+                addObj[prop] = obj[prop];
+            }
+        }
+
+        $http.put('/images_mgmt/add_meta', addObj)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
             });

@@ -163,12 +163,11 @@ router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 
 router.get('/get_all', call.isAuthenticated, function(req, res, next){
 
-    var images = new qb(req, 'images');
-
-    //console.log(images.select({id: 'DESC'}));
+    //var images = new qb(req, 'images');
 
     pg.connect(connectionString, function(error, client, done){
-        var query = client.query(images.select({id: 'DESC'}), function(error, result){
+        var query = client.query('select * from images where occasion is not null order by id desc', function(error, result){
+        //var query = client.query(images.select({id: 'DESC'}), function(error, result){
 
                 if(error){
                 console.log(error);
@@ -202,6 +201,8 @@ router.get('/get_new', call.isAuthenticated, function(req, res, next){
 
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
+    console.log('adding meta: ', req.body);
+
     var image = new qb(req, 'images', 'id', ['names', 'meta']);
 
     //console.log(image.update());
@@ -222,6 +223,8 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 });
 
 router.delete('/:id?', call.isAuthenticated, function(req, res, next){
+
+    console.log('deleting: ', req.params, req.body);
 
     var image = new qb(req, 'images');
 

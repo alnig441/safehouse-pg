@@ -7,6 +7,8 @@ var qb = require('../public/javascripts/query_builder.js');
 
 router.post('/add', call.isAuthenticated, function(req, res, next){
 
+    console.log('adding event: ', req.body );
+
     var event = new qb(req, 'events');
 
     pg.connect(connectionString, function (err, client, done) {

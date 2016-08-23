@@ -899,10 +899,18 @@ app.filter('dotFilter', function(){
 
     };
 
-    $scope.deleteImg = function(){
-        $http.delete('/images_mgmt/' + this.uncategorized.id)
+    $scope.deleteImg = function(id){
+
+        console.log('show me id to delete: ', id);
+
+        if(id === undefined || id === 'undefined'){
+            id = this.uncategorized.id;
+        }
+
+        $http.delete('/images_mgmt/' + id)
             .then(function(response){
                 imageServices.getUncategorisedImg();
+                imageServices.getAll();
                 appServices.update_files();
             });
     };
@@ -998,7 +1006,7 @@ app.filter('dotFilter', function(){
         $http.get('/events_mgmt')
             .then(function(response){
                 $rootScope.events = response.data;
-                $rootScope.event_form = $rootScope.events[0];
+                //$rootScope.event_form = $rootScope.events[0];
             });
     };
 
@@ -1271,7 +1279,7 @@ app.filter('dotFilter', function(){
 
     _imageServiceFactory.addTags = function(obj){
 
-        console.log('add event? ', obj.add_event);
+        console.log('add event? ', obj);
 
         var addTags = {};
         var addEvent = {};
@@ -1287,28 +1295,34 @@ app.filter('dotFilter', function(){
 
             }
 
+            console.log('show me addEvent: ', addEvent);
+
             $http.post('/events_mgmt/add', addEvent)
                 .then(function(response){
                     eventServices.getAllEvents();
                 });
         }
 
-        for(var prop in obj){
-            if(prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id'){
-                if(prop === 'city' || prop === 'state' || prop === 'names') {
-                    addTags[prop] = capInitialFilter(obj[prop]);
-                }
-                else {
-                    addTags[prop] = obj[prop];
+        if(obj.add_tags) {
+
+            for (var prop in obj) {
+                if (prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id') {
+                    if (prop === 'city' || prop === 'state' || prop === 'names') {
+                        addTags[prop] = capInitialFilter(obj[prop]);
+                    }
+                    else {
+                        addTags[prop] = obj[prop];
+                    }
                 }
             }
+
+            $http.put('/images_mgmt/add_meta', addTags)
+                .then(function (response) {
+                    _imageServiceFactory.getUncategorisedImg();
+                    _imageServiceFactory.getAll();
+                });
+
         }
-
-        $http.put('/images_mgmt/add_meta', addTags)
-            .then(function(response){
-                _imageServiceFactory.getUncategorisedImg();
-            });
-
     };
 
     _imageServiceFactory.getUncategorisedImg = function(){
@@ -1316,7 +1330,7 @@ app.filter('dotFilter', function(){
         $http.get('/images_mgmt/get_new')
             .then(function(response){
                 $rootScope.uncategorized = response.data;
-                $rootScope.img = $rootScope.uncategorized[0];
+                //$rootScope.img = $rootScope.uncategorized[0];
 
             });
     };
@@ -1326,7 +1340,13 @@ app.filter('dotFilter', function(){
         $http.get('/images_mgmt/get_one/' + id)
             .then(function(response){
                 $rootScope.img = response.data;
-                console.log('show me img: ', response.data);
+
+                $http.get('/events_mgmt/get_one/' + id)
+                    .then(function(response){
+                        if(response.data){
+                            $rootScope.img.event = true;
+                        }
+                    });
             });
 
     };

@@ -149,20 +149,22 @@ app.filter('dotFilter', function(){
 
         //console.log('AddTagsModalCtrl - submitting this img: ', this.img);
 
-        this.img.url = null;
+        //this.img.url = null;
+        //
+        //for(var prop in this.img){
+        //    if(prop !== 'url' && prop !== 'folder' && prop !== 'path' && prop !== 'file' && prop !== 'owner' && prop !== 'size' && prop !== 'created' && prop !== 'year' && prop !== 'month' && prop !== 'day'){
+        //        if(prop === 'city' || prop === 'state' || prop === 'names'){
+        //            $rootScope.img[prop] = capInitialFilter(this.img[prop]);
+        //        }
+        //        else{
+        //            $rootScope.img[prop] = this.img[prop];
+        //        }
+        //    }
+        //}
+        //
+        //imageServices.addTags($rootScope.img);
 
-        for(var prop in this.img){
-            if(prop !== 'url' && prop !== 'folder' && prop !== 'path' && prop !== 'file' && prop !== 'owner' && prop !== 'size' && prop !== 'created' && prop !== 'year' && prop !== 'month' && prop !== 'day'){
-                if(prop === 'city' || prop === 'state' || prop === 'names'){
-                    $rootScope.img[prop] = capInitialFilter(this.img[prop]);
-                }
-                else{
-                    $rootScope.img[prop] = this.img[prop];
-                }
-            }
-        }
-
-        imageServices.addTags($rootScope.img);
+        imageServices.addTags(this.img);
 
         $modalInstance.dismiss('cancel');
 
@@ -959,6 +961,7 @@ app.filter('dotFilter', function(){
         $http.get('/events_mgmt/' + id)
             .then(function(response){
                 $rootScope.event_form = response.data;
+                console.log(response.data, $rootScope.event_form);
             });
 
     };
@@ -1215,7 +1218,7 @@ app.filter('dotFilter', function(){
 
     return _globalFactory;
 
-}]);;app.service('imageServices', ['$http','$rootScope', 'appServices', function($http, $rootScope, appServices){
+}]);;app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFilter', function($http, $rootScope, appServices, capInitialFilter){
 
     var _imageServiceFactory = {};
 
@@ -1250,15 +1253,37 @@ app.filter('dotFilter', function(){
 
     _imageServiceFactory.addTags = function(obj){
 
-        var addObj = {};
+        console.log('add event? ', obj.add_event);
+
+        var addTags = {};
+        var addEvent = {};
+
+        if(obj.add_event){
+            for(var prop in obj){
+                if(prop === 'id'){
+                    addEvent.img_id = obj[prop];
+                }
+                else if(prop === 'event_da' || prop === 'event_en'){
+                    addEvent[prop] = obj[prop];
+                }
+
+            }
+
+            $http.post('/events_mgmt/add', addEvent);
+        }
 
         for(var prop in obj){
             if(prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id'){
-                addObj[prop] = obj[prop];
+                if(prop === 'city' || prop === 'state' || prop === 'names') {
+                    addTags[prop] = capInitialFilter(obj[prop]);
+                }
+                else {
+                    addTags[prop] = obj[prop];
+                }
             }
         }
 
-        $http.put('/images_mgmt/add_meta', addObj)
+        $http.put('/images_mgmt/add_meta', addTags)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
             });

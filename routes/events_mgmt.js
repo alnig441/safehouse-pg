@@ -27,17 +27,18 @@ router.post('/add', call.isAuthenticated, function(req, res, next){
 
 router.get('/:img_id?', call.isAuthenticated, function(req, res, next){
 
-    //var event = new qb(req, 'events');
+    console.log('yep');
 
     pg.connect(connectionString, function(error, client, done){
+        //var query = client.query("select i.*, path || folder || '/' || file as url from events as i  cross join images cross join storages  where id = " + req.params.img_id, function(error, result){
 
         var query = client.query("select i.*, path || folder || '/' || file as url from events as i  cross join images cross join storages  where img_id = " + req.params.img_id + " and img_id = id", function(error, result){
-        //var query = client.query(event.select(), function(error,result){
             if(error){
                 console.log(error);
             }
         })
         query.on('row', function(row){
+            console.log('show me row: ', row);
             res.status(200).send(row);
         })
         query.on('end', function(result){

@@ -144,6 +144,8 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
 router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 
+    console.log('yepper');
+
     pg.connect(connectionString, function(error, client, done){
         var query = client.query("SELECT i.*, path || folder || '/' || file AS url FROM images AS i CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
 

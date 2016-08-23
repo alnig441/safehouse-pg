@@ -25,9 +25,9 @@ router.post('/add', call.isAuthenticated, function(req, res, next){
 
 });
 
-router.get('/:img_id?', call.isAuthenticated, function(req, res, next){
+router.get('/get_one/:img_id?', call.isAuthenticated, function(req, res, next){
 
-    console.log('yep');
+    console.log('gettng event by id');
 
     pg.connect(connectionString, function(error, client, done){
         //var query = client.query("select i.*, path || folder || '/' || file as url from events as i  cross join images cross join storages  where id = " + req.params.img_id, function(error, result){
@@ -65,6 +65,24 @@ router.put('/', call.isAuthenticated, function(req, res, next){
     })
 
 });
+
+router.get('/', call.isAuthenticated, function(req, res, next){
+
+    console.log('getting all events');
+
+    pg.connect(connectionString, function(error, client, done){
+
+        var query = client.query("select i.*, path || folder || '/' || file as url from events as i  cross join images cross join storages where img_id = id order by img_id desc", function(error, result){
+            if(error){
+                console.log(error);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result.rows);
+        })
+    })
+})
 
 
 module.exports = router;

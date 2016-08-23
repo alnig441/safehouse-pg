@@ -144,8 +144,6 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
 router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 
-    console.log('yepper');
-
     pg.connect(connectionString, function(error, client, done){
         var query = client.query("SELECT i.*, path || folder || '/' || file AS url FROM images AS i CROSS JOIN storages where storage = folder AND id=" + parseInt(req.params.id), function(error, result){
 
@@ -166,6 +164,8 @@ router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 router.get('/get_all', call.isAuthenticated, function(req, res, next){
 
     var images = new qb(req, 'images');
+
+    //console.log(images.select({id: 'DESC'}));
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(images.select({id: 'DESC'}), function(error, result){
@@ -204,7 +204,7 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
     var image = new qb(req, 'images', 'id', ['names', 'meta']);
 
-    console.log(image.update());
+    //console.log(image.update());
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(image.update(), function(error, result){

@@ -183,6 +183,9 @@ app.filter('dotFilter', function(){
     appServices.update_files();
     imageServices.getUncategorisedImg();
     imageServices.getAll();
+    eventServices.getAllEvents();
+
+    console.log('show me rootscope: ', $rootScope);
 
     function update_files(){
 
@@ -281,6 +284,12 @@ app.filter('dotFilter', function(){
     $scope.updateEvent = function(){
 
         eventServices.updateEvent($rootScope.event_form);
+
+    };
+
+    $scope.getImgById = function(id){
+
+        imageServices.getImgById(id);
 
     };
 
@@ -958,7 +967,7 @@ app.filter('dotFilter', function(){
 
         console.log('eventServices getting event by id: ', id);
 
-        $http.get('/events_mgmt/' + id)
+        $http.get('/events_mgmt/get_one/' + id)
             .then(function(response){
                 $rootScope.event_form = response.data;
                 console.log(response.data, $rootScope.event_form);
@@ -982,7 +991,16 @@ app.filter('dotFilter', function(){
                 $rootScope.img = {};
             });
 
-    }
+    };
+
+    _eventServiceFactory.getAllEvents = function(){
+
+        $http.get('/events_mgmt')
+            .then(function(response){
+                $rootScope.events = response.data;
+                $rootScope.event_form = $rootScope.events[0];
+            });
+    };
 
     return _eventServiceFactory;
 
@@ -1218,7 +1236,7 @@ app.filter('dotFilter', function(){
 
     return _globalFactory;
 
-}]);;app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFilter', function($http, $rootScope, appServices, capInitialFilter){
+}]);;app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFilter', 'eventServices', function($http, $rootScope, appServices, capInitialFilter, eventServices){
 
     var _imageServiceFactory = {};
 
@@ -1269,7 +1287,10 @@ app.filter('dotFilter', function(){
 
             }
 
-            $http.post('/events_mgmt/add', addEvent);
+            $http.post('/events_mgmt/add', addEvent)
+                .then(function(response){
+                    eventServices.getAllEvents();
+                });
         }
 
         for(var prop in obj){
@@ -1305,6 +1326,7 @@ app.filter('dotFilter', function(){
         $http.get('/images_mgmt/get_one/' + id)
             .then(function(response){
                 $rootScope.img = response.data;
+                console.log('show me img: ', response.data);
             });
 
     };

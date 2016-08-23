@@ -965,7 +965,15 @@ app.filter('dotFilter', function(){
 
     _eventServiceFactory.updateEvent = function(obj){
 
-        $http.put('/events_mgmt', obj)
+        var addObj = {};
+
+        for(var prop in obj){
+            if(prop !== 'url'){
+                addObj[prop] = obj[prop];
+            }
+        }
+
+        $http.put('/events_mgmt', addObj)
             .then(function(response){
                 $rootScope.event_form = {};
                 $rootScope.img = {};

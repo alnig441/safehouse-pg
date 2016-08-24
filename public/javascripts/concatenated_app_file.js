@@ -821,6 +821,8 @@ app.filter('dotFilter', function(){
 
     $scope.uploadFiles = function(file, opt){
 
+        var progress = document.getElementById('progress');
+
         $scope.img = {};
         $scope.img.url = file.name;
         $scope.img.meta = $scope.meta;
@@ -845,20 +847,21 @@ app.filter('dotFilter', function(){
             });
             file.upload.progress(function(evt){
                 file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                var width = file.progress + '%';
+
+                angular.element(progress).css({"width": width});
+
+                if(file.progress == 100){
+
+                    imageServices.addImg($scope.img);
+                    $modalInstance.dismiss('cancel');
+                    $rootScope.f = undefined;
+
+                }
+
+
             });
         }
-
-        //TIMEOUT ADDED TO ALLOW PHOTOS + EXIF INFO TO BE STORED ON HARD DRIVE
-
-        $timeout(function(){
-
-            imageServices.addImg($scope.img);
-            $timeout.cancel();
-
-        },1500);
-
-
-        $modalInstance.dismiss('cancel');
 
     };
 

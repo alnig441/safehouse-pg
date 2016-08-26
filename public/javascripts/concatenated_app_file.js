@@ -364,12 +364,12 @@ app.filter('dotFilter', function(){
     var menu = document.getElementsByClassName('collapse');
 
     $rootScope.template = {};
-    $rootScope.template.url = './views/accounts.html';
+    $rootScope.template.url = './views/images.html';
 
     $scope.templates = {
         accounts: './views/accounts.html',
         images: './views/images.html',
-        landing: './views/landing-page.html'
+        landing_page: './views/landing-page.html'
     };
 
     $scope.switch = function(option){
@@ -384,6 +384,7 @@ app.filter('dotFilter', function(){
 
         if(option === 'btle'){
             $location.path('/admin/btle');
+            $rootScope.template = {};
         }
         if(option === 'diary'){
             $location.path('/admin/diary');
@@ -392,7 +393,7 @@ app.filter('dotFilter', function(){
 
     $scope.select = function(choice){
 
-        appServices.selectTab(choice);
+        appServices.selectTab(choice.toLowerCase());
     };
 
 }]);
@@ -1021,7 +1022,7 @@ app.filter('dotFilter', function(){
     var _appServicesFactory = {};
     var excl_incr;
     var conditions;
-    var elements = {meta: 'meta_div', time: 'time_div', list: 'list_div', add: 'add_div', image: 'image_div', event: 'event_div', storage: 'storage_div', resume: 'resume_div', ticker: 'ticker_div', biography: 'biography_div'};
+    var elements = {meta: 'meta_div', time: 'time_div', list: 'list_div', add: 'add_div', images: 'image_div', events: 'event_div', storages: 'storage_div', projects: 'resume_div', tickers: 'ticker_div', biographies: 'biography_div'};
 
     var modals = {
         login: {contr: 'LoginModalCtrl', templ: './views/myLoginModal.html'},

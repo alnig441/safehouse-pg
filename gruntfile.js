@@ -31,8 +31,8 @@ module.exports = function(grunt) {
                     spawn: false
                 }
             },
-            templates: {
-                files: [paths.from.templates],
+            views: {
+                files: [paths.from.views],
                 tasks: ['jshint', 'jade', 'copy'],
                 options: {
                     spawn: false
@@ -74,7 +74,7 @@ module.exports = function(grunt) {
                     {expand: true, cwd: './development/modules/' ,src: '*.js', dest: paths.to.modules, filter: 'isFile'},
                     {expand: true, cwd: './node_modules/angular-ui-bootstrap/dist/' ,src: '*tpls.js', dest: paths.to.vendors, filter: 'isFile'},
                     {expand: true, cwd: './development/icons/' ,src: '*.svg', dest: paths.to.icons, filter: 'isFile'},
-                    {expand: true, cwd: './development/templates/' ,src: '*.html', dest: paths.to.views, filter: 'isFile'},
+                    {expand: true, cwd: './development/views/' ,src: '*.html', dest: paths.to.views, filter: 'isFile'},
                     {expand: true, cwd: './development/partials/' ,src: '*.html', dest: paths.to.views, filter: 'isFile'},
                     {expand: true, cwd: './node_modules/font_awesome/css/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'},
                     {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.js', dest: paths.to.vendors, filter: 'isFile'},
@@ -88,7 +88,7 @@ module.exports = function(grunt) {
             options: {
                 pretty: true,
                 files: {
-                    "*": [paths.from.templates, paths.from.partials]
+                    "*": [paths.from.views, paths.from.partials]
                 }
             },
             debug: {
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
                         livereload: false
                     },
                     files: {
-                        "*": [paths.from.templates, paths.from.partials]
+                        "*": [paths.from.views, paths.from.partials]
                     },
                     pretty: false
                 }
@@ -170,6 +170,6 @@ module.exports = function(grunt) {
 };
 
 var paths = {
-    from: {scripts: './development/javascripts/*.js', partials: './development/partials/*.jade', templates: './development/templates/*.jade', styles: './development/styles/*.css', icons: './development/icons/*.svg', modules: './development/modules/*.js'},
+    from: {scripts: './development/javascripts/*.js', partials: './development/partials/*.jade', views: './development/views/*.jade', styles: './development/styles/*.css', icons: './development/icons/*.svg', modules: './development/modules/*.js'},
     to: {scripts: './public/javascripts/angular_app.js', views: './public/views/', styles: './public/stylesheets/', icons: './public/icons/', modules: './public/javascripts/', vendors: './public/vendors/'}
 };

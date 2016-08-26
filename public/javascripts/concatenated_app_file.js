@@ -364,6 +364,7 @@ app.filter('dotFilter', function(){
     var menu = document.getElementsByClassName('collapse');
 
     $rootScope.template = {};
+    $rootScope.template.url = './views/accounts.html';
 
     $scope.templates = {
         accounts: './views/accounts.html',

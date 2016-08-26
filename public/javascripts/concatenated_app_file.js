@@ -374,7 +374,7 @@ app.filter('dotFilter', function(){
 
     $scope.switch = function(option){
 
-        console.log('location ctrl swithing to ', option);
+        console.log('location ctrl switching to ', option);
 
         $rootScope.template.url = $scope.templates[option];
         angular.element(menu).collapse('hide');

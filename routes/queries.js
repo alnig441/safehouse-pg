@@ -121,14 +121,14 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         search = search + " AND DAY = " + req.body.day;
     }
 
-    if(req.body.database === 'events'){
+    if(req.body.table === 'events'){
         query_string ="SELECT ID, "+descr+" AS DESCRIPTION, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
     }
-    if(req.body.database === 'images'){
+    if(req.body.table === 'images'){
         query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
-    console.log('post/queries: ', query_string);
+    //console.log('post/queries: ', query_string);
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(query_string, function(error, result){

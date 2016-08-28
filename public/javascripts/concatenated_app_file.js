@@ -589,7 +589,7 @@ app.filter('dotFilter', function(){
 
     $scope.open2 = function (size, db, type) {
 
-        console.log('multi view modal ctrl \nsize: '+size+'\ntable: '+db+'\ntype: '+type+ '\nform: ', this.form , '\nrootScope: ', $rootScope);
+        console.log('multi view modal ctrl \ntable: '+db+'\nform', this.form , '\nrootScope: ', $rootScope);
 
         var modal = appServices.setModal('multi');
 
@@ -610,7 +610,7 @@ app.filter('dotFilter', function(){
             }
         }
         else{
-            $scope.form.database = db;
+            $scope.form.table = $rootScope.active_table;
             obj = $scope.form;
         }
 
@@ -700,6 +700,8 @@ app.filter('dotFilter', function(){
 
     $scope.selectTable = function(x){
 
+        $rootScope.active_table = x;
+
         $scope.form = {};
         angular.element(menu).collapse('hide');
         $scope.selection = x;
@@ -714,6 +716,8 @@ app.filter('dotFilter', function(){
     };
 
     $scope.build_query = function(x) {
+
+        console.log('privCtrl build_query: ', $rootScope.active_table);
 
         console.log('hvad kommer ind: ',this.form);
 
@@ -782,6 +786,8 @@ app.filter('dotFilter', function(){
     };
 
     $scope.getValues = function(option, db){
+
+        console.log('privCtrl getvalues: ', $rootScope.active_table);
 
         if(option === 'month') {
             $scope.form.option = false;
@@ -1068,7 +1074,7 @@ app.filter('dotFilter', function(){
             }
         }
 
-        console.log('give me type: '+ type + '\nand object: '+ JSON.stringify(obj));
+        //console.log('give me type: '+ type + '\nand object: '+ JSON.stringify(obj));
 
         switch(type){
             case 'contract':

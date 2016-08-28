@@ -672,6 +672,14 @@ app.filter('dotFilter', function(){
 
     $scope.select = function(choice){
 
+        choice = choice.toLowerCase();
+
+        if(choice == 'content' || choice == 'indholdsbaseret'){
+            choice = 'meta';
+        } else if(choice == 'point-in-time' || choice == 'tidsafgrænset') {
+            choice ='time';
+        }
+
         console.log('privCtrl - selectTab: ', choice);
         appServices.selectTab(choice);
 

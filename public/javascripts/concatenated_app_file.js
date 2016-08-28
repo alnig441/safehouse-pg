@@ -705,7 +705,7 @@ app.filter('dotFilter', function(){
         $scope.selection = x;
         $scope.query =  {};
         $scope.query.option = 'year';
-        $scope.query.database = x;
+        $scope.query.table = x;
 
         $http.post('/dropdowns/build', $scope.query)
             .then(function(response){

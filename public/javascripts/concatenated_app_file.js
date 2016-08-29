@@ -646,6 +646,25 @@ app.filter('dotFilter', function(){
 
     console.log('priv ctrl - rootscope: ', $rootScope);
 
+    //RUN priv_load() TO POPULATE THE SELECT OPTIONA IN POINT-IN-TIME SEARCH FORM  WWIH THE APPROPRIATE VALUES
+    priv_load();
+
+    function priv_load () {
+
+        $scope.form = {};
+        $scope.query = {};
+        $scope.query.option = 'year';
+        $scope.query.table = 'events';
+
+        $http.post('/dropdowns/build', $scope.query)
+            .then(function(response){
+                $scope.years = response.data;
+            });
+
+    };
+
+    $rootScope.active_table = 'images';
+
     appServices.resetSQ();
 
     /*BLOCKED OUT FUNTIONALITY FOR USE WHEN MORE STORAGE FOLDERS ARE ACTIVE PER USER*/
@@ -676,7 +695,8 @@ app.filter('dotFilter', function(){
 
         if(choice == 'content' || choice == 'indholdsbaseret'){
             choice = 'meta';
-        } else if(choice == 'point-in-time' || choice == 'tidsafgrænset') {
+        }
+        else if(choice == 'point-in-time' || choice == 'tidsafgrænset') {
             choice ='time';
         }
 
@@ -700,11 +720,21 @@ app.filter('dotFilter', function(){
 
     $scope.selectTable = function(x){
 
+        angular.element(menu).collapse('hide');
+
+        if(x == 'events'){
+            angular.element(document.getElementById('nav_events')).addClass('ng-hide');
+            angular.element(document.getElementById('nav_images')).removeClass('ng-hide');
+        }
+
+        if(x == 'images'){
+            angular.element(document.getElementById('nav_images')).addClass('ng-hide');
+            angular.element(document.getElementById('nav_events')).removeClass('ng-hide');
+        }
+
         $rootScope.active_table = x;
 
         $scope.form = {};
-        angular.element(menu).collapse('hide');
-        $scope.selection = x;
         $scope.query =  {};
         $scope.query.option = 'year';
         $scope.query.table = x;
@@ -1036,7 +1066,7 @@ app.filter('dotFilter', function(){
     var _appServicesFactory = {};
     var excl_incr;
     var conditions;
-    var elements = {meta: 'meta_div', time: 'time_div', list: 'list_div', add: 'add_div', images: 'image_div', events: 'event_div', storages: 'storage_div', projects: 'resume_div', tickers: 'ticker_div', biographies: 'biography_div'};
+    var elements = {meta: 'meta_div', time: 'time_div', list: 'list_div', add: 'add_div', images: 'image_div', events: 'event_div', storages: 'storage_div', projects: 'resume_div', tickers: 'ticker_div', biographies: 'biography_div', seneste: 'event_latest', tidsafgrænset: 'event_time'};
 
     var modals = {
         login: {contr: 'LoginModalCtrl', templ: './views/myLoginModal.html'},
@@ -1138,6 +1168,8 @@ app.filter('dotFilter', function(){
     };
 
     _appServicesFactory.selectTab = function(option){
+
+        console.log('app factory - selectTab: ',option);
 
         for(var prop in elements){
             if(prop !== option){

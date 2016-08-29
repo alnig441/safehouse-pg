@@ -98,17 +98,16 @@ app.filter('mapTabs', function(){
 
         var mapping = {
             indholdsbaseret: 'content',
-            tidsafgrænset: 'point-in-time',
+            tidsafgrænset: 'point-in-time'
         };
 
         for(var prop in mapping){
             if(prop == input){
-                console.log('show me mappring prop:', prop, input);
                 output = mapping[prop];
             }
         }
 
-        //console.log('show me output from mapFilter: ', output);
+        console.log('mapTabs -  \ninput: ' + input + '\noutput: ' + output);
 
         return output;
     }
@@ -612,9 +611,9 @@ app.filter('dotFilter', function(){
 
     $scope.animationsEnabled = true;
 
-    $scope.open2 = function (size, db, type) {
+    $scope.open2 = function (size, type) {
 
-        console.log('multi view modal ctrl \ntable: '+db+'\nform', this.form , '\nrootScope: ', $rootScope);
+        console.log('multi view modal ctrl \ntable: '+ $rootScope.active_table +'\nform', this.form , '\ntype: ', type, '\nrootScope: ', $rootScope);
 
         var modal = appServices.setModal('multi');
 
@@ -716,19 +715,9 @@ app.filter('dotFilter', function(){
 
     $scope.select = function(choice){
 
-        choice = choice.toLowerCase();
+        //choice = choice.toLowerCase();
 
-        choice = mapTabsFilter(choice);
-
-
-        //if(choice == 'content' || choice == 'indholdsbaseret'){
-        //    choice = 'meta';
-        //}
-        //else if(choice == 'point-in-time' || choice == 'tidsafgrænset') {
-        //    choice ='time';
-        //}
-
-        //console.log('privCtrl - selectTab: ', choice);
+        choice = mapTabsFilter(choice.toLowerCase());
 
         appServices.selectTab(choice);
 
@@ -739,7 +728,7 @@ app.filter('dotFilter', function(){
                 });
         }
 
-        if(choice === 'meta'){
+        if(choice === 'content'){
             $scope.form.type_and = true;
             appServices.buildMeta();
         }

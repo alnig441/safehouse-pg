@@ -90,6 +90,31 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
 });
 
+app.filter('mapTabs', function(){
+
+    return function (input){
+
+        var output = input;
+
+        var mapping = {
+            indholdsbaseret: 'content',
+            tidsafgrænset: 'point-in-time',
+        };
+
+        for(var prop in mapping){
+            if(prop == input){
+                console.log('show me mappring prop:', prop, input);
+                output = mapping[prop];
+            }
+        }
+
+        //console.log('show me output from mapFilter: ', output);
+
+        return output;
+    }
+
+});
+
 app.filter('dotFilter', function(){
 
     return function(input){
@@ -642,7 +667,7 @@ app.filter('dotFilter', function(){
     };
 
 });
-;app.controller('privCtrl', ['$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function($scope, $rootScope, $http, $log, $modal, $location, appServices){
+;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, mapFilter){
 
     console.log('priv ctrl - rootscope: ', $rootScope);
 
@@ -693,14 +718,18 @@ app.filter('dotFilter', function(){
 
         choice = choice.toLowerCase();
 
-        if(choice == 'content' || choice == 'indholdsbaseret'){
-            choice = 'meta';
-        }
-        else if(choice == 'point-in-time' || choice == 'tidsafgrænset') {
-            choice ='time';
-        }
+        choice = mapTabsFilter(choice);
 
-        console.log('privCtrl - selectTab: ', choice);
+
+        //if(choice == 'content' || choice == 'indholdsbaseret'){
+        //    choice = 'meta';
+        //}
+        //else if(choice == 'point-in-time' || choice == 'tidsafgrænset') {
+        //    choice ='time';
+        //}
+
+        //console.log('privCtrl - selectTab: ', choice);
+
         appServices.selectTab(choice);
 
         if(choice === 'event'){
@@ -1066,7 +1095,7 @@ app.filter('dotFilter', function(){
     var _appServicesFactory = {};
     var excl_incr;
     var conditions;
-    var elements = {meta: 'meta_div', time: 'time_div', list: 'list_div', add: 'add_div', images: 'image_div', events: 'event_div', storages: 'storage_div', projects: 'resume_div', tickers: 'ticker_div', biographies: 'biography_div', seneste: 'event_latest', tidsafgrænset: 'event_time'};
+    var elements = {content: 'meta_div','point-in-time': 'time_div', list: 'list_div', add: 'add_div', images: 'image_div', events: 'event_div', storages: 'storage_div', projects: 'resume_div', tickers: 'ticker_div', biographies: 'biography_div'};
 
     var modals = {
         login: {contr: 'LoginModalCtrl', templ: './views/myLoginModal.html'},
@@ -1169,7 +1198,7 @@ app.filter('dotFilter', function(){
 
     _appServicesFactory.selectTab = function(option){
 
-        console.log('app factory - selectTab: ',option);
+        //console.log('app factory - selectTab: ',option);
 
         for(var prop in elements){
             if(prop !== option){

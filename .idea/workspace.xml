@@ -3,8 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/btle.html" afterPath="$PROJECT_DIR$/public/views/btle.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/diary.html" afterPath="$PROJECT_DIR$/public/views/diary.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/landing-page.min.css" afterPath="$PROJECT_DIR$/public/stylesheets/landing-page.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/images.html" afterPath="$PROJECT_DIR$/public/views/images.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/priv_da.html" afterPath="$PROJECT_DIR$/public/views/priv_da.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/priv_en.html" afterPath="$PROJECT_DIR$/public/views/priv_en.html" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,41 +27,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="base_admin.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/development/templates/base_admin.jade">
+      <file leaf-file-name="landing-page.css" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/development/styles/landing-page.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="30" column="37" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
+            <state vertical-scroll-proportion="0.61538464">
+              <caret line="127" column="1" selection-start-line="127" selection-start-column="1" selection-end-line="127" selection-end-column="1" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="diary.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/development/partials/diary.jade">
+      <file leaf-file-name="images.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/development/views/images.jade">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+              <caret line="104" column="30" selection-start-line="104" selection-start-column="30" selection-end-line="104" selection-end-column="30" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="btle.jade" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/development/partials/btle.jade">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.1744186">
-              <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="accounts.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/development/views/accounts.jade">
+      <file leaf-file-name="meta_search_form.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/development/templates/meta_search_form.jade">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
+              <caret line="55" column="35" selection-start-line="55" selection-start-column="35" selection-end-line="55" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -117,23 +109,23 @@
         <option value="$PROJECT_DIR$/development/views/accounts.jade" />
         <option value="$PROJECT_DIR$/development/views/landing-page.jade" />
         <option value="$PROJECT_DIR$/development/views/biography.jade" />
-        <option value="$PROJECT_DIR$/development/views/images.jade" />
         <option value="$PROJECT_DIR$/routes/dropdowns.js" />
         <option value="$PROJECT_DIR$/routes/queries.js" />
-        <option value="$PROJECT_DIR$/development/templates/time_search_form.jade" />
         <option value="$PROJECT_DIR$/development/partials/priv_en.jade" />
         <option value="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
         <option value="$PROJECT_DIR$/development/templates/base_private.jade" />
-        <option value="$PROJECT_DIR$/development/styles/landing-page.css" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/multiViewModalCtrl.js" />
-        <option value="$PROJECT_DIR$/development/templates/meta_search_form.jade" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/factories/factories.js" />
-        <option value="$PROJECT_DIR$/development/partials/priv_da.jade" />
         <option value="$PROJECT_DIR$/development/javascripts/filters/filters.js" />
         <option value="$PROJECT_DIR$/development/templates/base_admin.jade" />
         <option value="$PROJECT_DIR$/development/partials/diary.jade" />
         <option value="$PROJECT_DIR$/development/partials/btle.jade" />
+        <option value="$PROJECT_DIR$/development/templates/time_search_form.jade" />
+        <option value="$PROJECT_DIR$/development/templates/meta_search_form.jade" />
+        <option value="$PROJECT_DIR$/development/partials/priv_da.jade" />
+        <option value="$PROJECT_DIR$/development/views/images.jade" />
+        <option value="$PROJECT_DIR$/development/styles/landing-page.css" />
       </list>
     </option>
   </component>
@@ -773,14 +765,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/views/images.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.5261628">
-          <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/locationCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.82848835">
@@ -821,14 +805,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/styles/landing-page.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8584337">
-          <caret line="157" column="17" selection-start-line="157" selection-start-column="17" selection-end-line="157" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/templates/base_modal.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -841,30 +817,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/templates/time_search_form.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5232558">
-          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/templates/base_private.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="48" column="19" selection-start-line="48" selection-start-column="19" selection-end-line="48" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/partials/priv_da.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="82" selection-start-line="3" selection-start-column="82" selection-end-line="3" selection-end-column="82" />
           <folding />
         </state>
       </provider>
@@ -901,34 +853,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/templates/meta_search_form.jade">
+    <entry file="file://$PROJECT_DIR$/development/partials/btle.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.5261627">
-          <caret line="71" column="9" selection-start-line="71" selection-start-column="9" selection-end-line="71" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/templates/tabbed_navigation.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.1744186">
+          <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/development/partials/diary.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.19622093">
           <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/templates/base_admin.jade">
+    <entry file="file://$PROJECT_DIR$/development/templates/time_search_form.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="30" column="37" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.021802325">
+          <caret line="1" column="22" selection-start-line="1" selection-start-column="22" selection-end-line="1" selection-end-column="22" />
           <folding />
         </state>
       </provider>
@@ -941,10 +885,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/partials/btle.jade">
+    <entry file="file://$PROJECT_DIR$/development/templates/base_admin.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1744186">
-          <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="30" column="37" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/templates/meta_search_form.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="55" column="35" selection-start-line="55" selection-start-column="35" selection-end-line="55" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/partials/priv_da.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3" column="82" selection-start-line="3" selection-start-column="82" selection-end-line="3" selection-end-column="82" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/templates/base_private.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0872093">
+          <caret line="48" column="19" selection-start-line="48" selection-start-column="19" selection-end-line="48" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/templates/tabbed_navigation.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/views/images.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="104" column="30" selection-start-line="104" selection-start-column="30" selection-end-line="104" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/styles/landing-page.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.61538464">
+          <caret line="127" column="1" selection-start-line="127" selection-start-column="1" selection-end-line="127" selection-end-column="1" />
           <folding />
         </state>
       </provider>

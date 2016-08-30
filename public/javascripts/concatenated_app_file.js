@@ -466,7 +466,7 @@ app.filter('dotFilter', function(){
             });
     };
 });
-;app.controller('ModalInstanceCtrl2', function($scope, $modalInstance, events, $interval) {
+;app.controller('ModalInstanceCtrl2', function($scope, $rootScope, $modalInstance, events, $interval) {
 
     $scope.selector = 0;
 
@@ -481,28 +481,24 @@ app.filter('dotFilter', function(){
 
     $scope.play = function(bool){
 
-        var elem = document.getElementById('play');
-
-        console.log('show me element: ', elem);
-
-        if(angular.element(elem).hasClass("fa-play")){
-
-            angular.element(elem).addClass('fa-pause').removeClass('fa-play');
-
-            $scope.interval = $interval(function() {
-
+        if(!$scope.interval){
+            $scope.interval = $interval(function(){
                 $scope.next();
-
-            }, 5000);
-
+            }, 2500)
         }
-        else if(angular.element(elem).hasClass("fa-pause")){
 
-            angular.element(elem).addClass('fa-play').removeClass('fa-pause');
-
+        else{
             $interval.cancel($scope.interval);
+            $scope.interval = false;
         }
+
     };
+
+    $scope.pause = function(){
+
+
+    };
+
 
     $scope.next = function(){
 
@@ -714,8 +710,6 @@ app.filter('dotFilter', function(){
     angular.element(menu).collapse('hide');
 
     $scope.select = function(choice){
-
-        //choice = choice.toLowerCase();
 
         choice = mapTabsFilter(choice.toLowerCase());
 

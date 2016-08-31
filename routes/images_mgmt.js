@@ -129,6 +129,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
 });
 
+
 router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
     var currUpload = uploadFnct(req.params.dest);
@@ -140,6 +141,19 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
         res.json({error_code:0,err_desc:null, filename: req.file.filename});
     });
 
+});
+
+router.post('/batch', call.isAuthenticated, function(req,res,next){
+
+    console.log('show me body: ', req.body, typeof req.body.id);
+
+    var batch = new qb(req, 'images', 'id', ['names', 'meta', 'id']);
+
+    console.log(batch.update());
+
+    //pg.connect(connectionString, function(error, client, done){
+    //
+    //})
 });
 
 router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){

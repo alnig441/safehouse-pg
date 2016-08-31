@@ -171,6 +171,24 @@ app.filter('dotFilter', function(){
 
     $scope.submit = function(){
 
+        console.log('hansemanse: ', $scope.batchEdit, $rootScope.batchObj, $scope.batchObj);
+
+        if($scope.batchObj.hasOwnProperty(this.img.id)){
+
+            $scope.batchObj[this.img.id] = false;
+
+            var incr = 0;
+            for(var prop in $scope.batchObj){
+                if($scope.batchObj[prop]){
+                    incr ++;
+                }
+            }
+
+            if(incr == 0){
+                $scope.batch.all = false;
+            }
+        }
+
         imageServices.addTags(this.img);
 
         $modalInstance.dismiss('cancel');
@@ -186,7 +204,11 @@ app.filter('dotFilter', function(){
 
     $scope.submit = function(){
 
-        imageServices.addTags(this.img);
+        this.batchEdit.id = $scope.ids;
+
+        console.log('show me stuff: ', this.batchEdit);
+
+        imageServices.batchEdit(this.batchEdit);
 
         $modalInstance.dismiss('cancel');
 
@@ -247,28 +269,6 @@ app.filter('dotFilter', function(){
             }
         }
     };
-
-    $scope.batchAdmin = function() {
-
-        var tmp = 0;
-
-        for(var prop in $scope.batchObj){
-            if($scope.batchObj[prop] === true){
-                tmp ++;
-            }
-        }
-
-        console.log('shwo tmp: ', tmp);
-
-        if(Object.keys($scope.batchObj).length >= 1 && tmp > 0){
-            console.log('batch edit go ', $scope.batchObj);
-        }
-        else{
-            console.log('batch edit no-go', $scope.batchObj);
-        }
-
-    };
-
 
     $scope.update_images = function(){
 
@@ -976,16 +976,17 @@ app.filter('dotFilter', function(){
 
         if(option === 'batch'){
 
-            var tmp = 0;
+            var arr = [];
+
 
             for(var prop in $scope.batchObj){
                 if($scope.batchObj[prop] === true){
-                    tmp ++;
+                    arr.push(prop);
                 }
             }
-
-            if(Object.keys($scope.batchObj).length >= 1 && tmp > 0){
-                openModal(config);
+            if(arr.length >= 1){
+                    $scope.ids = arr;
+                    openModal(config);
             }
         }
 
@@ -1018,6 +1019,13 @@ app.filter('dotFilter', function(){
     $scope.deleteImg = function(id){
 
         console.log('show me id to delete: ', id);
+
+        if($scope.batchObj.hasOwnProperty(this.uncategorized.id)){
+            $scope.batchObj[this.uncategorized.id] = false;
+            if(Object.keys($scope.batchObj).length == 1){
+                $scope.batch.all = false;
+            }
+        }
 
         if(id === undefined || id === 'undefined'){
             id = this.uncategorized.id;
@@ -1482,6 +1490,20 @@ function openModal(obj) {
 
     };
 
+    _imageServiceFactory.batchEdit = function(obj){
+
+        for (var prop in obj) {
+            if (prop === 'city' || prop === 'state' || prop === 'names') {
+                obj[prop] = capInitialFilter(obj[prop]);
+            }
+        }
+
+        $http.post('/images_mgmt/batch', obj)
+            .then(function(response){
+               console.log(response);
+            });
+
+    }
 
     return _imageServiceFactory;
 

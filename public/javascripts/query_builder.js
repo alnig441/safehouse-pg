@@ -29,13 +29,19 @@ function Record (req, table, primaryKey, arrays) {
     this.update = function() {
 
         var parms = parseObj(this.request.body, this.primaryKey, this.arrays);
-        var query = 'UPDATE ' + this.table + ' SET (' + parms.cols + ') = (' + parms.vals + ') WHERE ' + this.primaryKey + ' = ' + parms[this.primaryKey] + '';
+        var query;
+
+        if(Array.isArray(this.request.body.id)){
+            query = 'UPDATE ' + this.table + ' SET (' + parms.cols + ') = (' + parms.vals + ') WHERE ' + parms.ids;
+        }
+        else {
+            query = 'UPDATE ' + this.table + ' SET (' + parms.cols + ') = (' + parms.vals + ') WHERE ' + this.primaryKey + ' = ' + parms[this.primaryKey] + '';
+        }
+
         return query;
     };
 
     this.select = function(sort) {
-
-        console.log('select: ', sort);
 
         var parms;
         var query;
@@ -72,7 +78,12 @@ function parseObj (obj, str, arr) {
         if(obj[prop] !== null && obj[prop] !== 'null'){
 
             if((str !== null || str !== undefined) && prop === str){
-                parms[str] = "'" + obj[str] + "'";
+                if(Array.isArray(obj[prop])) {
+                    parms.ids = batch(prop, obj[prop]);
+                    }
+                else {
+                    parms[str] = "'" + obj[str] + "'";
+                }
             }
 
             else{
@@ -121,8 +132,6 @@ function compare (prop, arr){
 
     var incr = 0;
 
-    console.log('prop: ' + prop + '\narr: ' + arr);
-
     if(arr !== 'undefined' && arr !== undefined){
 
         arr.forEach(function(elem, ind){
@@ -140,4 +149,22 @@ function compare (prop, arr){
         return false;
     }
 
+}
+
+function batch (property, array) {
+
+    // SET BATCH LOAD IDs
+
+    var str = '';
+
+    array.forEach(function(elem, ind, arr){
+        if(ind < array.length - 1){
+            str += property + '=' + elem + ' OR ';
+        }
+        else {
+            str += property + '=' + elem;
+        }
+    });
+
+    return str;
 }

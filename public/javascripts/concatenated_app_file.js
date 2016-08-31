@@ -171,22 +171,20 @@ app.filter('dotFilter', function(){
 
     $scope.submit = function(){
 
-        //console.log('AddTagsModalCtrl - submitting this img: ', this.img);
+        imageServices.addTags(this.img);
 
-        //this.img.url = null;
-        //
-        //for(var prop in this.img){
-        //    if(prop !== 'url' && prop !== 'folder' && prop !== 'path' && prop !== 'file' && prop !== 'owner' && prop !== 'size' && prop !== 'created' && prop !== 'year' && prop !== 'month' && prop !== 'day'){
-        //        if(prop === 'city' || prop === 'state' || prop === 'names'){
-        //            $rootScope.img[prop] = capInitialFilter(this.img[prop]);
-        //        }
-        //        else{
-        //            $rootScope.img[prop] = this.img[prop];
-        //        }
-        //    }
-        //}
-        //
-        //imageServices.addTags($rootScope.img);
+        $modalInstance.dismiss('cancel');
+
+    };
+
+    $scope.cancel = function(){
+        $rootScope.img = {};
+        $modalInstance.dismiss('cancel');
+    };
+}]);
+;app.controller('BatchEditModalCtrl', ['imageServices', 'capInitialFilter', '$scope', '$modalInstance', '$http', '$rootScope', 'appServices', function(imageServices, capInitialFilter, $scope, $modalInstance, $http, $rootScope, appServices){
+
+    $scope.submit = function(){
 
         imageServices.addTags(this.img);
 
@@ -201,7 +199,7 @@ app.filter('dotFilter', function(){
 }]);
 ;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
-    console.log('imageCtrl. \nscope.images:'+ $scope +'\nrootscope.images: '+ $rootScope.images);
+    console.log('imageCtrl. \nscope.images:'+ $scope +'\nrootscope.images: '+ $rootScope);
 
     //IMAGE BATCH UPDATE TOOL
     appServices.update_files();
@@ -234,6 +232,43 @@ app.filter('dotFilter', function(){
             });
 
     }
+
+    $scope.batchObj = {};
+    $scope.batch = {};
+
+    $scope.mngBatchObj = function(){
+
+        if(!$scope.batch.all){
+            $scope.batchObj = {};
+        }
+        else {
+            for(var prop in $rootScope.uncategorized){
+                $scope.batchObj[$rootScope.uncategorized[prop].id] = true;
+            }
+        }
+    };
+
+    $scope.batchAdmin = function() {
+
+        var tmp = 0;
+
+        for(var prop in $scope.batchObj){
+            if($scope.batchObj[prop] === true){
+                tmp ++;
+            }
+        }
+
+        console.log('shwo tmp: ', tmp);
+
+        if(Object.keys($scope.batchObj).length >= 1 && tmp > 0){
+            console.log('batch edit go ', $scope.batchObj);
+        }
+        else{
+            console.log('batch edit no-go', $scope.batchObj);
+        }
+
+    };
+
 
     $scope.update_images = function(){
 
@@ -484,7 +519,7 @@ app.filter('dotFilter', function(){
         if(!$scope.interval){
             $scope.interval = $interval(function(){
                 $scope.next();
-            }, 2500)
+            }, 5000)
         }
 
         else{
@@ -494,14 +529,7 @@ app.filter('dotFilter', function(){
 
     };
 
-    $scope.pause = function(){
-
-
-    };
-
-
     $scope.next = function(){
-
 
         if($scope.selector < events.length - 1){
             $scope.selector ++;
@@ -516,6 +544,7 @@ app.filter('dotFilter', function(){
     };
 
     $scope.previous = function(){
+
         if($scope.selector === 0){
             $scope.selector = events.length -1;
         }
@@ -526,6 +555,7 @@ app.filter('dotFilter', function(){
             event: $scope.events[$scope.selector]
         };
     };
+
 });
 ;app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
@@ -932,31 +962,56 @@ app.filter('dotFilter', function(){
 
     $scope.open = function (size, option, misc) {
 
-        var modal = appServices.setModal(option);
+        console.log('show me scope: ', $scope, this.uncategorized);
 
-        if(option === 'event'){
-            angular.element(menu).collapse('hide');
-        }
-
-        if(misc === 'new'){
-            $scope.img = this.uncategorized;
-        }
-
-        if(misc === 'Allan'){
-            $scope.projects = $rootScope.resumes.Allan;
-        }
-
-        if(misc === 'Fiona'){
-            $scope.projects = $rootScope.resumes.Fiona;
-        }
-
-        var modalInstance = $modal.open({
-            scope: $scope,
-            animation: $scope.animationsEnabled,
-            templateUrl: modal.templ,
-            controller: modal.contr,
+        var config = {
+            $scope: $scope,
+            $modal: $modal,
+            modal: appServices.setModal(option),
             size: size
-        });
+        };
+
+        option != undefined ? option = option.toLowerCase() : option = option;
+        misc != undefined ? misc =  misc.toLowerCase(): misc = misc;
+
+        if(option === 'batch'){
+
+            var tmp = 0;
+
+            for(var prop in $scope.batchObj){
+                if($scope.batchObj[prop] === true){
+                    tmp ++;
+                }
+            }
+
+            if(Object.keys($scope.batchObj).length >= 1 && tmp > 0){
+                openModal(config);
+            }
+        }
+
+        else if(option === 'event'){
+            angular.element(menu).collapse('hide');
+            openModal(config);
+        }
+
+        else if(misc === 'new'){
+            $scope.img = this.uncategorized;
+            openModal(config);
+        }
+
+        else if(misc === 'allan'){
+            $scope.projects = $rootScope.resumes.Allan;
+            openModal(config);
+        }
+
+        else if(misc === 'fiona'){
+            $scope.projects = $rootScope.resumes.Fiona;
+            openModal(config);
+        }
+
+        else {
+            openModal(config);
+        }
 
     };
 
@@ -977,7 +1032,19 @@ app.filter('dotFilter', function(){
     };
 
 });
-;app.service('accountServices', ['$http','$rootScope', function($http, $rootScope){
+
+function openModal(obj) {
+
+    var modalInstance = obj.$modal.open({
+        scope: obj.$scope,
+        animation: obj.$scope.animationsEnabled,
+        templateUrl: obj.modal.templ,
+        controller: obj.modal.contr,
+        size: obj.size
+    });
+
+
+};;app.service('accountServices', ['$http','$rootScope', function($http, $rootScope){
 
     var _accountServiceFactory = {};
 
@@ -1090,7 +1157,8 @@ app.filter('dotFilter', function(){
         modify_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myModifyStorageModal.html'},
         add_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myAddStorageModal.html'},
         event: {contr: 'ModalInstanceCtrl', templ: './views/myLatestEventModal.html'},
-        multi: {contr: 'ModalInstanceCtrl2', templ: './views/myMultiViewModal.html'}
+        multi: {contr: 'ModalInstanceCtrl2', templ: './views/myMultiViewModal.html'},
+        batch: {contr: 'BatchEditModalCtrl', templ: './views/myBatchEditModal.html'}
     };
 
     _appServicesFactory.setModal = function(option){
@@ -1535,6 +1603,11 @@ app.filter('dotFilter', function(){
         restrict: 'EA'
     }
 });;app.directive('myAddTagsModal', function(){
+
+    return {
+        restrict: 'EA'
+    }
+});;app.directive('myBatchEditModal', function(){
 
     return {
         restrict: 'EA'

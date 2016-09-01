@@ -1464,6 +1464,8 @@ function openModal(obj) {
 
     _imageServiceFactory.addTags = function(obj){
 
+        console.log('show obj - addtags: ', obj);
+
         var addTags = {};
         var addEvent = {};
 
@@ -1489,10 +1491,9 @@ function openModal(obj) {
 
             for (var prop in obj) {
                 if ((prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id') && obj[prop] !== null ) {
-                    if ((prop === 'city' || prop === 'state' || prop === 'names' || prop === 'meta')) {
+                    if(prop !== 'id'){
                         addTags[prop] = capInitialFilter(obj[prop]);
-                    }
-                    else {
+                    }else{
                         addTags[prop] = obj[prop];
                     }
                 }
@@ -1534,10 +1535,10 @@ function openModal(obj) {
 
     _imageServiceFactory.batchEdit = function(obj){
 
+        console.log('show obj - batchedit: ', obj);
+
         for (var prop in obj) {
-            if (prop === 'city' || prop === 'state' || prop === 'names' || prop === 'meta') {
-                obj[prop] = capInitialFilter(obj[prop]);
-            }
+            obj[prop] = capInitialFilter(obj[prop]);
         }
 
         $http.post('/images_mgmt/batch', obj)

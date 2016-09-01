@@ -57,7 +57,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
                     //vals += ", '" + country.name + "'";
                     vals.push("'" + country.name + "'");
 
-                    if (country.code.toLowerCase() !== 'usa') {
+                    if (country.code.toLowerCase() !== 'usa' && country.code.toLowerCase() !== 'united states of america') {
                         cols += ", state";
                         //vals += ", 'n/a'";
                         vals.push("'n/a'");

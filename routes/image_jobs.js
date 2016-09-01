@@ -61,6 +61,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 router.post('/load', call.isAuthenticated, function(req, res, next){
 
     //console.log('in images: ', req.body.file);
+
     var created;
     var country;
     var cols = "created, year, month, day, file, storage";
@@ -70,7 +71,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
         if(req.body.file !== 'zzz' && exifData !== undefined){
 
-            //console.log('this is the exifdata: ', exifData);
+            console.log('this is the exifdata: ', exifData.image.Software);
 
             if(exifData.gps.GPSDateStamp !== undefined){
 
@@ -91,7 +92,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
                 cols += ", country";
                 vals.push("'"+country.name+"'");
 
-                if(country.code.toLowerCase() !== 'usa'){
+                if(country.code.toLowerCase() !== 'usa' && country.code.toLowerCase() !== 'united states of america'){
                     cols += ", state";
                     vals.push("'n/a'");
                 }
@@ -106,7 +107,15 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
             }
 
-            console.log('TIME CREATED \nLocal: '+ created + '\nZulu: ' + created.toJSON());
+            else if (exifData.image.Software.toLowerCase() === 'apple image capture') {
+
+                created = new Date();
+
+            }
+
+            //console.log('TIME CREATED \nLocal: '+ created + '\nZulu: ' + created.toJSON());
+
+            console.log('creating date for file: ', req.body.file, created);
 
             vals.unshift("'James'");
             vals.unshift("'"+req.body.file+"'");

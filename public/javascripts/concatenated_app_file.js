@@ -452,6 +452,13 @@ function capitalize (elem, ind, arr){
 
     var menu = document.getElementsByClassName('collapse');
 
+    $rootScope.captions = {
+        images: 'Images',
+        accounts: 'Accounts',
+        'landing_page': 'Landing Page'
+    };
+
+    $rootScope.caption = $rootScope.captions.images;
     $rootScope.template = {};
     $rootScope.template.url = './views/images.html';
 
@@ -464,7 +471,7 @@ function capitalize (elem, ind, arr){
     $scope.switch = function(option){
 
         console.log('location ctrl switching to ', option);
-
+        $rootScope.caption = $rootScope.captions[option];
         $rootScope.template.url = $scope.templates[option];
         angular.element(menu).collapse('hide');
     };
@@ -1448,8 +1455,6 @@ function openModal(obj) {
 
     _imageServiceFactory.addTags = function(obj){
 
-        console.log('add event? ', obj);
-
         var addTags = {};
         var addEvent = {};
 
@@ -1464,19 +1469,19 @@ function openModal(obj) {
 
             }
 
-            console.log('show me addEvent: ', addEvent);
-
             $http.post('/events_mgmt/add', addEvent)
                 .then(function(response){
                     eventServices.getAllEvents();
+                    _imageServiceFactory.getAll();
                 });
         }
 
         if(obj.add_tags) {
 
             for (var prop in obj) {
-                if (prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id') {
-                    if (prop === 'city' || prop === 'state' || prop === 'names') {
+                if ((prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id') && obj[prop] !== null ) {
+                    console.log('show me prop: ', prop, obj[prop]);
+                    if ((prop === 'city' || prop === 'state' || prop === 'names')) {
                         addTags[prop] = capInitialFilter(obj[prop]);
                     }
                     else {
@@ -1499,7 +1504,6 @@ function openModal(obj) {
         $http.get('/images_mgmt/get_new')
             .then(function(response){
                 $rootScope.uncategorized = response.data;
-                //$rootScope.img = $rootScope.uncategorized[0];
 
             });
     };
@@ -1532,6 +1536,7 @@ function openModal(obj) {
             .then(function(response){
                console.log(response);
                 _imageServiceFactory.getUncategorisedImg();
+                _imageServiceFactory.getAll();
             });
 
     }

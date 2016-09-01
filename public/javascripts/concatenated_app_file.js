@@ -48,42 +48,19 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
         var output;
         var outArr = [];
         var inputArr = [];
+        var result = [];
 
-        if(typeof input === 'string'){
+        if(Array.isArray(input)){
+            inputArr = input;
+            output = inputArr.forEach(capitalize);
+        }
+        else {
             input = input.toLowerCase();
             inputArr = input.split(',');
+            inputArr.forEach(elemIsArray);
         }
 
-        if(typeof input === 'object'){
-            inputArr = input;
-        }
-
-
-        inputArr.forEach(function(elem, ind){
-
-            elem = elem.trim();
-
-            var tmp = [];
-            var x = '';
-
-            for(var i = 0 ; i <= elem.length ; i ++){
-                tmp.push(elem[i]);
-            }
-
-            x = tmp[0].toUpperCase();
-            tmp.shift();
-            tmp.unshift(x);
-            elem = tmp.join('');
-            outArr.push(elem);
-
-        });
-
-        if(outArr.length > 1){
-            output = outArr.join(',');
-        }
-        else{
-            output = outArr.toString();
-        }
+        output = inputArr.join(',');
 
         return output;
     };
@@ -122,7 +99,62 @@ app.filter('dotFilter', function(){
 
         return str;
     }
-});;app.controller('acctsCtrl',['accountServices', '$scope', 'appServices', '$http', function(accountServices, $scope, appServices, $http){
+});
+
+function elemIsArray(elem, index, array){
+
+    var outArr = [];
+    var outStr;
+
+    elem = elem.trim();
+
+    if(Array.isArray(elem.split(' ')) && elem.split(' ').length > 1){
+
+        var tmp = elem.split(' ');
+        tmp.forEach(capitalize);
+        array[index] = tmp.join(' ');
+    }
+    else {
+        elem = capitalize(elem);
+        array[index] = elem.toString();
+    }
+
+    outStr = array.join(',');
+
+    return outStr;
+
+}
+
+function capitalize (elem, ind, arr){
+
+    elem = elem.trim();
+    var out;
+
+    arr != undefined ? out = arr : out = undefined;
+
+    var tmp = [];
+    var x = '';
+
+    for(var i = 0 ; i <= elem.length ; i ++){
+        tmp.push(elem[i]);
+    }
+
+    x = tmp[0].toUpperCase();
+    tmp.shift();
+    tmp.unshift(x);
+    elem = tmp.join('');
+
+    if(arr != undefined){
+        arr[ind] = elem;
+    }
+    else {
+        arr = [];
+        arr.push(elem);
+    }
+
+    return arr;
+
+};app.controller('acctsCtrl',['accountServices', '$scope', 'appServices', '$http', function(accountServices, $scope, appServices, $http){
 
     console.log('accounts ctrl');
 
@@ -1501,6 +1533,7 @@ function openModal(obj) {
         $http.post('/images_mgmt/batch', obj)
             .then(function(response){
                console.log(response);
+                _imageServiceFactory.getUncategorisedImg();
             });
 
     }

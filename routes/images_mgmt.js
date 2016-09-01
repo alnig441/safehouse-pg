@@ -151,9 +151,20 @@ router.post('/batch', call.isAuthenticated, function(req,res,next){
 
     console.log(batch.update());
 
-    //pg.connect(connectionString, function(error, client, done){
-    //
-    //})
+    pg.connect(connectionString, function(error, client, done){
+
+        var query = client.query(batch.update(), function(error, result){
+            if(error){
+                console.log(error);
+            }
+        });
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result);
+        })
+    })
+
+
 });
 
 router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){

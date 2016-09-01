@@ -45,6 +45,8 @@ app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
 
     return function(input) {
 
+        console.log('cap filter; ', input, typeof input);
+
         var output;
         var outArr = [];
         var inputArr = [];
@@ -125,6 +127,8 @@ function elemIsArray(elem, index, array){
 
 function capitalize (elem, ind, arr){
 
+    console.log('capitalize input: ',elem, ind);
+
     elem = elem.trim();
     var out;
 
@@ -133,14 +137,21 @@ function capitalize (elem, ind, arr){
     var tmp = [];
     var x = '';
 
-    for(var i = 0 ; i <= elem.length ; i ++){
-        tmp.push(elem[i]);
+    if((elem === 'of' || elem === 'the' ) && ind != 0){
+        console.log('avoid at all costs');
+    }
+    else{
+        for(var i = 0 ; i <= elem.length ; i ++){
+            tmp.push(elem[i]);
+        }
+
+        x = tmp[0].toUpperCase();
+        tmp.shift();
+        tmp.unshift(x);
+        elem = tmp.join('');
     }
 
-    x = tmp[0].toUpperCase();
-    tmp.shift();
-    tmp.unshift(x);
-    elem = tmp.join('');
+
 
     if(arr != undefined){
         arr[ind] = elem;
@@ -200,8 +211,6 @@ function capitalize (elem, ind, arr){
 ;app.controller('AddTagsModalCtrl', ['imageServices', 'capInitialFilter', '$scope', '$modalInstance', '$http', '$rootScope', 'appServices', function(imageServices, capInitialFilter, $scope, $modalInstance, $http, $rootScope, appServices){
 
     $scope.submit = function(){
-
-        console.log('hansemanse: ', $scope.batchEdit, $rootScope.batchObj, $scope.batchObj);
 
         if($scope.batchObj.hasOwnProperty(this.img.id)){
 
@@ -1480,8 +1489,7 @@ function openModal(obj) {
 
             for (var prop in obj) {
                 if ((prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id') && obj[prop] !== null ) {
-                    console.log('show me prop: ', prop, obj[prop]);
-                    if ((prop === 'city' || prop === 'state' || prop === 'names')) {
+                    if ((prop === 'city' || prop === 'state' || prop === 'names' || prop === 'meta')) {
                         addTags[prop] = capInitialFilter(obj[prop]);
                     }
                     else {
@@ -1527,7 +1535,7 @@ function openModal(obj) {
     _imageServiceFactory.batchEdit = function(obj){
 
         for (var prop in obj) {
-            if (prop === 'city' || prop === 'state' || prop === 'names') {
+            if (prop === 'city' || prop === 'state' || prop === 'names' || prop === 'meta') {
                 obj[prop] = capInitialFilter(obj[prop]);
             }
         }

@@ -111,11 +111,18 @@ function parseObj (obj, str, arr) {
 
 function breakout (str) {
 
+
     // TAKE INCOMING PARAMETER STR AND PARSE IT INTO AN ARRAY TO BE STRORED IN THE SPECIFIED TABLE COLUMN
 
-    var arr = str.split(',');
+    var arr;
     var tmpStr;
     var tmpArr = [];
+
+    if(Array.isArray(str)){
+        arr = str;
+    } else {
+        arr = str.split(',');
+    }
 
     arr.forEach(function(elem, ind, arr){
         tmpArr.push("'" + elem.trim() + "'");

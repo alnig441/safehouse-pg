@@ -84,8 +84,6 @@ app.filter('mapTabs', function(){
             }
         }
 
-        console.log('mapTabs -  \ninput: ' + input + '\noutput: ' + output);
-
         return output;
     }
 

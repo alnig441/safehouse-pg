@@ -51,7 +51,8 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
                 files = files.slice(0,5);
 
                 //console.log('show me files ', files);
-                res.send(files.slice(0,5));
+                //res.send(files.slice(0,5));
+                res.send(files.slice(0,1));
             })
         })
     })
@@ -137,6 +138,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
                     }
                 })
                 query.on('end', function(result){
+                    console.log(result);
                     client.end();
                     res.send(result);
 
@@ -146,7 +148,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
         }
 
         else{
-            res.status(200).send('File not entered: '+ req.body.file);
+            res.status(200).send('Creation Data Missing: ' +  req.body.file);
         }
 
     });

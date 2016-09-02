@@ -28,6 +28,14 @@ function Record (req, table, primaryKey, arrays) {
 
     this.update = function() {
 
+        console.log('IDs - string or array? ', typeof this.request.body.id);
+
+        var tmp = this.request.body.id;
+
+        if(tmp === 'string') {
+            this.request.body.id = tmp.split(',');
+        }
+
         var parms = parseObj(this.request.body, this.primaryKey, this.arrays);
         var query;
 

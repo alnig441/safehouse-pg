@@ -1531,15 +1531,19 @@ function openModal(obj) {
 
         console.log('show obj - batchedit: ', obj);
 
+        var batch = {};
+
         if(obj.country == 'usa'){
-            obj.country = 'united states of america';
+            batch.country = 'united states of america';
         }
 
         for (var prop in obj) {
-            obj[prop] = capInitialFilter(obj[prop]);
+            if(obj[prop] !== undefined){
+                batch[prop] = capInitialFilter(obj[prop]);
+            }
         }
 
-        $http.post('/images_mgmt/batch', obj)
+        $http.post('/images_mgmt/batch', batch)
             .then(function(response){
                console.log(response);
                 _imageServiceFactory.getUncategorisedImg();

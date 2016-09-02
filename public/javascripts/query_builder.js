@@ -32,7 +32,7 @@ function Record (req, table, primaryKey, arrays) {
 
         var tmp = this.request.body.id;
 
-        if(tmp === 'string') {
+        if(tmp == 'string') {
             this.request.body.id = tmp.split(',');
         }
 

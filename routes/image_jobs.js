@@ -108,7 +108,8 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
             }
 
-            else if (exifData.image.Software !== undefined) {
+            //else if (exifData.image.Software !== undefined) {
+            else {
 
                 var file = req.body.file;
                 var tmp;

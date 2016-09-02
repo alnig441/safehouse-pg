@@ -36,6 +36,8 @@ function Record (req, table, primaryKey, arrays) {
             this.request.body.id = tmp.split(',');
         }
 
+        console.log('req bod id: ', typeof this.request.body.id, this.request.body.id);
+
         var parms = parseObj(this.request.body, this.primaryKey, this.arrays);
         var query;
 

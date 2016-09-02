@@ -147,7 +147,7 @@ router.post('/batch', call.isAuthenticated, function(req,res,next){
 
     console.log('show me body: ', req.body, typeof req.body.id);
 
-    var batch = new qb(req, 'images', 'id', ['names', 'meta', 'id']);
+    var batch = new qb(req, 'images', 'id', ['names', 'meta']);
 
     console.log(batch.update());
 

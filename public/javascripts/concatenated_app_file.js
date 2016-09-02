@@ -1538,7 +1538,7 @@ function openModal(obj) {
         }
 
         for (var prop in obj) {
-            if(obj[prop] !== undefined){
+            if(obj[prop] !== undefined && prop !== undefined){
                 batch[prop] = capInitialFilter(obj[prop]);
             }
         }

@@ -31,17 +31,20 @@ function Record (req, table, primaryKey, arrays) {
         console.log('IDs - string or array? ', typeof this.request.body.id);
 
         var tmp = this.request.body.id;
+        var isArray = false;
 
         if(typeof tmp === 'string' && tmp.split(',').length >1) {
             this.request.body.id = tmp.split(',');
+            isArray = true;
         }
 
-        console.log('req bod id: '+ typeof tmp + '\nlength: '+ tmp.spit(',').length);
+        //console.log('req bod id: '+ typeof tmp + '\nlength: '+ tmp.spit(',').length);
 
         var parms = parseObj(this.request.body, this.primaryKey, this.arrays);
         var query;
 
-        if(Array.isArray(this.request.body.id) && tmp.split(',').length > 1){
+        //if(Array.isArray(this.request.body.id) && tmp.split(',').length > 1){
+        if(isArray){
             query = 'UPDATE ' + this.table + ' SET (' + parms.cols + ') = (' + parms.vals + ') WHERE ' + parms.ids;
         }
         else {

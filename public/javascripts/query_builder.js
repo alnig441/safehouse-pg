@@ -28,7 +28,7 @@ function Record (req, table, primaryKey, arrays) {
 
     this.update = function() {
 
-        console.log('IDs - string or array? ', typeof this.request.body.id);
+        //console.log('IDs - string or array? ', typeof this.request.body.id);
 
         var tmp = this.request.body.id;
         var isArray = false;
@@ -50,6 +50,8 @@ function Record (req, table, primaryKey, arrays) {
         else {
             query = 'UPDATE ' + this.table + ' SET (' + parms.cols + ') = (' + parms.vals + ') WHERE ' + this.primaryKey + ' = ' + parms[this.primaryKey] + '';
         }
+
+        console.log('show qb.update return query: ', query);
 
         return query;
     };

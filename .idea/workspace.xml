@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/images_mgmt.js" afterPath="$PROJECT_DIR$/routes/images_mgmt.js" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,11 +34,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="images_mgmt.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="images_mgmt.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="59" column="63" selection-start-line="59" selection-start-column="63" selection-end-line="59" selection-end-column="63" />
+            <state vertical-scroll-proportion="0.43313953">
+              <caret line="151" column="0" selection-start-line="151" selection-start-column="0" selection-end-line="152" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -63,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="myBatchEditModal.jade" pinned="false" current-in-tab="true">
+      <file leaf-file-name="myBatchEditModal.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/development/partials/myBatchEditModal.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6540698">
-              <caret line="30" column="103" selection-start-line="30" selection-start-column="103" selection-end-line="30" selection-end-column="103" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="23" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -170,7 +171,6 @@
         <option value="$PROJECT_DIR$/development/javascripts/controllers/singleViewModalCtrl.js" />
         <option value="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
         <option value="$PROJECT_DIR$/development/partials/myAddTagsModal.jade" />
-        <option value="$PROJECT_DIR$/routes/images_mgmt.js" />
         <option value="$PROJECT_DIR$/development/views/images.jade" />
         <option value="$PROJECT_DIR$/development/templates/base_admin.jade" />
         <option value="$PROJECT_DIR$/development/partials/diary.jade" />
@@ -182,6 +182,7 @@
         <option value="$PROJECT_DIR$/development/modules/query_builder.js" />
         <option value="$PROJECT_DIR$/development/javascripts/factories/imageServices.js" />
         <option value="$PROJECT_DIR$/development/partials/myBatchEditModal.jade" />
+        <option value="$PROJECT_DIR$/routes/images_mgmt.js" />
       </list>
     </option>
   </component>
@@ -1087,14 +1088,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="59" column="63" selection-start-line="59" selection-start-column="63" selection-end-line="59" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1105,8 +1098,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/development/partials/myBatchEditModal.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6540698">
-          <caret line="30" column="103" selection-start-line="30" selection-start-column="103" selection-end-line="30" selection-end-column="103" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.43313953">
+          <caret line="151" column="0" selection-start-line="151" selection-start-column="0" selection-end-line="152" selection-end-column="0" />
           <folding />
         </state>
       </provider>

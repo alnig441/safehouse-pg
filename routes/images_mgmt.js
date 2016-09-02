@@ -149,8 +149,6 @@ router.post('/batch', call.isAuthenticated, function(req,res,next){
 
     var batch = new qb(req, 'images', 'id', ['names', 'meta']);
 
-    console.log(batch.update());
-
     pg.connect(connectionString, function(error, client, done){
 
         var query = client.query(batch.update(), function(error, result){

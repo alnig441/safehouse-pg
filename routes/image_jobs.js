@@ -72,7 +72,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
         if(req.body.file !== 'zzz' && exifData !== undefined){
 
-            console.log('this is the exifdata: ', exifData.image.Software);
+            console.log('this is the exifdata: ', exifData);
 
             if(exifData.gps.GPSDateStamp !== undefined){
 
@@ -108,9 +108,31 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
             }
 
-            else if (exifData.image.Software.toLowerCase() === 'apple image capture') {
+            else if (exifData.image.Software !== undefined) {
+
+                var file = req.body.file;
+                var tmp;
+                var year;
+                var month;
+                var day;
+
+                if(Array.isArray(file.split(' ')[0].split('-')) && file.split(' ')[0].split('-').length == 3){
+                    tmp = file.split(' ')[0].split('-');
+                    year = tmp[0];
+                    month = tmp[1] - 1;
+                    day = tmp[2];
+                }
+                else if(file.split('_')[1].length == 8){
+                    tmp = file.split('_')[1];
+                    year = tmp.slice(0,4);
+                    month = tmp.slice(4,6) -1;
+                    day = tmp.slice(6,8);
+                }
 
                 created = new Date();
+                created.setUTCFullYear(year);
+                created.setUTCMonth(year);
+                created.setUTCDate(year);
 
             }
 

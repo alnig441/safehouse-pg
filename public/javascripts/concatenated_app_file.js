@@ -1531,6 +1531,10 @@ function openModal(obj) {
 
         console.log('show obj - batchedit: ', obj);
 
+        if(obj.country == 'usa'){
+            obj.country = 'united states of america';
+        }
+
         for (var prop in obj) {
             obj[prop] = capInitialFilter(obj[prop]);
         }

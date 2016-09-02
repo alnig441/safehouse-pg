@@ -111,8 +111,6 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
             //else if (exifData.image.Software !== undefined) {
             else {
 
-                var utc = {}
-
                 var file = req.body.file;
                 var tmp;
                 var year;

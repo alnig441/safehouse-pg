@@ -120,7 +120,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
                     tmp = file.split(' ')[1].split('.');
                     hour = tmp[0];
                     minute = tmp[1];
-                    second = [2];
+                    second = tmp[2];
 
                 }
                 else if(file.split('_')[1].length == 8 && file.split('_')[2].length >= 6){

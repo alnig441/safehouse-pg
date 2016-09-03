@@ -39,7 +39,6 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
                 result.rows.forEach(function(elem,ind,arr){
                     for(var i = 0 ; i < files.length ; i ++){
-                        //console.log(elem.file.toLowerCase(), files[i].toLowerCase());
                         if(elem.file.toLowerCase() === files[i].toLowerCase()){
                             files[i] = 'zzz';
                         }
@@ -50,8 +49,6 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
                 files = files.slice(0,5);
 
-                //console.log('show me files ', files);
-                //res.send(files.slice(0,5));
                 res.send(files.slice(0,1));
             })
         })
@@ -61,8 +58,6 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
 router.post('/load', call.isAuthenticated, function(req, res, next){
 
-    //console.log('in images: ', req.body.file);
-
     var created;
     var country;
     var cols = "created, year, month, day, file, storage";
@@ -71,8 +66,6 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
     new ExifImage({ image : './public/buffalo/James/'+ req.body.file }, function (error, exifData) {
 
         if(req.body.file !== 'zzz' && exifData !== undefined){
-
-            console.log('this is the exifdata: ', exifData);
 
             if(exifData.gps.GPSDateStamp !== undefined){
 
@@ -108,7 +101,6 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
             }
 
-            //else if (exifData.image.Software !== undefined) {
             else {
 
                 var file = req.body.file;
@@ -144,17 +136,13 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
                 created = new Date();
                 created.setUTCFullYear(year);
-                created.setUTCMonth(year);
-                created.setUTCDate(year);
+                created.setUTCMonth(month);
+                created.setUTCDate(day);
                 created.setUTCHours(hour);
                 created.setUTCMinutes(minute);
                 created.setUTCSeconds(second);
 
             }
-
-            //console.log('TIME CREATED \nLocal: '+ created + '\nZulu: ' + created.toJSON());
-
-            console.log('creating date for file: ', req.body.file, created);
 
             vals.unshift("'James'");
             vals.unshift("'"+req.body.file+"'");
@@ -163,9 +151,6 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
             vals.unshift("'"+created.getUTCFullYear()+"'");
             vals.unshift("'"+created.toJSON()+"'");
             vals = vals.toString();
-
-            //console.log('Sending query: \nColumns: '+ cols + '\nValues: '+vals);
-
 
             pg.connect(connectionString, function(error, client, done){
                 var query = client.query("INSERT INTO images("+cols+") values("+vals+")", function(error, result){

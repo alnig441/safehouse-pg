@@ -38,12 +38,9 @@ function Record (req, table, primaryKey, arrays) {
             isArray = true;
         }
 
-        //console.log('req bod id: '+ typeof tmp + '\nlength: '+ tmp.spit(',').length);
-
         var parms = parseObj(this.request.body, this.primaryKey, this.arrays);
         var query;
 
-        //if(Array.isArray(this.request.body.id) && tmp.split(',').length > 1){
         if(isArray){
             query = 'UPDATE ' + this.table + ' SET (' + parms.cols + ') = (' + parms.vals + ') WHERE ' + parms.ids;
         }

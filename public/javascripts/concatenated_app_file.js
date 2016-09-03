@@ -1462,6 +1462,9 @@ function openModal(obj) {
 
         var addTags = {};
         var addEvent = {};
+        if(obj.country.toLowerCase() === 'usa'){
+            obj.country = 'united states of america';
+        }
 
         if(obj.add_event){
             for(var prop in obj){
@@ -1533,7 +1536,7 @@ function openModal(obj) {
 
         var batch = {};
 
-        if(obj.country == 'usa'){
+        if(obj.country.toLowerCase() === 'usa'){
             batch.country = 'united states of america';
         }
 

@@ -263,35 +263,58 @@ function capitalize (elem, ind, arr){
     console.log('imageCtrl. \nscope.images:'+ $scope +'\nrootscope.images: '+ $rootScope);
 
     //IMAGE BATCH UPDATE TOOL
-    appServices.update_files();
+    //appServices.update_files();
+    new_files();
     imageServices.getUncategorisedImg();
     imageServices.getAll();
     eventServices.getAllEvents();
 
     console.log('show me rootscope: ', $rootScope);
 
-    function update_files(){
+    //GENERATE OBJECT CONTAINING NEW IMAGES
 
+    function new_files() {
+
+        $rootScope.newImages = {};
         var elem =  document.getElementById('new_files');
         var show = 'ng-show';
 
-        $http.get('/image_jobs/count/' + $rootScope.default_storage)
-            .then(function(result){
-                $scope.img_db = result.data;
-
-                $http.get('/image_jobs/new_files/')
-                    .then(function(result){
-                        if(parseInt(result.data.amount)  > parseInt($scope.img_db.size)){
-                            console.log('new files in directory', result.data.amount);
-                            angular.element(elem).removeClass('ng-hide');
-                            angular.element(elem).addClass(show);
-                        }
-                        else{
-                            console.log('no new files in directory', result.data.amount);
-                        }
-                    });
+        $http.get('/image_jobs/files')
+            .then(function(response){
+                if(response.data){
+                    $rootScope.newImages = response.data;
+                    angular.element(elem).removeClass('ng-hide');
+                    angular.element(elem).addClass(show);
+                    console.log('new_files new images: ', $rootScope.newImages);
+                }
             });
+    }
 
+    //LOAD IMAGES TABLE WITH NEW IMAGE FILES
+
+    $scope.loadNewImages = function() {
+
+        var image = {};
+        image.file = get_next_img();
+
+        if(image.file) {
+            $http.post('/image_jobs/load', image)
+                .then(function(response){
+                    response.data ? $rootScope.newImages[image.file] = response.data : $rootScope.newImages[image.file] = false;
+                    $scope.loadNewImages();
+                    imageServices.getUncategorisedImg();
+                });
+        }
+    }
+
+    //GET NEXT NEW IMAGE
+
+    function get_next_img() {
+        for(var prop in $rootScope.newImages){
+            if($rootScope.newImages[prop] === true){
+                return prop;
+            }
+        }
     }
 
     $scope.batchObj = {};
@@ -982,6 +1005,7 @@ function capitalize (elem, ind, arr){
                 if(file.progress == 100){
 
                     imageServices.addImg($scope.img);
+                    $rootScope.newImages[$scope.img.url] = false;
                     $modalInstance.dismiss('cancel');
                     $rootScope.f = undefined;
 
@@ -1553,7 +1577,12 @@ function openModal(obj) {
                 _imageServiceFactory.getAll();
             });
 
-    }
+    };
+
+    _imageServiceFactory.newFiles = function() {
+
+
+    };
 
     return _imageServiceFactory;
 

@@ -14,19 +14,14 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
     fs.readdir('./public/buffalo/James/', function(err, files){
 
+        var newImg = {};
+
         files.forEach(function(elem, ind, array){
 
-            array[ind] = elem.toLowerCase();
-            var x = array[ind].split('_');
-            var y = array[ind].split('-');
-
-            if(x[0].charAt(0) ==='.' || y[0].charAt(0) === '.'){
-                console.log(array[ind]);
-                array[ind] = 'zzz';
+            if(elem.charAt(0) != '.') {
+                newImg[elem] = true;
             }
         });
-        files.sort();
-
 
         pg.connect(connectionString,function(error,client,done){
             var query = client.query('SELECT file FROM images ORDER BY CREATED ASC', function(error, result){
@@ -34,22 +29,16 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
                     console.log(error);
                 }
             })
+            query.on('row', function(row) {
+                console.log('show me row; ', row);
+                if(newImg.hasOwnProperty(row.file)){
+                    newImg[row.file] = false;
+                }
+            })
             query.on('end',function(result){
                 client.end();
 
-                result.rows.forEach(function(elem,ind,arr){
-                    for(var i = 0 ; i < files.length ; i ++){
-                        if(elem.file.toLowerCase() === files[i].toLowerCase()){
-                            files[i] = 'zzz';
-                        }
-                    }
-                })
-                files.sort();
-                console.log('show me files ', files);
-
-                files = files.slice(0,5);
-
-                res.send(files.slice(0,1));
+                res.send(newImg);
             })
         })
     })
@@ -57,6 +46,8 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 });
 
 router.post('/load', call.isAuthenticated, function(req, res, next){
+
+    console.log('show me load body: ', req.body, req.params);
 
     var created;
     var country;

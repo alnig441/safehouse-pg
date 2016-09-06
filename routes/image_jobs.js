@@ -15,13 +15,13 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
     fs.readdir('./public/buffalo/James/', function(err, files){
 
         var newImg = {};
-        newImg.total = 0;
+        var total = 0;
 
         files.forEach(function(elem, ind, array){
 
             if(elem.charAt(0) != '.') {
                 newImg[elem.toLowerCase()] = true;
-                newImg.total ++;
+                total ++;
             }
         });
 
@@ -34,11 +34,17 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
             query.on('row', function(row) {
                 if(newImg.hasOwnProperty(row.file) || newImg.hasOwnProperty(row.file.toLowerCase())){
                     newImg[row.file.toLowerCase()] = false;
-                    newImg.total --;
+                    total --;
                 }
             })
             query.on('end',function(result){
                 client.end();
+
+                if(total === 0){
+                    newImg = {};
+                }
+
+                newImg.total = total;
 
                 res.send(newImg);
             })

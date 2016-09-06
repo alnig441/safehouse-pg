@@ -32,7 +32,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
                 }
             })
             query.on('row', function(row) {
-                if(newImg.hasOwnProperty(row.file)){
+                if(newImg.hasOwnProperty(row.file) || newImg.hasOwnProperty(row.file.toLowerCase())){
                     newImg[row.file] = false;
                     newImg.total --;
                 }

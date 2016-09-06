@@ -973,7 +973,7 @@ function capitalize (elem, ind, arr){
 
                 if(file.progress == 100){
                     done ++;
-                    if(done === 1){
+                    if(done === 3){
                         imageServices.addImg($scope.img);
                         $rootScope.newImages[$scope.img.url] = false;
                         $modalInstance.dismiss('cancel');

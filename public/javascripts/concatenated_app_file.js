@@ -264,31 +264,10 @@ function capitalize (elem, ind, arr){
 
     //IMAGE BATCH UPDATE TOOL
     appServices.update_files();
-    new_files();
+    imageServices.getNewFiles();
     imageServices.getUncategorisedImg();
     imageServices.getAll();
     eventServices.getAllEvents();
-
-    console.log('show me rootscope: ', $rootScope);
-
-    //GENERATE OBJECT CONTAINING NEW IMAGES
-
-    function new_files() {
-
-        $rootScope.newImages = {};
-        var elem =  document.getElementById('new_files');
-        var show = 'ng-show';
-
-        $http.get('/image_jobs/files')
-            .then(function(response){
-                if(response.data){
-                    $rootScope.newImages = response.data;
-                    angular.element(elem).removeClass('ng-hide');
-                    angular.element(elem).addClass(show);
-                    console.log('new_files new images: ', $rootScope.newImages);
-                }
-            });
-    }
 
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
@@ -300,12 +279,25 @@ function capitalize (elem, ind, arr){
         if(image.file) {
             $http.post('/image_jobs/load', image)
                 .then(function(response){
-                    response.data.rowCount ? $rootScope.newImages[image.file] = false : $rootScope.newImages[image.file] = response.data;
+                    //response.data.rowCount ? $rootScope.newImages[image.file] = false : $rootScope.newImages[image.file] = response.data;
+                    switch (response.data.rowCount) {
+                        case 1:
+                            $rootScope.newImages[image.file] = false;
+                            break;
+                        default:
+                            if(response.data.name ==='error'){
+                                $rootScope.newImages[image.file] = response.data.detail;
+                            }
+                            else{
+                                $rootScope.newImages[image.file] = response.data
+                            }
+                            break;
+                    }
                     $scope.loadNewImages();
                     imageServices.getUncategorisedImg();
                 });
         }
-    }
+    };
 
     //GET NEXT NEW IMAGE
 
@@ -946,6 +938,8 @@ function capitalize (elem, ind, arr){
 
         var progress = document.getElementById('progress');
 
+        var done = 0;
+
         $scope.img = {};
         $scope.img.url = file.name;
         $scope.img.meta = $scope.meta;
@@ -969,24 +963,25 @@ function capitalize (elem, ind, arr){
                     $scope.errorMsg = response.status + ': ' + response.data;
             });
             file.upload.progress(function(evt){
+
+                console.log('show me evt: ', evt, done);
+
                 file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
                 var width = file.progress + '%';
 
                 angular.element(progress).css({"width": width});
 
                 if(file.progress == 100){
-
-                    imageServices.addImg($scope.img);
-                    $rootScope.newImages[$scope.img.url] = false;
-                    $modalInstance.dismiss('cancel');
-                    $rootScope.f = undefined;
-
+                    done ++;
+                    if(done === 1){
+                        imageServices.addImg($scope.img);
+                        $rootScope.newImages[$scope.img.url] = false;
+                        $modalInstance.dismiss('cancel');
+                        $rootScope.f = undefined;
+                    }
                 }
-
-
             });
         }
-
     };
 
 }]);
@@ -1443,6 +1438,8 @@ function openModal(obj) {
     _imageServiceFactory.addImg = function(obj){
 
         $http.post('/images_mgmt/add', obj)
+        //$http.post('/image_jobs/load', obj)
+
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
             })
@@ -1551,8 +1548,21 @@ function openModal(obj) {
 
     };
 
-    _imageServiceFactory.newFiles = function() {
+    _imageServiceFactory.getNewFiles = function(){
 
+        $rootScope.newImages = {};
+        var elem =  document.getElementById('new_files');
+        var show = 'ng-show';
+
+        $http.get('/image_jobs/files')
+            .then(function(response){
+                if(response.data){
+                    $rootScope.newImages = response.data;
+                    angular.element(elem).removeClass('ng-hide');
+                    angular.element(elem).addClass(show);
+                    console.log('new_files new images: ', $rootScope.newImages);
+                }
+            });
 
     };
 

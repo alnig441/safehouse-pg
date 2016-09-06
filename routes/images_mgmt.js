@@ -33,6 +33,8 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.url }, function (error, exifData) {
 
+        //console.log('this is the exif: ', exifData);
+
         if (req.body.created === undefined) {
 
             if (exifData !== undefined) {
@@ -73,10 +75,15 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
                 }
 
-                else if (exifData.image.Software.toLowerCase() === 'apple image capture') {
-
-                    created = new Date();
-
+                else if (exifData.Make !== undefined){
+                    switch (exifData.Make.toLowerCase()) {
+                        case 'motorola':
+                            break;
+                        case 'apple':
+                            break;
+                        case 'canon':
+                            break;
+                    }
                 }
 
                 else {
@@ -134,7 +141,11 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
     var currUpload = uploadFnct(req.params.dest);
+
     currUpload(req,res,function(err){
+
+        console.log('show me response from upload', err);
+
         if(err){
             res.json({error_code:1,err_desc:err});
             return;

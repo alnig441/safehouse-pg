@@ -290,7 +290,7 @@ function capitalize (elem, ind, arr){
             });
     }
 
-    //LOAD IMAGES TABLE WITH NEW IMAGE FILES
+    //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
     $scope.loadNewImages = function() {
 
@@ -330,34 +330,6 @@ function capitalize (elem, ind, arr){
                 $scope.batchObj[$rootScope.uncategorized[prop].id] = true;
             }
         }
-    };
-
-    $scope.update_images = function(){
-
-        //BATCH UPLOAD OF FILES
-            $http.get('/image_jobs/files')
-                .then(function(response){
-                    console.log(response);
-                    response.data.forEach(function(elem, ind, arr){
-                        if(elem !== 'zzz'){
-
-                            var image = {};
-                            image.file = elem;
-                            console.log('FILE_NAME: ', image);
-
-                            $http.post('/image_jobs/load', image)
-                                .then(function(response){
-                                    console.log('end load: ', response);
-                                    if(response.statusText == 'OK' && response.data !== 'Creation Data Missing: ' + image.file && response.data.name !== 'error'){
-                                        $scope.update_images();
-                                    }
-                                    imageServices.getUncategorisedImg();
-
-                                });
-                        }
-
-                    });
-                });
     };
 
     var menu = document.getElementsByClassName('collapse');

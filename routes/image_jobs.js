@@ -15,24 +15,26 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
     fs.readdir('./public/buffalo/James/', function(err, files){
 
         var newImg = {};
+        newImg.total = 0;
 
         files.forEach(function(elem, ind, array){
 
             if(elem.charAt(0) != '.') {
                 newImg[elem] = true;
+                newImg.total ++;
             }
         });
 
         pg.connect(connectionString,function(error,client,done){
             var query = client.query('SELECT file FROM images ORDER BY CREATED ASC', function(error, result){
                 if(error){
-                    console.log(error);
+                    res.send(error);
                 }
             })
             query.on('row', function(row) {
-                console.log('show me row; ', row);
                 if(newImg.hasOwnProperty(row.file)){
                     newImg[row.file] = false;
+                    newImg.total --;
                 }
             })
             query.on('end',function(result){

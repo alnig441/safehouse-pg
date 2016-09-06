@@ -263,7 +263,7 @@ function capitalize (elem, ind, arr){
     console.log('imageCtrl. \nscope.images:'+ $scope +'\nrootscope.images: '+ $rootScope);
 
     //IMAGE BATCH UPDATE TOOL
-    //appServices.update_files();
+    appServices.update_files();
     new_files();
     imageServices.getUncategorisedImg();
     imageServices.getAll();
@@ -300,7 +300,7 @@ function capitalize (elem, ind, arr){
         if(image.file) {
             $http.post('/image_jobs/load', image)
                 .then(function(response){
-                    response.data ? $rootScope.newImages[image.file] = response.data : $rootScope.newImages[image.file] = false;
+                    response.data.rowCount ? $rootScope.newImages[image.file] = false : $rootScope.newImages[image.file] = response.data;
                     $scope.loadNewImages();
                     imageServices.getUncategorisedImg();
                 });

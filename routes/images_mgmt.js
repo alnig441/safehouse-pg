@@ -120,6 +120,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
                     }
                 })
                 query.on('end', function (result) {
+                    client.end();
                     res.status(200).send(result.rows);
                 })
             })

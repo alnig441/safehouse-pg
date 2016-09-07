@@ -275,11 +275,12 @@ function capitalize (elem, ind, arr){
 
         var image = {};
         image.file = get_next_img();
+        image.storage = $rootScope.default_storage;
 
         if(image.file) {
             $http.post('/image_jobs/load', image)
                 .then(function(response){
-                    //response.data.rowCount ? $rootScope.newImages[image.file] = false : $rootScope.newImages[image.file] = response.data;
+                    console.log('response: ', response, image.file, $rootScope.newImages);
                     switch (response.data.rowCount) {
                         case 1:
                             $rootScope.newImages[image.file] = false;
@@ -941,6 +942,7 @@ function capitalize (elem, ind, arr){
         var done = 0;
 
         $scope.img = {};
+        $scope.img.storage = $rootScope.default_storage;
         $scope.img.url = file.name;
         $scope.img.meta = $scope.meta;
         if($scope.created){
@@ -963,8 +965,6 @@ function capitalize (elem, ind, arr){
                     $scope.errorMsg = response.status + ': ' + response.data;
             });
             file.upload.progress(function(evt){
-
-                console.log('show me evt: ', evt, done);
 
                 file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
                 var width = file.progress + '%';
@@ -992,8 +992,6 @@ function capitalize (elem, ind, arr){
     $scope.animationsEnabled = true;
 
     $scope.open = function (size, option, misc) {
-
-        console.log('show me scope: ', $scope, this.uncategorized);
 
         var config = {
             $scope: $scope,
@@ -1438,9 +1436,9 @@ function openModal(obj) {
     _imageServiceFactory.addImg = function(obj){
 
         $http.post('/images_mgmt/add', obj)
-        //$http.post('/image_jobs/load', obj)
 
             .then(function(response){
+                console.log('addImg response', response);
                 _imageServiceFactory.getUncategorisedImg();
             })
             .then(function(response){
@@ -1450,8 +1448,6 @@ function openModal(obj) {
     };
 
     _imageServiceFactory.addTags = function(obj){
-
-        console.log('show obj - addtags: ', obj);
 
         var addTags = {};
         var addEvent = {};
@@ -1524,8 +1520,6 @@ function openModal(obj) {
     };
 
     _imageServiceFactory.batchEdit = function(obj){
-
-        console.log('show obj - batchedit: ', obj);
 
         var batch = {};
 

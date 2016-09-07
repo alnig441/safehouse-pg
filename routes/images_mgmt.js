@@ -27,113 +27,79 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    var cols = "created, year, month, day, file, storage";
-    var vals = [];
-    var created ;
+    var qbObj = {};
+    qbObj.storage = req.body.storage;
+    qbObj.file = req.body.url;
+    qbObj.created = new Date(qbObj.file.split(' ')[0]);
 
-    new ExifImage({ image : './public/buffalo/James/'+ req.body.url }, function (error, exifData) {
+    console.log('add... : ', req.body, qbObj);
 
-        //console.log('this is the exif: ', exifData);
+    if(req.body.created){
+        qbObj.created = req.body.created;
+        qbObj.year = new Date(qbObj.created).getUTCFullYear();
+        qbObj.month = new Date(qbObj.created).getUTCMonth();
+        qbObj.day = new Date(qbObj.created).getUTCDate();
+    }
+    else if(qbObj.file.split(' ')[0].split('-').length === 3 && qbObj.created.toString() !== 'Invalid Date'){
+        console.log('apple');
+        var tmpArr = qbObj.file.split(' ')[0].split('-');
+        qbObj.year = tmpArr[0];
+        qbObj.month = tmpArr[1] - 1;
+        qbObj.day = tmpArr[2];
+        tmpArr = qbObj.file.split(' ')[1].split('.');
+        qbObj.created.setUTCHours(tmpArr[0]);
+        qbObj.created.setUTCMinutes(tmpArr[1]);
+        qbObj.created.setUTCSeconds(tmpArr[2]);
+        qbObj.created = qbObj.created.toJSON();
+    }
+    else if(qbObj.file.split('_')[1].length === 8 && qbObj.file.split('_')[2].length >= 6 && qbObj.created.toString() === 'Invalid Date'){
+        console.log('android');
+        qbObj.created = new Date();
+        var tmpArr = qbObj.file.split('_')[1];
+        qbObj.year = tmpArr.slice(0,4);
+        qbObj.created.setUTCFullYear(tmpArr.slice(0,4));
+        qbObj.month = tmpArr.slice(4,6) - 1;
+        qbObj.created.setUTCMonth(tmpArr.slice(4,6) - 1);
+        qbObj.day = tmpArr.slice(6,8);
+        qbObj.created.setUTCDate(tmpArr.slice(6,8));
+        tmpArr = qbObj.file.split('_')[2];
+        qbObj.created.setUTCHours(tmpArr.slice(0,2));
+        qbObj.created.setUTCMinutes(tmpArr.slice(2,4));
+        qbObj.created.setUTCSeconds(tmpArr.slice(4,6));
+        qbObj.created = qbObj.created.toJSON();
+    }
 
-        if (req.body.created === undefined) {
+    req.body = qbObj;
 
-            if (exifData !== undefined) {
+    var img = new qb(req, 'images');
 
-                if (exifData.gps.GPSDateStamp !== undefined) {
+    pg.connect(connectionString, function (err, client, done) {
+        var query = client.query(img.insert(), function (error, result) {
 
-                    var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
-                    var time_str = exifData.gps.GPSTimeStamp.join(':');
-                    created = new Date(date_str + 'Z' + time_str);
+            if (error) {
+                switch (error.code){
 
-                    var lng = exifData.gps.GPSLongitude.slice(0, 2);
-                    var lng_str = lng.join('.');
-                    var lat = exifData.gps.GPSLatitude.slice(0, 2);
-                    var lat_str = lat.join('.');
-
-                    if (exifData.gps.GPSLongitudeRef.toLowerCase() === 'w') {
-                        lng_str = '-' + lng_str;
-                    }
-
-                    country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
-                    cols += ", country";
-                    //vals += ", '" + country.name + "'";
-                    vals.push("'" + country.name + "'");
-
-                    if (country.code.toLowerCase() !== 'usa' && country.code.toLowerCase() !== 'united states of america') {
-                        cols += ", state";
-                        //vals += ", 'n/a'";
-                        vals.push("'n/a'");
-                    }
+                    case '22007':
+                        error.detail = 'Created: Invalid Date';
+                        break;
+                    case '22001':
+                        error.detail = 'File name too long';
+                        break;
+                    default:
+                        error.detail = error.code;
+                        break;
                 }
-
-                else if (exifData.exif.DateTimeOriginal !== undefined) {
-
-                    var dto = exifData.exif.DateTimeOriginal.split(' ');
-                    var dto_0 = dto[0].split(':');
-                    var timestamp = dto_0.join('-') + ' ' + dto[1];
-                    created = new Date(timestamp);
-
-                }
-
-                else if (exifData.Make !== undefined){
-                    switch (exifData.Make.toLowerCase()) {
-                        case 'motorola':
-                            break;
-                        case 'apple':
-                            break;
-                        case 'canon':
-                            break;
-                    }
-                }
-
-                else {
-
-                    created = false;
-                }
-
+                console.log(error);
+                res.send(error);
             }
+        })
+        query.on('end', function (result) {
+            client.end();
+            console.log(result);
+            res.status(200).send(result.rows);
+        })
+    })
 
-        }
-
-        else {
-
-            created = new Date(req.body.created);
-
-        }
-
-        if (!created) {
-
-            console.log('no valid date present');
-            res.status(400).send('no valid date present');
-        }
-
-        else {
-
-            vals.unshift("'James'");
-            vals.unshift("'" + req.body.url + "'");
-            vals.unshift("'" + created.getUTCDate() + "'");
-            vals.unshift("'" + created.getUTCMonth() + "'");
-            vals.unshift("'" + created.getUTCFullYear() + "'");
-            vals.unshift("'" + created.toJSON() + "'");
-            vals = vals.toString();
-
-
-            pg.connect(connectionString, function (err, client, done) {
-                var query = client.query("INSERT INTO images(" + cols + ") values(" + vals + ")", function (error, result) {
-
-                    if (error) {
-                        console.log(error);
-                        res.status(304).send(error);
-                    }
-                })
-                query.on('end', function (result) {
-                    client.end();
-                    res.status(200).send(result.rows);
-                })
-            })
-        }
-
-    });
 
 });
 

@@ -1,5 +1,66 @@
 var call = {
 
+    buildQBObj: function(obj){
+
+        var qbObj = {};
+        var tmp;
+        var hour;
+        var min;
+        var sec;
+
+        for(var prop in obj){
+            if(obj[prop] !== null && obj[prop] !== 'null'){
+                qbObj[prop] = obj[prop];
+            }
+        }
+
+        if(!qbObj.created){
+
+            if(obj.file.split(' ')[0].split('-').length == 3){
+                tmp = obj.file.split(' ')[0].split('-');
+                qbObj.year = tmp[0];
+                qbObj.month = tmp[1] - 1;
+                qbObj.day = tmp[2];
+                tmp = obj.file.split(' ')[1].split('.');
+                hour = tmp[0];
+                min = tmp[1];
+                sec = tmp[2];
+
+            }
+            else if(obj.file.split('_').length >= 3 && obj.file.split('_')[1].length == 8 && obj.file.split('_')[2].length >= 6){
+                tmp = obj.file.split('_')[1];
+                qbObj.year = tmp.slice(0,4);
+                qbObj.month = tmp.slice(4,6) - 1;
+                qbObj.day = tmp.slice(6,8);
+                tmp = obj.file.split('_')[2];
+                hour = tmp.slice(0,2);
+                min = tmp.slice(2,4);
+                sec = tmp.slice(4,6);
+            }
+
+            qbObj.created = new Date();
+            qbObj.created.setUTCFullYear(qbObj.year);
+            qbObj.created.setUTCMonth(qbObj.month);
+            qbObj.created.setUTCDate(qbObj.day);
+            qbObj.created.setUTCHours(hour);
+            qbObj.created.setUTCMinutes(min);
+            qbObj.created.setUTCSeconds(sec);
+        }
+        else{
+            qbObj.created = new Date(obj.created);
+            qbObj.year = qbObj.created.getUTCFullYear(qbObj.year);
+            qbObj.month = qbObj.created.getUTCMonth(qbObj.month);
+            qbObj.day = qbObj.created.getUTCDate(qbObj.day);
+
+        }
+
+        if(qbObj.created != 'Invalid Date'){
+            qbObj.created = qbObj.created.toJSON();
+        }
+
+        return qbObj;
+    },
+
     parser: function(string, lang){
         var temp = string.slice(1,11);
         var created = {};

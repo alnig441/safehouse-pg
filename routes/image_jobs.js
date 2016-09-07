@@ -7,6 +7,8 @@ var call = require('../public/javascripts/myFunctions.js');
 var fs = require('fs');
 var crg = require('country-reverse-geocoding').country_reverse_geocoding();
 var ExifImage = require('exif').ExifImage;
+var qb = require('../public/javascripts/query_builder.js');
+
 
 router.get('/files', call.isAuthenticated, function(req, res, next){
 
@@ -20,7 +22,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
         files.forEach(function(elem, ind, array){
 
             if(elem.charAt(0) != '.') {
-                newImg[elem.toLowerCase()] = true;
+                newImg[elem] = true;
                 total ++;
             }
         });
@@ -32,10 +34,13 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
                 }
             })
             query.on('row', function(row) {
-                if(newImg.hasOwnProperty(row.file) || newImg.hasOwnProperty(row.file.toLowerCase())){
-                    newImg[row.file.toLowerCase()] = false;
-                    total --;
+                if(newImg.hasOwnProperty(row.file)){
+                    newImg[row.file] = false;
                 }
+                else if(newImg.hasOwnProperty(row.file.toLowerCase())){
+                    newImg[row.file.toLowerCase()] = false;
+                }
+                total --;
             })
             query.on('end',function(result){
                 client.end();
@@ -55,123 +60,77 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
 router.post('/load', call.isAuthenticated, function(req, res, next){
 
-    console.log('show me load body: ', req.body, req.params);
+    //console.log('show me load body: ', req.body, req.params);
 
     var created;
     var country;
     var cols = "created, year, month, day, file, storage";
     var vals = [];
+    var image;
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.file }, function (error, exifData) {
 
-        if(req.body.file !== 'zzz' && exifData !== undefined){
+        if(exifData) {
 
-            if(exifData.gps.GPSDateStamp !== undefined){
+            if (exifData.gps.GPSDateStamp) {
 
                 var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
                 var time_str = exifData.gps.GPSTimeStamp.join(':');
-                created = new Date(date_str + 'Z' + time_str);
 
-                var lng = exifData.gps.GPSLongitude.slice(0,2);
+                var lng = exifData.gps.GPSLongitude.slice(0, 2);
                 var lng_str = lng.join('.');
-                var lat = exifData.gps.GPSLatitude.slice(0,2);
+                var lat = exifData.gps.GPSLatitude.slice(0, 2);
                 var lat_str = lat.join('.');
 
-                if(exifData.gps.GPSLongitudeRef.toLowerCase() === 'w'){
-                    lng_str = '-'+lng_str;
+                if (exifData.gps.GPSLongitudeRef.toLowerCase() === 'w') {
+                    lng_str = '-' + lng_str;
                 }
 
                 country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
-                cols += ", country";
-                vals.push("'"+country.name+"'");
 
-                if(country.code.toLowerCase() !== 'usa' && country.code.toLowerCase() !== 'united states of america'){
-                    cols += ", state";
-                    vals.push("'n/a'");
-                }
+                req.body.created = date_str + 'Z' + time_str;
+                req.body.country = country.name;
             }
 
-            else if(exifData.exif.DateTimeOriginal !== undefined){
+            else if (exifData.exif.DateTimeOriginal) {
 
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
                 var dto_0 = dto[0].split(':');
                 var timestamp = dto_0.join('-') + ' ' + dto[1];
-                created = new Date(timestamp);
 
+                req.body.created = timestamp;
             }
 
-            else {
+        }
 
-                var file = req.body.file;
-                var tmp;
-                var year;
-                var month;
-                var day;
-                var hour;
-                var minute;
-                var second;
+        req.body = call.buildQBObj(req.body);
 
-                if(Array.isArray(file.split(' ')[0].split('-')) && file.split(' ')[0].split('-').length == 3){
-                    tmp = file.split(' ')[0].split('-');
-                    year = tmp[0];
-                    month = tmp[1] - 1;
-                    day = tmp[2];
-                    tmp = file.split(' ')[1].split('.');
-                    hour = tmp[0];
-                    minute = tmp[1];
-                    second = tmp[2];
+        image = new qb(req, 'images');
 
-                }
-                else if(file.split('_')[1].length == 8 && file.split('_')[2].length >= 6){
-                    tmp = file.split('_')[1];
-                    year = tmp.slice(0,4);
-                    month = tmp.slice(4,6) - 1;
-                    day = tmp.slice(6,8);
-                    tmp = file.split('_')[2];
-                    hour = tmp.slice(0,2);
-                    minute = tmp.slice(2,4);
-                    second = tmp.slice(4,6);
-                }
+        pg.connect(connectionString, function(error, client, done){
+            var query = client.query(image.insert(), function(error, result){
 
-                created = new Date();
-                created.setUTCFullYear(year);
-                created.setUTCMonth(month);
-                created.setUTCDate(day);
-                created.setUTCHours(hour);
-                created.setUTCMinutes(minute);
-                created.setUTCSeconds(second);
-
-            }
-
-            vals.unshift("'James'");
-            vals.unshift("'"+req.body.file+"'");
-            vals.unshift("'"+created.getUTCDate()+"'");
-            vals.unshift("'"+created.getUTCMonth()+"'");
-            vals.unshift("'"+created.getUTCFullYear()+"'");
-            vals.unshift("'"+created.toJSON()+"'");
-            vals = vals.toString();
-
-            pg.connect(connectionString, function(error, client, done){
-                var query = client.query("INSERT INTO images("+cols+") values("+vals+")", function(error, result){
-
-                    if(error){
-                        console.log(error);
-                        res.status(200).send(error);
+                if(error){
+                    switch (error.code){
+                        case '22007':
+                            error.detail = 'Created: Invalid Date';
+                            break;
+                        case '22001':
+                            error.detail = 'File name too long';
+                            break;
+                        default:
+                            error.detail = 'postgres error code: ' + error.code;
+                            break;
                     }
-                })
-                query.on('end', function(result){
-                    console.log(result);
-                    client.end();
-                    res.send(result);
-
-                })
+                    res.send(error);
+                }
             })
+            query.on('end', function(result){
+                client.end();
+                res.send(result);
 
-        }
-
-        else{
-            res.status(200).send('Creation Data Missing: ' +  req.body.file);
-        }
+            })
+        })
 
     });
 

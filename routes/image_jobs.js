@@ -62,10 +62,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
     //console.log('show me load body: ', req.body, req.params);
 
-    var created;
     var country;
-    var cols = "created, year, month, day, file, storage";
-    var vals = [];
     var image;
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.file }, function (error, exifData) {

@@ -277,6 +277,8 @@ function capitalize (elem, ind, arr){
         image.file = get_next_img();
         image.storage = $rootScope.default_storage;
 
+        console.log('loading new: ', image);
+
         if(image.file) {
             $http.post('/image_jobs/load', image)
                 .then(function(response){
@@ -294,8 +296,8 @@ function capitalize (elem, ind, arr){
                             }
                             break;
                     }
-                    $scope.loadNewImages();
                     imageServices.getUncategorisedImg();
+                    $scope.loadNewImages();
                 });
         }
     };
@@ -943,7 +945,8 @@ function capitalize (elem, ind, arr){
 
         $scope.img = {};
         $scope.img.storage = $rootScope.default_storage;
-        $scope.img.url = file.name;
+        //$scope.img.url = file.name;
+        $scope.img.file = file.name;
         $scope.img.meta = $scope.meta;
         if($scope.created){
             $scope.img.created = $scope.created;
@@ -975,7 +978,7 @@ function capitalize (elem, ind, arr){
                     done ++;
                     if(done === 3){
                         imageServices.addImg($scope.img);
-                        $rootScope.newImages[$scope.img.url] = false;
+                        //$rootScope.newImages[$scope.img.file] = false;
                         $modalInstance.dismiss('cancel');
                         $rootScope.f = undefined;
                     }
@@ -1439,6 +1442,11 @@ function openModal(obj) {
 
             .then(function(response){
                 console.log('addImg response', response);
+                response.data.name == 'error' ? $rootScope.newImages[obj.file] = response.data.detail : $rootScope.newImages[obj.file] = false;
+                //_imageServiceFactory.getUncategorisedImg();
+                //_imageServiceFactory.getNewFiles();
+            })
+            .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
             })
             .then(function(response){

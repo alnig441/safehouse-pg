@@ -27,49 +27,9 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    var qbObj = {};
-    qbObj.storage = req.body.storage;
-    qbObj.file = req.body.url;
-    qbObj.created = new Date(qbObj.file.split(' ')[0]);
+    //console.log('add... : ', req.body);
 
-    console.log('add... : ', req.body, qbObj);
-
-    if(req.body.created){
-        qbObj.created = req.body.created;
-        qbObj.year = new Date(qbObj.created).getUTCFullYear();
-        qbObj.month = new Date(qbObj.created).getUTCMonth();
-        qbObj.day = new Date(qbObj.created).getUTCDate();
-    }
-    else if(qbObj.file.split(' ')[0].split('-').length === 3 && qbObj.created.toString() !== 'Invalid Date'){
-        console.log('apple');
-        var tmpArr = qbObj.file.split(' ')[0].split('-');
-        qbObj.year = tmpArr[0];
-        qbObj.month = tmpArr[1] - 1;
-        qbObj.day = tmpArr[2];
-        tmpArr = qbObj.file.split(' ')[1].split('.');
-        qbObj.created.setUTCHours(tmpArr[0]);
-        qbObj.created.setUTCMinutes(tmpArr[1]);
-        qbObj.created.setUTCSeconds(tmpArr[2]);
-        qbObj.created = qbObj.created.toJSON();
-    }
-    else if(qbObj.file.split('_')[1].length === 8 && qbObj.file.split('_')[2].length >= 6 && qbObj.created.toString() === 'Invalid Date'){
-        console.log('android');
-        qbObj.created = new Date();
-        var tmpArr = qbObj.file.split('_')[1];
-        qbObj.year = tmpArr.slice(0,4);
-        qbObj.created.setUTCFullYear(tmpArr.slice(0,4));
-        qbObj.month = tmpArr.slice(4,6) - 1;
-        qbObj.created.setUTCMonth(tmpArr.slice(4,6) - 1);
-        qbObj.day = tmpArr.slice(6,8);
-        qbObj.created.setUTCDate(tmpArr.slice(6,8));
-        tmpArr = qbObj.file.split('_')[2];
-        qbObj.created.setUTCHours(tmpArr.slice(0,2));
-        qbObj.created.setUTCMinutes(tmpArr.slice(2,4));
-        qbObj.created.setUTCSeconds(tmpArr.slice(4,6));
-        qbObj.created = qbObj.created.toJSON();
-    }
-
-    req.body = qbObj;
+    req.body = call.buildQBObj(req.body);
 
     var img = new qb(req, 'images');
 

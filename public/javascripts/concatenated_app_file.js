@@ -1443,8 +1443,6 @@ function openModal(obj) {
             .then(function(response){
                 console.log('addImg response', response);
                 response.data.name == 'error' ? $rootScope.newImages[obj.file] = response.data.detail : $rootScope.newImages[obj.file] = false;
-                //_imageServiceFactory.getUncategorisedImg();
-                //_imageServiceFactory.getNewFiles();
             })
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
@@ -1459,7 +1457,8 @@ function openModal(obj) {
 
         var addTags = {};
         var addEvent = {};
-        if(obj.country.toLowerCase() === 'usa'){
+
+        if(obj.country && obj.country.toLowerCase() === 'usa'){
             obj.country = 'united states of america';
         }
 
@@ -1531,12 +1530,12 @@ function openModal(obj) {
 
         var batch = {};
 
-        if(obj.country.toLowerCase() === 'usa'){
+        if(obj.country && obj.country.toLowerCase() === 'usa'){
             batch.country = 'united states of america';
         }
 
         for (var prop in obj) {
-            if(obj[prop] !== undefined && prop !== undefined){
+            if(obj[prop] && prop){
                 batch[prop] = capInitialFilter(obj[prop]);
             }
         }

@@ -22,7 +22,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
         files.forEach(function(elem, ind, array){
 
             if(elem.charAt(0) != '.') {
-                newImg[elem] = true;
+                newImg[elem.toLowerCase()] = true;
                 total ++;
             }
         });
@@ -34,10 +34,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
                 }
             })
             query.on('row', function(row) {
-                if(newImg.hasOwnProperty(row.file)){
-                    newImg[row.file] = false;
-                }
-                else if(newImg.hasOwnProperty(row.file.toLowerCase())){
+                if(newImg.hasOwnProperty(row.file.toLowerCase())){
                     newImg[row.file.toLowerCase()] = false;
                 }
                 total --;

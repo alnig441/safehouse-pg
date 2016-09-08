@@ -9,8 +9,9 @@ var call = {
         var sec;
 
         for(var prop in obj){
-            if(obj[prop] !== null && obj[prop] !== 'null'){
-                qbObj[prop] = obj[prop];
+            //if(obj[prop] !== null && obj[prop] !== 'null'){
+            if(obj[prop]){
+                    qbObj[prop] = obj[prop];
             }
         }
 

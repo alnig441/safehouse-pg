@@ -42,7 +42,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
             query.on('end',function(result){
                 client.end();
 
-                if(total === 0){
+                if(total < 1){
                     newImg = {};
                 }
 

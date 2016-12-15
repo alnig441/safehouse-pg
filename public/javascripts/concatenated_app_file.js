@@ -260,7 +260,7 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
-    console.log('imageCtrl. \nscope.images:'+ $scope +'\nrootscope.images: '+ $rootScope);
+    //console.log('imageCtrl. \nscope.images:'+ $scope +'\nrootscope.images: '+ $rootScope);
 
     //IMAGE BATCH UPDATE TOOL
     appServices.update_files();
@@ -1561,7 +1561,7 @@ function openModal(obj) {
                     $rootScope.newImages = response.data;
                     angular.element(elem).removeClass('ng-hide');
                     angular.element(elem).addClass(show);
-                    console.log('new_files new images: ', $rootScope.newImages);
+                    console.log('New images: ', $rootScope.newImages);
                 }
             });
 

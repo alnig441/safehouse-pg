@@ -9,7 +9,7 @@
     "angular": "^1.4.6",
     "angular-route": "^1.4.6",
     "angular-ui-bootstrap": "^0.13.4",
-    "bcrypt": "^0.8.5",
+    "bcrypt": "^0.8.7",
     "body-parser": "~1.13.2",
     "bootstrap": "^3.3.5",
     "connect-pg-simple": "^3.0.2",

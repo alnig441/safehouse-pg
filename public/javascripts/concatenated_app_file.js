@@ -731,6 +731,8 @@ function capitalize (elem, ind, arr){
 
     function priv_load () {
 
+        console.log('running priv_load');
+
         $scope.form = {};
         $scope.query = {};
         $scope.query.option = 'year';
@@ -743,7 +745,8 @@ function capitalize (elem, ind, arr){
 
     };
 
-    //$rootScope.active_table = 'images';
+    //DO NOT REMOVE - ENSURES SOUND REQ.BODY ON LOAD
+    $rootScope.active_table = 'images';
 
     appServices.resetSQ();
 
@@ -891,7 +894,7 @@ function capitalize (elem, ind, arr){
 
     $scope.getValues = function(option, db){
 
-        console.log('privCtrl getvalues from table: ', $rootScope.active_table);
+        console.log('getting dropdown values for point-in-time search: ', option, db );
 
         if(option === 'month') {
             $scope.form.option = false;
@@ -902,23 +905,19 @@ function capitalize (elem, ind, arr){
         $scope.query = {};
         $scope.query = $scope.form;
         $scope.query.option = option;
-        $scope.query.database = db;
-
-        console.log('show me form: ', $scope.form);
+        $scope.query.table = db;
 
         $http.post('/dropdowns/build', $scope.query)
             .then(function(response){
 
                 console.log('result from dropdown.js:', response.data);
 
-                //if(response.data[0].da !== undefined){
-                if(response.data!== undefined){
+                if(response.data[0].name !== undefined){
                     $scope.months = response.data;
                 }
-                //if(response.data[0].day !== undefined){
-                ////if(response.data.day !== undefined){
-                //    $scope.days = response.data;
-                //}
+                if(response.data[0].day !== undefined){
+                    $scope.days = response.data;
+                }
 
             });
 
@@ -1234,8 +1233,6 @@ function openModal(obj) {
             }
         }
 
-        //console.log('give me type: '+ type + '\nand object: '+ JSON.stringify(obj));
-
         switch(type){
             case 'contract':
                 if(column !== 'names' && column !== 'meta'){
@@ -1281,25 +1278,19 @@ function openModal(obj) {
                 break;
         }
 
-        console.log('buildMeta OBJ: \nobject: '+JSON.stringify(obj)+'\ntype: '+type+'\nexclude conditions: '+$rootScope.exclude+'\ncolumn: '+column+'\nbasline_col: '+ baseline_col +'\nsending conditions: '+JSON.stringify(conditions));
-
         $http.get('/dropdowns/'+ conditions)
             .then(function(result){
                 $rootScope.meta = result.data;
-                console.log('result build: ', $rootScope.meta);
             });
 
         $http.put('/queries/count', {conditions: conditions})
             .then(function(response){
-                console.log('count: ', response.data[0].count);
                 $rootScope.queries_count = response.data[0].count;
             });
 
     };
 
     _appServicesFactory.selectTab = function(option){
-
-        //console.log('app factory - selectTab: ',option);
 
         for(var prop in elements){
             if(prop !== option){

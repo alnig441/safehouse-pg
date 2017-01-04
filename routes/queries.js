@@ -150,7 +150,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
 router.put('/count', call.isAuthenticated, function(req, res, next){
 
-    //console.log('queries/count: ', req.body);
+    console.log('queries/count: ', req.body);
 
     var search = 'SELECT COUNT(*) FROM IMAGES WHERE NAMES IS NOT NULL AND META IS NOT NULL AND OCCASION IS NOT NULL AND COUNTRY IS NOT NULL AND STATE IS NOT NULL AND CITY IS NOT NULL';
     var arr = [];

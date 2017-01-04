@@ -724,9 +724,9 @@ function capitalize (elem, ind, arr){
 });
 ;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, mapFilter){
 
-    console.log('priv ctrl - rootscope: ', $rootScope);
+    console.log('priv ctrl - rootscope: ', $rootScope, $scope.years);
 
-    //RUN priv_load() TO POPULATE THE SELECT OPTIONA IN POINT-IN-TIME SEARCH FORM  WWIH THE APPROPRIATE VALUES
+    //RUN priv_load() TO POPULATE THE SELECT OPTIONS IN POINT-IN-TIME SEARCH FORM  WWIH THE APPROPRIATE VALUES
     priv_load();
 
     function priv_load () {
@@ -734,7 +734,7 @@ function capitalize (elem, ind, arr){
         $scope.form = {};
         $scope.query = {};
         $scope.query.option = 'year';
-        $scope.query.table = 'events';
+        $scope.query.table = 'images';
 
         $http.post('/dropdowns/build', $scope.query)
             .then(function(response){
@@ -743,7 +743,7 @@ function capitalize (elem, ind, arr){
 
     };
 
-    $rootScope.active_table = 'images';
+    //$rootScope.active_table = 'images';
 
     appServices.resetSQ();
 
@@ -805,6 +805,8 @@ function capitalize (elem, ind, arr){
         }
 
         $rootScope.active_table = x;
+
+        console.log('show me active_table: ',$rootScope.active_table);
 
         $scope.form = {};
         $scope.query =  {};
@@ -889,7 +891,7 @@ function capitalize (elem, ind, arr){
 
     $scope.getValues = function(option, db){
 
-        console.log('privCtrl getvalues: ', $rootScope.active_table);
+        console.log('privCtrl getvalues from table: ', $rootScope.active_table);
 
         if(option === 'month') {
             $scope.form.option = false;
@@ -902,14 +904,21 @@ function capitalize (elem, ind, arr){
         $scope.query.option = option;
         $scope.query.database = db;
 
+        console.log('show me form: ', $scope.form);
+
         $http.post('/dropdowns/build', $scope.query)
             .then(function(response){
-                if(response.data[0].da !== undefined){
+
+                console.log('result from dropdown.js:', response.data);
+
+                //if(response.data[0].da !== undefined){
+                if(response.data!== undefined){
                     $scope.months = response.data;
                 }
-                if(response.data[0].day !== undefined){
-                    $scope.days = response.data;
-                }
+                //if(response.data[0].day !== undefined){
+                ////if(response.data.day !== undefined){
+                //    $scope.days = response.data;
+                //}
 
             });
 

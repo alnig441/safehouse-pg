@@ -62,7 +62,7 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
                     }
                     months.forEach(function(x, y, z){
                         if(elem.month === x.value){
-                            result.rows[ind] = x;
+                            result.rows[ind] = {value: x.value, name: x[req.user.lang]};
                         }
                     })
                 })

@@ -57,8 +57,6 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
 router.post('/load', call.isAuthenticated, function(req, res, next){
 
-    //console.log('show me load body: ', req.body, req.params);
-
     var country;
     var image;
 
@@ -83,7 +81,11 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
                 country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
 
                 req.body.created = date_str + 'Z' + time_str;
-                req.body.country = country.name;
+
+                if(country){
+                    req.body.country = country.name;
+                }
+
             }
 
             else if (exifData.exif.DateTimeOriginal) {
@@ -133,8 +135,6 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 /* FOR CASES WHERE MORE STORAGES ARE ACTIVE PER USER - NOT IMPLEMENTED YET */
 
 router.get('/count/:active_storage?', call.isAuthenticated, function(req, res, next){
-
-    //console.log('in images count: ', req.params);
 
     pg.connect(connectionString, function(err, client, done){
         var query = client.query("update storages set size = (select count(*) from images where storage = '"+ req.params.active_storage + "' AND META IS NOT NULL AND NAMES IS NOT NULL AND OCCASION IS NOT NULL AND COUNTRY IS NOT NULL AND STATE IS NOT NULL AND CITY IS NOT NULL) where folder = '"+ req.params.active_storage +"'; select size from storages where folder='"+ req.params.active_storage +"'", function(error, result){

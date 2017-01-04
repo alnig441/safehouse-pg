@@ -1012,8 +1012,9 @@ function capitalize (elem, ind, arr){
 
 
             for(var prop in $scope.batchObj){
-                if($scope.batchObj[prop] === true){
+                if($scope.batchObj[prop]){
                     arr.push(prop);
+                    $scope.batchObj[prop] = false;
                 }
             }
             if(arr.length >= 1){

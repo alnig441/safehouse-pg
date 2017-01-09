@@ -103,6 +103,8 @@ router.get('/:conditions?', function(req, res, next){
         })
     }
 
+    //console.log('show me query string: ', query_string);
+
     pg.connect(connectionString, function(error, client, done){
 
         var query = client.query(query_string, function(error, result){

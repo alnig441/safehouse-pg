@@ -28,8 +28,6 @@ function Record (req, table, primaryKey, arrays) {
 
     this.update = function() {
 
-        //console.log('IDs - string or array? ', typeof this.request.body.id);
-
         var tmp = this.request.body.id;
         var isArray = false;
 
@@ -48,8 +46,6 @@ function Record (req, table, primaryKey, arrays) {
             query = 'UPDATE ' + this.table + ' SET (' + parms.cols + ') = (' + parms.vals + ') WHERE ' + this.primaryKey + ' = ' + parms[this.primaryKey] + '';
         }
 
-        console.log('show qb.update return query: ', query);
-
         return query;
     };
 
@@ -65,7 +61,7 @@ function Record (req, table, primaryKey, arrays) {
             query = 'SELECT * FROM ' + this.table + '';
         }
 
-        if(sort !== undefined){
+        if(sort){
             query += ' ORDER BY ' + Object.keys(sort) + ' ' + sort[Object.keys(sort)];
         }
 
@@ -87,9 +83,10 @@ function parseObj (obj, str, arr) {
     var parms = {};
 
     for(var prop in obj){
-        if(obj[prop] !== null && obj[prop] !== 'null'){
 
-            if((str !== null || str !== undefined) && prop === str){
+        if(obj[prop]){
+
+            if(str && prop === str){
                 if(Array.isArray(obj[prop])) {
                     parms.ids = batch(prop, obj[prop]);
                     }
@@ -124,7 +121,7 @@ function parseObj (obj, str, arr) {
 function breakout (str) {
 
 
-    // TAKE INCOMING PARAMETER STR AND PARSE IT INTO AN ARRAY TO BE STRORED IN THE SPECIFIED TABLE COLUMN
+    // TAKE INCOMING PARAMETER STR AND PARSE IT INTO AN ARRAY TO BE STORED IN THE SPECIFIED TABLE COLUMN
 
     var arr;
     var tmpStr;
@@ -151,7 +148,7 @@ function compare (prop, arr){
 
     var incr = 0;
 
-    if(arr !== 'undefined' && arr !== undefined){
+    if(arr){
 
         arr.forEach(function(elem, ind){
             if(elem == prop){

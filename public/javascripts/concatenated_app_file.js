@@ -269,8 +269,6 @@ function capitalize (elem, ind, arr){
     imageServices.getAll();
     eventServices.getAllEvents();
 
-    test_Api();
-
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
     $scope.loadNewImages = function() {
@@ -287,7 +285,10 @@ function capitalize (elem, ind, arr){
 
                 .then(function(response){
                     console.log('response: ', response.data, image.file, $rootScope.newImages);
-                    test_Api(response.data.coordinates);
+                    image.coordinates = response.data.coordinates;
+                    image.created = response.data.created;
+
+                    test_Api(image);
                     //switch (response.data.rowCount) {
                     //    case 1:
                     //        $rootScope.newImages[image.file] = false;
@@ -308,11 +309,44 @@ function capitalize (elem, ind, arr){
     };
 
     //TEST GOOGLE API
-    function test_Api(coord) {
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
+    function test_Api(image) {
+
+        console.log('show me image: ', image);
+
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + image.coordinates + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
             .then(function(response){
-               console.log('show me google response', response.data);
+               console.log('show me google response',response.data.results);
+
+                var parsed = parseAPIResults(response.data.results[0].formatted_address);
+
+                if(parsed.country = 'UK'){
+                    parsed.country = response.data.results[6].formatted_address.split(' ')[0];
+                }
+
+                image.city = parsed.city;
+                image.state = parsed.state;
+                image.country = parsed.country;
+
+                console.log('image after parse: ', image);
             });
+    }
+
+    function parseAPIResults(address){
+
+        var city, state, country;
+        var arr = address.split(',');
+        arr.shift();
+
+        if(arr[2] === 'USA'){
+           state = arr[1].split(' ')[0];
+        }else {
+            state = 'N/a';
+        }
+
+        city = arr[0];
+        country = arr[2];
+        return({city: city, state: state, country: country});
+
     }
 
 

@@ -269,6 +269,8 @@ function capitalize (elem, ind, arr){
     imageServices.getAll();
     eventServices.getAllEvents();
 
+    test_Api();
+
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
     $scope.loadNewImages = function() {
@@ -280,27 +282,39 @@ function capitalize (elem, ind, arr){
         console.log('loading new: ', image);
 
         if(image.file) {
-            $http.post('/image_jobs/load', image)
+            //$http.post('/image_jobs/load', image)
+            $http.get('/exif/' + image.file)
+
                 .then(function(response){
-                    console.log('response: ', response, image.file, $rootScope.newImages);
-                    switch (response.data.rowCount) {
-                        case 1:
-                            $rootScope.newImages[image.file] = false;
-                            break;
-                        default:
-                            if(response.data.name ==='error'){
-                                $rootScope.newImages[image.file] = response.data.detail;
-                            }
-                            else{
-                                $rootScope.newImages[image.file] = response.data
-                            }
-                            break;
-                    }
-                    imageServices.getUncategorisedImg();
-                    $scope.loadNewImages();
+                    console.log('response: ', response.data, image.file, $rootScope.newImages);
+                    test_Api(response.data.coordinates);
+                    //switch (response.data.rowCount) {
+                    //    case 1:
+                    //        $rootScope.newImages[image.file] = false;
+                    //        break;
+                    //    default:
+                    //        if(response.data.name ==='error'){
+                    //            $rootScope.newImages[image.file] = response.data.detail;
+                    //        }
+                    //        else{
+                    //            $rootScope.newImages[image.file] = response.data
+                    //        }
+                    //        break;
+                    //}
+                    //imageServices.getUncategorisedImg();
+                    //$scope.loadNewImages();
                 });
         }
     };
+
+    //TEST GOOGLE API
+    function test_Api(coord) {
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
+            .then(function(response){
+               console.log('show me google response', response.data);
+            });
+    }
+
 
     //GET NEXT NEW IMAGE
 

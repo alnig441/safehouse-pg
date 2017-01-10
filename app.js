@@ -33,6 +33,7 @@ var accounts = require('./routes/accounts_mgmt');
 var events = require('./routes/events_mgmt');
 var queries = require('./routes/queries');
 var landing = require('./routes/landing_mgmt');
+var exif = require('./routes/exif');
 
 var app = express();
 
@@ -123,6 +124,7 @@ app.use('/accounts_mgmt', accounts);
 app.use('/events_mgmt', events);
 app.use('/queries', queries);
 app.use('/landing_mgmt', landing);
+app.use('/exif', exif);
 
 
 

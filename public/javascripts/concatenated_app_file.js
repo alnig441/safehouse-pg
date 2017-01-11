@@ -302,12 +302,8 @@ function capitalize (elem, ind, arr){
                         image[prop] = location[prop];
                     }
 
-                    console.log('show me image before loading in db: ', image, location);
-
                     $http.post('/image_jobs/load', image)
                         .then(function(response){
-                            console.log('show me response from image_jobs: ', response.data);
-
                             switch (response.data.rowCount) {
                                 case 1:
                                     $rootScope.newImages[image.file] = false;
@@ -332,13 +328,9 @@ function capitalize (elem, ind, arr){
 
     function parseAPIResults(address){
 
-        console.log('show me address: ', address);
-
         var city, state, country;
         var arr = address.split(',');
         arr.shift();
-
-        console.log('show me arr: ', arr);
 
         switch(arr[arr.length - 1].trim()){
             case 'USA':
@@ -355,9 +347,7 @@ function capitalize (elem, ind, arr){
                 break;
         }
 
-        country = arr[2];
-
-        console.log('parsed country: ', country);
+        country = arr[arr.length -1].trim();
 
         return({city: city, state: state, country: country});
 

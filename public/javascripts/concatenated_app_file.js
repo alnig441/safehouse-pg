@@ -1037,13 +1037,7 @@ function capitalize (elem, ind, arr){
                 if(file.progress == 100){
                     done ++;
                     if(done === 3){
-                        $http.get('/exif/' +  $scope.img.file)
-                            .then(function(response){
-
-                                reverseGeocode(response.data.coordinates, $scope.img);
-
-                            })
-
+                        imageServices.addImg($scope.img);
                         $modalInstance.dismiss('cancel');
                         $rootScope.f = undefined;
                     }
@@ -1052,56 +1046,6 @@ function capitalize (elem, ind, arr){
         }
     };
 
-
-function reverseGeocode(coord, image) {
-
-    $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
-        .then(function(response){
-
-            if(response.data.status === 'OK') {
-                var location = parseAPIResults(response.data.results[0].formatted_address);
-
-                if (location.country = 'UK') {
-                    location.country = response.data.results[6].formatted_address.split(',')[0];
-                }
-
-                for (var prop in location) {
-                    image[prop] = location[prop];
-                }
-
-            }
-
-            imageServices.addImg(image);
-
-        });
-}
-
-function parseAPIResults(address){
-
-    var city, state, country;
-    var arr = address.split(',');
-    arr.shift();
-
-    switch(arr[arr.length - 1].trim()){
-        case 'USA':
-            state = arr[1].trim().split(' ')[0];
-            city = arr[0].trim();
-            break;
-        case 'Denmark':
-            state = 'N/a';
-            city = arr[0].trim().split(' ')[1];
-            break;
-        default:
-            state = 'N/a';
-            city = arr[0].trim();
-            break;
-    }
-
-    country = arr[arr.length -1].trim();
-
-    return({city: city, state: state, country: country});
-
-}
 
 }]);
 ;app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices, imageServices){
@@ -1527,6 +1471,7 @@ function openModal(obj) {
 }]);;app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFilter', 'eventServices', function($http, $rootScope, appServices, capInitialFilter, eventServices){
 
     var _imageServiceFactory = {};
+    //$rootScope.exifData = {};
 
     _imageServiceFactory.getAll = function(){
 
@@ -1545,19 +1490,70 @@ function openModal(obj) {
 
     };
 
-    _imageServiceFactory.addImg = function(obj){
+    _imageServiceFactory.addImg = function(image){
 
-        $http.post('/images_mgmt/add', obj)
+        $http.get('/exif/' + image.file)
 
             .then(function(response){
-                response.data.name == 'error' ? $rootScope.newImages[obj.file] = response.data.detail : $rootScope.newImages[obj.file] = false;
-            })
-            .then(function(response){
-                _imageServiceFactory.getUncategorisedImg();
-            })
-            .then(function(response){
-                _imageServiceFactory.getAll()
+
+                $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
+                    .then(function(response){
+
+                        if(response.data.status === 'OK') {
+                            var location = parseAPIResults(response.data.results[0].formatted_address);
+
+                            if (location.country = 'UK') {
+                                location.country = response.data.results[6].formatted_address.split(',')[0];
+                            }
+
+                            for (var prop in location) {
+                                image[prop] = location[prop];
+                            }
+
+
+                            $http.post('/images_mgmt/add', image)
+
+                                .then(function(response){
+                                    response.data.name == 'error' ? $rootScope.newImages[image.file] = response.data.detail : $rootScope.newImages[image.file] = false;
+                                })
+                                .then(function(response){
+                                    _imageServiceFactory.getUncategorisedImg();
+                                })
+                                .then(function(response){
+                                    _imageServiceFactory.getAll()
+                                });
+                        }
+
+                    });
+
             });
+
+        function parseAPIResults(address){
+
+            var city, state, country;
+            var arr = address.split(',');
+            arr.shift();
+
+            switch(arr[arr.length - 1].trim()){
+                case 'USA':
+                    state = arr[1].trim().split(' ')[0];
+                    city = arr[0].trim();
+                    break;
+                case 'Denmark':
+                    state = 'N/a';
+                    city = arr[0].trim().split(' ')[1];
+                    break;
+                default:
+                    state = 'N/a';
+                    city = arr[0].trim();
+                    break;
+            }
+
+            country = arr[arr.length -1].trim();
+
+            return({city: city, state: state, country: country});
+
+        }
 
     };
 
@@ -1673,6 +1669,14 @@ function openModal(obj) {
 
     };
 
+    _imageServiceFactory.getExifData = function (file) {
+
+        $http.get('/exif/' + file)
+            .then(function(response){
+                $rootScope.exifData = response.data;
+                return true;
+            });
+    };
 
     return _imageServiceFactory;
 

@@ -32,9 +32,7 @@ function convertGPS(arr, ref){
 
 router.get('/:file', call.isAuthenticated, function(req, res, next){
 
-    var lng,lat,created, timestamp;
-
-    console.log('show me file: ', req.params.file);
+    var lng,lat,timestamp;
 
     new ExifImage({ image : './public/buffalo/James/'+ req.params.file }, function (error, exifData) {
 

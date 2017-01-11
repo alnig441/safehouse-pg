@@ -286,47 +286,48 @@ function capitalize (elem, ind, arr){
         }
     };
 
-    //TEST GOOGLE API
+    //GOOGLE REVERSE GEOCODE API
     function reverseGeocode(coord, image) {
 
         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
             .then(function(response){
-                if(response.data.status === 'OK'){
+                if(response.data.status === 'OK') {
                     var location = parseAPIResults(response.data.results[0].formatted_address);
 
-                    if(location.country = 'UK'){
+                    if (location.country = 'UK') {
                         location.country = response.data.results[6].formatted_address.split(',')[0];
                     }
 
-                    for(var prop in location){
+                    for (var prop in location) {
                         image[prop] = location[prop];
                     }
-
-                    $http.post('/image_jobs/load', image)
-                        .then(function(response){
-                            switch (response.data.rowCount) {
-                                case 1:
-                                    $rootScope.newImages[image.file] = false;
-                                    break;
-                                default:
-                                    if(response.data.name ==='error'){
-                                        $rootScope.newImages[image.file] = response.data.detail;
-                                    }
-                                    else{
-                                        $rootScope.newImages[image.file] = response.data
-                                    }
-                                    break;
-                            }
-                            imageServices.getUncategorisedImg();
-                            $scope.loadNewImages();
-                        })
                 }
 
+                $http.post('/image_jobs/load', image)
+                    .then(function(response){
+                        switch (response.data.rowCount) {
+                            case 1:
+                                $rootScope.newImages[image.file] = false;
+                                break;
+                            default:
+                                if(response.data.name ==='error'){
+                                    $rootScope.newImages[image.file] = response.data.detail;
+                                }
+                                else{
+                                    $rootScope.newImages[image.file] = response.data
+                                }
+                                break;
+                        }
+                        imageServices.getUncategorisedImg();
+                        $scope.loadNewImages();
+                    })
 
             });
     }
 
     function parseAPIResults(address){
+
+        console.log('show me address', address);
 
         var city, state, country;
         var arr = address.split(',');
@@ -1005,7 +1006,6 @@ function capitalize (elem, ind, arr){
 
         $scope.img = {};
         $scope.img.storage = $rootScope.default_storage;
-        //$scope.img.url = file.name;
         $scope.img.file = file.name;
         $scope.img.meta = $scope.meta;
         if($scope.created){
@@ -1037,8 +1037,13 @@ function capitalize (elem, ind, arr){
                 if(file.progress == 100){
                     done ++;
                     if(done === 3){
-                        imageServices.addImg($scope.img);
-                        //$rootScope.newImages[$scope.img.file] = false;
+                        $http.get('/exif/' +  $scope.img.file)
+                            .then(function(response){
+
+                                reverseGeocode(response.data.coordinates, $scope.img);
+
+                            })
+
                         $modalInstance.dismiss('cancel');
                         $rootScope.f = undefined;
                     }
@@ -1046,6 +1051,57 @@ function capitalize (elem, ind, arr){
             });
         }
     };
+
+
+function reverseGeocode(coord, image) {
+
+    $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
+        .then(function(response){
+
+            if(response.data.status === 'OK') {
+                var location = parseAPIResults(response.data.results[0].formatted_address);
+
+                if (location.country = 'UK') {
+                    location.country = response.data.results[6].formatted_address.split(',')[0];
+                }
+
+                for (var prop in location) {
+                    image[prop] = location[prop];
+                }
+
+            }
+
+            imageServices.addImg(image);
+
+        });
+}
+
+function parseAPIResults(address){
+
+    var city, state, country;
+    var arr = address.split(',');
+    arr.shift();
+
+    switch(arr[arr.length - 1].trim()){
+        case 'USA':
+            state = arr[1].trim().split(' ')[0];
+            city = arr[0].trim();
+            break;
+        case 'Denmark':
+            state = 'N/a';
+            city = arr[0].trim().split(' ')[1];
+            break;
+        default:
+            state = 'N/a';
+            city = arr[0].trim();
+            break;
+    }
+
+    country = arr[arr.length -1].trim();
+
+    return({city: city, state: state, country: country});
+
+}
 
 }]);
 ;app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices, imageServices){
@@ -1494,7 +1550,6 @@ function openModal(obj) {
         $http.post('/images_mgmt/add', obj)
 
             .then(function(response){
-                console.log('addImg response', response);
                 response.data.name == 'error' ? $rootScope.newImages[obj.file] = response.data.detail : $rootScope.newImages[obj.file] = false;
             })
             .then(function(response){
@@ -1595,7 +1650,6 @@ function openModal(obj) {
 
         $http.post('/images_mgmt/batch', batch)
             .then(function(response){
-               console.log(response);
                 _imageServiceFactory.getUncategorisedImg();
                 _imageServiceFactory.getAll();
             });
@@ -1614,11 +1668,11 @@ function openModal(obj) {
                     $rootScope.newImages = response.data;
                     angular.element(elem).removeClass('ng-hide');
                     angular.element(elem).addClass(show);
-                    console.log('New images: ', $rootScope.newImages);
                 }
             });
 
     };
+
 
     return _imageServiceFactory;
 

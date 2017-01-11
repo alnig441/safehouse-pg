@@ -277,74 +277,88 @@ function capitalize (elem, ind, arr){
         image.file = get_next_img();
         image.storage = $rootScope.default_storage;
 
-        console.log('loading new: ', image);
-
         if(image.file) {
-            //$http.post('/image_jobs/load', image)
             $http.get('/exif/' + image.file)
-
                 .then(function(response){
-                    console.log('response: ', response.data, image.file, $rootScope.newImages);
-                    image.coordinates = response.data.coordinates;
                     image.created = response.data.created;
-
-                    test_Api(image);
-                    //switch (response.data.rowCount) {
-                    //    case 1:
-                    //        $rootScope.newImages[image.file] = false;
-                    //        break;
-                    //    default:
-                    //        if(response.data.name ==='error'){
-                    //            $rootScope.newImages[image.file] = response.data.detail;
-                    //        }
-                    //        else{
-                    //            $rootScope.newImages[image.file] = response.data
-                    //        }
-                    //        break;
-                    //}
-                    //imageServices.getUncategorisedImg();
-                    //$scope.loadNewImages();
+                    reverseGeocode(response.data.coordinates, image);
                 });
         }
     };
 
     //TEST GOOGLE API
-    function test_Api(image) {
+    function reverseGeocode(coord, image) {
 
-        console.log('show me image: ', image);
-
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + image.coordinates + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
             .then(function(response){
-               console.log('show me google response',response.data.results);
+                if(response.data.status === 'OK'){
+                    var location = parseAPIResults(response.data.results[0].formatted_address);
 
-                var parsed = parseAPIResults(response.data.results[0].formatted_address);
+                    if(location.country = 'UK'){
+                        location.country = response.data.results[6].formatted_address.split(',')[0];
+                    }
 
-                if(parsed.country = 'UK'){
-                    parsed.country = response.data.results[6].formatted_address.split(' ')[0];
+                    for(var prop in location){
+                        image[prop] = location[prop];
+                    }
+
+                    console.log('show me image before loading in db: ', image, location);
+
+                    $http.post('/image_jobs/load', image)
+                        .then(function(response){
+                            console.log('show me response from image_jobs: ', response.data);
+
+                            switch (response.data.rowCount) {
+                                case 1:
+                                    $rootScope.newImages[image.file] = false;
+                                    break;
+                                default:
+                                    if(response.data.name ==='error'){
+                                        $rootScope.newImages[image.file] = response.data.detail;
+                                    }
+                                    else{
+                                        $rootScope.newImages[image.file] = response.data
+                                    }
+                                    break;
+                            }
+                            imageServices.getUncategorisedImg();
+                            $scope.loadNewImages();
+                        })
                 }
 
-                image.city = parsed.city;
-                image.state = parsed.state;
-                image.country = parsed.country;
 
-                console.log('image after parse: ', image);
             });
     }
 
     function parseAPIResults(address){
 
+        console.log('show me address: ', address);
+
         var city, state, country;
         var arr = address.split(',');
         arr.shift();
 
-        if(arr[2] === 'USA'){
-           state = arr[1].split(' ')[0];
-        }else {
-            state = 'N/a';
+        console.log('show me arr: ', arr);
+
+        switch(arr[arr.length - 1].trim()){
+            case 'USA':
+                state = arr[1].trim().split(' ')[0];
+                city = arr[0].trim();
+                break;
+            case 'Denmark':
+                state = 'N/a';
+                city = arr[0].trim().split(' ')[1];
+                break;
+            default:
+                state = 'N/a';
+                city = arr[0].trim();
+                break;
         }
 
-        city = arr[0];
         country = arr[2];
+
+        console.log('parsed country: ', country);
+
         return({city: city, state: state, country: country});
 
     }

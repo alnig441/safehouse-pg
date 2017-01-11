@@ -59,50 +59,50 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
 
     var country;
     var image;
-    var tmpArr = req.body.file
+    var tmpArr = req.body.file;
 
-    new ExifImage({ image : './public/buffalo/James/'+ req.body.file }, function (error, exifData) {
-
-        if(exifData) {
-
-            //NEXUS
-            if (exifData.gps.GPSDateStamp) {
-
-                var file = req.body.file.split('_')[2].split('.')[0];
-
-                //ELIMINATION OF GMT OFF-SET FOR IMAGES IMPORTED FROM ANDROID DEVICE
-                var time_str = file.slice(0,2) + ':' + file.slice(2,4) + ':' + file.slice(4,6);
-
-                var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
-
-                var lng = exifData.gps.GPSLongitude.slice(0, 2);
-
-                var lat = exifData.gps.GPSLatitude.slice(0, 2);
-
-                exifData.gps.GPSLongitudeRef.toLowerCase() === 'w' ? lng_str = '-' + lng.join('.') : lng_str = lng.join('.');
-
-                exifData.gps.GPSLatitudeRef.toLowerCase() === 's' ? lat_str = '-' + lat.join('.') : lat_str = lat.join('.');
-
-                country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
-
-                req.body.created = date_str + ' ' + time_str + 'Z';
-
-                if(country){
-                    req.body.country = country.name;
-                }
-
-            }
-            //IPHONE
-            else if (exifData.exif.DateTimeOriginal) {
-
-                var dto = exifData.exif.DateTimeOriginal.split(' ');
-                var dto_0 = dto[0].split(':');
-                var timestamp = dto_0.join('-') + ' ' + dto[1] + 'Z';
-
-                req.body.created = timestamp;
-            }
-
-        }
+    //new ExifImage({ image : './public/buffalo/James/'+ req.body.file }, function (error, exifData) {
+    //
+    //    if(exifData) {
+    //
+    //        //NEXUS
+    //        if (exifData.gps.GPSDateStamp) {
+    //
+    //            var file = req.body.file.split('_')[2].split('.')[0];
+    //
+    //            //ELIMINATION OF GMT OFF-SET FOR IMAGES IMPORTED FROM ANDROID DEVICE
+    //            var time_str = file.slice(0,2) + ':' + file.slice(2,4) + ':' + file.slice(4,6);
+    //
+    //            var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
+    //
+    //            var lng = exifData.gps.GPSLongitude.slice(0, 2);
+    //
+    //            var lat = exifData.gps.GPSLatitude.slice(0, 2);
+    //
+    //            exifData.gps.GPSLongitudeRef.toLowerCase() === 'w' ? lng_str = '-' + lng.join('.') : lng_str = lng.join('.');
+    //
+    //            exifData.gps.GPSLatitudeRef.toLowerCase() === 's' ? lat_str = '-' + lat.join('.') : lat_str = lat.join('.');
+    //
+    //            country = crg.get_country(parseInt(lat_str), parseInt(lng_str));
+    //
+    //            req.body.created = date_str + ' ' + time_str + 'Z';
+    //
+    //            if(country){
+    //                req.body.country = country.name;
+    //            }
+    //
+    //        }
+    //        //IPHONE
+    //        else if (exifData.exif.DateTimeOriginal) {
+    //
+    //            var dto = exifData.exif.DateTimeOriginal.split(' ');
+    //            var dto_0 = dto[0].split(':');
+    //            var timestamp = dto_0.join('-') + ' ' + dto[1] + 'Z';
+    //
+    //            req.body.created = timestamp;
+    //        }
+    //
+    //    }
 
         req.body = call.buildQBObj(req.body);
 
@@ -133,7 +133,7 @@ router.post('/load', call.isAuthenticated, function(req, res, next){
             })
         })
 
-    });
+    //});
 
 });
 

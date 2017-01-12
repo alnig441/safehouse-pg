@@ -7,56 +7,62 @@ var router = express.Router();
 var call = require('../public/javascripts/myFunctions.js');
 var ExifImage = require('exif').ExifImage;
 
-function convertGPS(arr, ref){
-    var result;
+function convertGPSCoordinate(coordinate, coordinateReference){
+    var conversion;
 
-    arr.forEach(function(elem,ind){
+    coordinate.forEach(function(elem,ind){
         switch (ind){
             case 0:
-                result = elem;
+                conversion = elem;
                 break;
             case 1:
-                result += elem/60;
+                conversion += elem/60;
                 break;
             case 2:
-                result += elem/3600;
+                conversion += elem/3600;
                 break;
         }
     })
 
-    if(ref.toLowerCase()==='w' || ref.toLowerCase() ==='s'){
-        result = '-' + result.toString();
+    if(coordinateReference.toLowerCase()==='w' || coordinateReference.toLowerCase() ==='s'){
+        conversion = '-' + conversion.toString();
     }
-    return result;
+    return conversion;
 }
 
 router.get('/:file', call.isAuthenticated, function(req, res, next){
 
-    var lng,lat,timestamp;
-
     new ExifImage({ image : './public/buffalo/James/'+ req.params.file }, function (error, exifData) {
+
+        var timestamp;
 
         if(exifData) {
 
-            //NEXUS
-            if (exifData.gps.GPSDateStamp) {
+            //DETERMINE IF GPS DATA AVAILABLE
 
-                var file = req.params.file.split('_')[2].split('.')[0];
+            if (Object.keys(exifData.gps).length > 0) {
 
                 //ELIMINATION OF GMT OFF-SET FOR IMAGES IMPORTED FROM ANDROID DEVICE
-                var time_str = file.slice(0,2) + ':' + file.slice(2,4) + ':' + file.slice(4,6);
 
-                var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
+                if(!exifData.exif.DateTimeOriginal){
 
-                lng = convertGPS(exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef);
+                    var file = req.params.file.split('_')[2].split('.')[0];
+                    var time_str = exifData.gps.GPSTimeStamp;
+                    time_str[0] = file.slice(0,2);
+                    var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
+                    timestamp = date_str + ' ' + time_str.join(';') + 'Z';
 
-                lat = convertGPS(exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef);
+                }
 
-                timestamp = date_str + ' ' + time_str + 'Z';
+                var lng = convertGPSCoordinate(exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef);
+
+                var lat = convertGPSCoordinate(exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef);
 
             }
-            //IPHONE
-            else if (exifData.exif.DateTimeOriginal) {
+
+            //DETERMINE IF LOCAL TIME TIMESTAMP AVAILABLE
+
+            if (exifData.exif.DateTimeOriginal) {
 
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
 

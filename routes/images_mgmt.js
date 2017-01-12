@@ -44,10 +44,9 @@ router.post('/add', call.isAuthenticated, function(req, res) {
                         error.detail = 'File name too long';
                         break;
                     default:
-                        error.detail = error.code;
+                        error.detail = 'postgres error code: ' + error.code;
                         break;
                 }
-                console.log(error);
                 res.send(error);
             }
         })

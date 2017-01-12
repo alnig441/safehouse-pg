@@ -336,7 +336,13 @@ function capitalize (elem, ind, arr){
                                 }
                                 break;
                         }
+                        //imageServices.getUncategorisedImg();
+                        //$scope.loadNewImages();
+                    })
+                    .then(function(response){
                         imageServices.getUncategorisedImg();
+                    })
+                    .then(function(response){
                         $scope.loadNewImages();
                     })
 

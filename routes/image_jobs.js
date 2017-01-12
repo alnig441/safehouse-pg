@@ -55,39 +55,6 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
 });
 
-router.post('/load', call.isAuthenticated, function(req, res, next){
-
-    req.body = call.buildQBObj(req.body);
-
-    var image = new qb(req, 'images');
-
-    pg.connect(connectionString, function(error, client, done){
-        var query = client.query(image.insert(), function(error, result){
-
-            if(error){
-                switch (error.code){
-                    case '22007':
-                        error.detail = 'Created: Invalid Date';
-                        break;
-                    case '22001':
-                        error.detail = 'File name too long';
-                        break;
-                    default:
-                        error.detail = 'postgres error code: ' + error.code;
-                        break;
-                }
-                res.send(error);
-            }
-        })
-        query.on('end', function(result){
-            client.end();
-            res.send(result);
-
-        })
-    })
-
-});
-
 /* FOR CASES WHERE MORE STORAGES ARE ACTIVE PER USER - NOT IMPLEMENTED YET */
 
 router.get('/count/:active_storage?', call.isAuthenticated, function(req, res, next){

@@ -271,104 +271,16 @@ function capitalize (elem, ind, arr){
 
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
-    $scope.loadNewImages = function() {
+    $rootScope.loadNewImages = function() {
 
         var image = {};
         image.file = get_next_img();
         image.storage = $rootScope.default_storage;
 
         if(image.file) {
-
-            $http.get('/exif/' + image.file)
-                .then(function(response){
-                    image.created = response.data.created;
-                    reverseGeocode(response.data.coordinates, image, response.data.API_KEY);
-                });
+            imageServices.addImg(image, true);
         }
     };
-
-    //GOOGLE REVERSE GEOCODE API
-    function reverseGeocode(coord, image, API_KEY) {
-
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=' + API_KEY)
-            .then(function(response){
-
-                if(response.data.status === 'OK'){
-
-                    var locationData, country;
-
-                    locationData = response.data.results[0].address_components;
-
-                    country = findAddressComponent(locationData, 'country');
-
-                    switch(country.short_name) {
-                        case 'GB':
-                            image.country = findAddressComponent(locationData, 'administrative_area_level_1');
-                            image.state = 'N/a';
-                            break;
-                        case 'US':
-                            image.country = country.long_name;
-                            image.state = findAddressComponent(locationData, 'administrative_area_level_1');
-                            break;
-                        default:
-                            image.country = country.long_name;
-                            image.state = 'N/a';
-                            break;
-
-                    }
-
-                    image.city = findAddressComponent(locationData, 'locality');
-
-                }
-
-                $http.post('/image_jobs/load', image)
-                    .then(function(response){
-                        switch (response.data.rowCount) {
-                            case 1:
-                                $rootScope.newImages[image.file] = false;
-                                break;
-                            default:
-                                if(response.data.name ==='error'){
-                                    $rootScope.newImages[image.file] = response.data.detail;
-                                }
-                                else{
-                                    $rootScope.newImages[image.file] = response.data
-                                }
-                                break;
-                        }
-                        //imageServices.getUncategorisedImg();
-                        //$scope.loadNewImages();
-                    })
-                    .then(function(response){
-                        imageServices.getUncategorisedImg();
-                    })
-                    .then(function(response){
-                        $scope.loadNewImages();
-                    })
-
-            });
-    }
-
-    function findAddressComponent (components, target) {
-
-        var element = undefined;
-
-        components.forEach(function(elem, ind){
-
-            if(elem.types[0] === target) {
-
-                if(target === 'country'){
-                    element = elem;
-
-                }else{
-                    element =  elem.long_name;
-                }
-            }
-
-        })
-
-        return element;
-    }
 
     //GET NEXT NEW IMAGE
 
@@ -1505,7 +1417,7 @@ function openModal(obj) {
 
     };
 
-    _imageServiceFactory.addImg = function(image){
+    _imageServiceFactory.addImg = function(image, batch){
 
         $http.get('/exif/' + image.file)
 
@@ -1516,28 +1428,10 @@ function openModal(obj) {
 
                         if(response.data.status === 'OK'){
 
-                            var locationData, country;
+                            var locationData = response.data.results[0].address_components;
 
-                            locationData = response.data.results[0].address_components;
-
-                            country = findAddressComponent(locationData, 'country');
-
-                            switch(country.short_name) {
-                                case 'GB':
-                                    image.country = findAddressComponent(locationData, 'administrative_area_level_1');
-                                    image.state = 'N/a';
-                                    break;
-                                case 'US':
-                                    image.country = country.long_name;
-                                    image.state = findAddressComponent(locationData, 'administrative_area_level_1');
-                                    break;
-                                default:
-                                    image.country = country.long_name;
-                                    image.state = 'N/a';
-                                    break;
-
-                            }
-
+                            image.country = findAddressComponent(locationData, 'country');
+                            image.state = findAddressComponent(locationData, 'administrative_area_level_1');
                             image.city = findAddressComponent(locationData, 'locality');
 
                         }
@@ -1552,7 +1446,11 @@ function openModal(obj) {
                                 _imageServiceFactory.getUncategorisedImg();
                             })
                             .then(function(response){
-                                _imageServiceFactory.getAll()
+                                if(batch){
+                                    $rootScope.loadNewImages();
+                                }else{
+                                    _imageServiceFactory.getAll()
+                                }
                             });
 
                     });
@@ -1561,18 +1459,14 @@ function openModal(obj) {
 
         function findAddressComponent (components, target) {
 
-            var element = undefined;
+            var element = 'N/a';
 
             components.forEach(function(elem, ind){
 
                 if(elem.types[0] === target) {
 
-                    if(target === 'country'){
-                        element = elem;
+                    element = elem.long_name;
 
-                    }else{
-                        element =  elem.long_name;
-                    }
                 }
 
             })

@@ -38,6 +38,8 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
         if(exifData) {
 
+            console.log('exif total: ', exifData);
+
             //NEXUS
             if (exifData.gps.GPSDateStamp) {
 

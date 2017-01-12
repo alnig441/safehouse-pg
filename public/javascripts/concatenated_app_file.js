@@ -278,6 +278,7 @@ function capitalize (elem, ind, arr){
         image.storage = $rootScope.default_storage;
 
         if(image.file) {
+
             $http.get('/exif/' + image.file)
                 .then(function(response){
                     image.created = response.data.created;
@@ -291,16 +292,33 @@ function capitalize (elem, ind, arr){
 
         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
             .then(function(response){
-                if(response.data.status === 'OK') {
-                    var location = parseAPIResults(response.data.results[0].formatted_address);
 
-                    if (location.country = 'UK') {
-                        location.country = response.data.results[6].formatted_address.split(',')[0];
+                if(response.data.status === 'OK'){
+
+                    var locationData, country;
+
+                    locationData = response.data.results[0].address_components;
+
+                    country = findAddressComponent(locationData, 'country');
+
+                    switch(country.short_name) {
+                        case 'GB':
+                            image.country = findAddressComponent(locationData, 'administrative_area_level_1');
+                            image.state = 'N/a';
+                            break;
+                        case 'US':
+                            image.country = country.long_name;
+                            image.state = findAddressComponent(locationData, 'administrative_area_level_1');
+                            break;
+                        default:
+                            image.country = country.long_name;
+                            image.state = 'N/a';
+                            break;
+
                     }
 
-                    for (var prop in location) {
-                        image[prop] = location[prop];
-                    }
+                    image.city = findAddressComponent(locationData, 'locality');
+
                 }
 
                 $http.post('/image_jobs/load', image)
@@ -325,35 +343,26 @@ function capitalize (elem, ind, arr){
             });
     }
 
-    function parseAPIResults(address){
+    function findAddressComponent (components, target) {
 
-        console.log('show me address', address);
+        var element = undefined;
 
-        var city, state, country;
-        var arr = address.split(',');
-        arr.shift();
+        components.forEach(function(elem, ind){
 
-        switch(arr[arr.length - 1].trim()){
-            case 'USA':
-                state = arr[1].trim().split(' ')[0];
-                city = arr[0].trim();
-                break;
-            case 'Denmark':
-                state = 'N/a';
-                city = arr[0].trim().split(' ')[1];
-                break;
-            default:
-                state = 'N/a';
-                city = arr[0].trim();
-                break;
-        }
+            if(elem.types[0] === target) {
 
-        country = arr[arr.length -1].trim();
+                if(target === 'country'){
+                    element = elem;
 
-        return({city: city, state: state, country: country});
+                }else{
+                    element =  elem.long_name;
+                }
+            }
 
+        })
+
+        return element;
     }
-
 
     //GET NEXT NEW IMAGE
 
@@ -1501,30 +1510,29 @@ function openModal(obj) {
 
                         if(response.data.status === 'OK'){
 
-                            var locationData = response.data.results[0].address_components;
+                            var locationData, country;
 
-                            if(locationData){
+                            locationData = response.data.results[0].address_components;
 
-                                var country = findAddressComponent(locationData, 'country');
+                            country = findAddressComponent(locationData, 'country');
 
-                                switch(country.short_name) {
-                                    case 'GB':
-                                        image.country = findAddressComponent(locationData, 'administrative_area_level_1');
-                                        image.state = 'N/a';
-                                        break;
-                                    case 'US':
-                                        image.country = country.long_name;
-                                        image.state = findAddressComponent(locationData, 'administrative_area_level_1');
-                                        break;
-                                    default:
-                                        image.country = country.long_name;
-                                        image.state = 'N/a';
-                                        break;
-                                }
-
-                                image.city = findAddressComponent(locationData, 'locality');
+                            switch(country.short_name) {
+                                case 'GB':
+                                    image.country = findAddressComponent(locationData, 'administrative_area_level_1');
+                                    image.state = 'N/a';
+                                    break;
+                                case 'US':
+                                    image.country = country.long_name;
+                                    image.state = findAddressComponent(locationData, 'administrative_area_level_1');
+                                    break;
+                                default:
+                                    image.country = country.long_name;
+                                    image.state = 'N/a';
+                                    break;
 
                             }
+
+                            image.city = findAddressComponent(locationData, 'locality');
 
                         }
 

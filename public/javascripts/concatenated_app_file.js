@@ -1429,10 +1429,12 @@ function openModal(obj) {
                         if(response.data.status === 'OK'){
 
                             var locationData = response.data.results[0].address_components;
+                            var country = findAddressComponent(locationData, 'country');
+                            var state = findAddressComponent(locationData, 'administrative_area_level_1');
 
-                            image.country = findAddressComponent(locationData, 'country');
-                            image.state = findAddressComponent(locationData, 'administrative_area_level_1');
-                            image.city = findAddressComponent(locationData, 'locality');
+                            image.country = country.long_name;
+                            state ? image.state = country.short_name + ' - ' + state.long_name: image.state = 'N/a';
+                            image.city = findAddressComponent(locationData, 'locality').long_name;
 
                         }
 
@@ -1459,14 +1461,12 @@ function openModal(obj) {
 
         function findAddressComponent (components, target) {
 
-            var element = 'N/a';
+            var element;
 
             components.forEach(function(elem, ind){
 
                 if(elem.types[0] === target) {
-
-                    element = elem.long_name;
-
+                    element = elem;
                 }
 
             })

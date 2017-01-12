@@ -1499,60 +1499,71 @@ function openModal(obj) {
                 $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
                     .then(function(response){
 
-                        if(response.data.status === 'OK') {
-                            var location = parseAPIResults(response.data.results[0].formatted_address);
+                        if(response.data.status === 'OK'){
 
-                            if (location.country = 'UK') {
-                                location.country = response.data.results[6].formatted_address.split(',')[0];
+                            var locationData = response.data.results[0].address_components;
+
+                            if(locationData){
+
+                                var country = findAddressComponent(locationData, 'country');
+
+                                switch(country.short_name) {
+                                    case 'GB':
+                                        image.country = findAddressComponent(locationData, 'administrative_area_level_1');
+                                        image.state = 'N/a';
+                                        break;
+                                    case 'US':
+                                        image.country = country.long_name;
+                                        image.state = findAddressComponent(locationData, 'administrative_area_level_1');
+                                        break;
+                                    default:
+                                        image.country = country.long_name;
+                                        image.state = 'N/a';
+                                        break;
+                                }
+
+                                image.city = findAddressComponent(locationData, 'locality');
+
                             }
 
-                            for (var prop in location) {
-                                image[prop] = location[prop];
-                            }
-
-
-                            $http.post('/images_mgmt/add', image)
-
-                                .then(function(response){
-                                    response.data.name == 'error' ? $rootScope.newImages[image.file] = response.data.detail : $rootScope.newImages[image.file] = false;
-                                })
-                                .then(function(response){
-                                    _imageServiceFactory.getUncategorisedImg();
-                                })
-                                .then(function(response){
-                                    _imageServiceFactory.getAll()
-                                });
                         }
+
+
+                        $http.post('/images_mgmt/add', image)
+
+                            .then(function(response){
+                                response.data.name == 'error' ? $rootScope.newImages[image.file] = response.data.detail : $rootScope.newImages[image.file] = false;
+                            })
+                            .then(function(response){
+                                _imageServiceFactory.getUncategorisedImg();
+                            })
+                            .then(function(response){
+                                _imageServiceFactory.getAll()
+                            });
 
                     });
 
             });
 
-        function parseAPIResults(address){
+        function findAddressComponent (components, target) {
 
-            var city, state, country;
-            var arr = address.split(',');
-            arr.shift();
+            var element = undefined;
 
-            switch(arr[arr.length - 1].trim()){
-                case 'USA':
-                    state = arr[1].trim().split(' ')[0];
-                    city = arr[0].trim();
-                    break;
-                case 'Denmark':
-                    state = 'N/a';
-                    city = arr[0].trim().split(' ')[1];
-                    break;
-                default:
-                    state = 'N/a';
-                    city = arr[0].trim();
-                    break;
-            }
+            components.forEach(function(elem, ind){
 
-            country = arr[arr.length -1].trim();
+                if(elem.types[0] === target) {
 
-            return({city: city, state: state, country: country});
+                    if(target === 'country'){
+                        element = elem;
 
+                    }else{
+                        element =  elem.long_name;
+                    }
+                }
+
+            })
+
+            return element;
         }
 
     };

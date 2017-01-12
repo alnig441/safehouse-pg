@@ -27,8 +27,6 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    //console.log('add... : ', req.body);
-
     req.body = call.buildQBObj(req.body);
 
     var img = new qb(req, 'images');
@@ -55,7 +53,6 @@ router.post('/add', call.isAuthenticated, function(req, res) {
         })
         query.on('end', function (result) {
             client.end();
-            console.log(result);
             res.status(200).send(result.rows);
         })
     })

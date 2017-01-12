@@ -282,15 +282,15 @@ function capitalize (elem, ind, arr){
             $http.get('/exif/' + image.file)
                 .then(function(response){
                     image.created = response.data.created;
-                    reverseGeocode(response.data.coordinates, image);
+                    reverseGeocode(response.data.coordinates, image, response.data.API_KEY);
                 });
         }
     };
 
     //GOOGLE REVERSE GEOCODE API
-    function reverseGeocode(coord, image) {
+    function reverseGeocode(coord, image, API_KEY) {
 
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + coord + '&key=' + API_KEY)
             .then(function(response){
 
                 if(response.data.status === 'OK'){
@@ -1505,7 +1505,7 @@ function openModal(obj) {
 
             .then(function(response){
 
-                $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=AIzaSyCuv_wCsoDU3oTzCz_keg7PsQZFNxlF_V4')
+                $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
                     .then(function(response){
 
                         if(response.data.status === 'OK'){

@@ -38,6 +38,8 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
         if(exifData) {
 
+
+
             //DETERMINE IF GPS DATA AVAILABLE
 
             if (Object.keys(exifData.gps).length > 0) {
@@ -49,8 +51,8 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
                     var file = req.params.file.split('_')[2].split('.')[0];
                     var time_str = exifData.gps.GPSTimeStamp;
                     time_str[0] = file.slice(0,2);
-                    var date_str = exifData.gps.GPSDateStamp.replace(/:/g, ".");
-                    timestamp = date_str + ' ' + time_str.join(';') + 'Z';
+                    var date_str = exifData.gps.GPSDateStamp.replace(/:/g, "-");
+                    timestamp = date_str + ' ' + time_str.join(':') + 'Z';
 
                 }
 

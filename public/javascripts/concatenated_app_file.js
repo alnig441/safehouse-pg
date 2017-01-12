@@ -1423,6 +1423,8 @@ function openModal(obj) {
 
             .then(function(response){
 
+                image.created = response.data.created;
+
                 $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
                     .then(function(response){
 
@@ -1437,7 +1439,6 @@ function openModal(obj) {
                             image.city = findAddressComponent(locationData, 'locality').long_name;
 
                         }
-
 
                         $http.post('/images_mgmt/add', image)
 

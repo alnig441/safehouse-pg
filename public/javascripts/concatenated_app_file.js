@@ -1423,7 +1423,9 @@ function openModal(obj) {
 
             .then(function(response){
 
-                image.created = response.data.created;
+                if(!image.created){
+                    image.created = response.data.created;
+                }
 
                 $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
                     .then(function(response){

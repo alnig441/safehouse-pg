@@ -29,6 +29,8 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
     req.body = call.buildQBObj(req.body);
 
+    console.log('hvad kommer ind: ', req.body);
+
     var img = new qb(req, 'images');
 
     pg.connect(connectionString, function (err, client, done) {

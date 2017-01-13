@@ -35,6 +35,7 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
     new ExifImage({ image : './public/buffalo/James/'+ req.params.file }, function (error, exifData) {
 
         var timestamp;
+        var created;
 
         if(exifData) {
 
@@ -76,7 +77,7 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
         }
 
-        res.send({created: timestamp , coordinates: lat + ',' + lng, API_KEY: process.env.API_KEY});
+        res.send({created: timestamp, coordinates: lat + ',' + lng, API_KEY: process.env.API_KEY});
 
     });
 

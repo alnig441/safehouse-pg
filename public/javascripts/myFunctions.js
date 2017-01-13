@@ -9,54 +9,19 @@ var call = {
         var sec;
 
         for(var prop in obj){
-            //if(obj[prop] !== null && obj[prop] !== 'null'){
             if(obj[prop]){
                     qbObj[prop] = obj[prop];
             }
         }
 
-        if(!qbObj.created){
-
-            if(obj.file.split(' ')[0].split('-').length == 3){
-                tmp = obj.file.split(' ')[0].split('-');
-                qbObj.year = tmp[0];
-                qbObj.month = tmp[1] - 1;
-                qbObj.day = tmp[2];
-                tmp = obj.file.split(' ')[1].split('.');
-                hour = tmp[0];
-                min = tmp[1];
-                sec = tmp[2];
-
-            }
-            else if(obj.file.split('_').length >= 3 && obj.file.split('_')[1].length == 8 && obj.file.split('_')[2].length >= 6){
-                tmp = obj.file.split('_')[1];
-                qbObj.year = tmp.slice(0,4);
-                qbObj.month = tmp.slice(4,6) - 1;
-                qbObj.day = tmp.slice(6,8);
-                tmp = obj.file.split('_')[2];
-                hour = tmp.slice(0,2);
-                min = tmp.slice(2,4);
-                sec = tmp.slice(4,6);
-            }
-
-            qbObj.created = new Date();
-            qbObj.created.setUTCFullYear(qbObj.year);
-            qbObj.created.setUTCMonth(qbObj.month);
-            qbObj.created.setUTCDate(qbObj.day);
-            qbObj.created.setUTCHours(hour);
-            qbObj.created.setUTCMinutes(min);
-            qbObj.created.setUTCSeconds(sec);
-        }
-        else{
+        if(qbObj.created){
             qbObj.created = new Date(obj.created);
             qbObj.year = qbObj.created.getUTCFullYear(qbObj.year);
             qbObj.month = qbObj.created.getUTCMonth(qbObj.month);
             qbObj.day = qbObj.created.getUTCDate(qbObj.day);
-
-        }
-
-        if(qbObj.created != 'Invalid Date'){
             qbObj.created = qbObj.created.toJSON();
+        }else{
+            qbObj.created = 'no timestamp available';
         }
 
         return qbObj;
@@ -68,8 +33,6 @@ var call = {
         var arr = temp.split('-');
         var months =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var months_da =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Juni', 'Juli', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        //created.en = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];
-        //created.da = arr[2] + ' ' + months_da[parseInt(arr[1]-1)] + ' ' + arr[0];
         switch (lang) {
             case 'en':
                 created = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];

@@ -260,7 +260,7 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
-    //console.log('imageCtrl. \nscope.images:'+ $scope +'\nrootscope.images: '+ $rootScope);
+
 
     //IMAGE BATCH UPDATE TOOL
     appServices.update_files();
@@ -270,6 +270,7 @@ function capitalize (elem, ind, arr){
     eventServices.getAllEvents();
 
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
+    console.log('imageCtrl - rootscope.images: ', $rootScope);
 
     $rootScope.loadNewImages = function() {
 

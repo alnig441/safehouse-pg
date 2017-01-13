@@ -35,11 +35,10 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
     new ExifImage({ image : './public/buffalo/James/'+ req.params.file }, function (error, exifData) {
 
         var timestamp;
-        var created;
 
         if(exifData) {
 
-
+            console.log('exif: ', exifData);
 
             //DETERMINE IF GPS DATA AVAILABLE
 

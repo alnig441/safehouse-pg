@@ -18,6 +18,7 @@ var call = {
             qbObj.created = new Date(obj.created);
             qbObj.year = qbObj.created.getUTCFullYear(qbObj.year);
             qbObj.month = qbObj.created.getUTCMonth(qbObj.month);
+            qbObj.month = qbObj.month.toString();
             qbObj.day = qbObj.created.getUTCDate(qbObj.day);
             qbObj.created = qbObj.created.toJSON();
         }else{
@@ -45,7 +46,6 @@ var call = {
     },
 
     splitString: function(meta){
-        console.log('..splitstring..', meta);
         var separator = ',';
         var temp = meta.split(separator);
         return temp;
@@ -60,7 +60,6 @@ var call = {
         },
 
     selection: function(dbDump , query){
-        console.log('..myfunctions..', dbDump, query);
         var temp =[];
         if(query.database == 'events'){
             dbDump.forEach(function(element, index, array){
@@ -73,7 +72,6 @@ var call = {
 
         }
         if(query.database == 'images'){
-            console.log('SES DETTE??');
             dbDump.forEach(function(element, index, array){
                 var incr = 0;
 

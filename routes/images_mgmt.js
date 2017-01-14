@@ -162,10 +162,6 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
     var image = new qb(req, 'images', 'id', ['names', 'meta']);
 
-    //console.log(image.update());
-
-    //res.status(200).send(image.update());
-
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(image.update(), function(error, result){
 

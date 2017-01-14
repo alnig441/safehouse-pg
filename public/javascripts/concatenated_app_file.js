@@ -278,6 +278,19 @@ function capitalize (elem, ind, arr){
 
         console.log('checking exif');
 
+        function parse(array,target) {
+
+            var element;
+
+            array.forEach(function(elem,ind){
+                if(elem.types[0] === target){
+                    element = elem;
+                }
+            })
+
+            return element;
+        }
+
         function getIndex () {
             var i = 0;
             while(i < $rootScope.images.length){
@@ -301,20 +314,28 @@ function capitalize (elem, ind, arr){
                     if(response.data.created){
 
                         $rootScope.images[index].created = response.data.created;
-
                         $rootScope.images[index].checkExif = false;
                         $rootScope.images[index].occasion = false;
                         $rootScope.images[index].file = false;
+                        $rootScope.images[index].names = false;
                         $rootScope.images[index].meta.push('updated');
 
 
                         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
                             .then(function(response){
                                 console.log('api status: ', response.data.status);
+
                                 if(response.data.status === 'OK'){
-                                    $rootScope.images[index].country = 'new country';
-                                    $rootScope.images[index].state = 'new state';
-                                    $rootScope.images[index].city = 'new city';
+
+                                    console.log(response.data.results[0]);
+
+                                    var locationData = response.data.results[0].address_components;
+                                    var country = parse(locationData, 'country');
+                                    var state = parse(locationData, 'administrative_area_level_1');
+
+                                    $rootScope.images[index].country = country.long_name;
+                                    state ? $rootScope.images[index].state = country.short_name + ' - ' + state.long_name: $rootScope.images[index].state = 'N/a';
+                                    $rootScope.images[index].city = parse(locationData, 'locality').long_name
                                 }
 
                                 $http.put('/images_mgmt/add_meta', $rootScope.images[index])

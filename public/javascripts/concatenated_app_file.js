@@ -270,7 +270,72 @@ function capitalize (elem, ind, arr){
     eventServices.getAllEvents();
 
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
-    console.log('imageCtrl - rootscope.images: ', $rootScope);
+
+
+    //REWRITE THE FOLLOWING FOR QA....
+
+    $scope.checkExif = function() {
+
+        console.log('checking exif');
+
+        function getIndex () {
+            var i = 0;
+            while(i < $rootScope.images.length){
+                if(!$rootScope.images[i].hasOwnProperty('checkExif')){
+                    break;
+                }
+                i++;
+            }
+            if($rootScope.images[i]){
+                return i.toString();
+            }else {
+                return false;
+            }
+        }
+
+        var index = getIndex();
+
+        if (index && $rootScope.images[index].file.split('_').length === 3){
+            $http.get('/exif/' + $rootScope.images[index].file)
+                .then(function(response){
+                    if(response.data.created){
+
+                        $rootScope.images[index].created = response.data.created;
+
+                        $rootScope.images[index].checkExif = false;
+                        $rootScope.images[index].occasion = false;
+                        $rootScope.images[index].file = false;
+                        $rootScope.images[index].meta.push('updated');
+
+
+                        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
+                            .then(function(response){
+                                console.log('api status: ', response.data.status);
+                                if(response.data.status === 'OK'){
+                                    $rootScope.images[index].country = 'new country';
+                                    $rootScope.images[index].state = 'new state';
+                                    $rootScope.images[index].city = 'new city';
+                                }
+
+                                $http.put('/images_mgmt/add_meta', $rootScope.images[index])
+                                    .then(function(response){
+                                        console.log('show response from update: ', response.data);
+                                        $scope.checkExif();
+                                    })
+
+                            })
+                    }
+                    else {
+                        $scope.checkExif();
+                    }
+                })
+
+        } else if (index) {
+            console.log('index: ', index);
+            $rootScope.images[index].checkExif = 'done';
+            $scope.checkExif();
+        }
+    };
 
     $rootScope.loadNewImages = function() {
 

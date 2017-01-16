@@ -299,8 +299,6 @@ function capitalize (elem, ind, arr){
 
         function parse(array,target) {
 
-            console.log('parsing: ', array, target);
-
             var element;
 
             array.forEach(function(elem,ind){
@@ -366,7 +364,7 @@ function capitalize (elem, ind, arr){
 
                         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
                             .then(function(response){
-                                console.log('api status: ', response.data.status, response.data.results);
+                                console.log('api status: ', response.data.status);
 
                                 if(response.data.status === 'OK'){
 
@@ -376,12 +374,14 @@ function capitalize (elem, ind, arr){
                                     var route = parse(locationData, 'route');
                                     var locality = parse(locationData, 'locality');
 
-                                    $rootScope.images[index].country = country.long_name;
+                                    console.log('locations data: ', country, state, route);
+
+                                    country ? $rootScope.images[index].country = country.long_name : $rootScope.images[index].country = 'en route';
                                     state ? $rootScope.images[index].state = country.short_name + ' - ' + state.long_name: $rootScope.images[index].state = 'N/a';
-                                    if(route) {
-                                        route.short_name === 'Ellsworth Dr' ? $rootScope.images[index].city = 'Edina' : $rootScope.images[index].city = parse(locationData, 'locality').long_name
-                                    } else {
-                                        locality.long_name ? $rootScope.images[index].city = locality.long_name : $rootScope.images[index].city = 'N/a';
+                                    if(locality){
+                                        route.short_name === 'Ellsworth Dr' ? $rootScope.images[index].city = 'Edina' : $rootScope.images[index].city = locality;
+                                    }else {
+                                        $rootScope.images[index].city = 'en route';
                                     }
                                 }
                                 if(response.data.status ==='ZERO_RESULTS'){

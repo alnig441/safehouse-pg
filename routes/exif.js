@@ -10,6 +10,8 @@ var ExifImage = require('exif').ExifImage;
 function convertGPSCoordinate(coordinate, coordinateReference){
     var conversion;
 
+    console.log('incoming coordinate:', coordinate);
+
     coordinate.forEach(function(elem,ind){
         switch (ind){
             case 0:
@@ -42,7 +44,7 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
         if(exifData) {
 
-            //console.log('exif: ', exifData);
+            console.log('exif gps: ', exifData.gps);
 
             //DETERMINE IF GPS DATA AVAILABLE
 

@@ -273,10 +273,29 @@ function capitalize (elem, ind, arr){
 
     console.log('images: ', $rootScope.images, $rootScope.events);
 
+    $scope.tools = [
+        { name: 'import', value: 'loadNewImages' },
+        { name: 'update', value: 'checkExif' }
+    ];
+
+    $scope.activeTool = $scope.tools[0].value;
+
+    $scope.toolSelector = function(selectedTool){
+
+        //console.log('active tool: ', selectTool);
+        $scope.activeTool = selectedTool;
+
+    };
+
+    $scope.runTool = function(){
+
+        $rootScope[$scope.activeTool]();
+    };
+
 
     //REWRITE THE FOLLOWING FOR QA....
 
-    $scope.checkExif = function() {
+    $rootScope.checkExif = function() {
 
         function parse(array,target) {
 

@@ -66,7 +66,7 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
     currUpload(req,res,function(err){
 
-        console.log('show me response from upload', err);
+        //console.log('show me response from upload', err);
 
         if(err){
             res.json({error_code:1,err_desc:err});
@@ -79,7 +79,7 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
 router.post('/batch', call.isAuthenticated, function(req,res,next){
 
-    console.log('show me body: ', req.body, typeof req.body.id);
+    //console.log('show me body: ', req.body, typeof req.body.id);
 
     var batch = new qb(req, 'images', 'id', ['names', 'meta']);
 
@@ -158,7 +158,7 @@ router.get('/get_new', call.isAuthenticated, function(req, res, next){
 
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
-    console.log('adding meta: ', req.body);
+    //console.log('adding meta: ', req.body);
 
     var image = new qb(req, 'images', 'id', ['names', 'meta']);
 
@@ -181,7 +181,7 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
 router.delete('/:id?', call.isAuthenticated, function(req, res, next){
 
-    console.log('deleting: ', req.params, req.body);
+    //console.log('deleting: ', req.params, req.body);
 
     var image = new qb(req, 'images');
 

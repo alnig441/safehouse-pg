@@ -372,13 +372,14 @@ function capitalize (elem, ind, arr){
                                     var country = parse(locationData, 'country');
                                     var state = parse(locationData, 'administrative_area_level_1');
                                     var route = parse(locationData, 'route');
+                                    var locality = parse(locationData, 'locality');
 
                                     $rootScope.images[index].country = country.long_name;
                                     state ? $rootScope.images[index].state = country.short_name + ' - ' + state.long_name: $rootScope.images[index].state = 'N/a';
                                     if(route) {
                                         route.short_name === 'Ellsworth Dr' ? $rootScope.images[index].city = 'Edina' : $rootScope.images[index].city = parse(locationData, 'locality').long_name
                                     } else {
-                                        $rootScope.images[index].city = parse(locationData,'locality').long_name;
+                                        locality.long_name ? $rootScope.images[index].city = locality.long_name : $rootScope.images[index].city = 'N/a';
                                     }
                                 }
                                 if(response.data.status ==='ZERO_RESULTS'){

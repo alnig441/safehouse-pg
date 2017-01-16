@@ -271,7 +271,7 @@ function capitalize (elem, ind, arr){
 
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
-    console.log('images: ', $rootScope.images, $rootScope.events);
+    console.log('images: ', $rootScope);
 
     $scope.tools = [
         { name: 'import', value: 'loadNewImages' },
@@ -315,8 +315,7 @@ function capitalize (elem, ind, arr){
             var element;
 
             while(i < $rootScope.images.length){
-                if($rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'checked' && $rootScope.images[i].year === 2015 && $rootScope.images[i].month === 0){
-
+                if($rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'checked' && $rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'updated' /*&& $rootScope.images[i].year === 2015 && $rootScope.images[i].month === 0*/){
                     break;
                 }
                 i++;
@@ -346,6 +345,8 @@ function capitalize (elem, ind, arr){
                 .then(function(response){
 
                     $rootScope.images[index].meta.push('checked');
+
+                    console.log('response from exif: ', response.data);
 
                     if(response.data.created){
 
@@ -395,6 +396,7 @@ function capitalize (elem, ind, arr){
                             })
                     }
                     else {
+                        console.log('BANKO: ',$rootScope.images[index]);
                         $scope.checkExif();
                     }
                 })

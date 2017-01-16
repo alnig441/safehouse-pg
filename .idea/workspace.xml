@@ -58,8 +58,8 @@
       <file leaf-file-name="concatenated_app_file.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.15957446">
-              <caret line="366" column="105" selection-start-line="366" selection-start-column="105" selection-end-line="366" selection-end-column="105" />
+            <state vertical-scroll-proportion="0.75227964">
+              <caret line="385" column="77" selection-start-line="385" selection-start-column="77" selection-end-line="385" selection-end-column="77" />
               <folding />
             </state>
           </provider>
@@ -1000,8 +1000,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15957446">
-          <caret line="366" column="105" selection-start-line="366" selection-start-column="105" selection-end-line="366" selection-end-column="105" />
+        <state vertical-scroll-proportion="0.75227964">
+          <caret line="385" column="77" selection-start-line="385" selection-start-column="77" selection-end-line="385" selection-end-column="77" />
           <folding />
         </state>
       </provider>

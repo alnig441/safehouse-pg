@@ -299,6 +299,8 @@ function capitalize (elem, ind, arr){
 
         function parse(array,target) {
 
+            console.log('parsing: ', array, target);
+
             var element;
 
             array.forEach(function(elem,ind){

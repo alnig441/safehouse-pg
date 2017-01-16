@@ -48,7 +48,7 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
             //DETERMINE IF GPS DATA AVAILABLE
 
-            if (Object.keys(exifData.gps).length > 2) {
+            if (exifData.gps.GPSLongitude && exifData.gps.GPSLatitude) {
 
                 //ELIMINATION OF GMT OFF-SET FOR IMAGES IMPORTED FROM ANDROID DEVICE
 

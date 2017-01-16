@@ -374,12 +374,16 @@ function capitalize (elem, ind, arr){
                                     var route = parse(locationData, 'route');
                                     var locality = parse(locationData, 'locality');
 
-                                    console.log('locations data: ', country, state, route);
+                                    console.log('locations data: ', country, state, route, locality);
 
                                     country ? $rootScope.images[index].country = country.long_name : $rootScope.images[index].country = 'en route';
                                     state ? $rootScope.images[index].state = country.short_name + ' - ' + state.long_name: $rootScope.images[index].state = 'N/a';
                                     if(locality){
-                                        route.short_name === 'Ellsworth Dr' ? $rootScope.images[index].city = 'Edina' : $rootScope.images[index].city = locality;
+                                        if(route && route.short_name === 'Ellsworth Dr'){
+                                            $rootScope.images[index].city = 'Edina';
+                                        }else{
+                                            $rootScope.images[index].city = locality;
+                                        }
                                     }else {
                                         $rootScope.images[index].city = 'en route';
                                     }

@@ -382,7 +382,7 @@ function capitalize (elem, ind, arr){
                                         if(route && route.short_name === 'Ellsworth Dr'){
                                             $rootScope.images[index].city = 'Edina';
                                         }else{
-                                            $rootScope.images[index].city = locality;
+                                            $rootScope.images[index].city = locality.long_name;
                                         }
                                     }else {
                                         $rootScope.images[index].city = 'en route';

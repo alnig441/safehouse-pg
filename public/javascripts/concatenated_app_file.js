@@ -271,12 +271,12 @@ function capitalize (elem, ind, arr){
 
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
+    console.log('images: ', $rootScope.images, $rootScope.events);
+
 
     //REWRITE THE FOLLOWING FOR QA....
 
     $scope.checkExif = function() {
-
-        console.log('checking exif');
 
         function parse(array,target) {
 
@@ -293,8 +293,11 @@ function capitalize (elem, ind, arr){
 
         function getIndex () {
             var i = 0;
+            var element;
+
             while(i < $rootScope.images.length){
-                if(!$rootScope.images[i].hasOwnProperty('checkExif')){
+                if($rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'checked' && $rootScope.images[i].year === 2015 && $rootScope.images[i].month === 0){
+
                     break;
                 }
                 i++;
@@ -308,16 +311,34 @@ function capitalize (elem, ind, arr){
 
         var index = getIndex();
 
-        if (index && $rootScope.images[index].file.split('_').length === 3){
+        if(!index){
+            var images = [];
+            $rootScope.images.forEach(function(elem,ind){
+                if(elem.meta[elem.meta.length -1] === 'checked'){
+                    images.push(elem);
+                }
+
+            })
+            console.log('end of update!', images);
+        }
+
+        if (index){
             $http.get('/exif/' + $rootScope.images[index].file)
                 .then(function(response){
+
+                    $rootScope.images[index].meta.push('checked');
+
                     if(response.data.created){
 
+                        for(var prop in $rootScope.images[index]){
+                            if(prop != 'id' && prop != 'meta'){
+                                $rootScope.images[index][prop] = false;
+                            }
+                        }
+
+                        console.log('image: ', $rootScope.images[index]);
+
                         $rootScope.images[index].created = response.data.created;
-                        $rootScope.images[index].checkExif = false;
-                        $rootScope.images[index].occasion = false;
-                        $rootScope.images[index].file = false;
-                        $rootScope.images[index].names = false;
                         $rootScope.images[index].meta.push('updated');
 
 
@@ -326,8 +347,6 @@ function capitalize (elem, ind, arr){
                                 console.log('api status: ', response.data.status);
 
                                 if(response.data.status === 'OK'){
-
-                                    console.log(response.data.results[0]);
 
                                     var locationData = response.data.results[0].address_components;
                                     var country = parse(locationData, 'country');
@@ -342,10 +361,15 @@ function capitalize (elem, ind, arr){
                                         $rootScope.images[index].city = parse(locationData,'locality').long_name;
                                     }
                                 }
+                                if(response.data.status ==='ZERO_RESULTS'){
+                                    $rootScope.images[index].country = false;
+                                    $rootScope.images[index].state = false;
+                                    $rootScope.images[index].city = false;
+                                }
 
                                 $http.put('/images_mgmt/add_meta', $rootScope.images[index])
                                     .then(function(response){
-                                        console.log('show response from update: ', response.data);
+                                        //console.log('show response from update: ', response.data);
                                         $scope.checkExif();
                                     })
 
@@ -356,10 +380,6 @@ function capitalize (elem, ind, arr){
                     }
                 })
 
-        } else if (index) {
-            console.log('index: ', index);
-            $rootScope.images[index].checkExif = 'done';
-            $scope.checkExif();
         }
     };
 

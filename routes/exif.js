@@ -36,9 +36,13 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
         var timestamp;
 
+        //if(error){
+        //    console.log('Data?? :', error);
+        //}
+
         if(exifData) {
 
-            console.log('exif: ', exifData);
+            //console.log('exif: ', exifData);
 
             //DETERMINE IF GPS DATA AVAILABLE
 

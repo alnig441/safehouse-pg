@@ -364,7 +364,7 @@ function capitalize (elem, ind, arr){
 
                         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
                             .then(function(response){
-                                console.log('api status: ', response.data.status);
+                                console.log('api status: ', response.data.status, response.data.results);
 
                                 if(response.data.status === 'OK'){
 

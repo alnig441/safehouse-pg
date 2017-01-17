@@ -299,6 +299,8 @@ function capitalize (elem, ind, arr){
 
         function parse(array,target) {
 
+            var element;
+
             console.log('calling: ', target);
 
             for (var i = 0; i < array.length; i++ ){
@@ -306,10 +308,14 @@ function capitalize (elem, ind, arr){
                 array[i].types.forEach(function(elem,ind){
                     if(elem === target){
                         console.log('BINGO: ', target, array[i]);
-                        return array[i];
+                        element = array[i];
                     }
                 })
+
+                //return element;
             }
+
+            return element;
 
         }
 

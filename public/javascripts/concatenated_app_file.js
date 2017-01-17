@@ -299,19 +299,21 @@ function capitalize (elem, ind, arr){
 
         function parse(array,target) {
 
-            var element;
+            var element,i;
 
             array.forEach(function(elem,ind){
-                //if(elem.types[0] === target){
-                //    element = elem;
-                //}
-                elem.types.forEach(function(elem2, ind2){
-                    if(elem2[ind2] === target){
-                        console.log('show me elem2: ' + elem2 + ' and elem: ' + elem.long_name);
+                while(i < elem.types.length){
+                    if(elem.type[i] === target){
                         element = elem;
+                        break;
                     }
-
-                })
+                    i++;
+                }
+                //for(var i = 0; i < elem.types.length ; i++){
+                //    if(elem.types[i] === target){
+                //        element = elem;
+                //    }
+                //}
             })
 
             return element;

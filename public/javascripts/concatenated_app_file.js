@@ -306,6 +306,7 @@ function capitalize (elem, ind, arr){
                 //    element = elem;
                 //}
                 elem.types.forEach(function(elem2, ind2){
+                    console.log('show me elem2: ' + elem2 + ' and elem: ' + elem);
                     if(elem2[ind2] === target){
                         element = elem;
                     }

@@ -302,6 +302,7 @@ function capitalize (elem, ind, arr){
             var element,i;
 
             array.forEach(function(elem,ind){
+                console.log('elem :', elem );
                 while(i < elem.types.length){
                     console.log('elem type: ', elem.types[i]);
                     if(elem.type[i] === target){

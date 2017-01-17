@@ -303,7 +303,7 @@ function capitalize (elem, ind, arr){
 
             array.forEach(function(elem,ind){
 
-                for(;i<array.types.length;i++){
+                for(;i < elem.types.length; i++){
                     if(elem.types[i] === target){
                         element = elem;
                     }

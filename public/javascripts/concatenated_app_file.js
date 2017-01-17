@@ -307,21 +307,16 @@ function capitalize (elem, ind, arr){
                     //console.log('elem type: ', elem.types[i]);
                     if(elem.types[i] === target){
                         console.log('gotcha: ', elem.types[i], elem);
-                        //element = elem;
-                        //break;
-                        return elem;
+                        element = elem;
+                        break;
                     }
                     i++;
                 }
-                //for(var i = 0; i < elem.types.length ; i++){
-                //    if(elem.types[i] === target){
-                //        element = elem;
-                //    }
-                //}
+                console.log('here?');
                 return element;
             })
-
-            //return element;
+            console.log('...or here?');
+            return element;
         }
 
         function getIndex () {

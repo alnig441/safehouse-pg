@@ -305,6 +305,8 @@ function capitalize (elem, ind, arr){
 
             array.forEach(function(elem,ind){
 
+                console.log('looping: ', elem);
+
                 for(;i < elem.types.length; i++){
                     if(elem.types[i] === target){
                         console.log('FOR SATAN: ', target, elem[ind], elem[i], elem);

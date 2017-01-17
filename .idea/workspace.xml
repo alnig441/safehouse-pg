@@ -49,6 +49,18 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="exif.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/exif.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="81" column="42" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
+                  <folding>
+                    <element signature="e#0#46#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file leaf-file-name="imageServices.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
               <provider selected="true" editor-type-id="text-editor">
@@ -62,8 +74,8 @@
           <file leaf-file-name="imageCtrl.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="2.172256">
-                  <caret line="119" column="36" selection-start-line="119" selection-start-column="36" selection-end-line="119" selection-end-column="36" />
+                <state vertical-scroll-proportion="1.097561">
+                  <caret line="133" column="0" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -97,7 +109,7 @@
             <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.5030488">
-                  <caret line="1665" column="15" selection-start-line="1665" selection-start-column="15" selection-end-line="1665" selection-end-column="15" />
+                  <caret line="1645" column="6" selection-start-line="1645" selection-start-column="6" selection-end-line="1645" selection-end-column="6" />
                   <folding />
                 </state>
               </provider>
@@ -171,9 +183,9 @@
         <option value="$PROJECT_DIR$/development/styles/style.css" />
         <option value="$PROJECT_DIR$/development/views/images.jade" />
         <option value="$PROJECT_DIR$/routes/images_mgmt.js" />
-        <option value="$PROJECT_DIR$/routes/exif.js" />
         <option value="$PROJECT_DIR$/development/javascripts/factories/imageServices.js" />
         <option value="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
+        <option value="$PROJECT_DIR$/routes/exif.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js" />
       </list>
     </option>
@@ -1002,16 +1014,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/exif.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.06554878">
-          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#46#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/views/images.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1036,6 +1038,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5030488">
+          <caret line="1645" column="6" selection-start-line="1645" selection-start-column="6" selection-end-line="1645" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/exif.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="81" column="42" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#46#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1044,18 +1064,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5030488">
-          <caret line="1665" column="15" selection-start-line="1665" selection-start-column="15" selection-end-line="1665" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.172256">
-          <caret line="119" column="36" selection-start-line="119" selection-start-column="36" selection-end-line="119" selection-end-column="36" />
+        <state vertical-scroll-proportion="1.097561">
+          <caret line="133" column="0" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
           <folding />
         </state>
       </provider>

@@ -36,7 +36,7 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
     new ExifImage({ image : './public/buffalo/James/'+ req.params.file }, function (error, exifData) {
 
-        var timestamp;
+        var timestamp, coordinates, lng, lat;
 
         if(exifData) {
 
@@ -58,9 +58,9 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
                 }
 
-                var lng = convertGPSCoordinate(exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef);
+                lng = convertGPSCoordinate(exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef);
 
-                var lat = convertGPSCoordinate(exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef);
+                lat = convertGPSCoordinate(exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef);
 
             }
 
@@ -78,7 +78,11 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
         }
 
-        res.send({created: timestamp, coordinates: lat + ',' + lng, API_KEY: process.env.API_KEY});
+        if(lng && lat){
+            coordinates = lat + ',' + lng;
+        }
+
+        res.send({created: timestamp, coordinates: coordinates, API_KEY: process.env.API_KEY});
 
     });
 

@@ -332,6 +332,8 @@ function capitalize (elem, ind, arr){
 
                     if(response.data.created){
 
+                        var coord = response.data.coordinates;
+
                         for(var prop in $rootScope.images[index]){
                             if(prop != 'id' && prop != 'meta'){
                                 $rootScope.images[index][prop] = false;
@@ -350,7 +352,13 @@ function capitalize (elem, ind, arr){
                                     $rootScope.images[index] = imageServices.buildImageObject($rootScope.images[index], response.data.results[0].address_components);
 
                                 }
+                                if(coord && response.data.status === 'ZERO_RESULTS'){
 
+                                    $rootScope.images[index].country = 'en route';
+                                    $rootScope.images[index].state = 'N/a';
+                                    $rootScope.images[index].city = 'en route';
+
+                                }
                                 //ADD AND 'UPDATED' FLAG TO IMAGE IN THE DATABASE
                                 $rootScope.images[index].meta.push('updated');
 

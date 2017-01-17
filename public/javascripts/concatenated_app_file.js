@@ -301,23 +301,16 @@ function capitalize (elem, ind, arr){
 
             console.log('calling: ', target);
 
-            var element,i=0;
+            for (var i = 0; i < array.length; i++ ){
 
-            array.forEach(function(elem,ind){
-
-                console.log('looping: ', elem);
-
-                for(;i < elem.types.length; i++){
-                    if(elem.types[i] === target){
-                        console.log('FOR SATAN: ', target, elem[ind], elem[i], elem);
-                        element = elem[ind];
-                        return element;
+                array[i].types.forEach(function(elem,ind){
+                    if(elem === 'target'){
+                        console.log('BINGO: ', target, array[i]);
+                        return array[i];
                     }
-                }
-                //return element;
+                })
+            }
 
-            })
-            //return element;
         }
 
         function getIndex () {

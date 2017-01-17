@@ -315,8 +315,8 @@ function capitalize (elem, ind, arr){
                 console.log('here?', element);
                 return element;
             })
-            console.log('...or here?', element);
-            return element;
+            //console.log('...or here?', element);
+            //return element;
         }
 
         function getIndex () {

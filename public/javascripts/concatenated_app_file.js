@@ -305,7 +305,7 @@ function capitalize (elem, ind, arr){
                 console.log('elem :', elem );
                 while(i < elem.types.length){
                     console.log('elem type: ', elem.types[i]);
-                    if(elem.type[i] === target){
+                    if(elem.types[i] === target){
                         element = elem;
                         break;
                     }

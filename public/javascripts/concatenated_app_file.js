@@ -304,7 +304,7 @@ function capitalize (elem, ind, arr){
             for (var i = 0; i < array.length; i++ ){
 
                 array[i].types.forEach(function(elem,ind){
-                    if(elem === 'target'){
+                    if(elem === target){
                         console.log('BINGO: ', target, array[i]);
                         return array[i];
                     }

@@ -306,9 +306,10 @@ function capitalize (elem, ind, arr){
                 for(;i < elem.types.length; i++){
                     if(elem.types[i] === target){
                         element = elem;
+                        return element;
                     }
                 }
-                return element;
+                //return element;
 
             })
             //return element;

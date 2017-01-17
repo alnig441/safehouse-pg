@@ -302,9 +302,15 @@ function capitalize (elem, ind, arr){
             var element;
 
             array.forEach(function(elem,ind){
-                if(elem.types[0] === target){
-                    element = elem;
-                }
+                //if(elem.types[0] === target){
+                //    element = elem;
+                //}
+                elem.types.forEach(function(elem2, ind2){
+                    if(elem2[ind2] === target){
+                        element = elem;
+                    }
+
+                })
             })
 
             return element;
@@ -375,7 +381,7 @@ function capitalize (elem, ind, arr){
                                     var route = parse(locationData, 'route');
                                     var locality = parse(locationData, 'locality');
 
-                                    console.log('locations data: ', locationData);
+                                    console.log('locations data: ', meta, country);
 
                                     country ? $rootScope.images[index].country = country.long_name : $rootScope.images[index].country = 'en route';
                                     state ? $rootScope.images[index].state = country.short_name + ' - ' + state.long_name: $rootScope.images[index].state = 'N/a';

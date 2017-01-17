@@ -38,10 +38,6 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
         var timestamp;
 
-        //if(error){
-        //    console.log('Data?? :', error);
-        //}
-
         if(exifData) {
 
             console.log('exif gps: ', exifData.gps);

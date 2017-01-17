@@ -282,7 +282,6 @@ function capitalize (elem, ind, arr){
 
     $scope.toolSelector = function(selectedTool){
 
-        //console.log('active tool: ', selectTool);
         $scope.activeTool = selectedTool;
 
     };
@@ -297,34 +296,13 @@ function capitalize (elem, ind, arr){
 
     $rootScope.checkExif = function() {
 
-        function parse(array,target) {
-
-            var element;
-
-            console.log('calling: ', target);
-
-            for (var i = 0; i < array.length; i++ ){
-
-                array[i].types.forEach(function(elem,ind){
-                    if(elem === target){
-                        console.log('BINGO: ', target, array[i]);
-                        element = array[i];
-                    }
-                })
-
-                //return element;
-            }
-
-            return element;
-
-        }
-
         function getIndex () {
             var i = 0;
             var element;
 
+
             while(i < $rootScope.images.length){
-                if($rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'checked' && $rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'updated' /*&& $rootScope.images[i].year === 2015 && $rootScope.images[i].month === 0*/){
+                if($rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'checked' && $rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'updated'){
                     break;
                 }
                 i++;
@@ -346,16 +324,11 @@ function capitalize (elem, ind, arr){
                 }
 
             })
-            console.log('end of update!', images);
         }
 
         if (index){
             $http.get('/exif/' + $rootScope.images[index].file)
                 .then(function(response){
-
-                    //$rootScope.images[index].meta.push('checked');
-
-                    console.log('response from exif: ', response.data);
 
                     if(response.data.created){
 
@@ -365,59 +338,31 @@ function capitalize (elem, ind, arr){
                             }
                         }
 
-                        console.log('image: ', $rootScope.images[index]);
-
                         $rootScope.images[index].created = response.data.created;
-                        //$rootScope.images[index].meta.push('updated');
-
 
                         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
                             .then(function(response){
+
                                 console.log('api status: ', response.data.status);
 
                                 if(response.data.status === 'OK'){
 
-                                    var locationData = response.data.results[0].address_components;
-                                    var meta = parse(locationData,'point_of_interest');
-                                    var country = parse(locationData, 'country');
-                                    var state = parse(locationData, 'administrative_area_level_1');
-                                    var route = parse(locationData, 'route');
-                                    var locality = parse(locationData, 'locality');
+                                    $rootScope.images[index] = imageServices.buildImageObject($rootScope.images[index], response.data.results[0].address_components);
 
-                                    console.log('locations data: ', locationData, meta, country, state, route, locality);
-
-                                    country ? $rootScope.images[index].country = country.long_name : $rootScope.images[index].country = 'en route';
-                                    state ? $rootScope.images[index].state = country.short_name + ' - ' + state.long_name: $rootScope.images[index].state = 'N/a';
-                                    meta ? $rootScope.images[index].meta.push(meta.long_name) : $rootScope.images[index].meta = $rootScope.images[index].meta;
-
-                                    if(locality){
-                                        if(route && route.short_name === 'Ellsworth Dr'){
-                                            $rootScope.images[index].city = 'Edina';
-                                        }else{
-                                            $rootScope.images[index].city = locality.long_name;
-                                        }
-                                    }else {
-                                        $rootScope.images[index].city = 'en route';
-                                    }
-                                }
-                                if(response.data.status ==='ZERO_RESULTS'){
-                                    $rootScope.images[index].country = false;
-                                    $rootScope.images[index].state = false;
-                                    $rootScope.images[index].city = false;
                                 }
 
+                                //ADD AND 'UPDATED' FLAG TO IMAGE IN THE DATABASE
                                 $rootScope.images[index].meta.push('updated');
 
                                 $http.put('/images_mgmt/add_meta', $rootScope.images[index])
                                     .then(function(response){
-                                        //console.log('show response from update: ', response.data);
                                         $scope.checkExif();
                                     })
 
                             })
                     }
                     else {
-                        console.log('BANKO: ',$rootScope.images[index]);
+                        //ADD A 'CHECKED' FLAG TO THE IMAGE ON ROOTSCOPE
                         $rootScope.images[index].meta.push('checked');
                         $scope.checkExif();
                     }
@@ -1587,13 +1532,15 @@ function openModal(obj) {
 
                         if(response.data.status === 'OK'){
 
-                            var locationData = response.data.results[0].address_components;
-                            var country = findAddressComponent(locationData, 'country');
-                            var state = findAddressComponent(locationData, 'administrative_area_level_1');
+                            image = _imageServiceFactory.buildImageObject(image, response.data.results[0].address_components);
 
-                            image.country = country.long_name;
-                            state ? image.state = country.short_name + ' - ' + state.long_name: image.state = 'N/a';
-                            image.city = findAddressComponent(locationData, 'locality').long_name;
+                            //var locationData = response.data.results[0].address_components;
+                            //var country = findAddressComponent(locationData, 'country');
+                            //var state = findAddressComponent(locationData, 'administrative_area_level_1');
+                            //
+                            //image.country = country.long_name;
+                            //state ? image.state = country.short_name + ' - ' + state.long_name: image.state = 'N/a';
+                            //image.city = findAddressComponent(locationData, 'locality').long_name;
 
                         }
 
@@ -1621,15 +1568,18 @@ function openModal(obj) {
 
             var element;
 
-            components.forEach(function(elem, ind){
+            for (var i = 0; i < components.length; i++ ){
 
-                if(elem.types[0] === target) {
-                    element = elem;
-                }
+                components[i].types.forEach(function(elem,ind){
+                    if(elem === target){
+                        element = components[i];
+                    }
+                })
 
-            })
+            }
 
             return element;
+
         }
 
     };
@@ -1754,6 +1704,40 @@ function openModal(obj) {
                 return true;
             });
     };
+
+    _imageServiceFactory.buildImageObject = function(image, locationDataArray){
+
+        var parsedImage = image;
+
+        function parse (array, target) {
+            var locationDataObject,i;
+
+            for(i = 0; i < array.length; i++){
+                array[i].types.forEach(function(elem,ind){
+                    if(elem === target){
+                        locationDataObject = array[i];
+                    }
+                })
+            }
+            return locationDataObject;
+        }
+
+        parse(locationDataArray, 'country') ? parsedImage.country = parse(locationDataArray, 'country').long_name : parsedImage.country = 'en route';
+        parse(locationDataArray, 'administrative_area_level_1') ? parsedImage.state = parse(locationDataArray, 'country').short_name + ' - ' + parse(locationDataArray, 'administrative_area_level_1').long_name: parsedImage.state = 'N/a';
+        parse(locationDataArray,'point_of_interest') ? parsedImage.meta.push(parse(locationDataArray,'point_of_interest').long_name) : parsedImage.meta = parsedImage.meta;
+
+        if(parse(locationDataArray, 'locality')){
+            if(parse(locationDataArray, 'route') && parse(locationDataArray, 'route').short_name === 'Ellsworth Dr'){
+                parsedImage.city = 'Edina';
+            }else{
+                parsedImage.city = parse(locationDataArray, 'locality').long_name;
+            }
+        }else {
+            parsedImage.city = 'en route';
+        }
+
+        return parsedImage;
+    }
 
     return _imageServiceFactory;
 

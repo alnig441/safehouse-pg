@@ -305,7 +305,8 @@ function capitalize (elem, ind, arr){
                 while(i < elem.types.length){
                     if(elem.type[i] === target){
                         element = elem;
-                        break;
+                        //break;
+                        return element;
                     }
                     i++;
                 }
@@ -316,7 +317,7 @@ function capitalize (elem, ind, arr){
                 //}
             })
 
-            return element;
+            //return element;
         }
 
         function getIndex () {

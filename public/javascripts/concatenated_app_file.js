@@ -299,7 +299,7 @@ function capitalize (elem, ind, arr){
 
         function parse(array,target) {
 
-            var element,i;
+            var element,i=0;
 
             array.forEach(function(elem,ind){
                 console.log('elem :', elem );

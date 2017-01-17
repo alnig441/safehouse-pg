@@ -374,7 +374,7 @@ function capitalize (elem, ind, arr){
                                     var route = parse(locationData, 'route');
                                     var locality = parse(locationData, 'locality');
 
-                                    console.log('locations data: ', country, state, route, locality);
+                                    console.log('locations data: ', locationData);
 
                                     country ? $rootScope.images[index].country = country.long_name : $rootScope.images[index].country = 'en route';
                                     state ? $rootScope.images[index].state = country.short_name + ' - ' + state.long_name: $rootScope.images[index].state = 'N/a';

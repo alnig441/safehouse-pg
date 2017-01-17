@@ -302,21 +302,15 @@ function capitalize (elem, ind, arr){
             var element,i=0;
 
             array.forEach(function(elem,ind){
-                //console.log('elem :', elem );
-                while(i < elem.types.length){
-                    //console.log('elem type: ', elem.types[i]);
+
+                for(;i<array.types.length;i++){
                     if(elem.types[i] === target){
-                        console.log('gotcha: ', elem.types[i], elem);
                         element = elem;
-                        break;
                     }
-                    i++;
                 }
-                console.log('here?', element);
-                return element;
+
             })
-            //console.log('...or here?', element);
-            //return element;
+            return element;
         }
 
         function getIndex () {

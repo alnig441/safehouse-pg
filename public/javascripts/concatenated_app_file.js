@@ -302,12 +302,14 @@ function capitalize (elem, ind, arr){
             var element,i=0;
 
             array.forEach(function(elem,ind){
-                console.log('elem :', elem );
+                //console.log('elem :', elem );
                 while(i < elem.types.length){
-                    console.log('elem type: ', elem.types[i]);
+                    //console.log('elem type: ', elem.types[i]);
                     if(elem.types[i] === target){
-                        element = elem;
-                        break;
+                        console.log('gotcha: ', elem.types[i], elem);
+                        //element = elem;
+                        //break;
+                        return elem;
                     }
                     i++;
                 }

@@ -312,10 +312,10 @@ function capitalize (elem, ind, arr){
                     }
                     i++;
                 }
-                console.log('here?');
+                console.log('here?', element);
                 return element;
             })
-            console.log('...or here?');
+            console.log('...or here?', element);
             return element;
         }
 

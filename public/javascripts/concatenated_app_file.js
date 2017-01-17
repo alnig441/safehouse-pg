@@ -308,9 +308,10 @@ function capitalize (elem, ind, arr){
                         element = elem;
                     }
                 }
+                return element;
 
             })
-            return element;
+            //return element;
         }
 
         function getIndex () {

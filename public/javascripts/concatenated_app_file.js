@@ -305,7 +305,7 @@ function capitalize (elem, ind, arr){
 
                 for(;i < elem.types.length; i++){
                     if(elem.types[i] === target){
-                        console.log('FOR SATAN: ', elem[ind], elem[i], elem);
+                        console.log('FOR SATAN: ', target, elem[ind], elem[i], elem);
                         element = elem[ind];
                         return element;
                     }

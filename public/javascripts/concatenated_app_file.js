@@ -344,7 +344,7 @@ function capitalize (elem, ind, arr){
             $http.get('/exif/' + $rootScope.images[index].file)
                 .then(function(response){
 
-                    $rootScope.images[index].meta.push('checked');
+                    //$rootScope.images[index].meta.push('checked');
 
                     console.log('response from exif: ', response.data);
 
@@ -359,7 +359,7 @@ function capitalize (elem, ind, arr){
                         console.log('image: ', $rootScope.images[index]);
 
                         $rootScope.images[index].created = response.data.created;
-                        $rootScope.images[index].meta.push('updated');
+                        //$rootScope.images[index].meta.push('updated');
 
 
                         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
@@ -369,6 +369,7 @@ function capitalize (elem, ind, arr){
                                 if(response.data.status === 'OK'){
 
                                     var locationData = response.data.results[0].address_components;
+                                    var meta = parse(locationData,'point_of_interest');
                                     var country = parse(locationData, 'country');
                                     var state = parse(locationData, 'administrative_area_level_1');
                                     var route = parse(locationData, 'route');
@@ -378,6 +379,8 @@ function capitalize (elem, ind, arr){
 
                                     country ? $rootScope.images[index].country = country.long_name : $rootScope.images[index].country = 'en route';
                                     state ? $rootScope.images[index].state = country.short_name + ' - ' + state.long_name: $rootScope.images[index].state = 'N/a';
+                                    meta ? $rootScope.images[index].meta.push(meta.long_name) : $rootScope.images[index].meta = $rootScope.images[index].meta;
+
                                     if(locality){
                                         if(route && route.short_name === 'Ellsworth Dr'){
                                             $rootScope.images[index].city = 'Edina';
@@ -394,6 +397,8 @@ function capitalize (elem, ind, arr){
                                     $rootScope.images[index].city = false;
                                 }
 
+                                $rootScope.images[index].meta.push('updated');
+
                                 $http.put('/images_mgmt/add_meta', $rootScope.images[index])
                                     .then(function(response){
                                         //console.log('show response from update: ', response.data);
@@ -404,6 +409,7 @@ function capitalize (elem, ind, arr){
                     }
                     else {
                         console.log('BANKO: ',$rootScope.images[index]);
+                        $rootScope.images[index].meta.push('checked');
                         $scope.checkExif();
                     }
                 })

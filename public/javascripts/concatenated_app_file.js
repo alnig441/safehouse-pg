@@ -354,9 +354,9 @@ function capitalize (elem, ind, arr){
                                 }
                                 if(coord && response.data.status === 'ZERO_RESULTS'){
 
-                                    $rootScope.images[index].country = 'en route';
+                                    $rootScope.images[index].country = 'En Route';
                                     $rootScope.images[index].state = 'N/a';
-                                    $rootScope.images[index].city = 'en route';
+                                    $rootScope.images[index].city = 'En Route';
 
                                 }
                                 //ADD AND 'UPDATED' FLAG TO IMAGE IN THE DATABASE
@@ -1531,6 +1531,8 @@ function openModal(obj) {
 
             .then(function(response){
 
+                var coord = response.data.coordinates;
+
                 if(!image.created){
                     image.created = response.data.created;
                 }
@@ -1542,15 +1544,16 @@ function openModal(obj) {
 
                             image = _imageServiceFactory.buildImageObject(image, response.data.results[0].address_components);
 
-                            //var locationData = response.data.results[0].address_components;
-                            //var country = findAddressComponent(locationData, 'country');
-                            //var state = findAddressComponent(locationData, 'administrative_area_level_1');
-                            //
-                            //image.country = country.long_name;
-                            //state ? image.state = country.short_name + ' - ' + state.long_name: image.state = 'N/a';
-                            //image.city = findAddressComponent(locationData, 'locality').long_name;
+                        }
+
+                        if(coord && response.data.status === 'ZERO_RESULTS'){
+
+                            $rootScope.images[index].country = 'En Route';
+                            $rootScope.images[index].state = 'N/a';
+                            $rootScope.images[index].city = 'En Route';
 
                         }
+
 
                         $http.post('/images_mgmt/add', image)
 
@@ -1730,7 +1733,7 @@ function openModal(obj) {
             return locationDataObject;
         }
 
-        parse(locationDataArray, 'country') ? parsedImage.country = parse(locationDataArray, 'country').long_name : parsedImage.country = 'en route';
+        parse(locationDataArray, 'country') ? parsedImage.country = parse(locationDataArray, 'country').long_name : parsedImage.country = 'En Route';
         parse(locationDataArray, 'administrative_area_level_1') ? parsedImage.state = parse(locationDataArray, 'country').short_name + ' - ' + parse(locationDataArray, 'administrative_area_level_1').long_name: parsedImage.state = 'N/a';
         parse(locationDataArray,'point_of_interest') ? parsedImage.meta.push(parse(locationDataArray,'point_of_interest').long_name) : parsedImage.meta = parsedImage.meta;
 
@@ -1741,7 +1744,7 @@ function openModal(obj) {
                 parsedImage.city = parse(locationDataArray, 'locality').long_name;
             }
         }else {
-            parsedImage.city = 'en route';
+            parsedImage.city = 'En Route';
         }
 
         return parsedImage;

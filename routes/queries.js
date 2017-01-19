@@ -44,8 +44,6 @@ router.get('/latest', call.isAuthenticated, function(req, res, next){
 
 router.post('/', call.isAuthenticated, function(req, res, next){
 
-    //console.log('queries/post: ', req.body);
-
     var descr;
 
     switch (req.user.lang) {
@@ -122,14 +120,13 @@ router.post('/', call.isAuthenticated, function(req, res, next){
     }
 
     if(req.body.table === 'events'){
+        console.log('events string ', req.body.table);
         query_string ="SELECT ID, "+descr+" AS DESCRIPTION, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
     }
     if(req.body.table === 'images'){
-        //query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
+        console.log('images string ', req.body.table);
         query_string = "SELECT ID,CREATED,PATH||FOLDER|| '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
-
-    //console.log('post/queries: ', query_string);
 
     console.log('try this query string: ', query_string);
 
@@ -143,6 +140,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         })
 
         query.on('row', function(row){
+            console.log('row created: ', row.created);
             row.created = call.parser(JSON.stringify(row.created), req.user.lang);
         })
 

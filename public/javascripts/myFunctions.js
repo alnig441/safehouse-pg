@@ -29,6 +29,7 @@ var call = {
     },
 
     parser: function(string, lang){
+        console.log('string: ', string, typeof string);
         var temp = string.slice(1,11);
         var created = {};
         var arr = temp.split('-');

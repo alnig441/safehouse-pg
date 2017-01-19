@@ -243,11 +243,13 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
-        this.batchEdit.id = $scope.ids;
+        console.log('batchEditModal: ', $scope.ids, this.batchEdit);
 
-        console.log('show me stuff: ', this.batchEdit);
-
-        imageServices.batchEdit(this.batchEdit);
+        if(this.batchEdit){
+            this.batchEdit.id = $scope.ids;
+            //imageServices.batchEdit(this.batchEdit);
+            imageServices.deleteImages(this.batchEdit.id);
+        }
 
         $modalInstance.dismiss('cancel');
 
@@ -402,6 +404,19 @@ function capitalize (elem, ind, arr){
 
     $scope.batchObj = {};
     $scope.batch = {};
+
+    $scope.deleteImg = function(){
+
+        if($scope.batchObj.hasOwnProperty(this.uncategorized.id)){
+            $scope.batchObj[this.uncategorized.id] = false;
+            if(Object.keys($scope.batchObj).length == 1){
+                $scope.batch.all = false;
+            }
+        }
+
+        imageServices.deleteImages(this.uncategorized.id);
+
+    };
 
     $scope.mngBatchObj = function(){
 
@@ -1144,28 +1159,26 @@ function capitalize (elem, ind, arr){
 
     };
 
-    $scope.deleteImg = function(id){
-
-        console.log('show me id to delete: ', id);
-
-        if($scope.batchObj.hasOwnProperty(this.uncategorized.id)){
-            $scope.batchObj[this.uncategorized.id] = false;
-            if(Object.keys($scope.batchObj).length == 1){
-                $scope.batch.all = false;
-            }
-        }
-
-        if(id === undefined || id === 'undefined'){
-            id = this.uncategorized.id;
-        }
-
-        $http.delete('/images_mgmt/' + id)
-            .then(function(response){
-                imageServices.getUncategorisedImg();
-                imageServices.getAll();
-                appServices.update_files();
-            });
-    };
+    //$scope.deleteImg = function(){
+    //
+    //    if($scope.batchObj.hasOwnProperty(this.uncategorized.id)){
+    //        $scope.batchObj[this.uncategorized.id] = false;
+    //        if(Object.keys($scope.batchObj).length == 1){
+    //            $scope.batch.all = false;
+    //        }
+    //    }
+    //
+    //    //if(id === undefined || id === 'undefined'){
+    //    //    id = this.uncategorized.id;
+    //    //}
+    //
+    //    $http.delete('/images_mgmt/' + this.uncategorized.id)
+    //        .then(function(response){
+    //            imageServices.getUncategorisedImg();
+    //            imageServices.getAll();
+    //            appServices.update_files();
+    //        });
+    //};
 
 });
 
@@ -1748,6 +1761,21 @@ function openModal(obj) {
         }
 
         return parsedImage;
+    };
+
+    _imageServiceFactory.deleteImages = function(imageArray){
+
+        if(Array.isArray(imageArray)){
+            console.log('binge');
+        }
+
+        $http.delete('/images_mgmt/' + imageArray)
+            .then(function(response){
+                _imageServiceFactory.getUncategorisedImg();
+                _imageServiceFactory.getAll();
+                appServices.update_files();
+            })
+
     }
 
     return _imageServiceFactory;

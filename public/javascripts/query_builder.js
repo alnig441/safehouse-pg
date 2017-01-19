@@ -87,6 +87,9 @@ function parseObj (obj, str, arr) {
         if(obj[prop]){
 
             if(str && prop === str){
+
+                console.log('bingo');
+
                 if(Array.isArray(obj[prop])) {
                     parms.ids = batch(prop, obj[prop]);
                     }
@@ -98,11 +101,17 @@ function parseObj (obj, str, arr) {
             else{
 
                 if(compare(prop, arr)){
+
+                    console.log('bongo');
+
                     cols.push(prop);
                     vals.push(breakout(obj[prop]));
                 }
 
                 else {
+
+                    console.log('BANKO');
+
                     cols.push(prop);
                     vals.push("'" + obj[prop] + "'");
                 }

@@ -20,8 +20,25 @@ function Record (req, table, primaryKey, arrays) {
 
     this.delete = function() {
 
+        var query = 'DELETE FROM ' + this.table + ' WHERE ';
         var parms = parseObj(this.request.params);
-        var query = 'DELETE FROM ' + this.table + ' * WHERE ' + parms.cols + ' = ' + parms.vals + '';
+
+        if(parms.vals.split(',').length > 1){
+
+            parms.vals.split(',').forEach(function(elem,ind){
+                if(elem){
+                    if(ind === 0){
+                        query += parms.cols + ' = ' + elem ;
+                    }else{
+                        query += "'" + ' OR ' + parms.cols + " = '" + elem ;
+                    }
+                }
+            });
+        }
+        else{
+            query += '' + parms.cols + ' = ' + parms.vals + '';
+        }
+
         return query;
 
     };
@@ -102,15 +119,11 @@ function parseObj (obj, str, arr) {
 
                 if(compare(prop, arr)){
 
-                    console.log('bongo');
-
                     cols.push(prop);
                     vals.push(breakout(obj[prop]));
                 }
 
                 else {
-
-                    console.log('BANKO');
 
                     cols.push(prop);
                     vals.push("'" + obj[prop] + "'");

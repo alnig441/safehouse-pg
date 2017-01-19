@@ -122,10 +122,10 @@ router.post('/', call.isAuthenticated, function(req, res, next){
     }
 
     if(req.body.table === 'events'){
-        query_string ="SELECT ID, "+descr+" AS DESCRIPTION, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
+        query_string ="SELECT CREATED, ID, "+descr+" AS DESCRIPTION, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
     }
     if(req.body.table === 'images'){
-        query_string ="SELECT ID, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
+        query_string ="SELECT CREATED, ID, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
     console.log('post/queries: ', query_string);

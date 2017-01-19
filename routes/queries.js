@@ -138,6 +138,11 @@ router.post('/', call.isAuthenticated, function(req, res, next){
                 res.status(200).send(error);
             }
         })
+
+        query.on('row', function(row){
+            row.created = call.parser(JSON.stringify(row.created), req.user.lang);
+        })
+
         query.on('end', function(result){
 
             client.end();

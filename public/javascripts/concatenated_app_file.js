@@ -243,17 +243,21 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
-        console.log('batchEditModal: ', $scope.ids, this.batchEdit);
-
         if(this.batchEdit){
             this.batchEdit.id = $scope.ids;
-            //imageServices.batchEdit(this.batchEdit);
-            imageServices.deleteImages(this.batchEdit.id);
+            imageServices.batchEdit(this.batchEdit);
         }
 
         $modalInstance.dismiss('cancel');
 
     };
+
+    $scope.delete = function(){
+
+        imageServices.deleteImages($scope.ids);
+
+        $modalInstance.dismiss('cancel');
+    }
 
     $scope.cancel = function(){
         $rootScope.img = {};
@@ -273,7 +277,7 @@ function capitalize (elem, ind, arr){
 
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
-    console.log('images: ', $rootScope);
+    console.log('images: ', $scope.ids);
 
     $scope.tools = [
         { name: 'import', value: 'loadNewImages' },
@@ -1159,27 +1163,6 @@ function capitalize (elem, ind, arr){
 
     };
 
-    //$scope.deleteImg = function(){
-    //
-    //    if($scope.batchObj.hasOwnProperty(this.uncategorized.id)){
-    //        $scope.batchObj[this.uncategorized.id] = false;
-    //        if(Object.keys($scope.batchObj).length == 1){
-    //            $scope.batch.all = false;
-    //        }
-    //    }
-    //
-    //    //if(id === undefined || id === 'undefined'){
-    //    //    id = this.uncategorized.id;
-    //    //}
-    //
-    //    $http.delete('/images_mgmt/' + this.uncategorized.id)
-    //        .then(function(response){
-    //            imageServices.getUncategorisedImg();
-    //            imageServices.getAll();
-    //            appServices.update_files();
-    //        });
-    //};
-
 });
 
 function openModal(obj) {
@@ -1764,10 +1747,6 @@ function openModal(obj) {
     };
 
     _imageServiceFactory.deleteImages = function(imageArray){
-
-        if(Array.isArray(imageArray)){
-            console.log('binge');
-        }
 
         $http.delete('/images_mgmt/' + imageArray)
             .then(function(response){

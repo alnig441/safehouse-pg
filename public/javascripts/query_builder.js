@@ -105,8 +105,6 @@ function parseObj (obj, str, arr) {
 
             if(str && prop === str){
 
-                console.log('bingo');
-
                 if(Array.isArray(obj[prop])) {
                     parms.ids = batch(prop, obj[prop]);
                     }

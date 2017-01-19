@@ -181,8 +181,6 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
 router.delete('/:id?', call.isAuthenticated, function(req, res, next){
 
-    console.log('deleting: ', req.params, req.body);
-
     var image = new qb(req, 'images');
 
     pg.connect(connectionString, function(error, client, done){

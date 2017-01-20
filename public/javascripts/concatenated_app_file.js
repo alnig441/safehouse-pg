@@ -779,7 +779,7 @@ function capitalize (elem, ind, arr){
 
     $scope.open2 = function (size, type) {
 
-        console.log('multi view modal ctrl \ntable: '+ $rootScope.active_table +'\nform', this.form , '\ntype: ', type, '\nrootScope: ', $rootScope);
+        //console.log('multi view modal ctrl \ntable: '+ $rootScope.active_table +'\nform', this.form , '\ntype: ', type, '\nrootScope: ', $rootScope);
 
         var modal = appServices.setModal('multi');
 
@@ -787,7 +787,7 @@ function capitalize (elem, ind, arr){
         var arr = [];
 
         if(appServices.getConditions()){
-            arr = appServices.getConditions().split(' ');
+            arr = appServices.getConditions().trim().split(' ');
         }
 
         if(type === 'meta' && arr[0]){
@@ -805,6 +805,8 @@ function capitalize (elem, ind, arr){
         }
 
         var temp = [];
+
+        console.log('object passed to queries: ', obj);
 
         $http.post('/queries', obj)
             .then(function(response){
@@ -922,7 +924,7 @@ function capitalize (elem, ind, arr){
 
         $rootScope.active_table = x;
 
-        console.log('show me active_table: ',$rootScope.active_table);
+        //console.log('show me active_table: ',$rootScope.active_table);
 
         $scope.form = {};
         $scope.query =  {};
@@ -937,9 +939,9 @@ function capitalize (elem, ind, arr){
 
     $scope.build_query = function(x) {
 
-        console.log('privCtrl build_query: ', $rootScope.active_table);
-
-        console.log('hvad kommer ind: ',this.form);
+        //console.log('privCtrl build_query: ', $rootScope.active_table);
+        //
+        //console.log('hvad kommer ind: ',this.form);
 
         var query = {};
 
@@ -997,7 +999,7 @@ function capitalize (elem, ind, arr){
                 }
             }
 
-            console.log('search terms: ', $rootScope.search_terms);
+            //console.log('search terms: ', $rootScope.search_terms);
 
             appServices.buildMeta(query);
 
@@ -1007,7 +1009,7 @@ function capitalize (elem, ind, arr){
 
     $scope.getValues = function(option, db){
 
-        console.log('getting dropdown values for point-in-time search: ', option, db );
+        //console.log('getting dropdown values for point-in-time search: ', option, db );
 
         if(option === 'month') {
             $scope.form.option = false;
@@ -1023,7 +1025,7 @@ function capitalize (elem, ind, arr){
         $http.post('/dropdowns/build', $scope.query)
             .then(function(response){
 
-                console.log('result from dropdown.js:', response.data);
+                //console.log('result from dropdown.js:', response.data);
 
                 if(response.data[0].name !== undefined){
                     $scope.months = response.data;

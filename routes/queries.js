@@ -6,8 +6,6 @@ var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/sa
 
 router.get('/latest', call.isAuthenticated, function(req, res, next){
 
-    console.log('getting latest: ', req.user);
-
     var descr;
 
     switch (req.user.lang) {
@@ -43,6 +41,8 @@ router.get('/latest', call.isAuthenticated, function(req, res, next){
 
 
 router.post('/', call.isAuthenticated, function(req, res, next){
+
+    console.log('queries incoming: ', req.body);
 
     var descr;
 
@@ -128,8 +128,6 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         query_string = "SELECT ID,CREATED,PATH||FOLDER|| '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
-    console.log('try this query string: ', query_string);
-
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(query_string, function(error, result){
 
@@ -140,7 +138,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         })
 
         query.on('row', function(row){
-            console.log('row created: ', row.created);
+            //console.log('row created: ', row.created);
             row.created = call.parser(JSON.stringify(row.created), req.user.lang);
         })
 

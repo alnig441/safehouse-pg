@@ -696,11 +696,15 @@ function capitalize (elem, ind, arr){
 });
 ;app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
-    $http.get('/queries/latest')
-        .then(function(response){
-            $scope.event = response.data;
-
-        });
+    //$http.get('/queries/latest')
+    //    .then(function(response){
+    //        if(response.data.length > 0){
+    //            console.log('whats going on: ',response.data);
+    //            $scope.event = response.data;
+    //        } else {
+    //            $modalInstance.dismiss('cancel');
+    //        }
+    //    });
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
     };
@@ -782,11 +786,11 @@ function capitalize (elem, ind, arr){
         var obj = {};
         var arr = [];
 
-        if(appServices.getConditions() !== undefined){
+        if(appServices.getConditions()){
             arr = appServices.getConditions().split(' ');
         }
 
-        if(type === 'meta' && arr[0] !== undefined){
+        if(type === 'meta' && arr[0]){
             if(arr[0].toLowerCase() !== 'select'){
                 obj.query = "select id, created, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
             }
@@ -804,21 +808,24 @@ function capitalize (elem, ind, arr){
 
         $http.post('/queries', obj)
             .then(function(response){
+                console.log('jens bertel askou: ', response.data);
                 $rootScope.events = response.data;
 
             })
             .then(function(){
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: modal.templ,
-                    controller: modal.contr,
-                    size: size,
-                    resolve: {
-                        events: function () {
-                            return $rootScope.events;
+                if($rootScope.events.length >0){
+                    var modalInstance = $modal.open({
+                        animation: $scope.animationsEnabled,
+                        templateUrl: modal.templ,
+                        controller: modal.contr,
+                        size: size,
+                        resolve: {
+                            events: function () {
+                                return $rootScope.events;
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
             });
 
@@ -828,9 +835,9 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, mapFilter){
+;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices ){
 
-    console.log('priv ctrl - rootscope: ', $rootScope, $scope.years);
+    imageServices.getLatestEvent();
 
     //RUN priv_load() TO POPULATE THE SELECT OPTIONS IN POINT-IN-TIME SEARCH FORM  WWIH THE APPROPRIATE VALUES
     priv_load();
@@ -1138,6 +1145,7 @@ function capitalize (elem, ind, arr){
 
         else if(option === 'event'){
             angular.element(menu).collapse('hide');
+            config.$scope = $rootScope;
             openModal(config);
         }
 
@@ -1166,13 +1174,20 @@ function capitalize (elem, ind, arr){
 
 function openModal(obj) {
 
-    var modalInstance = obj.$modal.open({
-        scope: obj.$scope,
-        animation: obj.$scope.animationsEnabled,
-        templateUrl: obj.modal.templ,
-        controller: obj.modal.contr,
-        size: obj.size
-    });
+    console.log('asdfadadf: ', obj.$scope.event, obj.modal.contr);
+
+    if(obj.modal.contr === 'ModalInstanceCtrl' && !obj.$scope.event){
+        console.log('carry on trucking');
+    }
+    else{
+        var modalInstance = obj.$modal.open({
+            scope: obj.$scope,
+            animation: obj.$scope.animationsEnabled,
+            templateUrl: obj.modal.templ,
+            controller: obj.modal.contr,
+            size: obj.size
+        });
+    }
 
 
 };;app.service('accountServices', ['$http','$rootScope', function($http, $rootScope){
@@ -1498,10 +1513,10 @@ function openModal(obj) {
 
     return _globalFactory;
 
-}]);;app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFilter', 'eventServices', function($http, $rootScope, appServices, capInitialFilter, eventServices){
+}]);;
+app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFilter', 'eventServices', function($http, $rootScope, appServices, capInitialFilter, eventServices){
 
     var _imageServiceFactory = {};
-    //$rootScope.exifData = {};
 
     _imageServiceFactory.getAll = function(){
 
@@ -1516,6 +1531,16 @@ function openModal(obj) {
         $http.get('/images_mgmt/get_latest')
             .then(function(response){
                $rootScope.img = response.data;
+
+            });
+
+    };
+
+    _imageServiceFactory.getLatestEvent = function(){
+
+        $http.get('/queries/latest')
+            .then(function(response){
+                $rootScope.event = response.data;
             });
 
     };

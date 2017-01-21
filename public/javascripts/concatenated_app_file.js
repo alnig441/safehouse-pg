@@ -944,15 +944,15 @@ function capitalize (elem, ind, arr){
                 }
             }
             else {
-                if (this.form.type_and && this.form[x] !== null) {
+                if (this.form.type_and && this.form[x]) {
                     query.contract = {};
                     query.contract[x] = this.form[x];
                 }
-                if (this.form.type_or && this.form[x] !== null) {
+                if (this.form.type_or && this.form[x]) {
                     query.expand = {};
                     query.expand[x] = this.form[x];
                 }
-                if (this.form.exclude && this.form[x] !== null) {
+                if (this.form.exclude && this.form[x]) {
                     query.exclude = {};
                     query.exclude[x] = this.form[x];
                 }
@@ -962,28 +962,28 @@ function capitalize (elem, ind, arr){
             query.baseline = $rootScope.baseline;
 
             if ((!$rootScope.search_terms.contract[x] && this.form.type_and) || (!$rootScope.search_terms.expand[x] && this.form.type_or) || (!$rootScope.search_terms.exclude[x] && this.form.exclude)) {
-                if (this.form.type_and && this.form[x] !== null) {
+                if (this.form.type_and && this.form[x]) {
                     $rootScope.search_terms.contract[x] = [];
                     $rootScope.search_terms.contract[x].push(this.form[x]);
                 }
-                if (this.form.type_or && this.form[x] !== null) {
+                if (this.form.type_or && this.form[x]) {
                     $rootScope.search_terms.expand[x] = [];
                     $rootScope.search_terms.expand[x].push(this.form[x]);
                 }
-                if (this.form.exclude && this.form[x] !== null) {
+                if (this.form.exclude && this.form[x]) {
                     $rootScope.search_terms.exclude[x] = [];
                     $rootScope.search_terms.exclude[x].push(this.form[x]);
                 }
 
             }
             else {
-                if (this.form.type_and && this.form[x] !== null) {
+                if (this.form.type_and && this.form[x]) {
                     $rootScope.search_terms.contract[x].push(this.form[x]);
                 }
-                if (this.form.type_or && this.form[x] !== null) {
+                if (this.form.type_or && this.form[x]) {
                     $rootScope.search_terms.expand[x].push(this.form[x]);
                 }
-                if (this.form.exclude && this.form[x] !== null) {
+                if (this.form.exclude && this.form[x]) {
                     $rootScope.search_terms.exclude[x].push(this.form[x]);
                 }
             }
@@ -1366,10 +1366,17 @@ function openModal(obj) {
                 break;
         }
 
-        $http.get('/dropdowns/'+ conditions)
-            .then(function(result){
-                $rootScope.meta = result.data;
-            });
+        if(!conditions){
+            $http.get('/dropdowns/')
+                .then(function(result){
+                    $rootScope.meta = result.data;
+                });
+        }else {
+            $http.get('/dropdowns/'+ conditions)
+                .then(function(result){
+                    $rootScope.meta = result.data;
+                });
+        }
 
         $http.put('/queries/count', {conditions: conditions})
             .then(function(response){

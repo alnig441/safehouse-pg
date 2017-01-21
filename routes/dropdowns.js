@@ -7,6 +7,8 @@ var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/sa
 
 router.post('/build', call.isAuthenticated, function(req, res, next){
 
+
+
     if(req.body.month === 12){
         req.body.month = 0;
     }
@@ -78,7 +80,6 @@ router.get('/:conditions?', function(req, res, next){
 
     if(req.params.conditions){
         arr = req.params.conditions.split(' ');
-        //console.log('arr[0]: ', arr[0]);
     }
     else{
         arr = ['ignore']
@@ -102,8 +103,6 @@ router.get('/:conditions?', function(req, res, next){
             query_string = query_string.replace(/xxx/g, "'");
         })
     }
-
-    //console.log('show me query string: ', query_string);
 
     pg.connect(connectionString, function(error, client, done){
 

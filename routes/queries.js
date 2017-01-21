@@ -58,7 +58,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
     var search = "";
     var query_string;
 
-    if(req.body.query !== undefined){
+    if(req.body.query){
         query_string = req.body.query.replace(/xxx/g, "'");
         query_string = query_string.replace(/ASTERIX/g, "*");
     }
@@ -159,7 +159,7 @@ router.put('/count', call.isAuthenticated, function(req, res, next){
     var search = 'SELECT COUNT(*) FROM IMAGES WHERE NAMES IS NOT NULL AND META IS NOT NULL AND OCCASION IS NOT NULL AND COUNTRY IS NOT NULL AND STATE IS NOT NULL AND CITY IS NOT NULL';
     var arr = [];
 
-    if(req.body.conditions !== undefined){
+    if(req.body.conditions){
         arr = req.body.conditions.split(' ');
         if(arr[0].toLowerCase() !== 'select'){
             search +=req.body.conditions.replace(/xxx/g, "'");

@@ -37,8 +37,8 @@ router.get('/tickers', function(req, res, next){
             }
         })
         query.on('row', function(row){
-            if(req.params.owner === undefined){
-                if(tickers[row.owner] === undefined){
+            if(!req.params.owner){
+                if(!tickers[row.owner]){
                     tickers[row.owner] = [];
                     tickers[row.owner].push(row);
                 }
@@ -49,7 +49,7 @@ router.get('/tickers', function(req, res, next){
         })
         query.on('end', function(result){
             client.end();
-            if(req.params.owner === undefined){
+            if(!req.params.owner){
                 res.status(200).send(tickers);
             }
             else{
@@ -92,8 +92,8 @@ router.get('/projects', function(req, res, next){
             }
         })
         query.on('row', function(row){
-            if(req.params.owner === undefined){
-                if(resumes[row.owner] === undefined){
+            if(!req.params.owner){
+                if(!resumes[row.owner]){
                     resumes[row.owner] = [];
                     resumes[row.owner].push(row);
                 }
@@ -104,7 +104,7 @@ router.get('/projects', function(req, res, next){
         })
         query.on('end', function(result){
             client.end();
-            if(req.params.owner === undefined){
+            if(!req.params.owner){
                 res.status(200).send(resumes);
             }
             else{

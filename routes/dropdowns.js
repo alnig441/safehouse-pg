@@ -76,7 +76,7 @@ router.get('/:conditions?', function(req, res, next){
     var query_string = "";
     var arr;
 
-    if(req.params.conditions !== 'undefined'){
+    if(req.params.conditions){
         arr = req.params.conditions.split(' ');
         //console.log('arr[0]: ', arr[0]);
     }
@@ -86,7 +86,7 @@ router.get('/:conditions?', function(req, res, next){
 
     if(arr[0].toLowerCase() !== 'select'){
         cols.forEach(function(elem,ind,arr){
-            if(req.params.conditions !== 'undefined'){
+            if(req.params.conditions){
                 query_string += "SELECT DISTINCT "+elem+" FROM images WHERE "+elem+" IS NOT NULL "+ req.params.conditions.replace(/xxx/g, "'") +" ORDER BY "+elem+ " ASC; "
             }
             else{

@@ -127,12 +127,10 @@ function elemIsArray(elem, index, array){
 
 function capitalize (elem, ind, arr){
 
-    console.log('capitalize input: ',elem, ind);
-
     elem = elem.trim();
     var out;
 
-    arr != undefined ? out = arr : out = undefined;
+    arr ? out = arr : out = undefined;
 
     var tmp = [];
     var x = '';
@@ -153,7 +151,7 @@ function capitalize (elem, ind, arr){
 
 
 
-    if(arr != undefined){
+    if(arr){
         arr[ind] = elem;
     }
     else {
@@ -716,7 +714,7 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(option){
 
-        if(option !== undefined){
+        if(option){
 
             this.user.option = option;
 
@@ -779,8 +777,6 @@ function capitalize (elem, ind, arr){
 
     $scope.open2 = function (size, type) {
 
-        //console.log('multi view modal ctrl \ntable: '+ $rootScope.active_table +'\nform', this.form , '\ntype: ', type, '\nrootScope: ', $rootScope);
-
         var modal = appServices.setModal('multi');
 
         var obj = {};
@@ -806,11 +802,8 @@ function capitalize (elem, ind, arr){
 
         var temp = [];
 
-        console.log('object passed to queries: ', obj);
-
         $http.post('/queries', obj)
             .then(function(response){
-                console.log('jens bertel askou: ', response.data);
                 $rootScope.events = response.data;
 
             })
@@ -939,14 +932,10 @@ function capitalize (elem, ind, arr){
 
     $scope.build_query = function(x) {
 
-        //console.log('privCtrl build_query: ', $rootScope.active_table);
-        //
-        //console.log('hvad kommer ind: ',this.form);
-
         var query = {};
 
 
-        if(this.form[x] !== null && this.form[x] !== undefined){
+        if(this.form[x]){
 
             if (Object.keys($rootScope.baseline).length === 0) {
                 $rootScope.baseline[x] = this.form[x];
@@ -972,7 +961,7 @@ function capitalize (elem, ind, arr){
 
             query.baseline = $rootScope.baseline;
 
-            if (($rootScope.search_terms.contract[x] === undefined && this.form.type_and) || ($rootScope.search_terms.expand[x] === undefined && this.form.type_or) || ($rootScope.search_terms.exclude[x] === undefined && this.form.exclude)) {
+            if ((!$rootScope.search_terms.contract[x] && this.form.type_and) || (!$rootScope.search_terms.expand[x] && this.form.type_or) || (!$rootScope.search_terms.exclude[x] && this.form.exclude)) {
                 if (this.form.type_and && this.form[x] !== null) {
                     $rootScope.search_terms.contract[x] = [];
                     $rootScope.search_terms.contract[x].push(this.form[x]);
@@ -1027,10 +1016,10 @@ function capitalize (elem, ind, arr){
 
                 //console.log('result from dropdown.js:', response.data);
 
-                if(response.data[0].name !== undefined){
+                if(response.data[0].name){
                     $scope.months = response.data;
                 }
-                if(response.data[0].day !== undefined){
+                if(response.data[0].day){
                     $scope.days = response.data;
                 }
 
@@ -1125,8 +1114,8 @@ function capitalize (elem, ind, arr){
             size: size
         };
 
-        option != undefined ? option = option.toLowerCase() : option = option;
-        misc != undefined ? misc =  misc.toLowerCase(): misc = misc;
+        option  ? option = option.toLowerCase() : option = option;
+        misc  ? misc =  misc.toLowerCase(): misc = misc;
 
         if(option === 'batch'){
 

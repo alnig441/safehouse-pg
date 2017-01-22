@@ -42,8 +42,6 @@ router.get('/latest', call.isAuthenticated, function(req, res, next){
 
 router.post('/', call.isAuthenticated, function(req, res, next){
 
-    console.log('queries incoming: ', req.body);
-
     var descr;
 
     switch (req.user.lang) {
@@ -138,7 +136,6 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         })
 
         query.on('row', function(row){
-            //console.log('row created: ', row.created);
             row.created = call.parser(JSON.stringify(row.created), req.user.lang);
         })
 
@@ -153,8 +150,6 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
 
 router.put('/count', call.isAuthenticated, function(req, res, next){
-
-    //console.log('queries/count: ', req.body);
 
     var search = 'SELECT COUNT(*) FROM IMAGES WHERE NAMES IS NOT NULL AND META IS NOT NULL AND OCCASION IS NOT NULL AND COUNTRY IS NOT NULL AND STATE IS NOT NULL AND CITY IS NOT NULL';
     var arr = [];
@@ -171,8 +166,6 @@ router.put('/count', call.isAuthenticated, function(req, res, next){
             search = search.replace(/ASTERIX/, "*");
         }
     }
-
-    //console.log('queries/count search string: ', search);
 
     pg.connect(connectionString, function(err, client, done){
         var query = client.query(search, function(error, result){

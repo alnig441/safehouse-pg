@@ -194,9 +194,9 @@ function capitalize (elem, ind, arr){
 
     };
 
-    $scope.viewAcct = function(acct, show){
+    $scope.viewAcct = function(){
 
-        accountServices.viewAcct(this.form.acct_type);
+        accountServices.viewAcct(this.form.acct_type, $scope);
 
     };
 
@@ -917,8 +917,6 @@ function capitalize (elem, ind, arr){
 
         $rootScope.active_table = x;
 
-        //console.log('show me active_table: ',$rootScope.active_table);
-
         $scope.form = {};
         $scope.query =  {};
         $scope.query.option = 'year';
@@ -936,7 +934,6 @@ function capitalize (elem, ind, arr){
 
 
         if(this.form[x]){
-
             if (Object.keys($rootScope.baseline).length === 0) {
                 $rootScope.baseline[x] = this.form[x];
                 if(this.form.exclude){
@@ -988,8 +985,6 @@ function capitalize (elem, ind, arr){
                 }
             }
 
-            //console.log('search terms: ', $rootScope.search_terms);
-
             appServices.buildMeta(query);
 
         }
@@ -997,8 +992,6 @@ function capitalize (elem, ind, arr){
     };
 
     $scope.getValues = function(option, db){
-
-        //console.log('getting dropdown values for point-in-time search: ', option, db );
 
         if(option === 'month') {
             $scope.form.option = false;
@@ -1013,8 +1006,6 @@ function capitalize (elem, ind, arr){
 
         $http.post('/dropdowns/build', $scope.query)
             .then(function(response){
-
-                //console.log('result from dropdown.js:', response.data);
 
                 if(response.data[0].name){
                     $scope.months = response.data;
@@ -1181,13 +1172,11 @@ function openModal(obj) {
     }
 
 
-};;app.service('accountServices', ['$http','$rootScope', function($http, $rootScope){
+};;app.service('accountServices', ['$http', function($http){
 
     var _accountServiceFactory = {};
 
     _accountServiceFactory.addAcct = function(obj){
-
-        console.log('acct services adding ', obj);
 
         $http.post('/accounts_mgmt/add', obj)
             .then(function(response){
@@ -1197,8 +1186,6 @@ function openModal(obj) {
 
     _accountServiceFactory.deleteAcct = function(obj){
 
-        console.log('acct services deleting: ', obj);
-
         $http.delete('/accounts_mgmt/' + obj.username)
             .then(function(response){
                 _accountServiceFactory.viewAcct(obj.acct_type);
@@ -1207,17 +1194,14 @@ function openModal(obj) {
 
     };
 
-    _accountServiceFactory.viewAcct = function(acct){
-
-        console.log('acct services viewing: ', acct);
+    _accountServiceFactory.viewAcct = function(acct, $scope){
 
         $http.get('/accounts_mgmt/'+ acct)
             .then(function(response){
-                $rootScope.users = response.data;
+                $scope.users = response.data;
             });
 
     };
-
 
     return _accountServiceFactory;
 
@@ -1280,8 +1264,10 @@ function openModal(obj) {
 }]);;app.factory('appServices', ['$http', '$rootScope',  function($http, $rootScope){
 
     var _appServicesFactory = {};
+
     var excl_incr;
     var conditions;
+
     var elements = {content: 'meta_div','point-in-time': 'time_div', list: 'list_div', add: 'add_div', images: 'image_div', events: 'event_div', storages: 'storage_div', projects: 'resume_div', tickers: 'ticker_div', biographies: 'biography_div'};
 
     var modals = {
@@ -1346,7 +1332,6 @@ function openModal(obj) {
                 }
                 else{
                     conditions = conditions.replace(/RES\w.COLUMN/g, "ASTERIX");
-                    console.log('hansen cond: ', conditions);
                     conditions = 'SELECT DISTINCT RES'+excl_incr+'.* FROM ('+conditions+') as RES'+excl_incr+' where '+column+ ' != xxx'+key_value[column]+'xxx';
                     excl_incr ++;
                 }

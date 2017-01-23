@@ -33,9 +33,11 @@ app.config(function($routeProvider, $locationProvider){
         });
 });
 
-app.run(['loadServices','$rootScope',function(loadServices, $rootScope){
+app.run(['loadServices','$rootScope', function(loadServices, $rootScope){
 
     $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
+
+    console.log('app run: ', $rootScope);
 
     loadServices.getBios();
     loadServices.getTickers();
@@ -275,8 +277,6 @@ function capitalize (elem, ind, arr){
 
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
-    console.log('images: ', $scope.ids);
-
     $scope.tools = [
         { name: 'import', value: 'loadNewImages' },
         { name: 'update', value: 'checkExif' }
@@ -437,39 +437,41 @@ function capitalize (elem, ind, arr){
     $rootScope.img = {};
     $rootScope.event_form = {};
 
+    //HAS BEEN ADDED TO storagesCtrl
+
     $scope.deleteStorage = function(){
 
         storageServices.deleteStorage(this.storage.folder);
     };
 
-    $scope.addEvent = function(){
 
-        $rootScope.event_form.img_id = $rootScope.img.id;
-        $rootScope.event_form.updated = new Date();
+    //NOT IN USE
 
-        eventServices.postEvent($rootScope.event_form);
+    //$scope.addEvent = function(){
+    //
+    //    console.log('hvad kommer ind?: ', this);
+    //
+    //    $rootScope.event_form.img_id = $rootScope.img.id;
+    //    $rootScope.event_form.updated = new Date();
+    //
+    //    eventServices.postEvent($rootScope.event_form);
+    //
+    //    $rootScope.event_form = {};
+    //    $rootScope.f = {};
+    //};
 
-        $rootScope.event_form = {};
-        $rootScope.f = {};
-    };
+    $scope.getEventById = function(){
 
-    $scope.getEventById = function(id, bool){
-
-        $rootScope.event_form = {};
-
-        if(bool){
-            $scope.select('event');
-        }
-        else{
-            imageServices.getImgById(id);
-        }
-
+        var id = this.event_form.img_id;
+        $rootScope.img = {};
         eventServices.getEventById(id);
+        imageServices.getImgById(id);
 
     };
 
     $scope.updateEvent = function(){
 
+        console.log('hvad kommer ved update; ', this.form, this.event_form);
         eventServices.updateEvent($rootScope.event_form);
 
     };
@@ -498,8 +500,6 @@ function capitalize (elem, ind, arr){
 
 }]);
 ;app.controller('landingPageCtrl', ['$scope', '$http', '$rootScope', 'appServices', 'landingPageServices', function($scope, $http, $rootScope, appServices, landingPageServices){
-
-    console.log('landing page ctrl');
 
     $scope.postItem = function(){
 
@@ -591,7 +591,9 @@ function capitalize (elem, ind, arr){
     };
 
 }]);
-;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices) {
+;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices) {
+
+    console.log('login modal: ', $rootScope);
 
     $rootScope.new_files = {};
 
@@ -1092,6 +1094,8 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices, imageServices){
 
+    console.log('singel view modal: ', $rootScope);
+
     var menu = document.getElementsByClassName('collapse');
 
     $scope.animationsEnabled = true;
@@ -1155,8 +1159,6 @@ function capitalize (elem, ind, arr){
 });
 
 function openModal(obj) {
-
-    console.log('asdfadadf: ', obj.$scope.event, obj.modal.contr);
 
     if(obj.modal.contr === 'ModalInstanceCtrl' && !obj.$scope.event){
         console.log('carry on trucking');
@@ -1226,8 +1228,11 @@ function openModal(obj) {
 
         $http.get('/events_mgmt/get_one/' + id)
             .then(function(response){
-                $rootScope.event_form = response.data;
-                console.log(response.data, $rootScope.event_form);
+                if(response.data.length > 0){
+                    $rootScope.event_form = response.data[0];
+                    $rootScope.img.event = true;
+                    console.log(response.data, $rootScope.event_form);
+                }
             });
 
     };
@@ -1255,7 +1260,6 @@ function openModal(obj) {
         $http.get('/events_mgmt')
             .then(function(response){
                 $rootScope.events = response.data;
-                //$rootScope.event_form = $rootScope.events[0];
             });
     };
 
@@ -1447,55 +1451,6 @@ function openModal(obj) {
         }
     }
 
-}]);;app.factory('$global',['$http', function($http){
-
-    var _urls = {
-        biographies: '/landing_mgmt/bios/all',
-        tickers: '/landing_mgmt/tickers',
-        resumes: '/landing_mgmt/projects'
-    };
-
-    var _biographies = {};
-    var _tickers = {};
-    var _resumes = {};
-
-    var _globalFactory = {};
-
-
-        _globalFactory.request = function(str){
-            return $http.get(str);
-        };
-
-        _globalFactory.url = function(which){
-            return _urls[which];
-        };
-
-        _globalFactory.setBiographies = function(data){
-            _biographies = data;
-        };
-
-        _globalFactory.getBiographies = function(){
-            return _biographies;
-        };
-
-        _globalFactory.setTickers = function(data){
-            _tickers = data;
-        };
-
-        _globalFactory.getTickers = function(){
-            return _tickers;
-        };
-
-        _globalFactory.setResumes = function(data){
-            _resumes = data;
-        };
-
-        _globalFactory.getResumes = function(){
-            return _resumes;
-        };
-
-    return _globalFactory;
-
 }]);;
 app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFilter', 'eventServices', function($http, $rootScope, appServices, capInitialFilter, eventServices){
 
@@ -1600,6 +1555,8 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     _imageServiceFactory.addTags = function(obj){
 
+        console.log('hvad kommer ind her: ', obj, this);
+
         var addTags = {};
         var addEvent = {};
 
@@ -1661,12 +1618,10 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
             .then(function(response){
                 $rootScope.img = response.data;
 
-                $http.get('/events_mgmt/get_one/' + id)
-                    .then(function(response){
-                        if(response.data){
-                            $rootScope.img.event = true;
-                        }
-                    });
+                if(!$rootScope.img.event){
+                    eventServices.getEventById(id);
+                }
+
             });
 
     };
@@ -1806,7 +1761,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.get('landing_mgmt/bios/all')
             .then(function(response){
                 $rootScope.subjects = response.data;
-                console.log('subjects: ', $rootScope.subjects);
             });
     };
 
@@ -1823,6 +1777,55 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                 $rootScope.resumes = response.data;
             });
     }
+
+}]);;app.factory('$global',['$http', function($http){
+
+    var _urls = {
+        biographies: '/landing_mgmt/bios/all',
+        tickers: '/landing_mgmt/tickers',
+        resumes: '/landing_mgmt/projects'
+    };
+
+    var _biographies = {};
+    var _tickers = {};
+    var _resumes = {};
+
+    var _globalFactory = {};
+
+
+    _globalFactory.request = function(str){
+        return $http.get(str);
+    };
+
+    _globalFactory.url = function(which){
+        return _urls[which];
+    };
+
+    _globalFactory.setBiographies = function(data){
+        _biographies = data;
+    };
+
+    _globalFactory.getBiographies = function(){
+        return _biographies;
+    };
+
+    _globalFactory.setTickers = function(data){
+        _tickers = data;
+    };
+
+    _globalFactory.getTickers = function(){
+        return _tickers;
+    };
+
+    _globalFactory.setResumes = function(data){
+        _resumes = data;
+    };
+
+    _globalFactory.getResumes = function(){
+        return _resumes;
+    };
+
+    return _globalFactory;
 
 }]);;app.service('storageServices', ['$http','$rootScope', function($http, $rootScope){
 
@@ -1849,7 +1852,8 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
     };
 
     _storageServiceFactory.getStorages = function(){
-            var x = {};
+
+        console.log('loading storages');
 
         $http.get('/storages_mgmt/all')
             .then(function(response){

@@ -39,12 +39,9 @@ router.get('/get_one/:img_id?', call.isAuthenticated, function(req, res, next){
                 console.log(error);
             }
         })
-        query.on('row', function(row){
-            console.log('show me row: ', row);
-            res.status(200).send(row);
-        })
         query.on('end', function(result){
             client.end();
+            res.status(200).send(result.rows);
         })
     })
 });

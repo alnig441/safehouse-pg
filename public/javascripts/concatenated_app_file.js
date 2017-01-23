@@ -273,7 +273,7 @@ function capitalize (elem, ind, arr){
     imageServices.getNewFiles();
     imageServices.getUncategorisedImg();
     imageServices.getAll();
-    eventServices.getAllEvents();
+    eventServices.getAllEvents($scope);
 
     //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
@@ -444,22 +444,6 @@ function capitalize (elem, ind, arr){
         storageServices.deleteStorage(this.storage.folder);
     };
 
-
-    //NOT IN USE
-
-    //$scope.addEvent = function(){
-    //
-    //    console.log('hvad kommer ind?: ', this);
-    //
-    //    $rootScope.event_form.img_id = $rootScope.img.id;
-    //    $rootScope.event_form.updated = new Date();
-    //
-    //    eventServices.postEvent($rootScope.event_form);
-    //
-    //    $rootScope.event_form = {};
-    //    $rootScope.f = {};
-    //};
-
     $scope.getEventById = function(){
 
         var id = this.event_form.img_id;
@@ -591,7 +575,7 @@ function capitalize (elem, ind, arr){
     };
 
 }]);
-;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices) {
+;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices) {
 
     console.log('login modal: ', $rootScope);
 
@@ -832,9 +816,9 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices ){
+;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices ){
 
-    imageServices.getLatestEvent();
+    eventServices.getLatestEvent($scope);
 
     //RUN priv_load() TO POPULATE THE SELECT OPTIONS IN POINT-IN-TIME SEARCH FORM  WWIH THE APPROPRIATE VALUES
     priv_load();
@@ -1131,7 +1115,6 @@ function capitalize (elem, ind, arr){
 
         else if(option === 'event'){
             angular.element(menu).collapse('hide');
-            config.$scope = $rootScope;
             openModal(config);
         }
 
@@ -1224,14 +1207,11 @@ function openModal(obj) {
 
     _eventServiceFactory.getEventById = function(id){
 
-        console.log('eventServices getting event by id: ', id);
-
         $http.get('/events_mgmt/get_one/' + id)
             .then(function(response){
                 if(response.data.length > 0){
                     $rootScope.event_form = response.data[0];
                     $rootScope.img.event = true;
-                    console.log(response.data, $rootScope.event_form);
                 }
             });
 
@@ -1255,11 +1235,20 @@ function openModal(obj) {
 
     };
 
-    _eventServiceFactory.getAllEvents = function(){
+    _eventServiceFactory.getLatestEvent = function($scope){
+
+        $http.get('/queries/latest')
+            .then(function(response){
+                $scope.event = response.data;
+            });
+
+    };
+
+    _eventServiceFactory.getAllEvents = function($scope){
 
         $http.get('/events_mgmt')
             .then(function(response){
-                $rootScope.events = response.data;
+                $scope.events = response.data;
             });
     };
 
@@ -1474,14 +1463,14 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    _imageServiceFactory.getLatestEvent = function(){
-
-        $http.get('/queries/latest')
-            .then(function(response){
-                $rootScope.event = response.data;
-            });
-
-    };
+    //_imageServiceFactory.getLatestEvent = function(){
+    //
+    //    $http.get('/queries/latest')
+    //        .then(function(response){
+    //            $rootScope.event = response.data;
+    //        });
+    //
+    //};
 
     _imageServiceFactory.addImg = function(image, batch){
 

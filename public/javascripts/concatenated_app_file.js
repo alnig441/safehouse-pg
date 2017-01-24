@@ -37,8 +37,6 @@ app.run(['loadServices','$rootScope', function(loadServices, $rootScope){
 
     $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
 
-    console.log('app run: ', $rootScope);
-
     loadServices.getBios();
     loadServices.getTickers();
     loadServices.getProjects();
@@ -243,6 +241,8 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
+        console.log('batch edit scope; ',$scope);
+
         if(this.batchEdit){
             this.batchEdit.id = $scope.ids;
             imageServices.batchEdit(this.batchEdit);
@@ -266,16 +266,9 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
-
-
-    //IMAGE BATCH UPDATE TOOL
-    appServices.update_files();
-    imageServices.getNewFiles();
-    imageServices.getUncategorisedImg();
-    imageServices.getAll();
+    imageServices.getNewImages($scope);
+    imageServices.getAll($scope);
     eventServices.getAllEvents($scope);
-
-    //POPULATE IMAGES TABLE WITH NEW IMAGE FILES
 
     $scope.tools = [
         { name: 'import', value: 'loadNewImages' },
@@ -292,26 +285,29 @@ function capitalize (elem, ind, arr){
 
     $scope.runTool = function(){
 
-        $rootScope[$scope.activeTool]();
+        //$rootScope[$scope.activeTool]();
+        $scope[$scope.activeTool]();
     };
 
 
     //REWRITE THE FOLLOWING FOR QA....
 
-    $rootScope.checkExif = function() {
+    $scope.checkExif = function() {
+
+        console.log('exiffing');
 
         function getIndex () {
             var i = 0;
             var element;
 
 
-            while(i < $rootScope.images.length){
-                if($rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'checked' && $rootScope.images[i].meta[$rootScope.images[i].meta.length -1].toLowerCase() != 'updated'){
+            while(i < $scope.images.length){
+                if($scope.images[i].meta[$scope.images[i].meta.length -1].toLowerCase() != 'checked' && $scope.images[i].meta[$scope.images[i].meta.length -1].toLowerCase() != 'updated'){
                     break;
                 }
                 i++;
             }
-            if($rootScope.images[i]){
+            if($scope.images[i]){
                 return i.toString();
             }else {
                 return false;
@@ -322,7 +318,7 @@ function capitalize (elem, ind, arr){
 
         if(!index){
             var images = [];
-            $rootScope.images.forEach(function(elem,ind){
+            $scope.images.forEach(function(elem,ind){
                 if(elem.meta[elem.meta.length -1] === 'checked'){
                     images.push(elem);
                 }
@@ -331,20 +327,20 @@ function capitalize (elem, ind, arr){
         }
 
         if (index){
-            $http.get('/exif/' + $rootScope.images[index].file)
+            $http.get('/exif/' + $scope.images[index].file)
                 .then(function(response){
 
                     if(response.data.created){
 
                         var coord = response.data.coordinates;
 
-                        for(var prop in $rootScope.images[index]){
+                        for(var prop in $scope.images[index]){
                             if(prop != 'id' && prop != 'meta'){
-                                $rootScope.images[index][prop] = false;
+                                $scope.images[index][prop] = false;
                             }
                         }
 
-                        $rootScope.images[index].created = response.data.created;
+                        $scope.images[index].created = response.data.created;
 
                         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
                             .then(function(response){
@@ -353,20 +349,20 @@ function capitalize (elem, ind, arr){
 
                                 if(response.data.status === 'OK'){
 
-                                    $rootScope.images[index] = imageServices.buildImageObject($rootScope.images[index], response.data.results[0].address_components);
+                                    $scope.images[index] = imageServices.buildImageObject($scope.images[index], response.data.results[0].address_components);
 
                                 }
                                 if(coord && response.data.status === 'ZERO_RESULTS'){
 
-                                    $rootScope.images[index].country = 'En Route';
-                                    $rootScope.images[index].state = 'N/a';
-                                    $rootScope.images[index].city = 'En Route';
+                                    $scope.images[index].country = 'En Route';
+                                    $scope.images[index].state = 'N/a';
+                                    $scope.images[index].city = 'En Route';
 
                                 }
                                 //ADD AND 'UPDATED' FLAG TO IMAGE IN THE DATABASE
-                                $rootScope.images[index].meta.push('updated');
+                                $scope.images[index].meta.push('updated');
 
-                                $http.put('/images_mgmt/add_meta', $rootScope.images[index])
+                                $http.put('/images_mgmt/add_meta', $scope.images[index])
                                     .then(function(response){
                                         $scope.checkExif();
                                     })
@@ -375,7 +371,7 @@ function capitalize (elem, ind, arr){
                     }
                     else {
                         //ADD A 'CHECKED' FLAG TO THE IMAGE ON ROOTSCOPE
-                        $rootScope.images[index].meta.push('checked');
+                        $scope.images[index].meta.push('checked');
                         $scope.checkExif();
                     }
                 })
@@ -383,22 +379,22 @@ function capitalize (elem, ind, arr){
         }
     };
 
-    $rootScope.loadNewImages = function() {
+    $scope.loadNewImages = function() {
 
         var image = {};
         image.file = get_next_img();
         image.storage = $rootScope.default_storage;
 
         if(image.file) {
-            imageServices.addImg(image, true);
+            imageServices.addImg(image, true, $scope);
         }
     };
 
     //GET NEXT NEW IMAGE
 
     function get_next_img() {
-        for(var prop in $rootScope.newImages){
-            if($rootScope.newImages[prop] === true){
+        for(var prop in $scope.newImages){
+            if($scope.newImages[prop] === true){
                 return prop;
             }
         }
@@ -577,8 +573,6 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices) {
 
-    console.log('login modal: ', $rootScope);
-
     $rootScope.new_files = {};
 
     $scope.submit = function(){
@@ -587,6 +581,7 @@ function capitalize (elem, ind, arr){
             .then(function(response){
                 if(response.data.acct_type === 'admin'){
                     storageServices.getStorages();
+                    imageServices.getUncategorisedImg();
                     $rootScope.default_storage = response.data.storages[0];
                     $location.path('/admin/diary');
                 }
@@ -818,6 +813,7 @@ function capitalize (elem, ind, arr){
 });
 ;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices ){
 
+    imageServices.getDbCount($scope);
     eventServices.getLatestEvent($scope);
 
     //RUN priv_load() TO POPULATE THE SELECT OPTIONS IN POINT-IN-TIME SEARCH FORM  WWIH THE APPROPRIATE VALUES
@@ -1077,8 +1073,6 @@ function capitalize (elem, ind, arr){
 
 }]);
 ;app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices, imageServices){
-
-    console.log('singel view modal: ', $rootScope);
 
     var menu = document.getElementsByClassName('collapse');
 
@@ -1396,29 +1390,24 @@ function openModal(obj) {
         return conditions;
     };
 
-    _appServicesFactory.update_files = function(){
-
-        var elem =  document.getElementById('new_files');
-        var show = 'ng-show';
-
-        $http.get('/image_jobs/count/' + $rootScope.default_storage)
-            .then(function(result){
-                $rootScope.img_db = result.data;
-
-                $http.get('/image_jobs/new_files/')
-                    .then(function(result){
-                        if(parseInt(result.data.amount)  > parseInt($rootScope.img_db.size)){
-                            console.log('new files in directory', result.data.amount);
-                            angular.element(elem).removeClass('ng-hide');
-                            angular.element(elem).addClass(show);
-                        }
-                        else{
-                            console.log('no new files in directory', result.data.amount);
-                        }
-                    });
-            });
-
-    };
+    //_appServicesFactory.update_files = function($scope){
+    //
+    //    $http.get('/image_jobs/count/' + $rootScope.default_storage)
+    //        .then(function(result){
+    //            $rootScope.img_db = result.data;
+    //
+    //            $http.get('/image_jobs/new_files/')
+    //                .then(function(result){
+    //                    if(parseInt(result.data.amount)  > parseInt($rootScope.img_db.size)){
+    //                        console.log('new files in directory', result.data.amount);
+    //                    }
+    //                    else{
+    //                        console.log('no new files in directory', result.data.amount);
+    //                    }
+    //                });
+    //        });
+    //
+    //};
 
     return _appServicesFactory;
 
@@ -1445,11 +1434,11 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     var _imageServiceFactory = {};
 
-    _imageServiceFactory.getAll = function(){
+    _imageServiceFactory.getAll = function($scope){
 
         $http.get('/images_mgmt/get_all')
             .then(function(response){
-                $rootScope.images = response.data;
+                $scope.images = response.data;
             });
     };
 
@@ -1463,16 +1452,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    //_imageServiceFactory.getLatestEvent = function(){
-    //
-    //    $http.get('/queries/latest')
-    //        .then(function(response){
-    //            $rootScope.event = response.data;
-    //        });
-    //
-    //};
-
-    _imageServiceFactory.addImg = function(image, batch){
+    _imageServiceFactory.addImg = function(image, batch, $scope){
 
         $http.get('/exif/' + image.file)
 
@@ -1505,14 +1485,14 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                         $http.post('/images_mgmt/add', image)
 
                             .then(function(response){
-                                response.data.name == 'error' ? $rootScope.newImages[image.file] = response.data.detail : $rootScope.newImages[image.file] = false;
+                                response.data.name == 'error' ? $scope.newImages[image.file] = response.data.detail : $scope.newImages[image.file] = false;
                             })
                             .then(function(response){
                                 _imageServiceFactory.getUncategorisedImg();
                             })
                             .then(function(response){
                                 if(batch){
-                                    $rootScope.loadNewImages();
+                                    $scope.loadNewImages();
                                 }else{
                                     _imageServiceFactory.getAll()
                                 }
@@ -1592,7 +1572,9 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         }
     };
 
-    _imageServiceFactory.getUncategorisedImg = function(){
+    _imageServiceFactory.getUncategorisedImg = function($scope){
+
+        console.log('show me scope: ', $scope);
 
         $http.get('/images_mgmt/get_new')
             .then(function(response){
@@ -1637,21 +1619,26 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    _imageServiceFactory.getNewFiles = function(){
+    _imageServiceFactory.getNewImages = function($scope){
 
-        $rootScope.newImages = {};
-        var elem =  document.getElementById('new_files');
-        var show = 'ng-show';
+        $scope.newImages = {};
 
         $http.get('/image_jobs/files')
             .then(function(response){
                 if(response.data){
-                    $rootScope.newImages = response.data;
-                    angular.element(elem).removeClass('ng-hide');
-                    angular.element(elem).addClass(show);
+                    $scope.newImages = response.data;
                 }
             });
 
+    };
+
+    _imageServiceFactory.getNewImagesCount = function($scope){
+
+        $http.get('/image_jobs/new_files/')
+            .then(function(result){
+                console.log('hello: ',result.data);
+                $scope.newFilesCount = result.data.amount;
+            });
     };
 
     _imageServiceFactory.getExifData = function (file) {
@@ -1706,7 +1693,16 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                 appServices.update_files();
             })
 
-    }
+    };
+
+    _imageServiceFactory.getDbCount = function($scope) {
+
+        $http.get('/image_jobs/count/' + $rootScope.default_storage)
+            .then(function(response){
+                $scope.dbCount = response.data;
+            })
+
+    };
 
     return _imageServiceFactory;
 

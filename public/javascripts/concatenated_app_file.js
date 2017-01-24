@@ -826,12 +826,9 @@ function capitalize (elem, ind, arr){
 
     function priv_load () {
 
-        console.log('running priv_load');
-
         $scope.form = {};
-        $scope.query = {};
-        $scope.query.option = 'year';
-        $scope.query.table = 'images';
+        $scope.form.option = 'year';
+        $scope.form.table = 'images';
 
         appServices.buildDropdowns($scope);
     }
@@ -840,10 +837,6 @@ function capitalize (elem, ind, arr){
 
     /*BLOCKED OUT FUNTIONALITY FOR USE WHEN MORE STORAGE FOLDERS ARE ACTIVE PER USER*/
     $scope.selected_db = $rootScope.default_storage;
-
-    $scope.years = {};
-    $scope.days = {};
-    $scope.months = {};
 
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
@@ -855,8 +848,12 @@ function capitalize (elem, ind, arr){
         appServices.selectTab(choice);
 
         if(choice === 'content'){
+
+            $scope.form = {};
             $scope.form.type_and = true;
+
             appServices.buildMeta();
+
         }
 
     };
@@ -879,14 +876,15 @@ function capitalize (elem, ind, arr){
         $rootScope.active_table = x;
 
         $scope.form = {};
-        $scope.query =  {};
-        $scope.query.option = 'year';
-        $scope.query.table = x;
+        $scope.form.option = 'year';
+        $scope.form.table = x;
 
         appServices.buildDropdowns($scope);
     };
 
     $scope.build_query = function(x) {
+
+        console.log('meta search: ', this.form);
 
         var query = {};
 
@@ -952,15 +950,13 @@ function capitalize (elem, ind, arr){
     $scope.getValues = function(option, db){
 
         if(option === 'month') {
-            $scope.form.option = false;
-            $scope.form.day = false;
-            $scope.form.month = false;
+            this.form.option = false;
+            this.form.day = false;
+            this.form.month = false;
         }
 
-        $scope.query = {};
-        $scope.query = $scope.form;
-        $scope.query.option = option;
-        $scope.query.table = db;
+        this.form.option = option;
+        this.form.table = db;
 
         appServices.buildDropdowns($scope);
 
@@ -1245,8 +1241,6 @@ function openModal(obj) {
 
     _appServicesFactory.buildMeta = function(obj){
 
-        var arr = ['names', 'meta', 'country', 'state', 'city', 'occasion'];
-
         var column;
         var type;
         var key_value;
@@ -1358,7 +1352,7 @@ function openModal(obj) {
 
     _appServicesFactory.buildDropdowns = function($scope){
 
-        $http.post('/dropdowns/build', $scope.query)
+        $http.post('/dropdowns/build', $scope.form)
             .then(function(response){
 
                 if(response.data.length > 0){

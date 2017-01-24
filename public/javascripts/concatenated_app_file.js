@@ -161,9 +161,9 @@ function capitalize (elem, ind, arr){
 
     return arr;
 
-};app.controller('acctsCtrl',['accountServices', '$scope', 'appServices', '$http', function(accountServices, $scope, appServices, $http){
+};app.controller('acctsCtrl',['accountServices', '$scope', 'appServices', '$http', '$rootScope', function(accountServices, $scope, appServices, $http, $rootScope){
 
-    console.log('accounts ctrl');
+    console.log('accounts ctrl root: ', $rootScope);
 
     $scope.acct = [
         {name: '<<acct_type>>', value: null},
@@ -285,8 +285,8 @@ function capitalize (elem, ind, arr){
 
     $scope.runTool = function(){
 
-        //$rootScope[$scope.activeTool]();
         $scope[$scope.activeTool]();
+
     };
 
 
@@ -573,27 +573,32 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices) {
 
-    $rootScope.new_files = {};
+    console.log('login - root: ', $rootScope);
 
     $scope.submit = function(){
 
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
                 if(response.data.acct_type === 'admin'){
+
                     storageServices.getStorages();
                     imageServices.getUncategorisedImg();
                     $rootScope.default_storage = response.data.storages[0];
+
                     $location.path('/admin/diary');
                 }
-                else if(response.data.acct_type === 'private' && response.data.lang === 'en'){
+                else if(response.data.acct_type === 'private'){
+
                     $rootScope.storages = response.data.storages;
                     $rootScope.default_storage = $rootScope.storages[0];
-                    $location.path('/priv_uk');
-                }
-                else if(response.data.acct_type === 'private' && response.data.lang === 'da'){
-                    $rootScope.storages = response.data.storages;
-                    $rootScope.default_storage = $rootScope.storages[0];
-                    $location.path('/priv_dk');
+                    $rootScope.active_table = 'images';
+
+                    if(response.data.lang === 'en'){
+                        $location.path('/priv_uk');
+                    }
+                    if(response.data.lang === 'da'){
+                        $location.path('/priv_dk');
+                    }
                 }
                 else if(response.data.acct_type === 'public'){
                     $location.path('/public');
@@ -828,37 +833,18 @@ function capitalize (elem, ind, arr){
         $scope.query.option = 'year';
         $scope.query.table = 'images';
 
-        $http.post('/dropdowns/build', $scope.query)
-            .then(function(response){
-                $scope.years = response.data;
-            });
-
-    };
-
-    //DO NOT REMOVE - ENSURES SOUND REQ.BODY ON LOAD
-    $rootScope.active_table = 'images';
+        appServices.buildDropdowns($scope);
+    }
 
     appServices.resetSQ();
 
     /*BLOCKED OUT FUNTIONALITY FOR USE WHEN MORE STORAGE FOLDERS ARE ACTIVE PER USER*/
     $scope.selected_db = $rootScope.default_storage;
 
-    getCount($scope.selected_db);
-
-    $scope.setActive = function(){
-        getCount($scope.selected_db);
-    };
-
-    function getCount(db){
-        $http.get('/image_jobs/count/' + db)
-            .then(function(result){
-                $rootScope.img_db = result.data;
-            });
-    }
-
     $scope.years = {};
     $scope.days = {};
     $scope.months = {};
+
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
@@ -867,13 +853,6 @@ function capitalize (elem, ind, arr){
         choice = mapTabsFilter(choice.toLowerCase());
 
         appServices.selectTab(choice);
-
-        if(choice === 'event'){
-            $http.get('/images_mgmt/get_all')
-                .then(function(response){
-                    $scope.images = response.data;
-                });
-        }
 
         if(choice === 'content'){
             $scope.form.type_and = true;
@@ -904,10 +883,7 @@ function capitalize (elem, ind, arr){
         $scope.query.option = 'year';
         $scope.query.table = x;
 
-        $http.post('/dropdowns/build', $scope.query)
-            .then(function(response){
-                $scope.years = response.data;
-            });
+        appServices.buildDropdowns($scope);
     };
 
     $scope.build_query = function(x) {
@@ -986,17 +962,7 @@ function capitalize (elem, ind, arr){
         $scope.query.option = option;
         $scope.query.table = db;
 
-        $http.post('/dropdowns/build', $scope.query)
-            .then(function(response){
-
-                if(response.data[0].name){
-                    $scope.months = response.data;
-                }
-                if(response.data[0].day){
-                    $scope.days = response.data;
-                }
-
-            });
+        appServices.buildDropdowns($scope);
 
     };
 
@@ -1390,24 +1356,33 @@ function openModal(obj) {
         return conditions;
     };
 
-    //_appServicesFactory.update_files = function($scope){
-    //
-    //    $http.get('/image_jobs/count/' + $rootScope.default_storage)
-    //        .then(function(result){
-    //            $rootScope.img_db = result.data;
-    //
-    //            $http.get('/image_jobs/new_files/')
-    //                .then(function(result){
-    //                    if(parseInt(result.data.amount)  > parseInt($rootScope.img_db.size)){
-    //                        console.log('new files in directory', result.data.amount);
-    //                    }
-    //                    else{
-    //                        console.log('no new files in directory', result.data.amount);
-    //                    }
-    //                });
-    //        });
-    //
-    //};
+    _appServicesFactory.buildDropdowns = function($scope){
+
+        $http.post('/dropdowns/build', $scope.query)
+            .then(function(response){
+
+                if(response.data.length > 0){
+
+                    switch (Object.keys(response.data[0])[0]){
+                        case 'year':
+                            $scope.years = response.data;
+                            break;
+                        case 'name':
+                            $scope.months = response.data;
+                            break;
+                        case 'day':
+                            $scope.days = response.data;
+                            break;
+                    }
+
+                }else{
+                    $scope.years = {};
+                    $scope.months = {};
+                    $scope.days = {};
+                }
+            })
+
+    }
 
     return _appServicesFactory;
 
@@ -1637,7 +1612,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.get('/image_jobs/new_files/')
             .then(function(result){
                 console.log('hello: ',result.data);
-                $scope.newFilesCount = result.data.amount;
+                $scope.newImagesCount = result.data.amount;
             });
     };
 
@@ -1699,7 +1674,9 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
         $http.get('/image_jobs/count/' + $rootScope.default_storage)
             .then(function(response){
+                //$rootScope.dbCount = response.data;
                 $scope.dbCount = response.data;
+
             })
 
     };

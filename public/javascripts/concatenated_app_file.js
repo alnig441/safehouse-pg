@@ -241,11 +241,9 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
-        console.log('batch edit scope; ',$scope);
-
         if(this.batchEdit){
             this.batchEdit.id = $scope.ids;
-            imageServices.batchEdit(this.batchEdit);
+            imageServices.batchEdit(this.batchEdit, $scope);
         }
 
         $modalInstance.dismiss('cancel');
@@ -1482,24 +1480,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
             });
 
-        function findAddressComponent (components, target) {
-
-            var element;
-
-            for (var i = 0; i < components.length; i++ ){
-
-                components[i].types.forEach(function(elem,ind){
-                    if(elem === target){
-                        element = components[i];
-                    }
-                })
-
-            }
-
-            return element;
-
-        }
-
     };
 
     _imageServiceFactory.addTags = function(obj, $scope){
@@ -1575,7 +1555,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    _imageServiceFactory.batchEdit = function(obj){
+    _imageServiceFactory.batchEdit = function(obj, $scope){
 
         var batch = {};
 
@@ -1592,7 +1572,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.post('/images_mgmt/batch', batch)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
-                _imageServiceFactory.getAll();
+                _imageServiceFactory.getAll($scope);
             });
 
     };

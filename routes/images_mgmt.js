@@ -66,8 +66,6 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 
     currUpload(req,res,function(err){
 
-        //console.log('show me response from upload', err);
-
         if(err){
             res.json({error_code:1,err_desc:err});
             return;
@@ -78,8 +76,6 @@ router.put('/upload/:dest?', call.isAuthenticated, function(req, res, next){
 });
 
 router.post('/batch', call.isAuthenticated, function(req,res,next){
-
-    //console.log('show me body: ', req.body, typeof req.body.id);
 
     var batch = new qb(req, 'images', 'id', ['names', 'meta']);
 
@@ -119,8 +115,6 @@ router.get('/get_one/:id?', call.isAuthenticated, function(req, res, next){
 });
 
 router.get('/get_all', call.isAuthenticated, function(req, res, next){
-
-    //var images = new qb(req, 'images');
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query('select * from images where occasion is not null order by id desc', function(error, result){

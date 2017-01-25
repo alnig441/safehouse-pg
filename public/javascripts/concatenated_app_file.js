@@ -226,7 +226,7 @@ function capitalize (elem, ind, arr){
             }
         }
 
-        imageServices.addTags(this.img);
+        imageServices.addTags(this.img, $scope);
 
         $modalInstance.dismiss('cancel');
 
@@ -266,9 +266,17 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
+    //REQUEST $scope VARIABLES ON LOAD
     imageServices.getNewImages($scope);
     imageServices.getAll($scope);
     eventServices.getAllEvents($scope);
+
+    //$rootScope.img = {};
+    //$rootScope.event_form = {};
+
+    //INITIALISE CONTROLLER SPECIFIC SCOPE VARIABLES
+    $scope.batchObj = {};
+    $scope.batch = {};
 
     $scope.tools = [
         { name: 'import', value: 'loadNewImages' },
@@ -277,9 +285,13 @@ function capitalize (elem, ind, arr){
 
     $scope.activeTool = $scope.tools[0].value;
 
-    $scope.toolSelector = function(selectedTool){
+    //COLLAPSE DOM DROPDOWN MENU
+    var menu = document.getElementsByClassName('collapse');
 
-        $scope.activeTool = selectedTool;
+
+    $scope.toolSelector = function(){
+
+        $scope.activeTool = this.activeTool;
 
     };
 
@@ -400,9 +412,6 @@ function capitalize (elem, ind, arr){
         }
     }
 
-    $scope.batchObj = {};
-    $scope.batch = {};
-
     $scope.deleteImg = function(){
 
         if($scope.batchObj.hasOwnProperty(this.uncategorized.id)){
@@ -427,11 +436,6 @@ function capitalize (elem, ind, arr){
             }
         }
     };
-
-    var menu = document.getElementsByClassName('collapse');
-
-    $rootScope.img = {};
-    $rootScope.event_form = {};
 
     //HAS BEEN ADDED TO storagesCtrl
 
@@ -581,8 +585,14 @@ function capitalize (elem, ind, arr){
             .then(function(response){
                 if(response.data.acct_type === 'admin'){
 
+                    //INITIALISE rootScope VARIABLES
+                    $rootScope.img = {};
+                    $rootScope.event_form = {};
+
+                    //LOAD rootScope VARIABLES
                     storageServices.getStorages();
                     imageServices.getUncategorisedImg();
+
                     $rootScope.default_storage = response.data.storages[0];
 
                     $location.path('/admin/diary');
@@ -820,27 +830,17 @@ function capitalize (elem, ind, arr){
 
     imageServices.getDbCount($scope);
     eventServices.getLatestEvent($scope);
-
-    //RUN priv_load() TO POPULATE THE SELECT OPTIONS IN POINT-IN-TIME SEARCH FORM  WWIH THE APPROPRIATE VALUES
-    priv_load();
-
-    function priv_load () {
-
-        $scope.form = {};
-        $scope.form.option = 'year';
-        $scope.form.table = 'images';
-
-        appServices.buildDropdowns($scope);
-    }
-
     appServices.resetSQ();
+    appServices.initPOTSearch($scope, 'images');
 
-    /*BLOCKED OUT FUNTIONALITY FOR USE WHEN MORE STORAGE FOLDERS ARE ACTIVE PER USER*/
+    //USE selected_db TO INDICATE WHICH STORAGE AREA IS BEING ACCESSED
     $scope.selected_db = $rootScope.default_storage;
 
+    //COLLAPSE DROPDOWN MENU
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
+    //SEARCH TYPE SELECTOR
     $scope.select = function(choice){
 
         choice = mapTabsFilter(choice.toLowerCase());
@@ -858,88 +858,88 @@ function capitalize (elem, ind, arr){
 
     };
 
-
-    $scope.selectTable = function(x){
+    //DB TABLE SELECTOR
+    $scope.selectTable = function(table){
 
         angular.element(menu).collapse('hide');
 
-        if(x == 'events'){
+        if(table == 'events'){
             angular.element(document.getElementById('nav_events')).addClass('ng-hide');
             angular.element(document.getElementById('nav_images')).removeClass('ng-hide');
         }
 
-        if(x == 'images'){
+        if(table == 'images'){
             angular.element(document.getElementById('nav_images')).addClass('ng-hide');
             angular.element(document.getElementById('nav_events')).removeClass('ng-hide');
         }
 
-        $rootScope.active_table = x;
+        $rootScope.active_table = table;
 
-        $scope.form = {};
-        $scope.form.option = 'year';
-        $scope.form.table = x;
+        appServices.initPOTSearch($scope, table);
 
-        appServices.buildDropdowns($scope);
     };
 
-    $scope.build_query = function(x) {
-
-        console.log('meta search: ', this.form);
+    //FUNCTION TO ORGANISE, PRIORITISE AND RELAY SELECTED META SEARCH TERMS TO appServices QUERY BUILDER.
+    //IN RESPONSE appServices.buildMeta() WILL
+    //1) POPULATE THE META SEARCH FIELDS WITH APPROPRIATE VALUES
+    //2) CREATE THE APPROPRIATE POSTGRES SEARCH STRING FOR WHEN IMAGE SEARCH IS SUBMITTED
+    $scope.build_query = function(searchTerm) {
 
         var query = {};
 
-
-        if(this.form[x]){
+        if(this.form[searchTerm]){
             if (Object.keys($rootScope.baseline).length === 0) {
-                $rootScope.baseline[x] = this.form[x];
+                $rootScope.baseline[searchTerm] = this.form[searchTerm];
                 if(this.form.exclude){
                     $rootScope.baseline_type = 'exclude';
                 }
             }
             else {
-                if (this.form.type_and && this.form[x]) {
+                if (this.form.type_and && this.form[searchTerm]) {
                     query.contract = {};
-                    query.contract[x] = this.form[x];
+                    query.contract[searchTerm] = this.form[searchTerm];
                 }
-                if (this.form.type_or && this.form[x]) {
+                if (this.form.type_or && this.form[searchTerm]) {
                     query.expand = {};
-                    query.expand[x] = this.form[x];
+                    query.expand[searchTerm] = this.form[searchTerm];
                 }
-                if (this.form.exclude && this.form[x]) {
+                if (this.form.exclude && this.form[searchTerm]) {
                     query.exclude = {};
-                    query.exclude[x] = this.form[x];
+                    query.exclude[searchTerm] = this.form[searchTerm];
                 }
 
             }
 
             query.baseline = $rootScope.baseline;
 
-            if ((!$rootScope.search_terms.contract[x] && this.form.type_and) || (!$rootScope.search_terms.expand[x] && this.form.type_or) || (!$rootScope.search_terms.exclude[x] && this.form.exclude)) {
-                if (this.form.type_and && this.form[x]) {
-                    $rootScope.search_terms.contract[x] = [];
-                    $rootScope.search_terms.contract[x].push(this.form[x]);
+            if ((!$rootScope.search_terms.contract[searchTerm] && this.form.type_and) || (!$rootScope.search_terms.expand[searchTerm] && this.form.type_or) || (!$rootScope.search_terms.exclude[searchTerm] && this.form.exclude)) {
+                if (this.form.type_and && this.form[searchTerm]) {
+                    $rootScope.search_terms.contract[searchTerm] = [];
+                    $rootScope.search_terms.contract[searchTerm].push(this.form[searchTerm]);
                 }
-                if (this.form.type_or && this.form[x]) {
-                    $rootScope.search_terms.expand[x] = [];
-                    $rootScope.search_terms.expand[x].push(this.form[x]);
+                if (this.form.type_or && this.form[searchTerm]) {
+                    $rootScope.search_terms.expand[searchTerm] = [];
+                    $rootScope.search_terms.expand[searchTerm].push(this.form[searchTerm]);
                 }
-                if (this.form.exclude && this.form[x]) {
-                    $rootScope.search_terms.exclude[x] = [];
-                    $rootScope.search_terms.exclude[x].push(this.form[x]);
+                if (this.form.exclude && this.form[searchTerm]) {
+                    $rootScope.search_terms.exclude[searchTerm] = [];
+                    $rootScope.search_terms.exclude[searchTerm].push(this.form[searchTerm]);
                 }
 
             }
             else {
-                if (this.form.type_and && this.form[x]) {
-                    $rootScope.search_terms.contract[x].push(this.form[x]);
+                if (this.form.type_and && this.form[searchTerm]) {
+                    $rootScope.search_terms.contract[searchTerm].push(this.form[searchTerm]);
                 }
-                if (this.form.type_or && this.form[x]) {
-                    $rootScope.search_terms.expand[x].push(this.form[x]);
+                if (this.form.type_or && this.form[searchTerm]) {
+                    $rootScope.search_terms.expand[searchTerm].push(this.form[searchTerm]);
                 }
-                if (this.form.exclude && this.form[x]) {
-                    $rootScope.search_terms.exclude[x].push(this.form[x]);
+                if (this.form.exclude && this.form[searchTerm]) {
+                    $rootScope.search_terms.exclude[searchTerm].push(this.form[searchTerm]);
                 }
             }
+
+            console.log('build_query: ', this.form, query);
 
             appServices.buildMeta(query);
 
@@ -947,6 +947,7 @@ function capitalize (elem, ind, arr){
 
     };
 
+    //FUNCTON TO BUILD DROPDOWN-AND-SELECT BOXES FOR TIME BASED SEARCH
     $scope.getValues = function(option, db){
 
         if(option === 'month') {
@@ -962,6 +963,7 @@ function capitalize (elem, ind, arr){
 
     };
 
+    //FUNCTION TO CLEAR SELECTED META SEARCH TERMS FROM $scope.build_query
     $scope.clear = function(){
 
         $scope.form = {};
@@ -1376,6 +1378,16 @@ function openModal(obj) {
                 }
             })
 
+    };
+
+    _appServicesFactory.initPOTSearch = function($scope, table){
+
+        $scope.form = {};
+        $scope.form.option = 'year';
+        $scope.form.table = table;
+
+        _appServicesFactory.buildDropdowns($scope);
+
     }
 
     return _appServicesFactory;
@@ -1463,7 +1475,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                                 if(batch){
                                     $scope.loadNewImages();
                                 }else{
-                                    _imageServiceFactory.getAll()
+                                    _imageServiceFactory.getAll($scope)
                                 }
                             });
 
@@ -1491,7 +1503,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    _imageServiceFactory.addTags = function(obj){
+    _imageServiceFactory.addTags = function(obj, $scope){
 
         console.log('hvad kommer ind her: ', obj, this);
 
@@ -1515,8 +1527,8 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
             $http.post('/events_mgmt/add', addEvent)
                 .then(function(response){
-                    eventServices.getAllEvents();
-                    _imageServiceFactory.getAll();
+                    eventServices.getAllEvents($scope);
+                    _imageServiceFactory.getAll($scope);
                 });
         }
 
@@ -1535,7 +1547,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
             $http.put('/images_mgmt/add_meta', addTags)
                 .then(function (response) {
                     _imageServiceFactory.getUncategorisedImg();
-                    _imageServiceFactory.getAll();
+                    _imageServiceFactory.getAll($scope);
                 });
 
         }

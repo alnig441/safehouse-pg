@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/app.min.js" afterPath="$PROJECT_DIR$/public/javascripts/app.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" afterPath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/events_mgmt.js" afterPath="$PROJECT_DIR$/routes/events_mgmt.js" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,7 +28,7 @@
           <file leaf-file-name="imageCtrl.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.36893204">
+                <state vertical-scroll-proportion="3.5436893">
                   <caret line="146" column="57" selection-start-line="146" selection-start-column="57" selection-end-line="146" selection-end-column="57" />
                   <folding />
                 </state>
@@ -72,11 +69,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="imageServices.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="imageServices.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.3255814">
-                  <caret line="253" column="69" selection-start-line="253" selection-start-column="69" selection-end-line="253" selection-end-column="69" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="259" column="0" selection-start-line="259" selection-start-column="0" selection-end-line="259" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -96,17 +93,18 @@
             <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="579" column="0" selection-start-line="579" selection-start-column="0" selection-end-line="579" selection-end-column="0" />
-                  <folding>
-                    <marker date="1485381506000" expanded="true" signature="5647:5763" placeholder="{...}" />
-                    <marker date="1485381506000" expanded="true" signature="6375:6538" placeholder="{...}" />
-                    <marker date="1485381506000" expanded="true" signature="6536:6538" placeholder="//..." />
-                    <marker date="1485381506000" expanded="true" signature="49538:49598" placeholder="{...}" />
-                    <marker date="1485381506000" expanded="true" signature="49538:49606" placeholder="{...}" />
-                    <marker date="1485381506000" expanded="true" signature="49538:49882" placeholder="{...}" />
-                    <marker date="1485381506000" expanded="true" signature="49664:49844" placeholder="{...}" />
-                    <marker date="1485381506000" expanded="true" signature="49772:49836" placeholder="{...}" />
-                  </folding>
+                  <caret line="578" column="0" selection-start-line="578" selection-start-column="0" selection-end-line="578" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="batchEditModalCtrl.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/batchEditModalCtrl.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.25581396">
+                  <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -177,12 +175,12 @@
         <option value="$PROJECT_DIR$/development/javascripts/controllers/addTagsModalCtrl.js" />
         <option value="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
         <option value="$PROJECT_DIR$/routes/images_mgmt.js" />
-        <option value="$PROJECT_DIR$/development/javascripts/controllers/batchEditModalCtrl.js" />
         <option value="$PROJECT_DIR$/routes/events_mgmt.js" />
         <option value="$PROJECT_DIR$/development/javascripts/factories/eventServices.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/saveImageModalCtrl.js" />
-        <option value="$PROJECT_DIR$/development/javascripts/factories/imageServices.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/factories/imageServices.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/controllers/batchEditModalCtrl.js" />
       </list>
     </option>
   </component>
@@ -1054,31 +1052,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="579" column="0" selection-start-line="579" selection-start-column="0" selection-end-line="579" selection-end-column="0" />
-          <folding>
-            <marker date="1485381506000" expanded="true" signature="5647:5763" placeholder="{...}" />
-            <marker date="1485381506000" expanded="true" signature="6375:6538" placeholder="{...}" />
-            <marker date="1485381506000" expanded="true" signature="6536:6538" placeholder="//..." />
-            <marker date="1485381506000" expanded="true" signature="49538:49598" placeholder="{...}" />
-            <marker date="1485381506000" expanded="true" signature="49538:49606" placeholder="{...}" />
-            <marker date="1485381506000" expanded="true" signature="49538:49882" placeholder="{...}" />
-            <marker date="1485381506000" expanded="true" signature="49664:49844" placeholder="{...}" />
-            <marker date="1485381506000" expanded="true" signature="49772:49836" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/batchEditModalCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.069767445">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/singleViewModalCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.90697676">
@@ -1135,18 +1108,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3255814">
-          <caret line="253" column="69" selection-start-line="253" selection-start-column="69" selection-end-line="253" selection-end-column="69" />
+        <state vertical-scroll-proportion="3.5436893">
+          <caret line="146" column="57" selection-start-line="146" selection-start-column="57" selection-end-line="146" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js">
+    <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36893204">
-          <caret line="146" column="57" selection-start-line="146" selection-start-column="57" selection-end-line="146" selection-end-column="57" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="259" column="0" selection-start-line="259" selection-start-column="0" selection-end-line="259" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="578" column="0" selection-start-line="578" selection-start-column="0" selection-end-line="578" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/batchEditModalCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.25581396">
+          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
           <folding />
         </state>
       </provider>

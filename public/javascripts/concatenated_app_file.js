@@ -252,7 +252,7 @@ function capitalize (elem, ind, arr){
 
     $scope.delete = function(){
 
-        imageServices.deleteImages($scope.ids);
+        imageServices.deleteImages($scope.ids, $scope);
 
         $modalInstance.dismiss('cancel');
     }

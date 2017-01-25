@@ -7,8 +7,6 @@ var qb = require('../public/javascripts/query_builder.js');
 
 router.post('/add', call.isAuthenticated, function(req, res, next){
 
-    console.log('adding event: ', req.body );
-
     var event = new qb(req, 'events');
 
     pg.connect(connectionString, function (err, client, done) {
@@ -28,8 +26,6 @@ router.post('/add', call.isAuthenticated, function(req, res, next){
 });
 
 router.get('/get_one/:img_id?', call.isAuthenticated, function(req, res, next){
-
-    console.log('gettng event by id');
 
     pg.connect(connectionString, function(error, client, done){
         //var query = client.query("select i.*, path || folder || '/' || file as url from events as i  cross join images cross join storages  where id = " + req.params.img_id, function(error, result){

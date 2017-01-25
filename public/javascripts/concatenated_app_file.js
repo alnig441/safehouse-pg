@@ -269,9 +269,6 @@ function capitalize (elem, ind, arr){
     imageServices.getAll($scope);
     eventServices.getAllEvents($scope);
 
-    //$rootScope.img = {};
-    //$rootScope.event_form = {};
-
     //INITIALISE CONTROLLER SPECIFIC SCOPE VARIABLES
     $scope.batchObj = {};
     $scope.batch = {};
@@ -303,8 +300,6 @@ function capitalize (elem, ind, arr){
     //REWRITE THE FOLLOWING FOR QA....
 
     $scope.checkExif = function() {
-
-        console.log('exiffing');
 
         function getIndex () {
             var i = 0;
@@ -418,7 +413,7 @@ function capitalize (elem, ind, arr){
             }
         }
 
-        imageServices.deleteImages(this.uncategorized.id);
+        imageServices.deleteImages(this.uncategorized.id, $scope);
 
     };
 
@@ -452,7 +447,6 @@ function capitalize (elem, ind, arr){
 
     $scope.updateEvent = function(){
 
-        console.log('hvad kommer ved update; ', this.form, this.event_form);
         eventServices.updateEvent($rootScope.event_form);
 
     };
@@ -989,6 +983,7 @@ function capitalize (elem, ind, arr){
 
         var done = 0;
 
+        $scope.activeTool = false;
         $scope.img = {};
         $scope.img.storage = $rootScope.default_storage;
         $scope.img.file = file.name;
@@ -1150,8 +1145,6 @@ function openModal(obj) {
     var _eventServiceFactory = {};
 
     _eventServiceFactory.postEvent = function(obj){
-
-        console.log('eventServices posting event: ', obj);
 
         $http.post('/events_mgmt/add', obj)
             .then(function(response){
@@ -1432,6 +1425,8 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     _imageServiceFactory.addImg = function(image, batch, $scope){
 
+        console.log('addImg ', $scope);
+
         $http.get('/exif/' + image.file)
 
             .then(function(response){
@@ -1457,6 +1452,18 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                             image.state = 'N/a';
                             image.city = 'En Route';
 
+                        }
+
+                        switch ($scope.activeTool){
+                            case 'loadNewImages':
+                                console.log($scope.activeTool + ' calling!');
+                                break;
+                            case 'checkExif':
+                                console.log($scope.activeTool + ' calling!');
+                                break;
+                            default:
+                                console.log('not called by a tool');
+                                break;
                         }
 
 
@@ -1646,13 +1653,12 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         return parsedImage;
     };
 
-    _imageServiceFactory.deleteImages = function(imageArray){
+    _imageServiceFactory.deleteImages = function(imageArray, $scope){
 
         $http.delete('/images_mgmt/' + imageArray)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
-                _imageServiceFactory.getAll();
-                appServices.update_files();
+                _imageServiceFactory.getAll($scope);
             })
 
     };

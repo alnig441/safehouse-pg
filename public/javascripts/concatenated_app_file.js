@@ -338,7 +338,8 @@ function capitalize (elem, ind, arr){
             })
         }
 
-        if (index){
+        if (index) {
+
             $http.get('/exif/' + $scope.images[index].file)
                 .then(function(response){
 
@@ -1454,9 +1455,9 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
                         if(coord && response.data.status === 'ZERO_RESULTS'){
 
-                            $rootScope.images[index].country = 'En Route';
-                            $rootScope.images[index].state = 'N/a';
-                            $rootScope.images[index].city = 'En Route';
+                            image.country = 'En Route';
+                            image.state = 'N/a';
+                            image.city = 'En Route';
 
                         }
 

@@ -5,7 +5,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/app.min.js" afterPath="$PROJECT_DIR$/public/javascripts/app.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" afterPath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/images.html" afterPath="$PROJECT_DIR$/public/views/images.html" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,24 +24,34 @@
     <favorites_list name="starting_over" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.40203106">
+    <splitter split-orientation="horizontal" split-proportion="0.31899643">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="imageCtrl.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="16" column="46" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
+                  <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="imageServices.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
+          <file leaf-file-name="saveImageModalCtrl.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/saveImageModalCtrl.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.51004636">
-                  <caret line="114" column="0" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
+                <state vertical-scroll-proportion="0.74418604">
+                  <caret line="39" column="28" selection-start-line="39" selection-start-column="28" selection-end-line="39" selection-end-column="28" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="images_mgmt.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -52,59 +61,12 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="concatenated_app_file.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="concatenated_app_file.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-7.7777777">
-                  <caret line="1407" column="28" selection-start-line="1407" selection-start-column="28" selection-end-line="1407" selection-end-column="28" />
-                  <folding>
-                    <marker date="1485362937000" expanded="true" signature="4714:5168" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="4747:5168" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="4805:5128" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="4929:5034" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="4972:5020" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="5061:5118" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45099:45119" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45099:45131" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45099:45874" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45099:50027" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45158:45868" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45195:45621" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45380:45607" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45419:45511" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45515:45589" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45721:45855" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="45940:46152" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="46070:46144" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="46205:46479" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="46292:46470" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="46384:46455" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="46532:47057" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="46622:46689" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="46721:46840" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="46756:46830" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="46926:47048" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="47116:47357" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="47226:47348" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="47261:47334" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="47421:47637" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="47502:47629" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="47695:47874" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="47769:47866" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="47955:49370" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="48031:48377" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="48117:48328" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="48176:48313" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="48217:48295" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="48987:49276" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="49105:49164" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="49168:49266" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="49281:49335" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="49433:49697" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="49523:49689" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="49755:49989" placeholder="{...}" />
-                    <marker date="1485362937000" expanded="true" signature="49863:49981" placeholder="{...}" />
-                  </folding>
+                <state vertical-scroll-proportion="0.4854369">
+                  <caret line="1441" column="54" selection-start-line="1441" selection-start-column="54" selection-end-line="1441" selection-end-column="54" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -119,11 +81,21 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="addTagsModalCtrl.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="addTagsModalCtrl.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/addTagsModalCtrl.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.32457495">
-                  <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="imageServices.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="27" column="37" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
                   <folding />
                 </state>
               </provider>
@@ -163,7 +135,6 @@
         <option value="$PROJECT_DIR$/development/javascripts/controllers/modalInstanceCtrl.js" />
         <option value="$PROJECT_DIR$/development/modules/myFunctions.js" />
         <option value="$PROJECT_DIR$/views/layout.jade" />
-        <option value="$PROJECT_DIR$/development/javascripts/controllers/saveImageModalCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/multiViewModalCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/filters/filters.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/modifyAccountModalCtrl.js" />
@@ -192,15 +163,16 @@
         <option value="$PROJECT_DIR$/development/javascripts/controllers/landingPageCtrl.js" />
         <option value="$PROJECT_DIR$/development/partials/priv_da.jade" />
         <option value="$PROJECT_DIR$/routes/dropdowns.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
         <option value="$PROJECT_DIR$/development/templates/tabbed_navigation.jade" />
         <option value="$PROJECT_DIR$/development/views/images.jade" />
-        <option value="$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/loginModalCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/factories/factories.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js" />
-        <option value="$PROJECT_DIR$/development/javascripts/factories/imageServices.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/addTagsModalCtrl.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/factories/imageServices.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/controllers/saveImageModalCtrl.js" />
       </list>
     </option>
   </component>
@@ -716,7 +688,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24927704" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2990654" sideWeight="0.48708206" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29968783" sideWeight="0.48708206" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15797788" sideWeight="0.38428572" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -962,14 +934,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/saveImageModalCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.11591963">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/configuration/config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.90417314">
@@ -998,14 +962,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6491499">
           <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.5965996">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1090,14 +1046,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/loginModalCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55641425">
-          <caret line="24" column="65" selection-start-line="24" selection-start-column="65" selection-end-line="24" selection-end-column="65" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/partials/priv_da.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.16228747">
@@ -1122,81 +1070,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js">
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/loginModalCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="46" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.55813956">
+          <caret line="24" column="65" selection-start-line="24" selection-start-column="65" selection-end-line="24" selection-end-column="65" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
+    <entry file="file://$PROJECT_DIR$/routes/images_mgmt.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.7777777">
-          <caret line="1407" column="28" selection-start-line="1407" selection-start-column="28" selection-end-line="1407" selection-end-column="28" />
-          <folding>
-            <marker date="1485362937000" expanded="true" signature="4714:5168" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="4747:5168" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="4805:5128" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="4929:5034" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="4972:5020" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="5061:5118" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45099:45119" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45099:45131" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45099:45874" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45099:50027" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45158:45868" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45195:45621" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45380:45607" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45419:45511" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45515:45589" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45721:45855" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="45940:46152" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="46070:46144" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="46205:46479" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="46292:46470" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="46384:46455" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="46532:47057" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="46622:46689" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="46721:46840" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="46756:46830" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="46926:47048" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="47116:47357" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="47226:47348" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="47261:47334" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="47421:47637" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="47502:47629" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="47695:47874" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="47769:47866" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="47955:49370" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="48031:48377" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="48117:48328" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="48176:48313" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="48217:48295" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="48987:49276" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="49105:49164" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="49168:49266" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="49281:49335" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="49433:49697" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="49523:49689" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="49755:49989" placeholder="{...}" />
-            <marker date="1485362937000" expanded="true" signature="49863:49981" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.51004636">
-          <caret line="114" column="0" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/addTagsModalCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32457495">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="37" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4854369">
+          <caret line="1441" column="54" selection-start-line="1441" selection-start-column="54" selection-end-line="1441" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/saveImageModalCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.74418604">
+          <caret line="39" column="28" selection-start-line="39" selection-start-column="28" selection-end-line="39" selection-end-column="28" />
           <folding />
         </state>
       </provider>

@@ -357,8 +357,6 @@ function capitalize (elem, ind, arr){
                         $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
                             .then(function(response){
 
-                                console.log('api status: ', response.data.status);
-
                                 if(response.data.status === 'OK'){
 
                                     $scope.images[index] = imageServices.buildImageObject($scope.images[index], response.data.results[0].address_components);
@@ -1025,7 +1023,7 @@ function capitalize (elem, ind, arr){
                 if(file.progress == 100){
                     done ++;
                     if(done === 3){
-                        imageServices.addImg($scope.img);
+                        imageServices.addImg($scope.img, false, $scope);
                         $modalInstance.dismiss('cancel');
                         $rootScope.f = undefined;
                     }
@@ -1555,8 +1553,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     _imageServiceFactory.getUncategorisedImg = function($scope){
 
-        console.log('show me scope: ', $scope);
-
         $http.get('/images_mgmt/get_new')
             .then(function(response){
                 $rootScope.uncategorized = response.data;
@@ -1613,23 +1609,27 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    _imageServiceFactory.getNewImagesCount = function($scope){
+    //UNUSED AT PRESENT
 
-        $http.get('/image_jobs/new_files/')
-            .then(function(result){
-                console.log('hello: ',result.data);
-                $scope.newImagesCount = result.data.amount;
-            });
-    };
+    //_imageServiceFactory.getNewImagesCount = function(){
+    //
+    //    $http.get('/image_jobs/new_files/')
+    //        .then(function(result){
+    //            console.log('hello: ',result.data);
+    //            $scope.newImagesCount = result.data.amount;
+    //        });
+    //};
 
-    _imageServiceFactory.getExifData = function (file) {
+    //UNUSED AT PRESENT
 
-        $http.get('/exif/' + file)
-            .then(function(response){
-                $rootScope.exifData = response.data;
-                return true;
-            });
-    };
+    //_imageServiceFactory.getExifData = function (file) {
+    //
+    //    $http.get('/exif/' + file)
+    //        .then(function(response){
+    //            $rootScope.exifData = response.data;
+    //            return true;
+    //        });
+    //};
 
     _imageServiceFactory.buildImageObject = function(image, locationDataArray){
 
@@ -1680,7 +1680,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
         $http.get('/image_jobs/count/' + $rootScope.default_storage)
             .then(function(response){
-                //$rootScope.dbCount = response.data;
                 $scope.dbCount = response.data;
 
             })

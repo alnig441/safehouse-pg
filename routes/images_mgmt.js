@@ -27,6 +27,8 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
+    console.log('hvad kommer ind: ', req.body);
+
     req.body = call.buildQBObj(req.body);
 
     var img = new qb(req, 'images');
@@ -35,6 +37,9 @@ router.post('/add', call.isAuthenticated, function(req, res) {
         var query = client.query(img.insert(), function (error, result) {
 
             if (error) {
+
+                console.log(error);
+
                 switch (error.code){
 
                     case '22007':
@@ -151,8 +156,6 @@ router.get('/get_new', call.isAuthenticated, function(req, res, next){
 })
 
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
-
-    //console.log('adding meta: ', req.body);
 
     var image = new qb(req, 'images', 'id', ['names', 'meta']);
 

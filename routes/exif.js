@@ -40,8 +40,6 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
         if(exifData) {
 
-            console.log('exif gps: ', exifData.gps);
-
             //DETERMINE IF GPS DATA AVAILABLE
 
             if (exifData.gps.GPSLongitude && exifData.gps.GPSLatitude) {

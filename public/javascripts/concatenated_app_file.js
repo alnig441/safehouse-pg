@@ -210,6 +210,9 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
+        console.log('jamen jamem: ', this.img);
+        $scope.activeTool = '';
+
         if($scope.batchObj.hasOwnProperty(this.img.id)){
 
             $scope.batchObj[this.img.id] = false;
@@ -269,6 +272,9 @@ function capitalize (elem, ind, arr){
     imageServices.getAll($scope);
     eventServices.getAllEvents($scope);
 
+    console.log('looking for tool ID: ', $scope);
+
+
     //INITIALISE CONTROLLER SPECIFIC SCOPE VARIABLES
     $scope.batchObj = {};
     $scope.batch = {};
@@ -283,6 +289,11 @@ function capitalize (elem, ind, arr){
     //COLLAPSE DOM DROPDOWN MENU
     var menu = document.getElementsByClassName('collapse');
 
+    //FUNCTION TRIGGERED IN imageServices UPON ADDING TAGS TO NEW IMAGES IN ORDER TO UPDATE ID DROPDOWN SELECT BOX
+    $scope.loadImages = function () {
+        imageServices.getAll($scope);
+        eventServices.getAllEvents($scope);
+    };
 
     $scope.toolSelector = function(){
 
@@ -297,9 +308,9 @@ function capitalize (elem, ind, arr){
     };
 
 
-    //REWRITE THE FOLLOWING FOR QA....
+    //TOOL TO UPDATE FILE INFORMATION BASED ON EXIF DATA EXTRACTED FROM THE IMAGE FILE
 
-    $scope.checkExif = function() {
+    $scope.checkExif = function () {
 
         function getIndex () {
             var i = 0;
@@ -321,6 +332,7 @@ function capitalize (elem, ind, arr){
 
         var index = getIndex();
 
+        //OUTPUT A LIST OF FILES THAT FOR SOME WEREN'T UPDATED
         if(!index){
             var images = [];
             $scope.images.forEach(function(elem,ind){
@@ -333,76 +345,32 @@ function capitalize (elem, ind, arr){
 
         if (index) {
 
-            $http.get('/exif/' + $scope.images[index].file)
-                .then(function(response){
+            $rootScope.transientImage = $scope.images[index];
+            $rootScope.transientImage.meta.push('checked');
 
-                    if(response.data.created){
-
-                        var coord = response.data.coordinates;
-
-                        for(var prop in $scope.images[index]){
-                            if(prop != 'id' && prop != 'meta'){
-                                $scope.images[index][prop] = false;
-                            }
-                        }
-
-                        $scope.images[index].created = response.data.created;
-
-                        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
-                            .then(function(response){
-
-                                if(response.data.status === 'OK'){
-
-                                    $scope.images[index] = imageServices.buildImageObject($scope.images[index], response.data.results[0].address_components);
-
-                                }
-                                if(coord && response.data.status === 'ZERO_RESULTS'){
-
-                                    $scope.images[index].country = 'En Route';
-                                    $scope.images[index].state = 'N/a';
-                                    $scope.images[index].city = 'En Route';
-
-                                }
-                                //ADD AND 'UPDATED' FLAG TO IMAGE IN THE DATABASE
-                                $scope.images[index].meta.push('updated');
-
-                                $http.put('/images_mgmt/add_meta', $scope.images[index])
-                                    .then(function(response){
-                                        $scope.checkExif();
-                                    })
-
-                            })
-                    }
-                    else {
-                        //ADD A 'CHECKED' FLAG TO THE IMAGE ON ROOTSCOPE
-                        $scope.images[index].meta.push('checked');
-                        $scope.checkExif();
-                    }
-                })
+            imageServices.getExifData($scope);
 
         }
     };
 
     $scope.loadNewImages = function() {
 
-        var image = {};
-        image.file = get_next_img();
-        image.storage = $rootScope.default_storage;
-
-        if(image.file) {
-            imageServices.addImg(image, true, $scope);
-        }
-    };
-
-    //GET NEXT NEW IMAGE
-
-    function get_next_img() {
-        for(var prop in $scope.newImages){
-            if($scope.newImages[prop] === true){
-                return prop;
+        function get_next_img() {
+            for(var prop in $scope.newImages){
+                if($scope.newImages[prop] === true){
+                    return prop;
+                }
             }
         }
-    }
+
+        $rootScope.transientImage.file = get_next_img();
+        $rootScope.transientImage.storage = $rootScope.default_storage;
+
+        if($rootScope.transientImage.file) {
+            //imageServices.addImg($scope);
+            imageServices.getExifData($scope);
+        }
+    };
 
     $scope.deleteImg = function(){
 
@@ -451,9 +419,9 @@ function capitalize (elem, ind, arr){
 
     };
 
-    $scope.getImgById = function(id){
+    $scope.getImgById = function(){
 
-        imageServices.getImgById(id);
+        imageServices.getImgById(this.img.id);
 
     };
 
@@ -579,6 +547,7 @@ function capitalize (elem, ind, arr){
                     //INITIALISE rootScope VARIABLES
                     $rootScope.img = {};
                     $rootScope.event_form = {};
+                    $rootScope.transientImage = {};
 
                     //LOAD rootScope VARIABLES
                     storageServices.getStorages();
@@ -980,17 +949,16 @@ function capitalize (elem, ind, arr){
     $scope.uploadFiles = function(file, opt){
 
         var progress = document.getElementById('progress');
-
         var done = 0;
 
-        $scope.activeTool = false;
-        $scope.img = {};
-        $scope.img.storage = $rootScope.default_storage;
-        $scope.img.file = file.name;
-        $scope.img.meta = $scope.meta;
+        $rootScope.transientImage.storage = $rootScope.default_storage;
+        $rootScope.transientImage.file = file.name;
         if($scope.created){
-            $scope.img.created = $scope.created;
+            $rootScope.transientImage.created = $scope.created;
         }
+
+        $scope.activeTool = '';
+
         $rootScope.f = file;
 
         if(file && !file.$error && opt) {
@@ -1017,7 +985,7 @@ function capitalize (elem, ind, arr){
                 if(file.progress == 100){
                     done ++;
                     if(done === 3){
-                        imageServices.addImg($scope.img, false, $scope);
+                        imageServices.getExifData($scope);
                         $modalInstance.dismiss('cancel');
                         $rootScope.f = undefined;
                     }
@@ -1070,6 +1038,7 @@ function capitalize (elem, ind, arr){
 
         else if(misc === 'new'){
             $scope.img = this.uncategorized;
+            console.log('bingo: ', $scope.img);
             openModal(config);
         }
 
@@ -1144,11 +1113,15 @@ function openModal(obj) {
 
     var _eventServiceFactory = {};
 
-    _eventServiceFactory.postEvent = function(obj){
+    _eventServiceFactory.postEvent = function(obj, $scope){
 
         $http.post('/events_mgmt/add', obj)
             .then(function(response){
                 $rootScope.img = {};
+
+            })
+            .then(function(){
+                $scope.loadImages();
             });
 
     };
@@ -1423,82 +1396,31 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    _imageServiceFactory.addImg = function(image, batch, $scope){
+    _imageServiceFactory.addImg = function($scope){
 
-        console.log('addImg ', $scope);
-
-        $http.get('/exif/' + image.file)
-
+        $http.post('/images_mgmt/add', $rootScope.transientImage)
             .then(function(response){
-
-                var coord = response.data.coordinates;
-
-                if(!image.created){
-                    image.created = response.data.created;
+                response.data.name == 'error' ? $scope.newImages[$rootScope.transientImage.file] = response.data.detail : $scope.newImages[$rootScope.transientImage.file] = false;
+            })
+            .then(function(response){
+                $rootScope.transientImage = {};
+                _imageServiceFactory.getUncategorisedImg();
+                if($scope.activeTool === 'loadNewImages'){
+                    $scope.loadNewImages();
                 }
+            })
 
-                $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + response.data.coordinates + '&key=' + response.data.API_KEY)
-                    .then(function(response){
-
-                        if(response.data.status === 'OK'){
-
-                            image = _imageServiceFactory.buildImageObject(image, response.data.results[0].address_components);
-
-                        }
-
-                        if(coord && response.data.status === 'ZERO_RESULTS'){
-
-                            image.country = 'En Route';
-                            image.state = 'N/a';
-                            image.city = 'En Route';
-
-                        }
-
-                        switch ($scope.activeTool){
-                            case 'loadNewImages':
-                                console.log($scope.activeTool + ' calling!');
-                                break;
-                            case 'checkExif':
-                                console.log($scope.activeTool + ' calling!');
-                                break;
-                            default:
-                                console.log('not called by a tool');
-                                break;
-                        }
-
-
-                        $http.post('/images_mgmt/add', image)
-
-                            .then(function(response){
-                                response.data.name == 'error' ? $scope.newImages[image.file] = response.data.detail : $scope.newImages[image.file] = false;
-                            })
-                            .then(function(response){
-                                _imageServiceFactory.getUncategorisedImg();
-                            })
-                            .then(function(response){
-                                if(batch){
-                                    $scope.loadNewImages();
-                                }else{
-                                    _imageServiceFactory.getAll($scope)
-                                }
-                            });
-
-                    });
-
-            });
 
     };
 
     _imageServiceFactory.addTags = function(obj, $scope){
 
-        console.log('hvad kommer ind her: ', obj, this);
+        console.log('hvad kommer ind her: ', obj);
 
         var addTags = {};
         var addEvent = {};
 
-        if(obj.country && obj.country.toLowerCase() === 'usa'){
-            obj.country = 'united states of america';
-        }
+
 
         if(obj.add_event){
             for(var prop in obj){
@@ -1511,17 +1433,14 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
             }
 
-            $http.post('/events_mgmt/add', addEvent)
-                .then(function(response){
-                    eventServices.getAllEvents($scope);
-                    _imageServiceFactory.getAll($scope);
-                });
+            eventServices.postEvent(addEvent, $scope);
+
         }
 
         if(obj.add_tags) {
 
             for (var prop in obj) {
-                if ((prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id') && obj[prop] !== null ) {
+                if ((prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id') && obj[prop]) {
                     if(prop !== 'id'){
                         addTags[prop] = capInitialFilter(obj[prop]);
                     }else{
@@ -1530,13 +1449,30 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                 }
             }
 
-            $http.put('/images_mgmt/add_meta', addTags)
-                .then(function (response) {
-                    _imageServiceFactory.getUncategorisedImg();
-                    _imageServiceFactory.getAll($scope);
-                });
+            _imageServiceFactory.addMeta($scope, addTags);
 
         }
+    };
+
+    _imageServiceFactory.addMeta = function($scope, tags){
+
+        tags ? tags = tags : tags = $rootScope.transientImage;
+
+        console.log('add meta: ', $scope.activeTool);
+
+        $http.put('/images_mgmt/add_meta', tags)
+            .then(function(response){
+                _imageServiceFactory.getUncategorisedImg();
+                $rootScope.img = {};
+            })
+            .then(function(response){
+                $scope.loadImages();
+            })
+            .then(function(response){
+                if($scope.activeTool === 'checkExif'){
+                    $scope.checkExif();
+                }
+            })
     };
 
     _imageServiceFactory.getUncategorisedImg = function($scope){
@@ -1579,7 +1515,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.post('/images_mgmt/batch', batch)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
-                _imageServiceFactory.getAll($scope);
+                $scope.loadImages();
             });
 
     };
@@ -1596,28 +1532,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
             });
 
     };
-
-    //UNUSED AT PRESENT
-
-    //_imageServiceFactory.getNewImagesCount = function(){
-    //
-    //    $http.get('/image_jobs/new_files/')
-    //        .then(function(result){
-    //            console.log('hello: ',result.data);
-    //            $scope.newImagesCount = result.data.amount;
-    //        });
-    //};
-
-    //UNUSED AT PRESENT
-
-    //_imageServiceFactory.getExifData = function (file) {
-    //
-    //    $http.get('/exif/' + file)
-    //        .then(function(response){
-    //            $rootScope.exifData = response.data;
-    //            return true;
-    //        });
-    //};
 
     _imageServiceFactory.buildImageObject = function(image, locationDataArray){
 
@@ -1658,7 +1572,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.delete('/images_mgmt/' + imageArray)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
-                _imageServiceFactory.getAll($scope);
+                $scope.loadImages();
             })
 
     };
@@ -1672,6 +1586,80 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
             })
 
     };
+
+    _imageServiceFactory.getExifData = function($scope) {
+
+        $http.get('/exif/' + $rootScope.transientImage.file)
+            .then(function(response){
+
+                $rootScope.transientImage.exif = response.data;
+                $rootScope.transientImage.created = response.data.created;
+
+                switch ($scope.activeTool) {
+                    case 'checkExif':
+                        if(response.data.created){
+                            for(var prop in $rootScope.transientImage){
+                                if(prop != 'id' && prop != 'meta' && prop != 'exif' && prop != 'created'){
+                                    $rootScope.transientImage[prop] = false;
+                                }
+                            }
+                            _imageServiceFactory.getGeoLocationData($scope);
+
+                        }else{
+                            $scope.checkExif();
+                        }
+                        break;
+
+                    case 'loadNewImages':
+                        _imageServiceFactory.getGeoLocationData($scope);
+                        break;
+
+                    default:
+                        _imageServiceFactory.getGeoLocationData($scope);
+                        break;
+                }
+
+            })
+
+    };
+
+    _imageServiceFactory.getGeoLocationData = function($scope) {
+
+        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + $rootScope.transientImage.exif.coordinates + '&key=' + $rootScope.transientImage.exif.API_KEY)
+            .then(function(response){
+
+                if(response.data.status === 'OK'){
+                    $rootScope.transientImage = _imageServiceFactory.buildImageObject($rootScope.transientImage, response.data.results[0].address_components);
+                }
+                if($rootScope.transientImage.exif.coordinates && response.data.status === 'ZERO_RESULTS'){
+                    $rootScope.transientImage.country = 'En Route';
+                    $rootScope.transientImage.state = 'N/a';
+                    $rootScope.transientImage.city = 'En Route';
+                }
+
+                $rootScope.transientImage.exif = false;
+
+                switch ($scope.activeTool) {
+
+                    case 'checkExif':
+
+                        $rootScope.transientImage.meta.push('updated');
+
+                        _imageServiceFactory.addMeta($scope);
+
+                        break;
+
+                    default:
+
+                        _imageServiceFactory.addImg($scope);
+
+                        break;
+                }
+
+
+            })
+    }
+
 
     return _imageServiceFactory;
 

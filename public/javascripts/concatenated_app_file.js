@@ -1019,7 +1019,7 @@ function capitalize (elem, ind, arr){
         }
 
         else if(misc === 'new'){
-            console.log('herinde: ', this.form);
+            console.log('herinde: ', this.form, $rootScope.img);
             $rootScope.tags_form = {};
             $scope.img = this.uncategorized;
             openModal(config);

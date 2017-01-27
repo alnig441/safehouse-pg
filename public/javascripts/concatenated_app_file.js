@@ -517,8 +517,6 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices) {
 
-    console.log('login - root: ', $rootScope);
-
     $scope.submit = function(){
 
         $http.post('/login/authenticate', $scope.form)

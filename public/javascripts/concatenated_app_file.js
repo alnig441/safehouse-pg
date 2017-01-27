@@ -57,7 +57,9 @@ app.run(['loadServices','$rootScope', function(loadServices, $rootScope){
             output = inputArr.forEach(capitalize);
         }
         else {
-            input = input.toLowerCase();
+            if(input.charAt(3) != '-'){
+                input = input.toLowerCase();
+            }
             inputArr = input.split(',');
             inputArr.forEach(elemIsArray);
         }
@@ -210,9 +212,10 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
+        console.log('hvad kommer ind; ', this.tags_form);
+
         $scope.activeTool = '';
 
-        //imageServices.addTags($scope, this.img);
         this.tags_form.id = this.img.id;
 
         imageServices.addTags($scope, this.tags_form);
@@ -1397,12 +1400,14 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     _imageServiceFactory.addTags = function($scope, obj){
 
+        console.log('addTags hvad: ', obj);
+
         var addTags = {};
         var addEvent = {};
 
 
 
-        if(obj.event){
+        if(obj.event && obj.add_event){
 
             obj.event.img_id = obj.id;
 
@@ -1410,7 +1415,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
         }
 
-        if(obj.image) {
+        if(obj.image && obj.add_tags) {
 
             obj.image.id = obj.id;
 
@@ -1457,7 +1462,16 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.get('/images_mgmt/get_one/' + id)
             .then(function(response){
                 $rootScope.img = response.data;
-                $rootScope.tags_form.image = response.data;
+
+                $rootScope.tags_form.image = {};
+
+                for(var prop in $rootScope.img){
+                    if(typeof $rootScope.img[prop] != 'number' && prop != 'created' && prop != 'url' && prop != 'file' && prop != 'storage'){
+
+                        $rootScope.tags_form.image[prop] = $rootScope.img[prop];
+
+                    }
+                }
 
                 if(!$rootScope.img.event){
                     eventServices.getEventById(id);

@@ -210,8 +210,6 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
-        console.log('adding tags: ', this.img, this.tags_form);
-
         $scope.activeTool = '';
 
         //imageServices.addTags($scope, this.img);
@@ -1400,8 +1398,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
     };
 
     _imageServiceFactory.addTags = function($scope, obj){
-
-        console.log('hvad kommer ind lige her: ', obj);
 
         var addTags = {};
         var addEvent = {};

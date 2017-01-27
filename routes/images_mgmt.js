@@ -27,8 +27,6 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    console.log('hvad kommer ind: ', req.body);
-
     req.body = call.buildQBObj(req.body);
 
     var img = new qb(req, 'images');

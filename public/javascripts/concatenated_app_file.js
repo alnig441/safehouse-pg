@@ -210,11 +210,14 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
-        console.log('adding tags: ', this.img)
+        console.log('adding tags: ', this.img, this.tags_form);
 
         $scope.activeTool = '';
 
-        imageServices.addTags($scope, this.img);
+        //imageServices.addTags($scope, this.img);
+        this.tags_form.id = this.img.id;
+
+        imageServices.addTags($scope, this.tags_form);
 
         $modalInstance.dismiss('cancel');
 
@@ -222,6 +225,7 @@ function capitalize (elem, ind, arr){
 
     $scope.cancel = function(){
         $rootScope.img = {};
+        $rootScope.tags_form = {};
         $modalInstance.dismiss('cancel');
     };
 }]);
@@ -384,7 +388,7 @@ function capitalize (elem, ind, arr){
 
     $scope.getEventById = function(){
 
-        var id = this.event_form.img_id;
+        var id = this.tags_form.event.img_id;
         $rootScope.img = {};
         eventServices.getEventById(id);
         imageServices.getImgById(id);
@@ -393,7 +397,7 @@ function capitalize (elem, ind, arr){
 
     $scope.updateEvent = function(){
 
-        eventServices.updateEvent($rootScope.event_form);
+        eventServices.updateEvent($rootScope.tags_form.event);
 
     };
 
@@ -524,7 +528,7 @@ function capitalize (elem, ind, arr){
 
                     //INITIALISE rootScope VARIABLES
                     $rootScope.img = {};
-                    $rootScope.event_form = {};
+                    $rootScope.tags_form = {};
                     $rootScope.transientImage = {};
 
                     //LOAD rootScope VARIABLES
@@ -1015,6 +1019,8 @@ function capitalize (elem, ind, arr){
         }
 
         else if(misc === 'new'){
+            console.log('herinde: ', this.form);
+            $rootScope.tags_form = {};
             $scope.img = this.uncategorized;
             openModal(config);
         }
@@ -1094,6 +1100,7 @@ function openModal(obj) {
 
         $http.post('/events_mgmt/add', obj)
             .then(function(response){
+                $rootScope.tags_form = {};
                 $rootScope.img = {};
 
             })
@@ -1108,8 +1115,9 @@ function openModal(obj) {
         $http.get('/events_mgmt/get_one/' + id)
             .then(function(response){
                 if(response.data.length > 0){
-                    $rootScope.event_form = response.data[0];
-                    $rootScope.img.event = true;
+                    $rootScope.tags_form.event = response.data[0];
+                    $rootScope.img.id = id;
+                    //$rootScope.img.event = true;
                 }
             });
 
@@ -1127,7 +1135,7 @@ function openModal(obj) {
 
         $http.put('/events_mgmt', addObj)
             .then(function(response){
-                $rootScope.event_form = {};
+                $rootScope.tags_form.event = {};
                 $rootScope.img = {};
             });
 
@@ -1392,42 +1400,31 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     _imageServiceFactory.addTags = function($scope, obj){
 
-        console.log('hvad kommer ind her: ', obj);
+        console.log('hvad kommer ind lige her: ', obj);
 
         var addTags = {};
         var addEvent = {};
 
 
 
-        if(obj.add_event){
-            for(var prop in obj){
-                if(prop === 'id'){
-                    addEvent.img_id = obj[prop];
-                }
-                else if(prop === 'event_da' || prop === 'event_en'){
-                    addEvent[prop] = obj[prop];
-                }
+        if(obj.event){
 
-            }
+            obj.event.img_id = obj.id;
 
-            eventServices.postEvent($scope, addEvent);
+            eventServices.postEvent($scope, obj.event);
 
         }
 
-        if(obj.add_tags) {
+        if(obj.image) {
 
-            for (var prop in obj) {
-                if ((prop === 'meta' || prop === 'names' || prop === 'country' || prop === 'state' || prop === 'city' || prop === 'occasion' || prop === 'id') && obj[prop]) {
-                    if(prop !== 'id'){
-                        addTags[prop] = capInitialFilter(obj[prop]);
-                    }else{
-                        addTags[prop] = obj[prop];
-                    }
+            obj.image.id = obj.id;
+
+            for (var prop in obj.image) {
+                if(obj.image[prop] && prop !== 'id'){
+                    obj.image[prop] = capInitialFilter(obj.image[prop]);
                 }
             }
-
-            _imageServiceFactory.addMeta($scope, addTags);
-
+            _imageServiceFactory.addMeta($scope, obj.image);
         }
     };
 
@@ -1438,6 +1435,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.put('/images_mgmt/add_meta', tags)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
+                $rootScope.tags_form = {};
                 $rootScope.img = {};
             })
             .then(function(response){
@@ -1464,9 +1462,11 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.get('/images_mgmt/get_one/' + id)
             .then(function(response){
                 $rootScope.img = response.data;
+                $rootScope.tags_form.image = response.data;
 
                 if(!$rootScope.img.event){
                     eventServices.getEventById(id);
+
                 }
 
             });
@@ -1478,7 +1478,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         var batch = {};
 
         if(obj.country && obj.country.toLowerCase() === 'usa'){
-            batch.country = 'united states of america';
+            batch.country = 'United States';
         }
 
         for (var prop in obj) {
@@ -1584,10 +1584,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                         }else{
                             $scope.checkExif();
                         }
-                        break;
-
-                    case 'loadNewImages':
-                        _imageServiceFactory.getGeoLocationData($scope);
                         break;
 
                     default:

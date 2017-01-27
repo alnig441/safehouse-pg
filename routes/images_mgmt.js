@@ -159,8 +159,6 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
     var image = new qb(req, 'images', 'id', ['names', 'meta']);
 
-    //res.send(image.update());
-
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(image.update(), function(error, result){
 
@@ -177,8 +175,6 @@ router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 });
 
 router.delete('/:id?', call.isAuthenticated, function(req, res, next){
-
-    console.log('hvad kommer ind: ', req.params);
 
     var image = new qb(req, 'images');
 

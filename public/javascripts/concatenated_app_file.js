@@ -210,26 +210,11 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
-        console.log('jamen jamem: ', this.img);
+        console.log('adding tags: ', this.img)
+
         $scope.activeTool = '';
 
-        if($scope.batchObj.hasOwnProperty(this.img.id)){
-
-            $scope.batchObj[this.img.id] = false;
-
-            var incr = 0;
-            for(var prop in $scope.batchObj){
-                if($scope.batchObj[prop]){
-                    incr ++;
-                }
-            }
-
-            if(incr == 0){
-                $scope.batch.all = false;
-            }
-        }
-
-        imageServices.addTags(this.img, $scope);
+        imageServices.addTags($scope, this.img);
 
         $modalInstance.dismiss('cancel');
 
@@ -267,33 +252,31 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
-    //REQUEST $scope VARIABLES ON LOAD
-    imageServices.getNewImages($scope);
-    imageServices.getAll($scope);
-    eventServices.getAllEvents($scope);
-
-    console.log('looking for tool ID: ', $scope);
-
-
-    //INITIALISE CONTROLLER SPECIFIC SCOPE VARIABLES
-    $scope.batchObj = {};
-    $scope.batch = {};
-
     $scope.tools = [
         { name: 'import', value: 'loadNewImages' },
         { name: 'update', value: 'checkExif' }
     ];
 
-    $scope.activeTool = $scope.tools[0].value;
+    //INITIALISE $scope VARIABLES
+    initialiseScope();
+
+    function initialiseScope() {
+        imageServices.getNewImages($scope);
+        imageServices.getAll($scope);
+        eventServices.getAllEvents($scope);
+        $scope.batchObj = {};
+        $scope.batch = {};
+        $scope.activeTool = $scope.tools[0].value;
+    }
+
+    //FUNCTION TO REINITIALISE SCOPE VARIABLES UPON CONCLUSION OF VARIOUS image/event SERVICE CALLS
+    $scope.runReInit = function(){
+        initialiseScope();
+    };
 
     //COLLAPSE DOM DROPDOWN MENU
     var menu = document.getElementsByClassName('collapse');
 
-    //FUNCTION TRIGGERED IN imageServices UPON ADDING TAGS TO NEW IMAGES IN ORDER TO UPDATE ID DROPDOWN SELECT BOX
-    $scope.loadImages = function () {
-        imageServices.getAll($scope);
-        eventServices.getAllEvents($scope);
-    };
 
     $scope.toolSelector = function(){
 
@@ -374,14 +357,9 @@ function capitalize (elem, ind, arr){
 
     $scope.deleteImg = function(){
 
-        if($scope.batchObj.hasOwnProperty(this.uncategorized.id)){
-            $scope.batchObj[this.uncategorized.id] = false;
-            if(Object.keys($scope.batchObj).length == 1){
-                $scope.batch.all = false;
-            }
-        }
-
-        imageServices.deleteImages(this.uncategorized.id, $scope);
+        var id;
+        this.uncategorized.id ? id = this.uncategorized.id : id = this.img.id;
+        imageServices.deleteImages(id, $scope);
 
     };
 
@@ -1038,7 +1016,6 @@ function capitalize (elem, ind, arr){
 
         else if(misc === 'new'){
             $scope.img = this.uncategorized;
-            console.log('bingo: ', $scope.img);
             openModal(config);
         }
 
@@ -1113,7 +1090,7 @@ function openModal(obj) {
 
     var _eventServiceFactory = {};
 
-    _eventServiceFactory.postEvent = function(obj, $scope){
+    _eventServiceFactory.postEvent = function($scope, obj){
 
         $http.post('/events_mgmt/add', obj)
             .then(function(response){
@@ -1121,7 +1098,7 @@ function openModal(obj) {
 
             })
             .then(function(){
-                $scope.loadImages();
+                $scope.runReInit();
             });
 
     };
@@ -1413,7 +1390,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    _imageServiceFactory.addTags = function(obj, $scope){
+    _imageServiceFactory.addTags = function($scope, obj){
 
         console.log('hvad kommer ind her: ', obj);
 
@@ -1433,7 +1410,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
             }
 
-            eventServices.postEvent(addEvent, $scope);
+            eventServices.postEvent($scope, addEvent);
 
         }
 
@@ -1458,15 +1435,13 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
         tags ? tags = tags : tags = $rootScope.transientImage;
 
-        console.log('add meta: ', $scope.activeTool);
-
         $http.put('/images_mgmt/add_meta', tags)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
                 $rootScope.img = {};
             })
             .then(function(response){
-                $scope.loadImages();
+                $scope.runReInit();
             })
             .then(function(response){
                 if($scope.activeTool === 'checkExif'){
@@ -1515,7 +1490,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.post('/images_mgmt/batch', batch)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
-                $scope.loadImages();
+                $scope.runReInit();
             });
 
     };
@@ -1572,7 +1547,8 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.delete('/images_mgmt/' + imageArray)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
-                $scope.loadImages();
+                $rootScope.img = {};
+                $scope.runReInit();
             })
 
     };

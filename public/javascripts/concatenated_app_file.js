@@ -881,8 +881,6 @@ function capitalize (elem, ind, arr){
                 }
             }
 
-            console.log('build_query: ', this.form, query);
-
             appServices.buildMeta(query);
 
         }
@@ -1775,8 +1773,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
     };
 
     _storageServiceFactory.getStorages = function(){
-
-        console.log('loading storages');
 
         $http.get('/storages_mgmt/all')
             .then(function(response){

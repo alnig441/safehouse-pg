@@ -212,11 +212,11 @@ function capitalize (elem, ind, arr){
 
     $scope.submit = function(){
 
-        console.log('hvad kommer ind; ', this.tags_form);
+        console.log('hvad kommer ind; ', this.tags_form, this.uncategorized, this.img, this.transientImage, $rootScope.transientImage);
 
         $scope.activeTool = '';
 
-        this.tags_form.id = this.img.id;
+        this.img.id ? this.tags_form.id = this.img.id : this.tags_form.id = this.uncategorized.id;
 
         imageServices.addTags($scope, this.tags_form);
 
@@ -355,7 +355,6 @@ function capitalize (elem, ind, arr){
         $rootScope.transientImage.storage = $rootScope.default_storage;
 
         if($rootScope.transientImage.file) {
-            //imageServices.addImg($scope);
             imageServices.getExifData($scope);
         }
     };
@@ -1017,9 +1016,19 @@ function capitalize (elem, ind, arr){
         }
 
         else if(misc === 'new'){
-            console.log('herinde: ', this.form, $rootScope.img);
-            $rootScope.tags_form = {};
-            $scope.img = this.uncategorized;
+
+            if(this.uncategorized){
+                $rootScope.tags_form.image = {};
+                $rootScope.tags_form.image.country = this.uncategorized.country;
+                $rootScope.tags_form.image.state = this.uncategorized.state;
+                $rootScope.tags_form.image.city = this.uncategorized.city;
+                $rootScope.tags_form.image.id = this.uncategorized.id;
+
+            }
+
+            //CAPTURE IMAGE URL FOR DISPLAY IN MODAL
+            $scope.img.url = this.uncategorized.url;
+
             openModal(config);
         }
 

@@ -271,7 +271,6 @@ function capitalize (elem, ind, arr){
         eventServices.getAllEvents($scope);
         $scope.batchObj = {};
         $scope.batch = {};
-        $scope.activeTool = $scope.tools[0].value;
     }
 
     //FUNCTION TO REINITIALISE SCOPE VARIABLES UPON CONCLUSION OF VARIOUS image/event SERVICE CALLS
@@ -1407,12 +1406,8 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     _imageServiceFactory.addTags = function($scope, obj){
 
-        console.log('addTags hvad: ', obj);
-
         var addTags = {};
         var addEvent = {};
-
-
 
         if(obj.event && obj.add_event){
 

@@ -31,18 +31,17 @@ var call = {
         return qbObj;
     },
 
-    parser: function(string, lang){
-        var temp = string.slice(1,11);
+    parser: function(/*string*/ row, lang){
+
         var created = {};
-        var arr = temp.split('-');
         var months =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var months_da =['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Juni', 'Juli', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         switch (lang) {
             case 'en':
-                created = arr[2] + ' ' + months[parseInt(arr[1]-1)] + ' ' + arr[0];
+                created = row.day + ' ' + months[parseInt(row.month)] + ' ' + row.year;
                 break;
             case 'da':
-                created = arr[2] + ' ' + months_da[parseInt(arr[1]-1)] + ' ' + arr[0];
+                created = row.day + ' ' + months_da[parseInt(row.month)] + ' ' + row.year;
                 break;
         }
         return created;

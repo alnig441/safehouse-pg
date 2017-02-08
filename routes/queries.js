@@ -119,11 +119,11 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
     if(req.body.table === 'events'){
         console.log('events string ', req.body.table);
-        query_string ="SELECT ID, "+descr+" AS DESCRIPTION, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
+        query_string ="SELECT ID, YEAR, MONTH, DAY, "+descr+" AS DESCRIPTION, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
     }
     if(req.body.table === 'images'){
         console.log('images string ', req.body.table);
-        query_string = "SELECT ID,CREATED,PATH||FOLDER|| '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
+        query_string = "SELECT ID, YEAR, MONTH, DAY, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 
     pg.connect(connectionString, function(error, client, done){
@@ -136,7 +136,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         })
 
         query.on('row', function(row){
-            row.created = call.parser(JSON.stringify(row.created), req.user.lang);
+            row.created = call.parser(row, req.user.lang);
         })
 
         query.on('end', function(result){

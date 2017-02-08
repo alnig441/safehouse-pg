@@ -1524,39 +1524,39 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    _imageServiceFactory.buildImageObject = function(image, locationDataArray){
-
-        var parsedImage = image;
-
-        function parse (array, target) {
-            var locationDataObject,i;
-
-            for(i = 0; i < array.length; i++){
-                array[i].types.forEach(function(elem,ind){
-                    if(elem === target){
-                        locationDataObject = array[i];
-                    }
-                })
-            }
-            return locationDataObject;
-        }
-
-        parse(locationDataArray, 'country') ? parsedImage.country = parse(locationDataArray, 'country').long_name : parsedImage.country = 'En Route';
-        parse(locationDataArray, 'administrative_area_level_1') ? parsedImage.state = parse(locationDataArray, 'country').short_name + ' - ' + parse(locationDataArray, 'administrative_area_level_1').long_name: parsedImage.state = 'N/a';
-        parse(locationDataArray,'point_of_interest') ? parsedImage.meta.push(parse(locationDataArray,'point_of_interest').long_name) : parsedImage.meta = parsedImage.meta;
-
-        if(parse(locationDataArray, 'locality')){
-            if(parse(locationDataArray, 'route') && parse(locationDataArray, 'route').short_name === 'Ellsworth Dr'){
-                parsedImage.city = 'Edina';
-            }else{
-                parsedImage.city = parse(locationDataArray, 'locality').long_name;
-            }
-        }else {
-            parsedImage.city = 'En Route';
-        }
-
-        return parsedImage;
-    };
+    //_imageServiceFactory.buildImageObject = function(image, locationDataArray){
+    //
+    //    var parsedImage = image;
+    //
+    //    function parse (array, target) {
+    //        var locationDataObject,i;
+    //
+    //        for(i = 0; i < array.length; i++){
+    //            array[i].types.forEach(function(elem,ind){
+    //                if(elem === target){
+    //                    locationDataObject = array[i];
+    //                }
+    //            })
+    //        }
+    //        return locationDataObject;
+    //    }
+    //
+    //    parse(locationDataArray, 'country') ? parsedImage.country = parse(locationDataArray, 'country').long_name : parsedImage.country = 'En Route';
+    //    parse(locationDataArray, 'administrative_area_level_1') ? parsedImage.state = parse(locationDataArray, 'country').short_name + ' - ' + parse(locationDataArray, 'administrative_area_level_1').long_name: parsedImage.state = 'N/a';
+    //    parse(locationDataArray,'point_of_interest') ? parsedImage.meta.push(parse(locationDataArray,'point_of_interest').long_name) : parsedImage.meta = parsedImage.meta;
+    //
+    //    if(parse(locationDataArray, 'locality')){
+    //        if(parse(locationDataArray, 'route') && parse(locationDataArray, 'route').short_name === 'Ellsworth Dr'){
+    //            parsedImage.city = 'Edina';
+    //        }else{
+    //            parsedImage.city = parse(locationDataArray, 'locality').long_name;
+    //        }
+    //    }else {
+    //        parsedImage.city = 'En Route';
+    //    }
+    //
+    //    return parsedImage;
+    //};
 
     _imageServiceFactory.deleteImages = function(imageArray, $scope){
 
@@ -1587,7 +1587,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                 $rootScope.transientImage.exif = response.data;
                 $rootScope.transientImage.created = response.data.created;
 
-                console.log('in getExifData: ', $rootScope.transientImage.exif);
+                console.log('in getExifData: ', $rootScope.transientImage);
 
 
                 var timestamp = new Date($rootScope.transientImage.created);
@@ -1595,106 +1595,84 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
                 console.log('show me time: ', time);
 
-                //GET UTC OFFSET
-                $http.get('https://maps.googleapis.com/maps/api/timezone/json?location=' + $rootScope.transientImage.exif.coordinates + '&timestamp=' + time.toString().slice(0,10) + '&key=' + $rootScope.transientImage.exif.API_KEY)
-                    .then(function(response){
-                        console.log('show me timezone response: ', response);
-
-                        if($rootScope.transientImage.exif.utc){
-                            $rootScope.transientImage.created = new Date(time);
-                        }else{
-                            $rootScope.transientImage.created = new Date(time - (response.data.dstOffset + response.data.rawOffset)*1000);
-                        }
-
-                        $rootScope.transientImage.offset = 1000*(response.data.dstOffset + response.data.rawOffset);
-
-                        switch ($scope.activeTool) {
-                            case 'checkExif':
-                                if(response.data.created){
-                                    for(var prop in $rootScope.transientImage){
-                                        if(prop != 'id' && prop != 'meta' && prop != 'exif' && prop != 'created'){
-                                            $rootScope.transientImage[prop] = false;
-                                        }
-                                    }
-                                    _imageServiceFactory.getGeoLocationData($scope);
-
-                                }else{
-                                    $scope.checkExif();
-                                }
-                                break;
-
-                            default:
-                                _imageServiceFactory.getGeoLocationData($scope);
-
-                                break;
-                        }
-
-
-                    })
-
-
-                //switch ($scope.activeTool) {
-                //    case 'checkExif':
-                //        if(response.data.created){
-                //            for(var prop in $rootScope.transientImage){
-                //                if(prop != 'id' && prop != 'meta' && prop != 'exif' && prop != 'created'){
-                //                    $rootScope.transientImage[prop] = false;
-                //                }
-                //            }
-                //            _imageServiceFactory.getGeoLocationData($scope);
+                ////GET UTC OFFSET
+                //$http.get('https://maps.googleapis.com/maps/api/timezone/json?location=' + $rootScope.transientImage.exif.coordinates + '&timestamp=' + time.toString().slice(0,10) + '&key=' + $rootScope.transientImage.exif.API_KEY)
+                //    .then(function(response){
+                //        console.log('show me timezone response: ', response);
                 //
+                //        if($rootScope.transientImage.exif.utc){
+                //            $rootScope.transientImage.created = new Date(time);
                 //        }else{
-                //            $scope.checkExif();
+                //            $rootScope.transientImage.created = new Date(time - (response.data.dstOffset + response.data.rawOffset)*1000);
                 //        }
-                //        break;
                 //
-                //    default:
-                //        _imageServiceFactory.getGeoLocationData($scope);
+                //        $rootScope.transientImage.offset = 1000*(response.data.dstOffset + response.data.rawOffset);
                 //
-                //        break;
-                //}
+                //        switch ($scope.activeTool) {
+                //            case 'checkExif':
+                //                if(response.data.created){
+                //                    for(var prop in $rootScope.transientImage){
+                //                        if(prop != 'id' && prop != 'meta' && prop != 'exif' && prop != 'created'){
+                //                            $rootScope.transientImage[prop] = false;
+                //                        }
+                //                    }
+                //                    _imageServiceFactory.getGeoLocationData($scope);
+                //
+                //                }else{
+                //                    $scope.checkExif();
+                //                }
+                //                break;
+                //
+                //            default:
+                //                _imageServiceFactory.getGeoLocationData($scope);
+                //
+                //                break;
+                //        }
+                //
+                //
+                //    })
 
             })
 
     };
 
 
-    _imageServiceFactory.getGeoLocationData = function($scope) {
-
-        $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + $rootScope.transientImage.exif.coordinates + '&key=' + $rootScope.transientImage.exif.API_KEY)
-            .then(function(response){
-
-                if(response.data.status === 'OK'){
-                    $rootScope.transientImage = _imageServiceFactory.buildImageObject($rootScope.transientImage, response.data.results[0].address_components);
-                }
-                if($rootScope.transientImage.exif.coordinates && response.data.status === 'ZERO_RESULTS'){
-                    $rootScope.transientImage.country = 'En Route';
-                    $rootScope.transientImage.state = 'N/a';
-                    $rootScope.transientImage.city = 'En Route';
-                }
-
-                $rootScope.transientImage.exif = false;
-
-                switch ($scope.activeTool) {
-
-                    case 'checkExif':
-
-                        $rootScope.transientImage.meta.push('updated');
-
-                        _imageServiceFactory.addMeta($scope);
-
-                        break;
-
-                    default:
-
-                        _imageServiceFactory.addImg($scope);
-
-                        break;
-                }
-
-
-            })
-    }
+    //_imageServiceFactory.getGeoLocationData = function($scope) {
+    //
+    //    $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + $rootScope.transientImage.exif.coordinates + '&key=' + $rootScope.transientImage.exif.API_KEY)
+    //        .then(function(response){
+    //
+    //            if(response.data.status === 'OK'){
+    //                $rootScope.transientImage = _imageServiceFactory.buildImageObject($rootScope.transientImage, response.data.results[0].address_components);
+    //            }
+    //            if($rootScope.transientImage.exif.coordinates && response.data.status === 'ZERO_RESULTS'){
+    //                $rootScope.transientImage.country = 'En Route';
+    //                $rootScope.transientImage.state = 'N/a';
+    //                $rootScope.transientImage.city = 'En Route';
+    //            }
+    //
+    //            $rootScope.transientImage.exif = false;
+    //
+    //            switch ($scope.activeTool) {
+    //
+    //                case 'checkExif':
+    //
+    //                    $rootScope.transientImage.meta.push('updated');
+    //
+    //                    _imageServiceFactory.addMeta($scope);
+    //
+    //                    break;
+    //
+    //                default:
+    //
+    //                    _imageServiceFactory.addImg($scope);
+    //
+    //                    break;
+    //            }
+    //
+    //
+    //        })
+    //}
 
 
     return _imageServiceFactory;

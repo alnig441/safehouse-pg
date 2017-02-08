@@ -36,7 +36,7 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
             if (error) {
 
-                console.log(error);
+                //console.log(error);
 
                 switch (error.code){
 

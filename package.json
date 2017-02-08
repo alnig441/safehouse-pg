@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "mocha"
   },
   "dependencies": {
     "angular": "^1.4.6",
@@ -38,8 +39,10 @@
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "grunt-jade-tasks": "0.0.0",
     "grunt-movehtml": "^0.1.4",
-    "gulp-watch": "^4.3.5"
+    "gulp-watch": "^4.3.5",
+    "mocha": "^3.2.0"
   }
 }

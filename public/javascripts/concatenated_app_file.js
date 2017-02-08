@@ -1587,29 +1587,77 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                 $rootScope.transientImage.exif = response.data;
                 $rootScope.transientImage.created = response.data.created;
 
-                switch ($scope.activeTool) {
-                    case 'checkExif':
-                        if(response.data.created){
-                            for(var prop in $rootScope.transientImage){
-                                if(prop != 'id' && prop != 'meta' && prop != 'exif' && prop != 'created'){
-                                    $rootScope.transientImage[prop] = false;
-                                }
-                            }
-                            _imageServiceFactory.getGeoLocationData($scope);
+                console.log('in getExifData: ', $rootScope.transientImage.exif);
 
+
+                var timestamp = new Date($rootScope.transientImage.created);
+                var time = Date.parse(timestamp);
+
+                console.log('show me time: ', time);
+
+                //GET UTC OFFSET
+                $http.get('https://maps.googleapis.com/maps/api/timezone/json?location=' + $rootScope.transientImage.exif.coordinates + '&timestamp=' + time.toString().slice(0,10) + '&key=' + $rootScope.transientImage.exif.API_KEY)
+                    .then(function(response){
+                        console.log('show me timezone response: ', response);
+
+                        if($rootScope.transientImage.exif.utc){
+                            $rootScope.transientImage.created = new Date(time);
                         }else{
-                            $scope.checkExif();
+                            $rootScope.transientImage.created = new Date(time - (response.data.dstOffset + response.data.rawOffset)*1000);
                         }
-                        break;
 
-                    default:
-                        _imageServiceFactory.getGeoLocationData($scope);
-                        break;
-                }
+                        $rootScope.transientImage.offset = 1000*(response.data.dstOffset + response.data.rawOffset);
+
+                        switch ($scope.activeTool) {
+                            case 'checkExif':
+                                if(response.data.created){
+                                    for(var prop in $rootScope.transientImage){
+                                        if(prop != 'id' && prop != 'meta' && prop != 'exif' && prop != 'created'){
+                                            $rootScope.transientImage[prop] = false;
+                                        }
+                                    }
+                                    _imageServiceFactory.getGeoLocationData($scope);
+
+                                }else{
+                                    $scope.checkExif();
+                                }
+                                break;
+
+                            default:
+                                _imageServiceFactory.getGeoLocationData($scope);
+
+                                break;
+                        }
+
+
+                    })
+
+
+                //switch ($scope.activeTool) {
+                //    case 'checkExif':
+                //        if(response.data.created){
+                //            for(var prop in $rootScope.transientImage){
+                //                if(prop != 'id' && prop != 'meta' && prop != 'exif' && prop != 'created'){
+                //                    $rootScope.transientImage[prop] = false;
+                //                }
+                //            }
+                //            _imageServiceFactory.getGeoLocationData($scope);
+                //
+                //        }else{
+                //            $scope.checkExif();
+                //        }
+                //        break;
+                //
+                //    default:
+                //        _imageServiceFactory.getGeoLocationData($scope);
+                //
+                //        break;
+                //}
 
             })
 
     };
+
 
     _imageServiceFactory.getGeoLocationData = function($scope) {
 

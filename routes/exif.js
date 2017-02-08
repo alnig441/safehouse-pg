@@ -51,6 +51,8 @@ function getGMTOffset (coordinates, timestamp, callback) {
             var body = JSON.parse(payload);
             var offset = (body.rawOffset + body.dstOffset)*1000;
 
+            console.log('timestamp out: ', new Date(timestamp + offset));
+
             callback({
                 timestamp: timestamp += offset
             });
@@ -147,11 +149,13 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
                 if(exifData.gps.GPSDateStamp){
 
-                    console.log('using gps timestamp');
+                    console.log('using gps timestamp', exifData.gps.GPSDateStamp, exifData.gps.GPSTimeStamp);
 
                     var date_str = exifData.gps.GPSDateStamp.replace(/:/g, "-");
                     var time_str = exifData.gps.GPSTimeStamp.join(':');
-                    timestamp = date_str + ' ' + time_str;
+                    timestamp = date_str + ' ' + time_str + 'z';
+
+
 
 
                 }

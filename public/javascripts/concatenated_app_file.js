@@ -1524,40 +1524,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
-    //_imageServiceFactory.buildImageObject = function(image, locationDataArray){
-    //
-    //    var parsedImage = image;
-    //
-    //    function parse (array, target) {
-    //        var locationDataObject,i;
-    //
-    //        for(i = 0; i < array.length; i++){
-    //            array[i].types.forEach(function(elem,ind){
-    //                if(elem === target){
-    //                    locationDataObject = array[i];
-    //                }
-    //            })
-    //        }
-    //        return locationDataObject;
-    //    }
-    //
-    //    parse(locationDataArray, 'country') ? parsedImage.country = parse(locationDataArray, 'country').long_name : parsedImage.country = 'En Route';
-    //    parse(locationDataArray, 'administrative_area_level_1') ? parsedImage.state = parse(locationDataArray, 'country').short_name + ' - ' + parse(locationDataArray, 'administrative_area_level_1').long_name: parsedImage.state = 'N/a';
-    //    parse(locationDataArray,'point_of_interest') ? parsedImage.meta.push(parse(locationDataArray,'point_of_interest').long_name) : parsedImage.meta = parsedImage.meta;
-    //
-    //    if(parse(locationDataArray, 'locality')){
-    //        if(parse(locationDataArray, 'route') && parse(locationDataArray, 'route').short_name === 'Ellsworth Dr'){
-    //            parsedImage.city = 'Edina';
-    //        }else{
-    //            parsedImage.city = parse(locationDataArray, 'locality').long_name;
-    //        }
-    //    }else {
-    //        parsedImage.city = 'En Route';
-    //    }
-    //
-    //    return parsedImage;
-    //};
-
     _imageServiceFactory.deleteImages = function(imageArray, $scope){
 
         $http.delete('/images_mgmt/' + imageArray)
@@ -1584,53 +1550,29 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.get('/exif/' + $rootScope.transientImage.file)
             .then(function(response){
 
-                $rootScope.transientImage.exif = response.data;
-                $rootScope.transientImage.created = response.data.created;
+                for(var prop in response.data){
+                    $rootScope.transientImage[prop] = response.data[prop];
+                }
 
-                console.log('in getExifData: ', $rootScope.transientImage);
+                console.log('in getExifData: ', $rootScope.transientImage, new Date(response.data.created));
+                console.log('active tool: ', $scope.activeTool);
 
+                switch ($scope.activeTool) {
 
-                var timestamp = new Date($rootScope.transientImage.created);
-                var time = Date.parse(timestamp);
+                    case 'checkExif':
 
-                console.log('show me time: ', time);
+                        $rootScope.transientImage.meta.push('updated');
 
-                ////GET UTC OFFSET
-                //$http.get('https://maps.googleapis.com/maps/api/timezone/json?location=' + $rootScope.transientImage.exif.coordinates + '&timestamp=' + time.toString().slice(0,10) + '&key=' + $rootScope.transientImage.exif.API_KEY)
-                //    .then(function(response){
-                //        console.log('show me timezone response: ', response);
-                //
-                //        if($rootScope.transientImage.exif.utc){
-                //            $rootScope.transientImage.created = new Date(time);
-                //        }else{
-                //            $rootScope.transientImage.created = new Date(time - (response.data.dstOffset + response.data.rawOffset)*1000);
-                //        }
-                //
-                //        $rootScope.transientImage.offset = 1000*(response.data.dstOffset + response.data.rawOffset);
-                //
-                //        switch ($scope.activeTool) {
-                //            case 'checkExif':
-                //                if(response.data.created){
-                //                    for(var prop in $rootScope.transientImage){
-                //                        if(prop != 'id' && prop != 'meta' && prop != 'exif' && prop != 'created'){
-                //                            $rootScope.transientImage[prop] = false;
-                //                        }
-                //                    }
-                //                    _imageServiceFactory.getGeoLocationData($scope);
-                //
-                //                }else{
-                //                    $scope.checkExif();
-                //                }
-                //                break;
-                //
-                //            default:
-                //                _imageServiceFactory.getGeoLocationData($scope);
-                //
-                //                break;
-                //        }
-                //
-                //
-                //    })
+                        _imageServiceFactory.addMeta($scope);
+
+                        break;
+
+                    default:
+
+                        _imageServiceFactory.addImg($scope);
+
+                        break;
+                }
 
             })
 

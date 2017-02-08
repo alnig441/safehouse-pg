@@ -99,54 +99,6 @@ var call = {
 
     }
 
-    //UNUSED
-
-    //build_set: function(obj, date){
-    //
-    //    var mySet = new Set();
-    //
-    //    switch (obj.option) {
-    //        case 'year':
-    //            mySet.add(date.getUTCFullYear());
-    //            break;
-    //        case 'month':
-    //            if(date.getUTCFullYear() === req.body.year){
-    //                mySet.add(date.getUTCMonth());
-    //            }
-    //            break;
-    //        case 'day':
-    //            if(date.getUTCFullYear() === req.body.year && date.getUTCMonth() === req.body.month){
-    //                mySet.add(date.getUTCDate());
-    //            }
-    //            break;
-    //    }
-    //
-    //    return mySet;
-    //
-    //}
-
-    //UNUSED
-
-    //build_obj: function(array){
-    //
-    //    var str ;
-    //
-    //    if(array){
-    //        str = '';
-    //        array.forEach(function(elem, ind, arr){
-    //            str += "'" + elem + "'";
-    //            if(ind < array.length -1){
-    //                str += ",";
-    //            }
-    //        });
-    //
-    //        return str;
-    //    }
-    //
-    //    return;
-    //
-    //}
-
 };
 
 module.exports = call;

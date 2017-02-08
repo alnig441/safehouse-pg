@@ -27,37 +27,50 @@ var uploadFnct = function(dest){
 
 router.post('/add', call.isAuthenticated, function(req, res) {
 
-    req.body = call.buildQBObj(req.body);
+    if(req.body.created){
 
-    var img = new qb(req, 'images');
+        if(!req.body.day){
+            req.body = call.buildQBObj(req.body);
+        }
 
-    pg.connect(connectionString, function (err, client, done) {
-        var query = client.query(img.insert(), function (error, result) {
+        var img = new qb(req, 'images');
 
-            if (error) {
+        pg.connect(connectionString, function (err, client, done) {
+            var query = client.query(img.insert(), function (error, result) {
 
-                //console.log(error);
+                if (error) {
 
-                switch (error.code){
+                    console.log('postgres error: ', error);
 
-                    case '22007':
-                        error.detail = 'Created: Invalid Date';
-                        break;
-                    case '22001':
-                        error.detail = 'File name too long';
-                        break;
-                    default:
-                        error.detail = 'postgres error code: ' + error.code;
-                        break;
+                    switch (error.code){
+
+                        case '22007':
+                            error.detail = 'Created: Invalid Date';
+                            break;
+                        case '22001':
+                            error.detail = 'File name too long';
+                            break;
+                        default:
+                            error.detail = 'postgres error code: ' + error.code;
+                            break;
+                    }
+                    res.send(error);
                 }
-                res.send(error);
-            }
+            })
+            query.on('end', function (result) {
+                client.end();
+                res.status(200).send(result.rows);
+            })
         })
-        query.on('end', function (result) {
-            client.end();
-            res.status(200).send(result.rows);
-        })
-    })
+
+    }
+
+    else {
+
+        res.status(200).send({name: 'error', detail: 'no valid date present'});
+
+    }
+
 
 
 });

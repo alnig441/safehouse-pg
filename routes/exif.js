@@ -7,8 +7,6 @@ var https = require('https');
 function convertGPSCoordinate(coordinate, coordinateReference){
     var conversion;
 
-    console.log('incoming coordinate:', coordinate);
-
     coordinate.forEach(function(elem,ind){
         switch (ind){
             case 0:
@@ -33,7 +31,6 @@ function getGMTOffset (coordinates, timestamp, callback) {
 
     var now = new Date(timestamp);
     timestamp = Date.parse(now);
-    console.log('timestamp in: ', new Date(timestamp));
 
     https.get('https://maps.googleapis.com/maps/api/timezone/json?location='+ coordinates +'&timestamp='+ timestamp.toString().slice(0,10) +'&key=' + process.env.API_KEY, function(res) {
 
@@ -50,12 +47,17 @@ function getGMTOffset (coordinates, timestamp, callback) {
         res.on('end', function(){
             var body = JSON.parse(payload);
             var offset = (body.rawOffset + body.dstOffset)*1000;
+            var timeObj = {};
+            var now = new Date(timestamp + offset);
 
-            console.log('timestamp out: ', new Date(timestamp + offset));
+            timeObj.created = timestamp;
+            timeObj.month = now.getUTCMonth().toString();
+            timeObj.day = now.getUTCDate();
+            timeObj.year = now.getUTCFullYear();
 
-            callback({
-                timestamp: timestamp += offset
-            });
+            callback(
+                timeObj
+            );
         })
 
     })
@@ -78,10 +80,11 @@ function getLocationData (coordinates, callback) {
 
         res.on('end', function(){
             var body = JSON.parse(payload);
-            var addressComponents = body.results[0].address_components;
             var imgObj = {};
 
             if(body.status === 'OK'){
+
+                var addressComponents = body.results[0].address_components;
 
                 parseLocationData(addressComponents, 'country') ? imgObj.country = parseLocationData(addressComponents, 'country').long_name : imgObj.country = 'En Route';
                 parseLocationData(addressComponents, 'administrative_area_level_1') ? imgObj.state = parseLocationData(addressComponents, 'country').short_name + ' - ' + parseLocationData(addressComponents, 'administrative_area_level_1').long_name: imgObj.state = 'N/a';
@@ -91,7 +94,7 @@ function getLocationData (coordinates, callback) {
                     if(parseLocationData(addressComponents, 'route') && parseLocationData(addressComponents, 'route').short_name === 'Ellsworth Dr'){
                         imgObj.city = 'Edina';
                     }else{
-                        imgObj.city = parse(addressComponents, 'locality').long_name;
+                        imgObj.city = parseLocationData(addressComponents, 'locality').long_name;
                     }
                 }else {
                     imgObj.city = 'En Route';
@@ -99,15 +102,17 @@ function getLocationData (coordinates, callback) {
 
 
                 callback(
-                        imgObj
+                    imgObj
                 );
 
             }
             else if(body.status = 'ZERO_RESULTS'){
 
-                callback({
-                    addressComponents: undefined
-                });
+                imgObj = {};
+
+                callback(
+                    imgObj
+                );
 
             }
 
@@ -149,14 +154,9 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
                 if(exifData.gps.GPSDateStamp){
 
-                    console.log('using gps timestamp', exifData.gps.GPSDateStamp, exifData.gps.GPSTimeStamp);
-
                     var date_str = exifData.gps.GPSDateStamp.replace(/:/g, "-");
                     var time_str = exifData.gps.GPSTimeStamp.join(':');
                     timestamp = date_str + ' ' + time_str + 'z';
-
-
-
 
                 }
 
@@ -170,39 +170,53 @@ router.get('/:file', call.isAuthenticated, function(req, res, next){
 
             else if (exifData.exif.DateTimeOriginal) {
 
-                console.log('using local timestamp');
-
                 var dto = exifData.exif.DateTimeOriginal.split(' ');
 
                 var dto_0 = dto[0].split(':');
 
-                timestamp = dto_0.join('-') + ' ' + dto[1] + 'Z';
+                timestamp = dto_0.join('-') + ' ' + dto[1];
 
             }
 
         }
 
+        // IF COORIDINATES AVAILABLE CALL GOOGLE APIs TO RESOLVE TIME/LOCATION DATA
+
         if(lng && lat){
+
             coordinates = lat + ',' + lng;
-        }
 
-        //RASPBERRY PI RUNNING UTC TIME - ADJUST TIME FOR GMT OFFSET TO GET CORRECT LOCAL TIME
+            getGMTOffset(coordinates, timestamp, function(timeObject){
 
-        getGMTOffset(coordinates, timestamp, function(adjustedTime){
+                //BUILD IMAGE OBJECT WITH LOCATION DATA RETRIEVED FROM GOOGLE
 
-            //BUILD IMAGE OBJECT WITH LOCATION DATA RETRIEVED FROM GOOGLE
+                getLocationData(coordinates, function(imageObject){
 
-            getLocationData(coordinates, function(imageObject){
 
-                imageObject.created = adjustedTime.timestamp;
+                    for(var prop in timeObject){
+                        if(prop){
+                            imageObject[prop] = timeObject[prop];
+                        }
+                    }
 
-                res.send(imageObject);
+                    if(imageObject.created){
+                        imageObject.created = new Date(imageObject.created);
+                    }
+
+                    res.send(imageObject);
+
+
+                });
 
 
             });
+        }
 
+        else {
 
-        });
+            res.send({});
+
+        }
 
     });
 

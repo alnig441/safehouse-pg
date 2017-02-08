@@ -1554,9 +1554,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                     $rootScope.transientImage[prop] = response.data[prop];
                 }
 
-                console.log('in getExifData: ', $rootScope.transientImage, new Date(response.data.created));
-                console.log('active tool: ', $scope.activeTool);
-
                 switch ($scope.activeTool) {
 
                     case 'checkExif':
@@ -1577,45 +1574,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
             })
 
     };
-
-
-    //_imageServiceFactory.getGeoLocationData = function($scope) {
-    //
-    //    $http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + $rootScope.transientImage.exif.coordinates + '&key=' + $rootScope.transientImage.exif.API_KEY)
-    //        .then(function(response){
-    //
-    //            if(response.data.status === 'OK'){
-    //                $rootScope.transientImage = _imageServiceFactory.buildImageObject($rootScope.transientImage, response.data.results[0].address_components);
-    //            }
-    //            if($rootScope.transientImage.exif.coordinates && response.data.status === 'ZERO_RESULTS'){
-    //                $rootScope.transientImage.country = 'En Route';
-    //                $rootScope.transientImage.state = 'N/a';
-    //                $rootScope.transientImage.city = 'En Route';
-    //            }
-    //
-    //            $rootScope.transientImage.exif = false;
-    //
-    //            switch ($scope.activeTool) {
-    //
-    //                case 'checkExif':
-    //
-    //                    $rootScope.transientImage.meta.push('updated');
-    //
-    //                    _imageServiceFactory.addMeta($scope);
-    //
-    //                    break;
-    //
-    //                default:
-    //
-    //                    _imageServiceFactory.addImg($scope);
-    //
-    //                    break;
-    //            }
-    //
-    //
-    //        })
-    //}
-
 
     return _imageServiceFactory;
 

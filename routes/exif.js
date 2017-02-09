@@ -19,7 +19,7 @@ function convertGPSCoordinate(coordinate, coordinateReference){
                 conversion += elem/3600;
                 break;
         }
-    })
+    });
 
     if(coordinateReference.toLowerCase()==='w' || coordinateReference.toLowerCase() ==='s'){
         conversion = '-' + conversion.toString();
@@ -42,7 +42,7 @@ function getGMTOffset (coordinates, timestamp, callback) {
 
         res.on('error', function(error){
             console.log('show me error');
-        })
+        });
 
         res.on('end', function(){
             var body = JSON.parse(payload);
@@ -76,7 +76,7 @@ function getLocationData (coordinates, callback) {
 
         res.on('error', function(error){
             console.log('show me error');
-        })
+        });
 
         res.on('end', function(){
             var body = JSON.parse(payload);
@@ -106,7 +106,7 @@ function getLocationData (coordinates, callback) {
                 );
 
             }
-            else if(body.status = 'ZERO_RESULTS'){
+            else if(body.status === 'ZERO_RESULTS'){
 
                 imgObj = {};
 

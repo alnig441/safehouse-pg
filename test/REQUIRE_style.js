@@ -2,6 +2,7 @@ var testCase = require('mocha').describe;
 var pre = require('mocha').before;
 var assertions = require('mocha').it;
 var chai = require('chai'),
+    chaiHttp = require('chai-http');
     expect = chai.expect,
     should = chai.should(),
     assert = chai.assert;

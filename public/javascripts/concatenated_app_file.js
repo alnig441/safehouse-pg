@@ -1437,6 +1437,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.put('/images_mgmt/add_meta', tags)
             .then(function(response){
                 _imageServiceFactory.getUncategorisedImg();
+                $rootScope.transientImage = {};
                 $rootScope.tags_form = {};
                 $rootScope.img = {};
             })
@@ -1544,6 +1545,8 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
         $http.get('/exif/' + $rootScope.transientImage.file)
             .then(function(response){
+
+                console.log('getExifData - \nresponse: ', response.data, '\ntransient image: ', $rootScope.transientImage.file);
 
                 for(var prop in response.data){
                     $rootScope.transientImage[prop] = response.data[prop];

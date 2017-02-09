@@ -1,7 +1,10 @@
 var chai = require('chai'),
+    chaiHttp = require('chai-http');
     expect = chai.expect,
-    should = chai.should();
+    should = chai.should(),
+    assert = chai.assert;
 
+chai.use(chaiHttp);
 
 describe('Array', function() {
     before(function() {
@@ -26,3 +29,15 @@ describe('Array', function() {
         });
     });
 });
+
+describe('exif route', function(){
+
+    describe('when exif is NOT present', function(){
+        it('should return an empty object', function(){
+            (function() {
+
+            }).should.not.throw();
+        })
+    })
+
+})

@@ -50,11 +50,12 @@ function getGMTOffset (coordinates, timestamp, callback) {
             var body = JSON.parse(payload);
             var offset = (body.rawOffset + body.dstOffset)*1000;
             var timeObj = {};
+            var now;
 
             if(timestamp.gps){
-                var now = new Date(timestamp.created + offset);
+                now = new Date(timestamp.created + offset);
             } else{
-                var now = new Date(timestamp.created);
+                now = new Date(timestamp.created);
             }
 
             console.log('show me now: ', now);
@@ -310,6 +311,8 @@ router.post('/', call.isAuthenticated, function(req, res, next){
                         coordinates += newCoordinates.lat + ',' + newCoordinates.lng;
 
                         getGMTOffset(coordinates, timestamp, function(timeObj){
+
+                            console.log('timeObj: ', timeObj);
 
                             imgObj.created = new Date(timeObj.created + flip * timeObj.offset);
 

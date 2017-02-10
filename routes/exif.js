@@ -209,6 +209,9 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         //DETERMINE IF FILE IS NEW
         req.body.occasion ? newImg = false : newImg = true;
 
+
+        console.log('show me request body: ', req.body);
+
         //FOR IMAGES WITHOUT EXIFDATA DO
         if(!exifData){
 

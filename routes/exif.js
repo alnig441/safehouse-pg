@@ -51,6 +51,8 @@ function getGMTOffset (coordinates, timestamp, callback) {
 
             if(timestamp.gps){
                 var now = new Date(timestamp.created + offset);
+            } else{
+                var now = new Date(timestamp.created);
             }
 
             console.log('show me now: ', now);
@@ -308,7 +310,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                     console.log('GPS timestamp: ', timestamp, '\ntimeObj: ', timeObj, '\nflip bit: ', flip);
 
-                    imgObj.created = timestamp;
+                    imgObj.created = new Date(timestamp.created);
 
                     for(var prop in timeObj){
                         if(prop && prop != 'offset' && prop != 'created'){

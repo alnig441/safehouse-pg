@@ -50,6 +50,8 @@ function getGMTOffset (coordinates, timestamp, callback) {
             var timeObj = {};
             var now = new Date(timestamp);
 
+            console.log('show me now: ', now);
+
             timeObj.created = timestamp;
             timeObj.month = now.getUTCMonth().toString();
             timeObj.day = now.getUTCDate();
@@ -293,16 +295,14 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                 coordinates += lat + ',' + lng;
 
-                timestamp = date_str + ' ' + time_str + 'z';
+                timestamp = date_str + ' ' + time_str;
 
                 getGMTOffset(coordinates, timestamp, function(timeObj){
-
-                    imgObj.created = new Date(timeObj.created + flip * timeObj.offset);
 
                     console.log('GPS timestamp: ', timestamp, '\ntimeObj: ', timeObj, '\nflip bit: ', flip);
 
                     for(var prop in timeObj){
-                        if(prop && prop != 'created' && prop != 'offset'){
+                        if(prop && prop != 'offset'){
                             imgObj[prop] = timeObj[prop];
                         }
                     }

@@ -56,11 +56,9 @@ function getGMTOffset (coordinates, timestamp, callback) {
             timeObj.year = now.getUTCFullYear();
             timeObj.offset = offset;
 
-            console.log('timeObj in getGMT: ', timeObj);
-
             callback(
                 timeObj
-            );
+            )
 
         })
 
@@ -301,7 +299,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                     imgObj.created = new Date(timeObj.created + flip * timeObj.offset);
 
-                    console.log('GPS timestamp: ', timestamp ,'\ntimeObj: ', imgObj);
+                    console.log('GPS timestamp: ', timestamp, '\ntimeObj: ', timeObj, '\nflip bit: ', flip);
 
                     for(var prop in timeObj){
                         if(prop && prop != 'created' && prop != 'offset'){

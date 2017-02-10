@@ -301,8 +301,10 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                     console.log('GPS timestamp: ', timestamp, '\ntimeObj: ', timeObj, '\nflip bit: ', flip);
 
+                    imgObj.created = timestamp;
+
                     for(var prop in timeObj){
-                        if(prop && prop != 'offset'){
+                        if(prop && prop != 'offset' && prop != 'created'){
                             imgObj[prop] = timeObj[prop];
                         }
                     }

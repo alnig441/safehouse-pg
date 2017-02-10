@@ -29,6 +29,8 @@ function convertGPSCoordinate(coordinate, coordinateReference){
 
 function getGMTOffset (coordinates, timestamp, callback) {
 
+    console.log('GMT Offset - received timestamp:', timestamp);
+
     var now = new Date(timestamp.created);
     timestamp.created = Date.parse(now);
 
@@ -191,16 +193,19 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
         var location, newImg = req.body, timestamp = {}, coordinates ='', lng, lat, imgObj = {},flip = 1;
 
-        req.body.state != 'N/a' ? location = req.body.state : location = req.body.country;
-
         //FILE IS CATEGORISED AND NEEDS UPDATING OR FILE IS NEW AND NEEDS TIMESTAMP ADJUSTED
         if((req.body.occasion && (!exifData || !exifData.gps.GPSDateStamp)) || (!req.body.occasion  && exifData && !exifData.gps.GPSDateStamp)){
             console.log('flipping');
             flip = -1;
         }
 
+        //INITIALISATION OF location VARIABLE - WILL BE OVERWRITTEN BY EXIF DATA, IF AVAILABLE
+        req.body.state != 'N/a' ? location = req.body.state : location = req.body.country;
+
+        //INITIALISATION OF TIMESTAMP - WILL BE OVERWRITTEN BY EXIF DATA, IF AVAILABLE
         req.body.created ? timestamp.created = req.body.created : timestamp.created = 'no valid date present';
 
+        //DETERMINE IF FILE IS NEW
         req.body.occasion ? newImg = false : newImg = true;
 
         //FOR IMAGES WITHOUT EXIFDATA DO

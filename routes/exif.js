@@ -299,7 +299,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                     imgObj.created = new Date(timeObj.created + flip * timeObj.offset);
 
-                    console.log('GPS timestamp: ', timestamp ,'\ntimeObj: ', imgObj.created);
+                    console.log('GPS timestamp: ', timestamp ,'\ntimeObj: ', imgObj);
 
                     for(var prop in timeObj){
                         if(prop && prop != 'created' && prop != 'offset'){

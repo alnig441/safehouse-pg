@@ -69,9 +69,9 @@ function getGMTOffset (coordinates, timestamp, callback) {
 
             }
 
-            else if(body.error_message){
+            else {
 
-                timeObj.error = body.status;
+                timeObj.status = body.status;
             }
 
             console.log('returning timeObj: ', timeObj);
@@ -132,8 +132,8 @@ function getLocationData (coordinates, callback) {
                 imgObj = {};
             }
 
-            else if(body.error_message){
-                imgObj.error = body.status;
+            else {
+                imgObj.status = body.status;
             }
 
             console.log('returning imgObj: ', imgObj);
@@ -192,9 +192,9 @@ function getCoordinates(location, callback) {
 
             }
 
-            else if(body.error_message){
+            else {
 
-                newLocation.error = body.status;
+                newLocation.status = body.status;
             }
 
             console.log('returning newLocation: ', newLocation);

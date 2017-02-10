@@ -74,8 +74,6 @@ function getGMTOffset (coordinates, timestamp, callback) {
                 timeObj.status = body.status;
             }
 
-            console.log('returning timeObj: ', timeObj);
-
             callback(
                 timeObj
             )
@@ -136,8 +134,6 @@ function getLocationData (coordinates, callback) {
                 imgObj.status = body.status;
             }
 
-            console.log('returning imgObj: ', imgObj);
-
             callback(
                 imgObj
             );
@@ -197,8 +193,6 @@ function getCoordinates(location, callback) {
                 newLocation.status = body.status;
             }
 
-            console.log('returning newLocation: ', newLocation);
-
             callback(
                 newLocation
             );
@@ -228,9 +222,6 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
         //DETERMINE IF FILE IS NEW
         req.body.occasion ? newImg = false : newImg = true;
-
-
-        console.log('show me request body: ', req.body);
 
         //FOR IMAGES WITHOUT EXIFDATA DO
         if(!exifData){

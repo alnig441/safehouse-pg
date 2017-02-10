@@ -262,7 +262,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                             coordinates += newCoordinates.lat + ',' + newCoordinates.lng;
 
-                            getGMTOffset(coordinates, timestamp, function (timeObject) {
+                            getGMTOffset(coordinates, timestamp.created, function (timeObject) {
 
                                 imgObj.created = new Date(timeObject.created + flip * timeObject.offset);
 

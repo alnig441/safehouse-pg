@@ -199,6 +199,8 @@ router.post('/', call.isAuthenticated, function(req, res, next){
             flip = -1;
         }
 
+        req.body.created ? timestamp.created = req.body.created : timestamp.created = 'no valid date present';
+
         req.body.occasion ? newImg = false : newImg = true;
 
         //FOR IMAGES WITHOUT EXIFDATA DO
@@ -206,7 +208,6 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
             console.log('exif?  NO');
 
-            req.body.created ? timestamp.created = req.body.created : timestamp.created = 'no valid date present';
 
             if(!newImg){
 
@@ -262,7 +263,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                             coordinates += newCoordinates.lat + ',' + newCoordinates.lng;
 
-                            getGMTOffset(coordinates, timestamp.created, function (timeObject) {
+                            getGMTOffset(coordinates, timestamp, function (timeObject) {
 
                                 imgObj.created = new Date(timeObject.created + flip * timeObject.offset);
 

@@ -29,7 +29,7 @@ function convertGPSCoordinate(coordinate, coordinateReference){
 
 function getGMTOffset (coordinates, timestamp, callback) {
 
-    console.log('GMT Offset - received timestamp:', timestamp);
+    console.log('GMT Offset - received timestamp:', timestamp, '\nand coordinates: ', coordinates);
 
     var now = new Date(timestamp.created);
     timestamp.created = Date.parse(now);

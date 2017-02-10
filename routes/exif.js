@@ -174,6 +174,8 @@ function getCoordinates(location, callback) {
             var body = JSON.parse(payload);
             var newLocation = {};
 
+            console.log('location body: ', body);
+
             if(body.status === 'OK'){
 
                 newLocation.lat = body.results[0].geometry.location.lat;

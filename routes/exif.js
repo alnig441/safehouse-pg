@@ -56,6 +56,8 @@ function getGMTOffset (coordinates, timestamp, callback) {
             timeObj.year = now.getUTCFullYear();
             timeObj.offset = offset;
 
+            console.log('timeObj in getGMT: ', timeObj);
+
             callback(
                 timeObj
             );

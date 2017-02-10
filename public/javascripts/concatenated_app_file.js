@@ -1549,7 +1549,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
             .then(function(response){
 
-                console.log('getExifData - \nresponse: ', response.data, '\ntransient image: ', $rootScope.transientImage.file);
+                console.log('getExifData - \nresponse: ', response.data, '\ntransient image: ', $rootScope.transientImage.file, '\nid: ', $rootScope.transientImage.id);
 
                 for(var prop in response.data){
                     $rootScope.transientImage[prop] = response.data[prop];

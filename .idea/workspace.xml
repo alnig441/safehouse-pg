@@ -46,8 +46,8 @@
       <file leaf-file-name="exif.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/exif.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.139535">
-              <caret line="52" column="46" selection-start-line="52" selection-start-column="46" selection-end-line="52" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.44186047">
+              <caret line="305" column="45" selection-start-line="305" selection-start-column="45" selection-end-line="305" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -927,8 +927,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/exif.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.139535">
-          <caret line="52" column="46" selection-start-line="52" selection-start-column="46" selection-end-line="52" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.44186047">
+          <caret line="305" column="45" selection-start-line="305" selection-start-column="45" selection-end-line="305" selection-end-column="45" />
           <folding />
         </state>
       </provider>

@@ -29,10 +29,10 @@ function convertGPSCoordinate(coordinate, coordinateReference){
 
 function getGMTOffset (coordinates, timestamp, callback) {
 
-    var now = new Date(timestamp);
-    timestamp = Date.parse(now);
+    var now = new Date(timestamp.created);
+    timestamp.created = Date.parse(now);
 
-    https.get('https://maps.googleapis.com/maps/api/timezone/json?location='+ coordinates +'&timestamp='+ timestamp.toString().slice(0,10) +'&key=' + process.env.API_KEY, function(res) {
+    https.get('https://maps.googleapis.com/maps/api/timezone/json?location='+ coordinates +'&timestamp='+ timestamp.created.toString().slice(0,10) +'&key=' + process.env.API_KEY, function(res) {
 
         var payload = '';
 
@@ -48,11 +48,14 @@ function getGMTOffset (coordinates, timestamp, callback) {
             var body = JSON.parse(payload);
             var offset = (body.rawOffset + body.dstOffset)*1000;
             var timeObj = {};
-            var now = new Date(timestamp);
+
+            if(timestamp.gps){
+                var now = new Date(timestamp.created + offset);
+            }
 
             console.log('show me now: ', now);
 
-            timeObj.created = timestamp;
+            timeObj.created = timestamp.created;
             timeObj.month = now.getUTCMonth().toString();
             timeObj.day = now.getUTCDate();
             timeObj.year = now.getUTCFullYear();
@@ -179,7 +182,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
     new ExifImage({ image : './public/buffalo/James/'+ req.body.file }, function (error, exifData) {
 
-        var location, newImg = req.body, timestamp, coordinates ='', lng, lat, imgObj = {},flip = 1;
+        var location, newImg = req.body, timestamp = {}, coordinates ='', lng, lat, imgObj = {},flip = 1;
 
         req.body.state != 'N/a' ? location = req.body.state : location = req.body.country;
 
@@ -196,7 +199,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
             console.log('exif?  NO');
 
-            req.body.created ? timestamp = req.body.created : timestamp = 'no valid date present';
+            req.body.created ? timestamp.created = req.body.created : timestamp.created = 'no valid date present';
 
             if(!newImg){
 
@@ -259,7 +262,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
                     //SET TIMESTAMP BASED ON DATE/TIME ORIGINAL
                     var dto = exifData.exif.DateTimeOriginal.split(' ');
                     var dto_0 = dto[0].split(':');
-                    timestamp = dto_0.join('-') + ' ' + dto[1] +'Z';
+                    timestamp.created = dto_0.join('-') + ' ' + dto[1] +'Z';
 
 
                     getCoordinates(location, function(newCoordinates){
@@ -285,6 +288,8 @@ router.post('/', call.isAuthenticated, function(req, res, next){
             else {
                 console.log('GPS timestamp? YES');
 
+                timestamp.gps = true;
+
                 //SET COORDINATES
                 lng = convertGPSCoordinate(exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef);
                 lat = convertGPSCoordinate(exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef);
@@ -295,7 +300,9 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                 coordinates += lat + ',' + lng;
 
-                timestamp = date_str + ' ' + time_str;
+                timestamp.created = date_str + ' ' + time_str;
+
+
 
                 getGMTOffset(coordinates, timestamp, function(timeObj){
 

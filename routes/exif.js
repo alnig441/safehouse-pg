@@ -58,7 +58,7 @@ function getGMTOffset (coordinates, timestamp, callback) {
                 now = new Date(timestamp.created);
             }
 
-            console.log('show me now: ', now);
+            console.log('show me now: ', now, '\n..and body: ', body);
 
             timeObj.created = timestamp.created;
             timeObj.month = now.getUTCMonth().toString();

@@ -1543,7 +1543,10 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     _imageServiceFactory.getExifData = function($scope) {
 
-        $http.get('/exif/' + $rootScope.transientImage.file)
+        //$http.get('/exif/' + $rootScope.transientImage.file)
+
+        $http.post('/exif/', $rootScope.transientImage)
+
             .then(function(response){
 
                 console.log('getExifData - \nresponse: ', response.data, '\ntransient image: ', $rootScope.transientImage.file);

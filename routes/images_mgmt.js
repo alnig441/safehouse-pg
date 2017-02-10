@@ -168,7 +168,7 @@ router.get('/get_new', call.isAuthenticated, function(req, res, next){
 
 router.put('/add_meta', call.isAuthenticated, function(req, res, next){
 
-    console.log('add meta body: ', req.body);
+    //console.log('add meta body: ', req.body);
 
     var image = new qb(req, 'images', 'id', ['names', 'meta']);
 

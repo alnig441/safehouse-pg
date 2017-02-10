@@ -54,10 +54,20 @@ function getGMTOffset (coordinates, timestamp, callback) {
             timeObj.month = now.getUTCMonth().toString();
             timeObj.day = now.getUTCDate();
             timeObj.year = now.getUTCFullYear();
+            timeObj.offset = offset;
 
-            callback(
-                timeObj
-            );
+            //if(update){
+            //
+            //    callback({offset: offset})
+            //
+            //}else{
+
+                callback(
+                    timeObj
+                );
+
+            //}
+
         })
 
     })
@@ -138,87 +148,192 @@ function parseLocationData (locationData, target) {
 
 }
 
-router.get('/:file', call.isAuthenticated, function(req, res, next){
 
-    new ExifImage({ image : './public/buffalo/James/'+ req.params.file }, function (error, exifData) {
+function getCoordinates(location, callback) {
 
-        var timestamp, coordinates, lng, lat;
+    var payload = '';
 
-        if(exifData) {
+    https.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + process.env.API_KEY, function(res){
 
-            //DETERMINE IF GPS DATA AVAILABLE
+        res.on('data', function(data){
+            payload += data;
+        });
 
-            if (exifData.gps.GPSLongitude && exifData.gps.GPSLatitude) {
+        res.on('error', function(error){
+            console.log(error);
+        });
 
-                //USE GPS TIME/DATE IF AVAILABLE
+        res.on('end', function(){
+            var body = JSON.parse(payload);
+            var newLocation = {};
 
-                if(exifData.gps.GPSDateStamp){
+            if(body.status === 'OK'){
 
-                    var date_str = exifData.gps.GPSDateStamp.replace(/:/g, "-");
-                    var time_str = exifData.gps.GPSTimeStamp.join(':');
-                    timestamp = date_str + ' ' + time_str + 'z';
-
-                }
-
-                lng = convertGPSCoordinate(exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef);
-
-                lat = convertGPSCoordinate(exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef);
+                newLocation.lat = body.results[0].geometry.location.lat;
+                newLocation.lng = body.results[0].geometry.location.lng;
 
             }
 
-            //ELSE USE LOCAL TIMESTAMP (TYPICALLY ONLY AVAILABLE ON IPHONE)
+            callback(newLocation);
 
-            else if (exifData.exif.DateTimeOriginal) {
+        });
+    })
 
-                var dto = exifData.exif.DateTimeOriginal.split(' ');
+}
 
-                var dto_0 = dto[0].split(':');
+router.post('/', call.isAuthenticated, function(req, res, next){
 
-                timestamp = dto_0.join('-') + ' ' + dto[1];
+    new ExifImage({ image : './public/buffalo/James/'+ req.body.file }, function (error, exifData) {
 
-            }
+        var location, newImg = req.body, timestamp, coordinates ='', lng, lat, imgObj = {},flip = 1;
 
+        req.body.state != 'N/a' ? location = req.body.state : location = req.body.country;
+
+        //FILE IS CATEGORISED AND NEEDS UPDATING OR FILE IS NEW AND NEEDS TIMESTAMP ADJUSTED
+        if((req.body.occasion && (!exifData || !exifData.gps.GPSDateStamp)) || (!req.body.occasion  && exifData && !exifData.gps.GPSDateStamp)){
+            console.log('flipping');
+            flip = -1;
         }
 
-        // IF COORIDINATES AVAILABLE CALL GOOGLE APIs TO RESOLVE TIME/LOCATION DATA
+        req.body.occasion ? newImg = false : newImg = true;
 
-        if(lng && lat){
+        //FOR IMAGES WITHOUT EXIFDATA DO
+        if(!exifData){
 
-            coordinates = lat + ',' + lng;
+            console.log('exif?  NO');
 
-            getGMTOffset(coordinates, timestamp, function(timeObject){
+            req.body.created ? timestamp = req.body.created : timestamp = 'no valid date present';
 
-                //BUILD IMAGE OBJECT WITH LOCATION DATA RETRIEVED FROM GOOGLE
+            if(!newImg){
 
-                getLocationData(coordinates, function(imageObject){
+                console.log('new image? NO')
+
+                getCoordinates(location, function(newCoordinates){
+
+                    coordinates += newCoordinates.lat + ',' + newCoordinates.lng;
+
+                    getGMTOffset(coordinates, timestamp, function(timeObject){
+
+                        imgObj.created = new Date(timeObject.created + flip * timeObject.offset);
+
+                        console.log('sending: ', imgObj);
+
+                        res.send(imgObj);
 
 
-                    for(var prop in timeObject){
-                        if(prop){
-                            imageObject[prop] = timeObject[prop];
-                        }
-                    }
-
-                    if(imageObject.created){
-                        imageObject.created = new Date(imageObject.created);
-                    }
-
-                    res.send(imageObject);
-
+                    });
 
                 });
 
+            }
 
-            });
+            else {
+
+                console.log('new image? YES')
+
+                imgObj.created = req.body.created;
+
+                console.log('sending: ', imgObj);
+
+                res.send(imgObj);
+
+            }
+
         }
 
-        else {
+        //FOR IMAGES WITH EXIFDATA DO
+        else{
 
-            res.send({});
+            console.log('exif? YES');
+
+            if(!exifData.gps.GPSDateStamp){
+
+                console.log('GPS timestamp? NO');
+
+                if(!exifData.exif.DateTimeOriginal){
+
+                    imgObj.created = 'no valid date present';
+
+                    console.log('sending: ', imgObj);
+
+                    res.send(imgObj);
+
+                }
+
+                else {
+
+                    //SET TIMESTAMP BASED ON DATE/TIME ORIGINAL
+                    var dto = exifData.exif.DateTimeOriginal.split(' ');
+                    var dto_0 = dto[0].split(':');
+                    timestamp = dto_0.join('-') + ' ' + dto[1] +'Z';
+
+
+                    getCoordinates(location, function(newCoordinates){
+
+                        coordinates += newCoordinates.lat + ',' + newCoordinates.lng;
+
+                        getGMTOffset(coordinates, timestamp, function(timeObj){
+
+                            imgObj.created = new Date(timeObj.created + flip * timeObj.offset);
+
+                            console.log('sending: ', imgObj);
+
+                            res.send(imgObj);
+
+                        })
+
+                    })
+
+                }
+
+            }
+
+            else {
+                console.log('GPS timestamp? YES');
+
+                //SET COORDINATES
+                lng = convertGPSCoordinate(exifData.gps.GPSLongitude, exifData.gps.GPSLongitudeRef);
+                lat = convertGPSCoordinate(exifData.gps.GPSLatitude, exifData.gps.GPSLatitudeRef);
+
+                //SET TIMESTAMP
+                var date_str = exifData.gps.GPSDateStamp.replace(/:/g, "-");
+                var time_str = exifData.gps.GPSTimeStamp.join(':');
+
+                coordinates += lat + ',' + lng;
+
+                timestamp = date_str + ' ' + time_str + 'z';
+
+                getGMTOffset(coordinates, timestamp, function(timeObj){
+
+                    imgObj.created = new Date(timeObj.created + flip * timeObj.offset);
+
+                    for(var prop in timeObj){
+                        if(prop && prop != 'created' && prop != 'offset'){
+                            imgObj[prop] = timeObj[prop];
+                        }
+                    }
+
+                    getLocationData(coordinates, function(locationObj){
+
+                        for(var prop in locationObj){
+                            if(prop){
+                                imgObj[prop] = locationObj[prop];
+                            }
+                        }
+
+                        console.log('sending: ', imgObj);
+
+                        res.send(imgObj);
+
+                    });
+
+                });
+
+            }
 
         }
 
-    });
+    })
 
 });
 

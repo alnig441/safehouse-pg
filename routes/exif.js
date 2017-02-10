@@ -251,11 +251,34 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                 if(!exifData.exif.DateTimeOriginal){
 
-                    imgObj.created = 'no valid date present';
+                    if(!newImg) {
 
-                    console.log('sending: ', imgObj);
+                        getCoordinates(location, function(newCoordinates){
 
-                    res.send(imgObj);
+                            coordinates += newCoordinates.lat + ',' + newCoordinates.lng;
+
+                            getGMTOffset(coordinates, timestamp, function(timeObject){
+
+                                imgObj.created = new Date(timeObject.created + flip * timeObject.offset);
+
+                                console.log('sending: ', imgObj);
+
+                                res.send(imgObj);
+
+
+                            });
+
+                        }
+
+                    else{
+
+                        imgObj.created = 'no valid date present';
+
+                        console.log('sending: ', imgObj);
+
+                        res.send(imgObj);
+
+                    }
 
                 }
 

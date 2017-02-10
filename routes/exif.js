@@ -90,6 +90,7 @@ function getLocationData (coordinates, callback) {
         res.on('end', function(){
             var body = JSON.parse(payload);
             var imgObj = {};
+            imgObj.meta = [];
 
             if(body.status === 'OK'){
 
@@ -107,6 +108,10 @@ function getLocationData (coordinates, callback) {
                     }
                 }else {
                     imgObj.city = 'En Route';
+                }
+
+                if(imgObj.meta.length == 0){
+                    imgObj.meta = undefined;
                 }
 
 
@@ -327,7 +332,6 @@ router.post('/', call.isAuthenticated, function(req, res, next){
                 coordinates += lat + ',' + lng;
 
                 timestamp.created = date_str + ' ' + time_str;
-
 
 
                 getGMTOffset(coordinates, timestamp, function(timeObj){

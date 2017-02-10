@@ -724,10 +724,10 @@ function capitalize (elem, ind, arr){
 
         if(type === 'meta' && arr[0]){
             if(arr[0].toLowerCase() !== 'select'){
-                obj.query = "select id, created, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
+                obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
             }
             else{
-                obj.query = "select id, created, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
+                obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
                 obj.query = obj.query.replace(/COLUMN/g, "*");
             }
         }

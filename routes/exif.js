@@ -48,7 +48,7 @@ function getGMTOffset (coordinates, timestamp, callback) {
             var body = JSON.parse(payload);
             var offset = (body.rawOffset + body.dstOffset)*1000;
             var timeObj = {};
-            var now = new Date(timestamp + offset);
+            var now = new Date(timestamp);
 
             timeObj.created = timestamp;
             timeObj.month = now.getUTCMonth().toString();
@@ -56,17 +56,9 @@ function getGMTOffset (coordinates, timestamp, callback) {
             timeObj.year = now.getUTCFullYear();
             timeObj.offset = offset;
 
-            //if(update){
-            //
-            //    callback({offset: offset})
-            //
-            //}else{
-
-                callback(
-                    timeObj
-                );
-
-            //}
+            callback(
+                timeObj
+            );
 
         })
 

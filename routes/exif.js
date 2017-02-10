@@ -262,6 +262,8 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                 if(!exifData.exif.DateTimeOriginal){
 
+                    console.log('date/time original? NO')
+
                     if(!newImg) {
 
                         getCoordinates(location, function (newCoordinates) {
@@ -301,6 +303,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
                     var dto_0 = dto[0].split(':');
                     timestamp.created = dto_0.join('-') + ' ' + dto[1] +'Z';
 
+                    console.log('date/time original? YES \n timestamp: ', timestamp);
 
                     getCoordinates(location, function(newCoordinates){
 

@@ -29,7 +29,7 @@ function convertGPSCoordinate(coordinate, coordinateReference){
 
 function getGMTOffset (coordinates, timestamp, callback) {
 
-    console.log('GMT Offset - received timestamp:', timestamp, '\nand coordinates: ', coordinates);
+    //console.log('GMT Offset - received timestamp:', timestamp, '\nand coordinates: ', coordinates);
 
     var now = new Date(timestamp.created);
     timestamp.created = Date.parse(now);
@@ -58,13 +58,23 @@ function getGMTOffset (coordinates, timestamp, callback) {
                 now = new Date(timestamp.created);
             }
 
-            console.log('show me now: ', now, '\n..and body: ', body);
 
-            timeObj.created = timestamp.created;
-            timeObj.month = now.getUTCMonth().toString();
-            timeObj.day = now.getUTCDate();
-            timeObj.year = now.getUTCFullYear();
-            timeObj.offset = offset;
+            if(body.status === 'OK'){
+
+                timeObj.created = timestamp.created;
+                timeObj.month = now.getUTCMonth().toString();
+                timeObj.day = now.getUTCDate();
+                timeObj.year = now.getUTCFullYear();
+                timeObj.offset = offset;
+
+            }
+
+            else if(body.error_message){
+
+                timeObj.error = body.status;
+            }
+
+            console.log('returning timeObj: ', timeObj);
 
             callback(
                 timeObj
@@ -117,21 +127,22 @@ function getLocationData (coordinates, callback) {
                     imgObj.meta = undefined;
                 }
 
-
-                callback(
-                    imgObj
-                );
-
             }
             else if(body.status === 'ZERO_RESULTS'){
-
                 imgObj = {};
-
-                callback(
-                    imgObj
-                );
-
             }
+
+            else if(body.error_message){
+                imgObj.error = body.status;
+            }
+
+            console.log('returning imgObj: ', imgObj);
+
+            callback(
+                imgObj
+            );
+
+
 
         })
 
@@ -174,8 +185,6 @@ function getCoordinates(location, callback) {
             var body = JSON.parse(payload);
             var newLocation = {};
 
-            console.log('location body: ', body);
-
             if(body.status === 'OK'){
 
                 newLocation.lat = body.results[0].geometry.location.lat;
@@ -183,7 +192,16 @@ function getCoordinates(location, callback) {
 
             }
 
-            callback(newLocation);
+            else if(body.error_message){
+
+                newLocation.error = body.status;
+            }
+
+            console.log('returning newLocation: ', newLocation);
+
+            callback(
+                newLocation
+            );
 
         });
     })
@@ -226,9 +244,13 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                 getCoordinates(location, function(newCoordinates){
 
+                    console.log('newCoordinates received: ', newCoordinates);
+
                     coordinates += newCoordinates.lat + ',' + newCoordinates.lng;
 
                     getGMTOffset(coordinates, timestamp, function(timeObject){
+
+                        console.log('timeObject received: ', timeObject);
 
                         imgObj.created = new Date(timeObject.created + flip * timeObject.offset);
 
@@ -274,9 +296,13 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                         getCoordinates(location, function (newCoordinates) {
 
+                            console.log('newCoordinates received: ', newCoordinates);
+
                             coordinates += newCoordinates.lat + ',' + newCoordinates.lng;
 
                             getGMTOffset(coordinates, timestamp, function (timeObject) {
+
+                                console.log('timeObject received: ', timeObject);
 
                                 imgObj.created = new Date(timeObject.created + flip * timeObject.offset);
 
@@ -293,8 +319,6 @@ router.post('/', call.isAuthenticated, function(req, res, next){
                     else{
 
                         imgObj.created = 'no valid date present';
-
-                        console.log('sending: ', imgObj);
 
                         res.send(imgObj);
 
@@ -313,11 +337,13 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                     getCoordinates(location, function(newCoordinates){
 
+                        console.log('newCoordinates received: ', newCoordinates);
+
                         coordinates += newCoordinates.lat + ',' + newCoordinates.lng;
 
                         getGMTOffset(coordinates, timestamp, function(timeObj){
 
-                            console.log('timeObj: ', timeObj);
+                            console.log('timeObj received: ', timeObj);
 
                             imgObj.created = new Date(timeObj.created + flip * timeObj.offset);
 
@@ -353,7 +379,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                 getGMTOffset(coordinates, timestamp, function(timeObj){
 
-                    console.log('GPS timestamp: ', timestamp, '\ntimeObj: ', timeObj, '\nflip bit: ', flip);
+                    console.log('timeObj received: ', timeObj);
 
                     imgObj.created = new Date(timestamp.created);
 
@@ -364,6 +390,8 @@ router.post('/', call.isAuthenticated, function(req, res, next){
                     }
 
                     getLocationData(coordinates, function(locationObj){
+
+                        console.log('locationObj received: ', locationObj);
 
                         for(var prop in locationObj){
                             if(prop){

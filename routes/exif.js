@@ -338,6 +338,12 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                             imgObj.created = new Date(timeObj.created + flip * timeObj.offset);
 
+                            for(var prop in timeObj){
+                                if(prop && prop != 'offset' && prop != 'created'){
+                                    imgObj[prop] = timeObj[prop];
+                                }
+                            }
+
                             console.log('sending: ', imgObj);
 
                             res.send(imgObj);

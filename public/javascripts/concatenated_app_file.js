@@ -1422,7 +1422,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
             obj.image.id = obj.id;
 
             for (var prop in obj.image) {
-                if(obj.image[prop] && typeof obj.image[prop] !== 'number' ){
+                if(obj.image[prop]){
                     obj.image[prop] = capInitialFilter(obj.image[prop]);
                 }
             }

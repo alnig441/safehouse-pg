@@ -273,7 +273,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         //FOR IMAGES WITH EXIFDATA DO
         else{
 
-            console.log('exif? YES \nExif: ', exifData);
+            console.log('exif? YES ');
 
             if(!exifData.gps.GPSDateStamp){
 
@@ -308,6 +308,8 @@ router.post('/', call.isAuthenticated, function(req, res, next){
                     }
 
                     else{
+
+                        console.log('request body created: ', timestamp.created);
 
                         imgObj.created = timestamp.created;
 

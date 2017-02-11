@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/exif.js" afterPath="$PROJECT_DIR$/routes/exif.js" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -37,17 +38,17 @@
         <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="58" column="34" selection-start-line="58" selection-start-column="34" selection-end-line="58" selection-end-column="34" />
+              <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="concatenated_app_file.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="concatenated_app_file.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="6.162791">
-              <caret line="306" column="44" selection-start-line="306" selection-start-column="44" selection-end-line="306" selection-end-column="44" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="307" column="44" selection-start-line="307" selection-start-column="44" selection-end-line="307" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -93,11 +94,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="exif.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="exif.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/exif.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="69.888885">
-              <caret line="188" column="13" selection-start-line="188" selection-start-column="13" selection-end-line="188" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.44174758">
+              <caret line="286" column="0" selection-start-line="286" selection-start-column="0" selection-end-line="286" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -170,9 +171,9 @@
         <option value="$PROJECT_DIR$/test/bdd_style.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/imageCtrl.js" />
         <option value="$PROJECT_DIR$/routes/images_mgmt.js" />
-        <option value="$PROJECT_DIR$/routes/exif.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/multiViewModalCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/factories/imageServices.js" />
+        <option value="$PROJECT_DIR$/routes/exif.js" />
       </list>
     </option>
   </component>
@@ -1037,10 +1038,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/exif.js">
+    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="69.888885">
-          <caret line="188" column="13" selection-start-line="188" selection-start-column="13" selection-end-line="188" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="307" column="44" selection-start-line="307" selection-start-column="44" selection-end-line="307" selection-end-column="44" />
           <folding />
         </state>
       </provider>
@@ -1048,15 +1049,15 @@
     <entry file="file://$PROJECT_DIR$/development/javascripts/factories/imageServices.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="58" column="34" selection-start-line="58" selection-start-column="34" selection-end-line="58" selection-end-column="34" />
+          <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
+    <entry file="file://$PROJECT_DIR$/routes/exif.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="6.162791">
-          <caret line="306" column="44" selection-start-line="306" selection-start-column="44" selection-end-line="306" selection-end-column="44" />
+        <state vertical-scroll-proportion="0.44174758">
+          <caret line="286" column="0" selection-start-line="286" selection-start-column="0" selection-end-line="286" selection-end-column="0" />
           <folding />
         </state>
       </provider>

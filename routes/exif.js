@@ -273,7 +273,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         //FOR IMAGES WITH EXIFDATA DO
         else{
 
-            console.log('exif? YES');
+            console.log('exif? YES \nExif: ', exifData);
 
             if(!exifData.gps.GPSDateStamp){
 
@@ -309,7 +309,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                     else{
 
-                        imgObj.created = 'no valid date present';
+                        imgObj.created = 'no valid date present - load manually';
 
                         res.send(imgObj);
 

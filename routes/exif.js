@@ -309,7 +309,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                     else{
 
-                        imgObj.created = 'no valid date present - load manually';
+                        imgObj.created = timestamp.created;
 
                         res.send(imgObj);
 

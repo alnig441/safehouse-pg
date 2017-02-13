@@ -305,8 +305,13 @@ function capitalize (elem, ind, arr){
 
 
             while(i < $scope.images.length){
-                if($scope.images[i].meta[$scope.images[i].meta.length -1].toLowerCase() != 'checked' && $scope.images[i].meta[$scope.images[i].meta.length -1].toLowerCase() != 'updated'){
-                    break;
+                //OLD VERSION; ONLY RUN UPDATE IF LAST ENTRY IS NOT 'checked' OR 'updated'
+                //if($scope.images[i].meta[$scope.images[i].meta.length -1].toLowerCase() != 'checked' && $scope.images[i].meta[$scope.images[i].meta.length -1].toLowerCase() != 'updated'){
+
+                //NEW VERSION: ONLY RUN UPDATE IF LAST ENTRY IS 'Update'
+                if($scope.images[i].meta[$scope.images[i].meta.length -1].toLowerCase() === 'update'){
+
+                        break;
                 }
                 i++;
             }

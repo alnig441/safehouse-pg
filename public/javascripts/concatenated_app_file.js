@@ -635,15 +635,15 @@ function capitalize (elem, ind, arr){
 });
 ;app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
 
-    //$http.get('/queries/latest')
-    //    .then(function(response){
-    //        if(response.data.length > 0){
-    //            console.log('whats going on: ',response.data);
-    //            $scope.event = response.data;
-    //        } else {
-    //            $modalInstance.dismiss('cancel');
-    //        }
-    //    });
+    $http.get('/queries/latest')
+        .then(function(response){
+            if(response.data.hasOwnProperty('id')){
+                $scope.event = response.data;
+            }
+            else {
+                $modalInstance.dismiss('cancel');
+            }
+        });
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
     };
@@ -1057,7 +1057,6 @@ function capitalize (elem, ind, arr){
 function openModal(obj) {
 
     if(obj.modal.contr === 'ModalInstanceCtrl' && !obj.$scope.event){
-        console.log('carry on trucking');
     }
     else{
         var modalInstance = obj.$modal.open({

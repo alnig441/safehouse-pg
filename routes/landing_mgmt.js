@@ -121,22 +121,22 @@ router.get('/bios/all', function(req, res, next){
     var bios = new qb(req, 'biographies');
     var subjects = {};
 
-    pg.connect(connectionString, function(err, client, done){
-        var query = client.query(bios.select(), function(error, result){
-
-                if(error){
-                res.status(200).send(error);
-            }
-        })
-        query.on('row', function(row){
-            subjects[row.owner] = row;
-        })
-        query.on('end', function(result){
-            client.end();
-            res.status(200).send(subjects);
-
-        })
-    })
+    //pg.connect(connectionString, function(err, client, done){
+    //    var query = client.query(bios.select(), function(error, result){
+    //
+    //            if(error){
+    //            res.status(200).send(error);
+    //        }
+    //    })
+    //    query.on('row', function(row){
+    //        subjects[row.owner] = row;
+    //    })
+    //    query.on('end', function(result){
+    //        client.end();
+    //        res.status(200).send(subjects);
+    //
+    //    })
+    //})
 
 });
 

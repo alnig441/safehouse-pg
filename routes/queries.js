@@ -21,13 +21,13 @@ router.get('/latest', call.isAuthenticated, function(req, res, next){
     pg.connect(connectionString, function(error, client, done){
 
         var event;
-        var query = client.query("declare geturl cursor for select id, created, "+descr+" as description, path || folder || '/' || file as url from events cross join images cross join storages where img_id = id and storage = folder order by created desc; fetch first from geturl", function(error, result){
+        var query = client.query("declare geturl cursor for select id, year, month, day, created, "+descr+" as description, path || folder || '/' || file as url from events cross join images cross join storages where img_id = id and storage = folder order by created desc; fetch first from geturl", function(error, result){
 
             if(error){ console.log('theres was an error ', error.detail);}
         })
         query.on('row', function(row){
             event = row;
-            event.created = call.parser(JSON.stringify(row.created), req.user.lang);
+            event.created = call.parser(row, req.user.lang);
         })
 
         query.on('end', function(result){
@@ -118,11 +118,9 @@ router.post('/', call.isAuthenticated, function(req, res, next){
     }
 
     if(req.body.table === 'events'){
-        console.log('events string ', req.body.table);
         query_string ="SELECT ID, YEAR, MONTH, DAY, "+descr+" AS DESCRIPTION, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
     }
     if(req.body.table === 'images'){
-        console.log('images string ', req.body.table);
         query_string = "SELECT ID, YEAR, MONTH, DAY, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM IMAGES CROSS JOIN STORAGES WHERE STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED ASC";
     }
 

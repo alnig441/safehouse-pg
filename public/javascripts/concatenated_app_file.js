@@ -616,7 +616,7 @@ function capitalize (elem, ind, arr){
 
     $scope.next = function(){
 
-        events.length - 1 == $scope.selector ? $scope.selected.event = $scope.events[$scope.selector] : $scope.selected.event = $scope.selected.eventPlusOne;
+        //events.length - 1 == $scope.selector ? $scope.selected.event = $scope.events[$scope.selector] : $scope.selected.event = $scope.selected.eventPlusOne;
 
         if($scope.selector < events.length - 1){
             $scope.selector ++;
@@ -624,9 +624,9 @@ function capitalize (elem, ind, arr){
         else{
             $scope.selector = 0;
         }
-        //$scope.selected = {
-        //    event: $scope.events[$scope.selector]
-        //};
+        $scope.selected = {
+            event: $scope.events[$scope.selector]
+        };
 
         console.log('selector: ', $scope.selector);
 

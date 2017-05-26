@@ -17,7 +17,6 @@ router.get('/latest', call.isAuthenticated, function(req, res, next){
             break;
     }
 
-    //POSTGRES REFACTOR GET LATEST EVENT
     pg.connect(connectionString, function(error, client, done){
 
         var event;
@@ -36,7 +35,6 @@ router.get('/latest', call.isAuthenticated, function(req, res, next){
         })
     })
 
-    //POSTGRES REFACTOR GET LATEST EVENT END
 });
 
 

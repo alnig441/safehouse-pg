@@ -476,6 +476,13 @@ function capitalize (elem, ind, arr){
     ];
 
 }]);
+;app.controller('LatestEventModalCtrl', function ($scope, $modalInstance, $http) {
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
 ;app.controller('locationCtrl', ['$scope', '$rootScope', '$location', 'appServices',  function($scope, $rootScope, $location, appServices){
 
     var menu = document.getElementsByClassName('collapse');
@@ -582,8 +589,10 @@ function capitalize (elem, ind, arr){
     $scope.selector = 0;
 
     $scope.events = events;
+
     $scope.selected = {
-        event: $scope.events[$scope.selector]
+        event: $scope.events[$scope.selector],
+        eventPlusOne: $scope.events[$scope.selector + 1]
     };
 
     $scope.cancel = function(){
@@ -607,15 +616,19 @@ function capitalize (elem, ind, arr){
 
     $scope.next = function(){
 
+        events.length - 1 == $scope.selector ? $scope.selected.event = $scope.events[$scope.selector] : $scope.selected.event = $scope.selected.eventPlusOne;
+
         if($scope.selector < events.length - 1){
             $scope.selector ++;
         }
         else{
             $scope.selector = 0;
         }
-        $scope.selected = {
-            event: $scope.events[$scope.selector]
-        };
+        //$scope.selected = {
+        //    event: $scope.events[$scope.selector]
+        //};
+
+        console.log('selector: ', $scope.selector);
 
     };
 
@@ -630,22 +643,6 @@ function capitalize (elem, ind, arr){
         $scope.selected = {
             event: $scope.events[$scope.selector]
         };
-    };
-
-});
-;app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
-
-    $http.get('/queries/latest')
-        .then(function(response){
-            if(response.data.hasOwnProperty('id')){
-                $scope.event = response.data;
-            }
-            else {
-                $modalInstance.dismiss('cancel');
-            }
-        });
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
     };
 
 });
@@ -746,6 +743,7 @@ function capitalize (elem, ind, arr){
         $http.post('/queries', obj)
             .then(function(response){
                 $rootScope.events = response.data;
+                console.log('show me response: ', response.data, response.data.length);
 
             })
             .then(function(){
@@ -774,7 +772,7 @@ function capitalize (elem, ind, arr){
 ;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices ){
 
     imageServices.getDbCount($scope);
-    eventServices.getLatestEvent($scope);
+    //eventServices.getLatestEvent($scope);
     appServices.resetSQ();
     appServices.initPOTSearch($scope, 'images');
 
@@ -1015,8 +1013,16 @@ function capitalize (elem, ind, arr){
         }
 
         else if(option === 'event'){
-            angular.element(menu).collapse('hide');
-            openModal(config);
+
+            $http.get('/queries/latest')
+                .then(function(response){
+                    if(response.data.hasOwnProperty('id')){
+                        config.$scope.event = response.data;
+                        angular.element(menu).collapse('hide');
+                        openModal(config);
+
+                    }
+                });
         }
 
         else if(misc === 'new'){
@@ -1056,7 +1062,7 @@ function capitalize (elem, ind, arr){
 
 function openModal(obj) {
 
-    if(obj.modal.contr === 'ModalInstanceCtrl' && !obj.$scope.event){
+    if(obj.modal.contr === 'LatestEventModalCtrl' && !obj.$scope.event){
     }
     else{
         var modalInstance = obj.$modal.open({
@@ -1188,7 +1194,7 @@ function openModal(obj) {
         storage: {contr: 'ModifyAcctModalCtrl', templ: './views/myManageStoragesModal.html'},
         modify_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myModifyStorageModal.html'},
         add_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myAddStorageModal.html'},
-        event: {contr: 'ModalInstanceCtrl', templ: './views/myLatestEventModal.html'},
+        event: {contr: 'LatestEventModalCtrl', templ: './views/myLatestEventModal.html'},
         multi: {contr: 'ModalInstanceCtrl2', templ: './views/myMultiViewModal.html'},
         batch: {contr: 'BatchEditModalCtrl', templ: './views/myBatchEditModal.html'}
     };

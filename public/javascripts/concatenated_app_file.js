@@ -592,7 +592,8 @@ function capitalize (elem, ind, arr){
 
     $scope.selected = {
         event: $scope.events[$scope.selector],
-        eventPlusOne: $scope.events[$scope.selector + 1]
+        eventPlusOne: $scope.events[$scope.selector + 1],
+        eventMinusOne: $scope.events[$scope.selector - 1]
     };
 
     $scope.cancel = function(){
@@ -615,8 +616,6 @@ function capitalize (elem, ind, arr){
     };
 
     $scope.next = function(){
-
-        //events.length - 1 == $scope.selector ? $scope.selected.event = $scope.events[$scope.selector] : $scope.selected.event = $scope.selected.eventPlusOne;
 
         if($scope.selector < events.length - 1){
             $scope.selector ++;
@@ -743,7 +742,7 @@ function capitalize (elem, ind, arr){
         $http.post('/queries', obj)
             .then(function(response){
                 $rootScope.events = response.data;
-                console.log('show me response: ', response.data, response.data.length);
+                //console.log('show me response: ', response.data, response.data.length);
 
             })
             .then(function(){

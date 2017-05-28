@@ -588,13 +588,27 @@ function capitalize (elem, ind, arr){
 
     $scope.selector = 0;
 
-    $scope.events = events;
+    eventFrame($scope.selector);
 
-    $scope.selected = {
-        event: $scope.events[$scope.selector],
-        eventPlusOne: $scope.events[$scope.selector + 1],
-        eventMinusOne: $scope.events[$scope.selector - 1]
-    };
+    //console.log('show events: ', $rootScope.events);
+
+    function eventFrame (i) {
+
+        $scope.selected = {
+            event: $rootScope.events[i],
+            eventPluseOne: $rootScope.events[i + 1],
+            eventMinusOne: $rootScope.events[i - 1]
+        }
+
+    }
+
+    //$scope.events = events;
+    //
+    //$scope.selected = {
+    //    event: $scope.events[$scope.selector],
+    //    eventPlusOne: $scope.events[$scope.selector + 1],
+    //    eventMinusOne: $scope.events[$scope.selector - 1]
+    //};
 
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
@@ -617,31 +631,52 @@ function capitalize (elem, ind, arr){
 
     $scope.next = function(){
 
-        if($scope.selector < events.length - 1){
+        $scope.selected.event = $scope.selected.eventPlusOne;
+
+        if($scope.selector < $rootScope.events.length - 1){
             $scope.selector ++;
         }
         else{
             $scope.selector = 0;
         }
-        $scope.selected = {
-            event: $scope.events[$scope.selector]
-        };
 
-        console.log('selector: ', $scope.selector);
+        eventFrame($scope.selector);
+
+        //if($scope.selector < events.length - 1){
+        //    $scope.selector ++;
+        //}
+        //else{
+        //    $scope.selector = 0;
+        //}
+        //$scope.selected = {
+        //    event: $scope.events[$scope.selector]
+        //};
 
     };
 
     $scope.previous = function(){
 
-        if($scope.selector === 0){
-            $scope.selector = events.length -1;
+        $scope.selected.event = $scope.selected.eventMinusOne;
+
+        if($scope.selector == 0){
+            $scope.selector = $rootScope.events.length -1;
         }
         else {
             $scope.selector --;
         }
-        $scope.selected = {
-            event: $scope.events[$scope.selector]
-        };
+
+        eventFrame($scope.selector);
+
+
+        //if($scope.selector === 0){
+        //    $scope.selector = events.length -1;
+        //}
+        //else {
+        //    $scope.selector --;
+        //}
+        //$scope.selected = {
+        //    event: $scope.events[$scope.selector]
+        //};
     };
 
 });
@@ -746,7 +781,7 @@ function capitalize (elem, ind, arr){
 
             })
             .then(function(){
-                if($rootScope.events.length >0){
+                if($rootScope.events.length > 0){
                     var modalInstance = $modal.open({
                         animation: $scope.animationsEnabled,
                         templateUrl: modal.templ,
@@ -771,7 +806,7 @@ function capitalize (elem, ind, arr){
 ;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices ){
 
     imageServices.getDbCount($scope);
-    //eventServices.getLatestEvent($scope);
+    eventServices.getLatestEvent($scope);
     appServices.resetSQ();
     appServices.initPOTSearch($scope, 'images');
 

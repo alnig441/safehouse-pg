@@ -594,10 +594,18 @@ function capitalize (elem, ind, arr){
 
     function eventFrame (i) {
 
+        var j;
+
+        if(i==0){
+            j = $rootScope.events.length;
+        } else {
+            j = i;
+        }
+
         $scope.selected = {
             event: $rootScope.events[i],
             eventPlusOne: $rootScope.events[i + 1],
-            eventMinusOne: $rootScope.events[i - 1]
+            eventMinusOne: $rootScope.events[j - 1]
         }
 
     }

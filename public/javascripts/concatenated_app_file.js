@@ -596,7 +596,7 @@ function capitalize (elem, ind, arr){
 
         $scope.selected = {
             event: $rootScope.events[i],
-            eventPluseOne: $rootScope.events[i + 1],
+            eventPlusOne: $rootScope.events[i + 1],
             eventMinusOne: $rootScope.events[i - 1]
         }
 

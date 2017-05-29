@@ -34,6 +34,9 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
                 }
             })
             query.on('row', function(row) {
+
+                console.log('file: ', row.file, '\nlength: ', newImg.length);
+
                 for(var i = 0; i<newImg.length; i++){
                     while(row.file.toLowerCase() == newImg.hasOwnProperty(row.file.toLowerCase())){
                         console.log('found new image: ', row.file);

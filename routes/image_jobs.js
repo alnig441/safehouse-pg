@@ -35,20 +35,10 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
             })
             query.on('row', function(row) {
 
-                var i = 0;
-
-                while( i < Object.keys(newImg).length ){
-                    i++;
-                    if(newImg[row.file.toLowerCase()] == row.file){
-                        console.log('existing file removed: ', row.file);
-                        newImg[row.file.toLowerCase()] = undefined;
-                        break;
-                    }
+                if(newImg.hasOwnProperty(row.file.toLowerCase())){
+                    newImg[row.file.toLowerCase()] = false;
+                    total --;
                 }
-                //if(newImg.hasOwnProperty(row.file.toLowerCase())){
-                //    newImg[row.file.toLowerCase()] = false;
-                //    total --;
-                //}
             })
             query.on('end',function(result){
                 client.end();
@@ -59,7 +49,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
                 newImg.total = total;
 
-                //console.log('newImg - from route: ', newImg);
+                console.log('newImg - from route: ', newImg);
 
                 res.status(200).send(newImg);
             })

@@ -349,6 +349,8 @@ function capitalize (elem, ind, arr){
 
     $scope.loadNewImages = function() {
 
+        console.log('newImages from loadNewImages tool: ', $scope.newImages);
+
         function get_next_img() {
             for(var prop in $scope.newImages){
                 if($scope.newImages[prop] === true){
@@ -1539,6 +1541,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.get('/image_jobs/files')
             .then(function(response){
                 if(response.data){
+                    console.log('newImages from service factory: ', response.data);
                     $scope.newImages = response.data;
                 }
             });

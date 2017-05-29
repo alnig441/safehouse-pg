@@ -36,6 +36,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
             query.on('row', function(row) {
                 for(var i = 0; i<newImg.length; i++){
                     while(row.file.toLowerCase() == newImg.hasOwnProperty(row.file.toLowerCase())){
+                        console.log('found new image: ', row.file);
                         newImg[row.file.toLowerCase()] = undefined;
                         break;
                     }
@@ -54,7 +55,7 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
                 newImg.total = total;
 
-                console.log('newImg - from route: ', newImg);
+                //console.log('newImg - from route: ', newImg);
 
                 res.status(200).send(newImg);
             })

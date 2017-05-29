@@ -37,17 +37,17 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
                 //console.log('file: ', row.file, '\nlength: ', newImg.length);
                 //
-                //for(var i = 0; i<newImg.length; i++){
-                //    while(row.file.toLowerCase() == newImg.hasOwnProperty(row.file.toLowerCase())){
-                //        console.log('found new image: ', row.file);
-                //        newImg[row.file.toLowerCase()] = undefined;
-                //        break;
-                //    }
-                //}
-                if(newImg.hasOwnProperty(row.file.toLowerCase())){
-                    newImg[row.file.toLowerCase()] = false;
-                    total --;
+                for(var i = 0; i < Object.keys(newImg).length; i++){
+                    while( newImg.hasOwnProperty(row.file.toLowerCase()) == row.file.toLowerCase()){
+                        console.log('found new image: ', row.file);
+                        newImg[row.file.toLowerCase()] = undefined;
+                        break;
+                    }
                 }
+                //if(newImg.hasOwnProperty(row.file.toLowerCase())){
+                //    newImg[row.file.toLowerCase()] = false;
+                //    total --;
+                //}
             })
             query.on('end',function(result){
                 client.end();

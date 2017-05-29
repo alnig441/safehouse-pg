@@ -257,6 +257,7 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
+
     $scope.tools = [
         { name: 'import', value: 'loadNewImages' },
         { name: 'update', value: 'checkExif' }
@@ -281,6 +282,7 @@ function capitalize (elem, ind, arr){
     //COLLAPSE DOM DROPDOWN MENU
     var menu = document.getElementsByClassName('collapse');
 
+    console.log('Uncategorized: ', $rootScope.uncategorized, '\nNew: ', $scope.newImages);
 
     $scope.toolSelector = function(){
 
@@ -590,11 +592,11 @@ function capitalize (elem, ind, arr){
 
     eventFrame($scope.selector);
 
-    //console.log('show events: ', $rootScope.events);
-
     function eventFrame (i) {
 
         var j;
+
+        //initialisation of eventMinusOne
 
         if(i==0){
             j = $rootScope.events.length;
@@ -609,14 +611,6 @@ function capitalize (elem, ind, arr){
         }
 
     }
-
-    //$scope.events = events;
-    //
-    //$scope.selected = {
-    //    event: $scope.events[$scope.selector],
-    //    eventPlusOne: $scope.events[$scope.selector + 1],
-    //    eventMinusOne: $scope.events[$scope.selector - 1]
-    //};
 
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
@@ -650,16 +644,6 @@ function capitalize (elem, ind, arr){
 
         eventFrame($scope.selector);
 
-        //if($scope.selector < events.length - 1){
-        //    $scope.selector ++;
-        //}
-        //else{
-        //    $scope.selector = 0;
-        //}
-        //$scope.selected = {
-        //    event: $scope.events[$scope.selector]
-        //};
-
     };
 
     $scope.previous = function(){
@@ -674,17 +658,6 @@ function capitalize (elem, ind, arr){
         }
 
         eventFrame($scope.selector);
-
-
-        //if($scope.selector === 0){
-        //    $scope.selector = events.length -1;
-        //}
-        //else {
-        //    $scope.selector --;
-        //}
-        //$scope.selected = {
-        //    event: $scope.events[$scope.selector]
-        //};
     };
 
 });

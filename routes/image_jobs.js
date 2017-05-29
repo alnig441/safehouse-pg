@@ -49,8 +49,6 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
 
                 newImg.total = total;
 
-                console.log('newImg - from route: ', newImg);
-
                 res.status(200).send(newImg);
             })
         })

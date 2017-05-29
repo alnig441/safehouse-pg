@@ -282,8 +282,6 @@ function capitalize (elem, ind, arr){
     //COLLAPSE DOM DROPDOWN MENU
     var menu = document.getElementsByClassName('collapse');
 
-    console.log('Uncategorized: ', $rootScope.uncategorized, '\nNew: ', $scope.newImages);
-
     $scope.toolSelector = function(){
 
         $scope.activeTool = this.activeTool;
@@ -348,8 +346,6 @@ function capitalize (elem, ind, arr){
     };
 
     $scope.loadNewImages = function() {
-
-        console.log('newImages from loadNewImages tool: ', $scope.newImages);
 
         function get_next_img() {
             for(var prop in $scope.newImages){
@@ -1541,7 +1537,6 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.get('/image_jobs/files')
             .then(function(response){
                 if(response.data){
-                    console.log('newImages from service factory: ', response.data);
                     $scope.newImages = response.data;
                 }
             });
@@ -1571,13 +1566,9 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     _imageServiceFactory.getExifData = function($scope) {
 
-        //$http.get('/exif/' + $rootScope.transientImage.file)
-
         $http.post('/exif/', $rootScope.transientImage)
 
             .then(function(response){
-
-                console.log('getExifData - \nresponse: ', response.data, '\ntransient image: ', $rootScope.transientImage.file, '\nid: ', $rootScope.transientImage.id);
 
                 for(var prop in response.data){
                     $rootScope.transientImage[prop] = response.data[prop];

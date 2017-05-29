@@ -35,11 +35,12 @@ router.get('/files', call.isAuthenticated, function(req, res, next){
             })
             query.on('row', function(row) {
 
-                console.log('file: ', row.file, '\nlength: ', Object.keys(newImg).length);
+                var i = 0;
 
-                for(var i = 0; i < Object.keys(newImg).length; i++){
-                    while( newImg.hasOwnProperty(row.file.toLowerCase()) == row.file.toLowerCase()){
-                        console.log('found new image: ', row.file);
+                while( i < Object.keys(newImg).length ){
+                    i++;
+                    if(newImg[row.file.toLowerCase()] == row.file){
+                        console.log('existing file removed: ', row.file);
                         newImg[row.file.toLowerCase()] = undefined;
                         break;
                     }

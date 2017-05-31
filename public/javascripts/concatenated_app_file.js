@@ -722,13 +722,41 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, appServices){
+;app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, $timeout, appServices){
 
     $scope.animationsEnabled = true;
 
-    $scope.open2 = function (size, type) {
+    $scope.submitCriteria = function(size,type) {
 
-        var modal = appServices.setModal('multi');
+        $scope.spinning = true;
+
+        $scope.executeSearch(type);
+
+        $timeout(function () {
+
+            var modal = appServices.setModal('multi');
+
+            if($rootScope.events.length > 0){
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: modal.templ,
+                    controller: modal.contr,
+                    size: size,
+                    resolve: {
+                        events: function () {
+                            return $rootScope.events;
+                        }
+                    }
+                });
+            }
+
+            $scope.spinning = false;
+
+        }, 2500);
+
+    };
+
+    $scope.executeSearch = function (type) {
 
         var obj = {};
         var arr = [];
@@ -756,23 +784,6 @@ function capitalize (elem, ind, arr){
         $http.post('/queries', obj)
             .then(function(response){
                 $rootScope.events = response.data;
-                //console.log('show me response: ', response.data, response.data.length);
-
-            })
-            .then(function(){
-                if($rootScope.events.length > 0){
-                    var modalInstance = $modal.open({
-                        animation: $scope.animationsEnabled,
-                        templateUrl: modal.templ,
-                        controller: modal.contr,
-                        size: size,
-                        resolve: {
-                            events: function () {
-                                return $rootScope.events;
-                            }
-                        }
-                    });
-                }
 
             });
 

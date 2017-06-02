@@ -758,6 +758,8 @@ function capitalize (elem, ind, arr){
 
     $scope.executeSearch = function (type) {
 
+        console.log('show me searchArea: ', $scope.searchArea);
+
         var obj = {};
         var arr = [];
 
@@ -765,25 +767,31 @@ function capitalize (elem, ind, arr){
             arr = appServices.getConditions().trim().split(' ');
         }
 
+        console.log('show me conditions array: ', arr);
+
         if(type === 'meta' && arr[0]){
             if(arr[0].toLowerCase() !== 'select'){
+                console.log('bingo');
                 obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
             }
             else{
+                console.log('banko');
                 obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
                 obj.query = obj.query.replace(/COLUMN/g, "*");
             }
         }
         else{
             Object.keys($scope.searchArea).forEach(function(elem, ind, array){
-                if(elem){
-                    $scope.form.table = array[ind];
+                if($scope.searchArea[elem]){
+                    $scope.form.table = elem;
                 }
             });
             obj = $scope.form;
         }
 
         var temp = [];
+
+        console.log('show me obj: ', obj);
 
 
         $http.post('/queries', obj)
@@ -805,8 +813,6 @@ function capitalize (elem, ind, arr){
     eventServices.getLatestEvent($scope);
     appServices.resetSQ();
     appServices.initPiTSearch($scope, 'images');
-
-    console.log($scope.searchArea, $rootScope.searchArea);
 
     //USE selected_db TO INDICATE WHICH STORAGE AREA IS BEING ACCESSED
     $scope.selected_db = $rootScope.default_storage;
@@ -862,6 +868,8 @@ function capitalize (elem, ind, arr){
     //2) CREATE THE APPROPRIATE POSTGRES SEARCH STRING FOR WHEN IMAGE SEARCH IS SUBMITTED
     $scope.build_query = function(searchTerm) {
 
+        console.log('build_query called: ', searchTerm);
+
         var query = {};
 
         if(this.form[searchTerm]){
@@ -916,6 +924,8 @@ function capitalize (elem, ind, arr){
                 }
             }
 
+            console.log('show me query: ', query);
+
             appServices.buildMeta(query);
 
         }
@@ -932,7 +942,13 @@ function capitalize (elem, ind, arr){
         }
 
         this.form.option = option;
-        this.form.table = db;
+
+        Object.keys($scope.searchArea).forEach(function(elem,ind,array){
+           if($scope.searchArea[elem]){
+               this.form.table = elem;
+           }
+        });
+        //this.form.table = db;
 
         appServices.buildDropdowns($scope);
 
@@ -1249,6 +1265,8 @@ function openModal(obj) {
 
     _appServicesFactory.buildMeta = function(obj){
 
+        console.log('factories - show me obj: ', obj);
+
         var column;
         var type;
         var key_value;
@@ -1261,6 +1279,8 @@ function openModal(obj) {
                 key_value = obj[prop];
             }
         }
+
+        console.log('app factory - show type: ', type);
 
         switch(type){
             case 'contract':

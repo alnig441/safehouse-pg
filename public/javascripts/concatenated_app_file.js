@@ -1384,7 +1384,8 @@ function openModal(obj) {
         $scope.form = {};
         $scope.form.option = 'year';
         $scope.form.table = table;
-
+        $scope.searchArea = {};
+        $scope.searchArea[table]=true;
         _appServicesFactory.buildDropdowns($scope);
 
     }

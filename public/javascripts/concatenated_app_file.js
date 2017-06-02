@@ -799,9 +799,9 @@ function capitalize (elem, ind, arr){
     eventServices.getEventCount($scope);
     eventServices.getLatestEvent($scope);
     appServices.resetSQ();
-    appServices.initPOTSearch($scope, 'images');
+    appServices.initPiTSearch($scope, 'images');
 
-    console.log($scope.eventCount, $rootScope.eventCount);
+    console.log($scope.searchArea, $rootScope.searchArea);
 
     //USE selected_db TO INDICATE WHICH STORAGE AREA IS BEING ACCESSED
     $scope.selected_db = $rootScope.default_storage;
@@ -845,7 +845,7 @@ function capitalize (elem, ind, arr){
 
         $rootScope.active_table = table;
 
-        appServices.initPOTSearch($scope, table);
+        appServices.initPiTSearch($scope, table);
 
     };
 
@@ -1379,7 +1379,7 @@ function openModal(obj) {
 
     };
 
-    _appServicesFactory.initPOTSearch = function($scope, table){
+    _appServicesFactory.initPiTSearch = function($scope, table){
 
         $scope.form = {};
         $scope.form.option = 'year';

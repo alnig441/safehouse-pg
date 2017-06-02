@@ -775,11 +775,16 @@ function capitalize (elem, ind, arr){
             }
         }
         else{
-            $scope.form.table = $rootScope.active_table;
+            Object.keys($scope.searchArea).forEach(function(elem, ind, array){
+                if(elem){
+                    $scope.form.table = array[ind];
+                }
+            });
             obj = $scope.form;
         }
 
         var temp = [];
+
 
         $http.post('/queries', obj)
             .then(function(response){
@@ -814,6 +819,8 @@ function capitalize (elem, ind, arr){
     $scope.select = function(choice){
 
         choice = mapTabsFilter(choice.toLowerCase());
+
+        appServices.initPiTSearch($scope, 'images');
 
         appServices.selectTab(choice);
 

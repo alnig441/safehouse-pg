@@ -796,9 +796,12 @@ function capitalize (elem, ind, arr){
 ;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices ){
 
     imageServices.getDbCount($scope);
+    eventServices.getEventCount($scope);
     eventServices.getLatestEvent($scope);
     appServices.resetSQ();
     appServices.initPOTSearch($scope, 'images');
+
+    console.log($scope.eventCount, $rootScope.eventCount);
 
     //USE selected_db TO INDICATE WHICH STORAGE AREA IS BEING ACCESSED
     $scope.selected_db = $rootScope.default_storage;
@@ -1197,6 +1200,14 @@ function openModal(obj) {
                 $scope.events = response.data;
             });
     };
+
+    _eventServiceFactory.getEventCount = function($scope){
+
+        $http.get('/events_mgmt/get_count/' + $rootScope.default_storage)
+            .then(function(response){
+                $scope.eventCount = response.data;
+            })
+    }
 
     return _eventServiceFactory;
 

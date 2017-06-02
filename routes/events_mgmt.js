@@ -42,6 +42,25 @@ router.get('/get_one/:img_id?', call.isAuthenticated, function(req, res, next){
     })
 });
 
+router.get('/get_count/:storage?', call.isAuthenticated, function(req, res, next){
+
+    //console.log('params: ', req.params);
+
+    pg.connect(connectionString, function(error, client, done){
+
+        var query = client.query("select count(*) from images cross join events where img_id = id and storage = '" + req.params.storage + "'", function(error, result){
+            if(error){
+                console.log(error);
+            }
+        })
+        query.on('end', function(result){
+            client.end();
+            res.status(200).send(result.rows[0].count);
+        })
+    })
+
+});
+
 router.put('/', call.isAuthenticated, function(req, res, next){
 
     var event = new qb(req, 'events', 'img_id');

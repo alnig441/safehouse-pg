@@ -846,14 +846,14 @@ function capitalize (elem, ind, arr){
 
         angular.element(menu).collapse('hide');
 
-        if(table == 'events'){
-            angular.element(document.getElementById('nav_events')).addClass('ng-hide');
+        if(table == 'videos'){
+            angular.element(document.getElementById('nav_videos')).addClass('ng-hide');
             angular.element(document.getElementById('nav_images')).removeClass('ng-hide');
         }
 
         if(table == 'images'){
             angular.element(document.getElementById('nav_images')).addClass('ng-hide');
-            angular.element(document.getElementById('nav_events')).removeClass('ng-hide');
+            angular.element(document.getElementById('nav_videos')).removeClass('ng-hide');
         }
 
         $rootScope.active_table = table;
@@ -933,7 +933,7 @@ function capitalize (elem, ind, arr){
     };
 
     //FUNCTON TO BUILD DROPDOWN-AND-SELECT BOXES FOR TIME BASED SEARCH
-    $scope.getValues = function(option, db){
+    $scope.getValues = function(option){
 
         if(option === 'month') {
             this.form.option = false;
@@ -948,7 +948,6 @@ function capitalize (elem, ind, arr){
                this.form.table = elem;
            }
         });
-        //this.form.table = db;
 
         appServices.buildDropdowns($scope);
 

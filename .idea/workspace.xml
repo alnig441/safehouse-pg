@@ -5,8 +5,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/app.min.js" afterPath="$PROJECT_DIR$/public/javascripts/app.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" afterPath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/priv_da.html" afterPath="$PROJECT_DIR$/public/views/priv_da.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/priv_en.html" afterPath="$PROJECT_DIR$/public/views/priv_en.html" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -57,11 +55,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="privCtrl.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="privCtrl.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="47" column="63" selection-start-line="47" selection-start-column="63" selection-end-line="47" selection-end-column="63" />
+            <state vertical-scroll-proportion="0.4883721">
+              <caret line="146" column="12" selection-start-line="146" selection-start-column="12" selection-end-line="146" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -77,11 +75,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="time_search_form.jade" pinned="false" current-in-tab="true">
+      <file leaf-file-name="time_search_form.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/development/templates/time_search_form.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.11627907">
+            <state vertical-scroll-proportion="0.0">
               <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="multiViewModalCtrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/multiViewModalCtrl.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="8" column="56" selection-start-line="8" selection-start-column="56" selection-end-line="8" selection-end-column="56" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="concatenated_app_file.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="952" column="0" selection-start-line="952" selection-start-column="0" selection-end-line="952" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -137,7 +155,6 @@
         <option value="$PROJECT_DIR$/development/javascripts/controllers/latestEventModalCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/singleViewModalCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/Private/selectorCtrl.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/selectorCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/modalInstance2Ctrl.js" />
         <option value="$PROJECT_DIR$/routes/image_jobs.js" />
@@ -151,12 +168,13 @@
         <option value="$PROJECT_DIR$/development/javascripts/factories/eventServices.js" />
         <option value="$PROJECT_DIR$/routes/events_mgmt.js" />
         <option value="$PROJECT_DIR$/development/javascripts/factories/factories.js" />
-        <option value="$PROJECT_DIR$/development/javascripts/controllers/multiViewModalCtrl.js" />
         <option value="$PROJECT_DIR$/development/partials/priv_en.jade" />
-        <option value="$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js" />
         <option value="$PROJECT_DIR$/development/templates/base_private.jade" />
         <option value="$PROJECT_DIR$/development/partials/priv_da.jade" />
         <option value="$PROJECT_DIR$/development/templates/time_search_form.jade" />
+        <option value="$PROJECT_DIR$/development/javascripts/controllers/multiViewModalCtrl.js" />
+        <option value="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js" />
       </list>
     </option>
   </component>
@@ -1049,22 +1067,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="22.04651">
-          <caret line="948" column="12" selection-start-line="948" selection-start-column="12" selection-end-line="948" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/multiViewModalCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.74418604">
-          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/factories/factories.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1113,18 +1115,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js">
+    <entry file="file://$PROJECT_DIR$/development/templates/time_search_form.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="47" column="63" selection-start-line="47" selection-start-column="63" selection-end-line="47" selection-end-column="63" />
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/templates/time_search_form.jade">
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/multiViewModalCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11627907">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="56" selection-start-line="8" selection-start-column="56" selection-end-line="8" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/concatenated_app_file.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="952" column="0" selection-start-line="952" selection-start-column="0" selection-end-line="952" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4883721">
+          <caret line="146" column="12" selection-start-line="146" selection-start-column="12" selection-end-line="146" selection-end-column="12" />
           <folding />
         </state>
       </provider>

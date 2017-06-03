@@ -728,37 +728,43 @@ function capitalize (elem, ind, arr){
 
     $scope.submitCriteria = function(size,type) {
 
-        $scope.spinning = true;
+        //TODO: DELETE IF-ELSE LOOP WHEN VIDEOS FULLY IMPLEMENTED
+        if($scope.searchArea.videos){
+            console.log('videos not fully implemented');
+        }
 
-        $scope.executeSearch(type);
+        else{
+            $scope.spinning = true;
 
-        $timeout(function () {
+            $scope.executeSearch(type);
 
-            var modal = appServices.setModal('multi');
+            $timeout(function () {
 
-            if($rootScope.events.length > 0){
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: modal.templ,
-                    controller: modal.contr,
-                    size: size,
-                    resolve: {
-                        events: function () {
-                            return $rootScope.events;
+                var modal = appServices.setModal('multi');
+
+                if($rootScope.events.length > 0){
+                    var modalInstance = $modal.open({
+                        animation: $scope.animationsEnabled,
+                        templateUrl: modal.templ,
+                        controller: modal.contr,
+                        size: size,
+                        resolve: {
+                            events: function () {
+                                return $rootScope.events;
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
 
-            $scope.spinning = false;
+                $scope.spinning = false;
 
-        }, 2500);
+            }, 2500);
+        }
+
 
     };
 
     $scope.executeSearch = function (type) {
-
-        console.log('show me searchArea: ', $scope.searchArea);
 
         var obj = {};
         var arr = [];
@@ -935,6 +941,8 @@ function capitalize (elem, ind, arr){
     //FUNCTON TO BUILD DROPDOWN-AND-SELECT BOXES FOR TIME BASED SEARCH
     $scope.getValues = function(option){
 
+        var table = 'do you see me?';
+
         if(option === 'month') {
             this.form.option = false;
             this.form.day = false;
@@ -945,9 +953,11 @@ function capitalize (elem, ind, arr){
 
         Object.keys($scope.searchArea).forEach(function(elem,ind,array){
            if($scope.searchArea[elem]){
-               this.form.table = elem;
+               table = elem;
            }
         });
+
+        this.form.table = table;
 
         appServices.buildDropdowns($scope);
 

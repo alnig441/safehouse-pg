@@ -35,6 +35,7 @@ var events = require('./routes/events_mgmt');
 var queries = require('./routes/queries');
 var landing = require('./routes/landing_mgmt');
 var exif = require('./routes/exif');
+var videos = require('./routes/videos_mgmt');
 
 var app = express();
 
@@ -126,6 +127,7 @@ app.use('/events_mgmt', events);
 app.use('/queries', queries);
 app.use('/landing_mgmt', landing);
 app.use('/exif', exif);
+app.use('/videos_mgmt', videos);
 
 
 

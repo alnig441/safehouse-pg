@@ -812,11 +812,12 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices ){
+;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices',  function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices){
 
     imageServices.getDbCount($scope);
     eventServices.getEventCount($scope);
     eventServices.getLatestEvent($scope);
+    imageServices.getVideos($scope);
     appServices.resetSQ();
     appServices.initPiTSearch($scope, 'images');
 
@@ -826,6 +827,8 @@ function capitalize (elem, ind, arr){
     //COLLAPSE DROPDOWN MENU
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
+
+    console.log('privCtrl scope: ', $scope);
 
     //SEARCH TYPE SELECTOR
     $scope.select = function(choice){
@@ -972,6 +975,22 @@ function capitalize (elem, ind, arr){
         $scope.form.exclude = false;
         appServices.resetSQ();
         appServices.buildMeta();
+
+    };
+
+    $scope.expand = function(key){
+
+        console.log('this.key: ', this.key);
+
+        $scope.videos.active = this.key;
+
+
+
+    };
+
+    $scope.collapse = function(key){
+
+        $scope.videos.active = false;
 
     };
 
@@ -1134,7 +1153,9 @@ function openModal(obj) {
     }
 
 
-};;app.service('accountServices', ['$http', function($http){
+};;app.controller('VideoModalCtrl', function($scope, $modalInstance, $http, appServices, $location){
+
+});;app.service('accountServices', ['$http', function($http){
 
     var _accountServiceFactory = {};
 
@@ -1263,7 +1284,8 @@ function openModal(obj) {
         add_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myAddStorageModal.html'},
         event: {contr: 'LatestEventModalCtrl', templ: './views/myLatestEventModal.html'},
         multi: {contr: 'ModalInstanceCtrl2', templ: './views/myMultiViewModal.html'},
-        batch: {contr: 'BatchEditModalCtrl', templ: './views/myBatchEditModal.html'}
+        batch: {contr: 'BatchEditModalCtrl', templ: './views/myBatchEditModal.html'},
+        video: {contr: 'VideoModalCtrl', templ: './views/myVideoModal.html'}
     };
 
     _appServicesFactory.setModal = function(option){
@@ -1654,6 +1676,39 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     };
 
+    _imageServiceFactory.getVideos = function($scope){
+
+        $http.get('/videos_mgmt/videos')
+            .then(function(response){
+
+                var data = {};
+                data.length = 0;
+
+                function addData(elem, year){
+                    data[year].push('./buffalo/videos/' + elem);
+                    data.length  ++;
+                }
+
+                response.data.forEach(function(elem,ind,arr){
+
+                    var year = elem.split('_')[1].slice(0,4);
+
+                    if(data[year]){
+                        addData(elem, year);
+                    }
+                    else{
+                        data[year] = [];
+                        addData(elem, year);
+                    }
+                })
+
+                //data.active = 'initial';
+
+                $scope.videos = data;
+            })
+
+    };
+
     return _imageServiceFactory;
 
 }]);;app.service('landingPageServices', ['$http', 'loadServices', function($http, loadServices){
@@ -1805,6 +1860,20 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     return _storageServiceFactory;
 
+}]);;
+app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, $scope){
+
+    var _videoServiceFactory = {};
+
+    _videoServiceFactory.getAll = function($scope){
+
+        console.log('hello from videos')
+
+    };
+
+
+    return _videoServiceFactory;
+
 }]);;app.directive('insertBio', function(){
 
     return {
@@ -1839,7 +1908,9 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
     return {
         restrict: 'EA',
-        templateUrl: 'views/latestEvent.html'
+        //templateUrl: 'views/latestEvent.html'
+        templateUrl: 'views/myLatestEventModal.html'
+
     };
 });;app.directive('myLoginModal', function(){
 
@@ -1874,4 +1945,10 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
     return {
         restrict: 'EA'
     }
+});;app.directive('myVideoModal', function(){
+
+    return {
+        restrict: 'EA',
+        templateUrl: 'views/myVideoModal.html'
+    };
 });

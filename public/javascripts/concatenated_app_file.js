@@ -828,6 +828,8 @@ function capitalize (elem, ind, arr){
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
+    console.log('$scope: ', $scope);
+
     //SEARCH TYPE SELECTOR
     $scope.select = function(choice){
 
@@ -1706,12 +1708,21 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                 //SORT FROM NEWEST TO OLDEST
                 for(var prop in data){
 
-                    if(prop != 'length'){
-                        var obj = {year: prop, videos: data[prop]};
-                        dataArr.unshift(obj);
-                    }
-                    else{
+                    var splitArr = [];
 
+                    if(prop != 'length'){
+
+                        data[prop].forEach(function(elem,ind,arr){
+
+                            if(!splitArr[Math.floor(ind / 5)]){
+                                splitArr[Math.floor(ind / 5)] = [];
+                            }
+
+                            splitArr[Math.floor(ind / 5)].push(elem);
+                        })
+
+                        var obj = {year: prop, videos: splitArr}
+                        dataArr.unshift(obj);
                     }
                 }
 

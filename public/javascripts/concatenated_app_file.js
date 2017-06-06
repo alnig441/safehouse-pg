@@ -828,8 +828,6 @@ function capitalize (elem, ind, arr){
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
-    console.log('privCtrl scope: ', $scope);
-
     //SEARCH TYPE SELECTOR
     $scope.select = function(choice){
 

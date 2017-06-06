@@ -980,9 +980,7 @@ function capitalize (elem, ind, arr){
 
     $scope.expand = function(key){
 
-        console.log('this.key: ', this.key);
-
-        $scope.videos.active = this.key;
+        $scope.videos.active = this.item.year;
 
 
 
@@ -1155,6 +1153,9 @@ function openModal(obj) {
 
 };;app.controller('VideoModalCtrl', function($scope, $modalInstance, $http, appServices, $location){
 
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    }
 });;app.service('accountServices', ['$http', function($http){
 
     var _accountServiceFactory = {};
@@ -1681,6 +1682,8 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
         $http.get('/videos_mgmt/videos')
             .then(function(response){
 
+                var dataArr = [];
+
                 var data = {};
                 data.length = 0;
 
@@ -1700,11 +1703,23 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                         data[year] = [];
                         addData(elem, year);
                     }
-                })
+                });
 
-                //data.active = 'initial';
+                //SORT FROM NEWEST TO OLDEST
+                for(var prop in data){
 
-                $scope.videos = data;
+                    if(prop != 'length'){
+                        var obj = {year: prop, videos: data[prop]};
+                        dataArr.unshift(obj);
+                    }
+                    else{
+
+                    }
+                }
+
+                dataArr.quantity = data.length;
+
+                $scope.videos = dataArr;
             })
 
     };

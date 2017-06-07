@@ -554,6 +554,7 @@ function capitalize (elem, ind, arr){
                     $rootScope.storages = response.data.storages;
                     $rootScope.default_storage = $rootScope.storages[0];
                     $rootScope.active_table = 'images';
+                    $rootScope.lang = response.data.lang;
 
                     if(response.data.lang === 'en'){
                         $location.path('/priv_uk');
@@ -828,7 +829,7 @@ function capitalize (elem, ind, arr){
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
-    console.log('$scope: ', $scope);
+    console.log('$scope: ', $scope, $rootScope.lang);
 
     //SEARCH TYPE SELECTOR
     $scope.select = function(choice){

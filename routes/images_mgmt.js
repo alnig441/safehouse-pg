@@ -205,7 +205,5 @@ router.delete('/:id?', call.isAuthenticated, function(req, res, next){
     })
 });
 
-
-
 module.exports = router;
 

@@ -79,6 +79,7 @@ module.exports = function(grunt) {
                     {expand: true, cwd: './node_modules/font_awesome/css/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'},
                     {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.js', dest: paths.to.vendors, filter: 'isFile'},
                     {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'},
+                    {expand: true, cwd: './models/', src: '*.json', dest: paths.to.models, filter: 'isFile'}
                 ]
             }
         },
@@ -170,6 +171,6 @@ module.exports = function(grunt) {
 };
 
 var paths = {
-    from: {scripts: './development/javascripts/*.js', partials: './development/partials/*.jade', views: './development/views/*.jade', styles: './development/styles/*.css', icons: './development/icons/*.svg', modules: './development/modules/*.js'},
-    to: {scripts: './public/javascripts/angular_app.js', views: './public/views/', styles: './public/stylesheets/', icons: './public/icons/', modules: './public/javascripts/', vendors: './public/vendors/'}
+    from: {models: './models/*.json', scripts: './development/javascripts/*.js', partials: './development/partials/*.jade', views: './development/views/*.jade', styles: './development/styles/*.css', icons: './development/icons/*.svg', modules: './development/modules/*.js'},
+    to: {models: './public/models/', scripts: './public/javascripts/angular_app.js', views: './public/views/', styles: './public/stylesheets/', icons: './public/icons/', modules: './public/javascripts/', vendors: './public/vendors/'}
 };

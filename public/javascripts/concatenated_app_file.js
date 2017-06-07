@@ -556,10 +556,13 @@ function capitalize (elem, ind, arr){
                     $rootScope.active_table = 'images';
                     $rootScope.lang = response.data.lang;
 
+
                     if(response.data.lang === 'en'){
+                        appServices.getLangPreference(response.data.lang);
                         $location.path('/priv_uk');
                     }
                     if(response.data.lang === 'da'){
+                        appServices.getLangPreference(response.data.lang);
                         $location.path('/priv_dk');
                     }
                 }
@@ -829,7 +832,7 @@ function capitalize (elem, ind, arr){
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
-    console.log('$scope: ', $scope, $rootScope.lang);
+    console.log('$scope: ', $scope, $rootScope.userLang);
 
     //SEARCH TYPE SELECTOR
     $scope.select = function(choice){
@@ -1448,7 +1451,17 @@ function openModal(obj) {
         $scope.searchArea[table]=true;
         _appServicesFactory.buildDropdowns($scope);
 
-    }
+    };
+
+    _appServicesFactory.getLangPreference = function(lang){
+
+        $http.get('./models/lang_preferences.json')
+            .then(function(response){
+                $rootScope.userLang = response.data[lang];
+            })
+
+    };
+
 
     return _appServicesFactory;
 

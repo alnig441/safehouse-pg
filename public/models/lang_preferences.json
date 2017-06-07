@@ -1,0 +1,118 @@
+{
+  "da": {
+    "generic": {
+      "events": "begivenheder",
+      "images": "billeder",
+      "videos": "videoer",
+      "contract": "begræns",
+      "expand": "udvid",
+      "exclude": "frasorter"
+    },
+    "button": {
+      "search": "søg",
+      "searching": "søger...",
+      "reset": "nulstil",
+      "cancel": "afslut",
+      "submit": "gem"
+    },
+    "nav_items": {
+      "latest": "seneste begivenhed"
+    },
+    "search_tabs": {
+      "time": "tidsafgrænset",
+      "meta": "indholdsbaseret"
+    },
+    "search_caption": {
+      "meta": {
+        "type": "vælg søgningstype",
+        "criteria": "valgte søgekriterier"
+      },
+      "time": {
+        "area": "vælg søgeområde"
+      }
+    },
+    "search_label": {
+      "meta": {
+        "keyword": "vælg søgeord",
+        "name": "vælg personer",
+        "occasion": "vælg lejlighed",
+        "country": "vælg land",
+        "state": "vælg stat",
+        "city": "vælg by"
+      },
+      "time": {
+        "year": "vælg år",
+        "month": "vælg måned",
+        "day": "vælg dag",
+        "significance": "søg som mærkedag"
+      }
+    },
+    "search_checkbox": {
+      "meta": {
+        "items": "emner i søgning"
+      }
+    }
+  },
+
+  "en": {
+        "generic": {
+          "events": "events",
+          "images": "images",
+          "videos": "videos",
+          "contract": "contract",
+          "expand": "expand",
+          "exclude": "exclude"
+        },
+
+        "button": {
+          "search": "search",
+          "searching": "searching...",
+          "reset": "reset",
+          "cancel": "cancel",
+          "submit": "submit"
+        },
+
+        "nav_items": {
+          "latest": "latest event"
+        },
+
+        "search_tabs": {
+          "time": "point-in-time",
+          "meta": "content"
+        },
+
+        "search_caption": {
+          "meta": {
+            "type": "type of search",
+            "criteria": "selected search criteria"
+          },
+          "time": {
+            "area": "select search area"
+          }
+        },
+
+        "search_label": {
+          "meta": {
+            "keyword": "pick keyword",
+            "name": "pick people",
+            "occasion": "pick occasion",
+            "country": "pick country",
+            "state": "pick state",
+            "city": "pick city"
+          },
+
+          "time": {
+            "year": "year",
+            "month":"month",
+            "day": "day",
+            "significance": "date of significance"
+          }
+        },
+
+        "search_checkbox": {
+          "meta": {
+            "items": "current search items"
+          }
+        }
+  }
+}

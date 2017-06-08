@@ -77,8 +77,8 @@
         },
 
         "search_tabs": {
-          "time": "point-in-time",
-          "meta": "content"
+          "time": "Point-in-Time",
+          "meta": "Content"
         },
 
         "search_caption": {
@@ -93,12 +93,12 @@
 
         "search_label": {
           "meta": {
-            "keyword": "pick keyword",
-            "name": "pick people",
-            "occasion": "pick occasion",
-            "country": "pick country",
-            "state": "pick state",
-            "city": "pick city"
+            "keyword": "select keyword",
+            "name": "select people",
+            "occasion": "select occasion",
+            "country": "select country",
+            "state": "select state",
+            "city": "select city"
           },
 
           "time": {

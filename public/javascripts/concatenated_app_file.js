@@ -530,6 +530,12 @@ function capitalize (elem, ind, arr){
 
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
+
+                //set language preferences
+                var lang = response.data.lang;
+                lang ? lang = lang : lang = 'en';
+                appServices.getLangPreference(lang);
+
                 if(response.data.acct_type === 'admin'){
 
                     //INITIALISE rootScope VARIABLES
@@ -550,10 +556,6 @@ function capitalize (elem, ind, arr){
                     $rootScope.storages = response.data.storages;
                     $rootScope.default_storage = $rootScope.storages[0];
                     $rootScope.active_table = 'images';
-                    $rootScope.lang = response.data.lang;
-
-                    //load language preferences
-                    appServices.getLangPreference(response.data.lang);
 
                     $location.path('/private');
 

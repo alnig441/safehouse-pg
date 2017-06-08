@@ -16,12 +16,8 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/diary.html',
             controller: 'locationCtrl'
         })
-        .when('/priv_uk', {
-            templateUrl: 'views/priv_en.html',
-            controller: 'privCtrl'
-        })
-        .when('/priv_dk', {
-            templateUrl: 'views/priv_da.html',
+        .when('/private', {
+            templateUrl: 'views/private.html',
             controller: 'privCtrl'
         })
         .when('/public', {
@@ -556,15 +552,11 @@ function capitalize (elem, ind, arr){
                     $rootScope.active_table = 'images';
                     $rootScope.lang = response.data.lang;
 
+                    //load language preferences
+                    appServices.getLangPreference(response.data.lang);
 
-                    if(response.data.lang === 'en'){
-                        appServices.getLangPreference(response.data.lang);
-                        $location.path('/priv_uk');
-                    }
-                    if(response.data.lang === 'da'){
-                        appServices.getLangPreference(response.data.lang);
-                        $location.path('/priv_dk');
-                    }
+                    $location.path('/private');
+
                 }
                 else if(response.data.acct_type === 'public'){
                     $location.path('/public');
@@ -836,6 +828,8 @@ function capitalize (elem, ind, arr){
 
     //SEARCH TYPE SELECTOR
     $scope.select = function(choice){
+
+        console.log('my choice is: ', choice);
 
         choice = mapTabsFilter(choice.toLowerCase());
 

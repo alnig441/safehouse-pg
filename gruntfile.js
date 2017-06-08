@@ -65,6 +65,20 @@ module.exports = function(grunt) {
                 options: {
                     spawn: false
                 }
+            },
+            models: {
+                files: [paths.from.models],
+                tasks: ['copy'],
+                options: {
+                    spawn: false
+                }
+            },
+            templates: {
+                files: [paths.from.templates],
+                tasks: ['jade','copy'],
+                options: {
+                    spawn: false
+                }
             }
         },
 
@@ -171,6 +185,6 @@ module.exports = function(grunt) {
 };
 
 var paths = {
-    from: {models: './models/*.json', scripts: './development/javascripts/*.js', partials: './development/partials/*.jade', views: './development/views/*.jade', styles: './development/styles/*.css', icons: './development/icons/*.svg', modules: './development/modules/*.js'},
+    from: {templates: './development/templates/*.jade', models: './models/*.json', scripts: './development/javascripts/*.js', partials: './development/partials/*.jade', views: './development/views/*.jade', styles: './development/styles/*.css', icons: './development/icons/*.svg', modules: './development/modules/*.js'},
     to: {models: './public/models/', scripts: './public/javascripts/angular_app.js', views: './public/views/', styles: './public/stylesheets/', icons: './public/icons/', modules: './public/javascripts/', vendors: './public/vendors/'}
 };

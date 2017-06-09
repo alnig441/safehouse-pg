@@ -536,9 +536,9 @@ function capitalize (elem, ind, arr){
             .then(function(response){
 
                 //set language preferences
-                var lang = response.data.lang;
-                lang ? lang = lang : lang = 'en';
-                appServices.getLangPreference(lang);
+                //var lang = response.data.lang;
+                //lang ? lang = lang : lang = 'en';
+                //appServices.getLangPreference(lang);
 
                 if(response.data.acct_type === 'admin'){
 
@@ -558,6 +558,8 @@ function capitalize (elem, ind, arr){
 
                 }
                 else if(response.data.acct_type === 'private'){
+
+                    appServices.getLangPreference(response.data.lang);
 
                     $rootScope.storages = response.data.storages;
                     $rootScope.default_storage = $rootScope.storages[0];
@@ -810,6 +812,8 @@ function capitalize (elem, ind, arr){
 });
 ;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices',  function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices){
 
+    $scope.summaryCount = {};
+
     imageServices.getDbCount($scope);
     eventServices.getEventCount($scope);
     eventServices.getLatestEvent($scope);
@@ -824,7 +828,7 @@ function capitalize (elem, ind, arr){
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
-    console.log('$scope: ', $scope, $rootScope.userLang);
+    console.log('$scope: ', $scope, $rootScope);
 
     //SEARCH TYPE SELECTOR
     $scope.select = function(choice){
@@ -837,7 +841,7 @@ function capitalize (elem, ind, arr){
 
         appServices.selectTab(choice);
 
-        if(choice === 'content'){
+        if(choice === 'meta'){
 
             $scope.form = {};
             $scope.form.type_and = true;
@@ -1260,7 +1264,7 @@ function openModal(obj) {
 
         $http.get('/events_mgmt/get_count/' + $rootScope.default_storage)
             .then(function(response){
-                $scope.eventCount = response.data;
+                $scope.summaryCount.events = response.data;
             })
     }
 
@@ -1454,9 +1458,10 @@ function openModal(obj) {
 
     _appServicesFactory.getLangPreference = function(lang){
 
-        $http.get('./models/lang_preferences.json')
+        $http.get('./models/copy.json')
             .then(function(response){
-                $rootScope.userLang = response.data[lang];
+                //$rootScope.userLang = response.data[lang];
+                $rootScope.copy = response.data.views.private[lang];
             })
 
     };
@@ -1653,7 +1658,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
         $http.get('/image_jobs/count/' + $rootScope.default_storage)
             .then(function(response){
-                $scope.dbCount = response.data;
+                $scope.summaryCount.images = response.data.size;
 
             })
 
@@ -1742,6 +1747,7 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
                 dataArr.quantity = data.length;
 
                 $scope.videos = dataArr;
+                $scope.summaryCount.videos = dataArr.quantity;
             })
 
     };

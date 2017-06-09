@@ -81,6 +81,14 @@
           "meta": "Content"
         },
 
+        "admin_menu": ["images", "accounts", "landing_page"],
+
+        "admin_tabs": {
+          "image_mgmt": ["images", "events", "storages"],
+          "events_mgmt": [],
+          "landing_mgmt": []
+        },
+
         "search_caption": {
           "meta": {
             "type": "type of search",

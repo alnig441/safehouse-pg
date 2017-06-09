@@ -8,12 +8,16 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/login.html',
             controller: 'singleViewModalCtrl'
         })
-        .when('/admin/btle', {
-            templateUrl: 'views/btle.html',
-            controller: 'locationCtrl'
-        })
+        //.when('/admin/btle', {
+        //    templateUrl: 'views/btle.html',
+        //    controller: 'locationCtrl'
+        //})
         .when('/admin/diary', {
             templateUrl: 'views/diary.html',
+            controller: 'locationCtrl'
+        })
+        .when('/admin', {
+            templateUrl: 'views/admin.html',
             controller: 'locationCtrl'
         })
         .when('/private', {
@@ -549,7 +553,9 @@ function capitalize (elem, ind, arr){
 
                     $rootScope.default_storage = response.data.storages[0];
 
-                    $location.path('/admin/diary');
+                    //$location.path('/admin/diary');
+                    $location.path('/admin');
+
                 }
                 else if(response.data.acct_type === 'private'){
 
@@ -726,39 +732,31 @@ function capitalize (elem, ind, arr){
 
     $scope.submitCriteria = function(size,type) {
 
-        //TODO: DELETE IF-ELSE LOOP WHEN VIDEOS FULLY IMPLEMENTED
-        if($scope.searchArea.videos){
-            console.log('videos not fully implemented');
-        }
+        $scope.spinning = true;
 
-        else{
-            $scope.spinning = true;
+        $scope.executeSearch(type);
 
-            $scope.executeSearch(type);
+        $timeout(function () {
 
-            $timeout(function () {
+            var modal = appServices.setModal('multi');
 
-                var modal = appServices.setModal('multi');
-
-                if($rootScope.events.length > 0){
-                    var modalInstance = $modal.open({
-                        animation: $scope.animationsEnabled,
-                        templateUrl: modal.templ,
-                        controller: modal.contr,
-                        size: size,
-                        resolve: {
-                            events: function () {
-                                return $rootScope.events;
-                            }
+            if($rootScope.events.length > 0){
+                var modalInstance = $modal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: modal.templ,
+                    controller: modal.contr,
+                    size: size,
+                    resolve: {
+                        events: function () {
+                            return $rootScope.events;
                         }
-                    });
-                }
+                    }
+                });
+            }
 
-                $scope.spinning = false;
+            $scope.spinning = false;
 
-            }, 2500);
-        }
-
+        }, 2500);
 
     };
 
@@ -1059,7 +1057,10 @@ function capitalize (elem, ind, arr){
 
     $scope.animationsEnabled = true;
 
+
     $scope.open = function (size, option, misc) {
+
+        console.log('option: ', option, this);
 
         var config = {
             $scope: $scope,
@@ -1272,7 +1273,7 @@ function openModal(obj) {
     var excl_incr;
     var conditions;
 
-    var elements = {content: 'meta_div','point-in-time': 'time_div', list: 'list_div', add: 'add_div', images: 'image_div', events: 'event_div', storages: 'storage_div', projects: 'resume_div', tickers: 'ticker_div', biographies: 'biography_div'};
+    var elements = {meta: 'meta_div','time': 'time_div', list: 'list_div', add: 'add_div', images: 'image_div', events: 'event_div', storages: 'storage_div', projects: 'resume_div', tickers: 'ticker_div', biographies: 'biography_div'};
 
     var modals = {
         login: {contr: 'LoginModalCtrl', templ: './views/myLoginModal.html'},
@@ -1378,6 +1379,8 @@ function openModal(obj) {
     };
 
     _appServicesFactory.selectTab = function(option){
+
+        console.log('shhow me option: ', option);
 
         for(var prop in elements){
             if(prop !== option){

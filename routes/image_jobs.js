@@ -12,46 +12,55 @@ var qb = require('../public/javascripts/query_builder.js');
 
 router.get('/files', call.isAuthenticated, function(req, res, next){
 
-    console.log('..getting files..');
-
     fs.readdir('./public/buffalo/James/', function(err, files){
 
         var newImg = {};
         var total = 0;
 
-        files.forEach(function(elem, ind, array){
+        if(!err){
 
-            if(elem.charAt(0) != '.') {
-                newImg[elem.toLowerCase()] = true;
-                total ++;
-            }
-        });
+            files.forEach(function(elem, ind, array){
 
-        pg.connect(connectionString,function(error,client,done){
-            var query = client.query('SELECT file FROM images ORDER BY CREATED ASC', function(error, result){
-                if(error){
-                    res.send(error);
+                if(elem.charAt(0) != '.') {
+                    newImg[elem.toLowerCase()] = true;
+                    total ++;
                 }
+            });
+
+            pg.connect(connectionString,function(error,client,done){
+                var query = client.query('SELECT file FROM images ORDER BY CREATED ASC', function(error, result){
+                    if(error){
+                        res.send(error);
+                    }
+                })
+                query.on('row', function(row) {
+
+                    if(newImg.hasOwnProperty(row.file.toLowerCase())){
+                        newImg[row.file.toLowerCase()] = undefined;
+                        total --;
+                    }
+                })
+                query.on('end',function(result){
+                    client.end();
+
+                    if(total < 1){
+                        newImg = {};
+                    }
+
+                    newImg.total = total;
+
+                    res.status(200).send(newImg);
+                })
             })
-            query.on('row', function(row) {
+        }
 
-                if(newImg.hasOwnProperty(row.file.toLowerCase())){
-                    newImg[row.file.toLowerCase()] = undefined;
-                    total --;
-                }
-            })
-            query.on('end',function(result){
-                client.end();
+        else {
+            console.log('there was an error: ', err);
+            res.status(200).send(err);
 
-                if(total < 1){
-                    newImg = {};
-                }
+        }
 
-                newImg.total = total;
 
-                res.status(200).send(newImg);
-            })
-        })
     })
 
 });

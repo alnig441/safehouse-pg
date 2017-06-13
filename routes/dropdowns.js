@@ -43,6 +43,8 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
 
     db === 'events' ? query_string = 'SELECT DISTINCT '+ option +' FROM events CROSS JOIN images where id = img_id'+ filter +' ORDER BY '+ option +' asc' : query_string = 'SELECT DISTINCT '+ option +' FROM images WHERE META IS NOT NULL '+ filter +' ORDER BY '+ option +' asc' ;
 
+    console.log('query string: ', query_string);
+
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(query_string, function(error, result){
             if(error){
@@ -62,6 +64,12 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
                             result.rows[ind] = {name: x[req.user.lang], value: x.value};
                         }
                     })
+                })
+            }
+
+            else {
+                result.rows.forEach(function(elem, ind, arr){
+                    result.rows[ind] = {name: elem[option], value: elem[option]}
                 })
             }
             res.status(200).send(result.rows);

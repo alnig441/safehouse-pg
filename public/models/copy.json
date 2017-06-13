@@ -1,8 +1,19 @@
 {
   "views": {
     "admin": {
-      "images": {
+      "head": {
+        "summary": {
+          "images": "",
+          "accounts": "",
+          "landing": ""
+        },
+        "menu": ["images", "accounts", "landing_page"]
 
+      },
+      "images": {
+        "image": {},
+        "event": {},
+        "storage": {}
       },
       "accounts": {
 
@@ -100,8 +111,8 @@
         },
         "meta": {
           "labels": {
-            "keyword": "select keyword",
-            "name": "select people",
+            "tags": "select keyword",
+            "names": "select people",
             "occasion": "select occasion",
             "country": "select country",
             "state": "select state",
@@ -110,10 +121,10 @@
             "criteria": "selected search criteria"
           },
           "checkboxes": {
-            "contract": "",
-            "expand": "",
-            "exclude": "",
-            "items": ""
+            "contract": "contract",
+            "expand": "expand",
+            "exclude": "exclude",
+            "items": "items in current search"
           }
         },
         "buttons": {
@@ -130,9 +141,5 @@
     }
 
   }
-
-
-
-
 
 }

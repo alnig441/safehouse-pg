@@ -542,6 +542,8 @@ function capitalize (elem, ind, arr){
 
                 if(response.data.acct_type === 'admin'){
 
+                    appServices.getLangPreference();
+
                     //INITIALISE rootScope VARIABLES
                     $rootScope.img = {};
                     $rootScope.tags_form = {};
@@ -730,6 +732,8 @@ function capitalize (elem, ind, arr){
 });
 ;app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, $timeout, appServices){
 
+    console.log('calling multiViewCtrl');
+
     $scope.animationsEnabled = true;
 
     $scope.submitCriteria = function(size,type) {
@@ -771,8 +775,6 @@ function capitalize (elem, ind, arr){
             arr = appServices.getConditions().trim().split(' ');
         }
 
-        console.log('show me conditions array: ', arr);
-
         if(type === 'meta' && arr[0]){
             if(arr[0].toLowerCase() !== 'select'){
                 console.log('bingo');
@@ -804,7 +806,14 @@ function capitalize (elem, ind, arr){
 
             });
 
-        $scope.clear();
+        if(type == 'meta'){
+            $scope.clear();
+        }
+        else{
+            console.log('clearing time form');
+            $scope.select('time');
+        }
+
 
 
     };
@@ -828,16 +837,12 @@ function capitalize (elem, ind, arr){
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
-    console.log('$scope: ', $scope, $rootScope);
-
     //SEARCH TYPE SELECTOR
     $scope.select = function(choice){
 
-        console.log('my choice is: ', choice);
+        console.log('selecting tab: ', choice);
 
         choice = mapTabsFilter(choice.toLowerCase());
-
-        appServices.initPiTSearch($scope, 'images');
 
         appServices.selectTab(choice);
 
@@ -848,6 +853,10 @@ function capitalize (elem, ind, arr){
 
             appServices.buildMeta();
 
+        }
+        else{
+            $scope.form = {};
+            appServices.initPiTSearch($scope, "images");
         }
 
     };
@@ -878,8 +887,6 @@ function capitalize (elem, ind, arr){
     //1) POPULATE THE META SEARCH FIELDS WITH APPROPRIATE VALUES
     //2) CREATE THE APPROPRIATE POSTGRES SEARCH STRING FOR WHEN IMAGE SEARCH IS SUBMITTED
     $scope.build_query = function(searchTerm) {
-
-        console.log('build_query called: ', searchTerm);
 
         var query = {};
 
@@ -935,8 +942,6 @@ function capitalize (elem, ind, arr){
                 }
             }
 
-            console.log('show me query: ', query);
-
             appServices.buildMeta(query);
 
         }
@@ -946,30 +951,57 @@ function capitalize (elem, ind, arr){
     //FUNCTON TO BUILD DROPDOWN-AND-SELECT BOXES FOR TIME BASED SEARCH
     $scope.getValues = function(option){
 
+        console.log('getValues - selection: ', this.selection, '\n option: ', option, '\nthis.form.options; ', this.form.option);
+
         var table = 'do you see me?';
 
-        if(option === 'month') {
-            this.form.option = false;
-            this.form.day = false;
-            this.form.month = false;
+        if(this.selection && this.selection != null){
+            console.log('selection NOT null: ', this.selection);
+
+
+            switch (option.toString()) {
+                case "1":
+                    option = 'month';
+                    $scope.form.year = this.selection;
+                    $scope.listSelection.push(this.selection);
+                    break;
+                case "2":
+                    option = 'day';
+                    $scope.form.month = this.selection;
+                    $scope.listSelection.push(this.selection);
+                    break;
+                default:
+                    option = 'year';
+                    $scope.form.day = this.selection;
+                    $scope.listSelection.push(this.selection);
+                    break;
+            }
+
+            this.form.option = option;
+
+            Object.keys($scope.searchArea).forEach(function(elem,ind,array){
+                if($scope.searchArea[elem]){
+                    table = elem;
+                }
+            });
+
+            this.form.table = table;
+
+            console.log('sending form: ', this.form);
+
+            appServices.buildDropdowns($scope);
         }
-
-        this.form.option = option;
-
-        Object.keys($scope.searchArea).forEach(function(elem,ind,array){
-           if($scope.searchArea[elem]){
-               table = elem;
-           }
-        });
-
-        this.form.table = table;
-
-        appServices.buildDropdowns($scope);
+        //else{
+        //
+        //}
+        //
 
     };
 
     //FUNCTION TO CLEAR SELECTED META SEARCH TERMS FROM $scope.build_query
     $scope.clear = function(){
+
+        console.log('clearing meta');
 
         $scope.form = {};
         $scope.form.type_and = true;
@@ -977,7 +1009,6 @@ function capitalize (elem, ind, arr){
         $scope.form.exclude = false;
         appServices.resetSQ();
         appServices.buildMeta();
-
     };
 
     $scope.expand = function(key){
@@ -1302,8 +1333,6 @@ function openModal(obj) {
 
     _appServicesFactory.buildMeta = function(obj){
 
-        console.log('factories - show me obj: ', obj);
-
         var column;
         var type;
         var key_value;
@@ -1316,8 +1345,6 @@ function openModal(obj) {
                 key_value = obj[prop];
             }
         }
-
-        console.log('app factory - show type: ', type);
 
         switch(type){
             case 'contract':
@@ -1384,8 +1411,6 @@ function openModal(obj) {
 
     _appServicesFactory.selectTab = function(option){
 
-        console.log('shhow me option: ', option);
-
         for(var prop in elements){
             if(prop !== option){
                 angular.element(document.getElementById(prop)).removeClass('active');
@@ -1419,21 +1444,42 @@ function openModal(obj) {
 
     _appServicesFactory.buildDropdowns = function($scope){
 
+        //console.log('listSelection - igen: ', $scope.listSelection);
+
+        $scope.listSelection.forEach(function(elem, ind){
+            if(elem == null){
+                console.log('lortearray!!', $scope.listSelection);
+                $scope.listSelection.shift();
+                console.log('renset: ', $scope.listSelection);
+            }
+        })
+
         $http.post('/dropdowns/build', $scope.form)
             .then(function(response){
 
                 if(response.data.length > 0){
+                    var temp = typeof response.data[0]['name'];
+                }
 
-                    switch (Object.keys(response.data[0])[0]){
-                        case 'year':
-                            $scope.years = response.data;
+                if(response.data.length > 0 && temp){
+
+                    switch (temp) {
+                        case 'number':
+                            if(temp > 31){
+                                console.log('holyhat');
+                                $scope.list.push(response.data);
+                                break;
+                            }else{
+                                $scope.list.push(response.data);
+                                break;
+                            }
+                        case 'string':
+                            $scope.list.push(response.data);
                             break;
-                        case 'name':
-                            $scope.months = response.data;
+                        default:
+                            console.log('forkert switch');
                             break;
-                        case 'day':
-                            $scope.days = response.data;
-                            break;
+
                     }
 
                 }else{
@@ -1446,6 +1492,10 @@ function openModal(obj) {
     };
 
     _appServicesFactory.initPiTSearch = function($scope, table){
+
+        $scope.list = [];
+        $scope.selection = '';
+        $scope.listSelection = [];
 
         $scope.form = {};
         $scope.form.option = 'year';
@@ -1461,7 +1511,12 @@ function openModal(obj) {
         $http.get('./models/copy.json')
             .then(function(response){
                 //$rootScope.userLang = response.data[lang];
-                $rootScope.copy = response.data.views.private[lang];
+                if(lang){
+                    $rootScope.copy = response.data.views.private[lang];
+                }
+                else{
+                    $rootScope.copy = response.data.views.admin;
+                }
             })
 
     };

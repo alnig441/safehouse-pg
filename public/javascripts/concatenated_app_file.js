@@ -845,7 +845,7 @@ function capitalize (elem, ind, arr){
         if(choice === 'meta'){
 
             $scope.form = {};
-            $scope.form.type_and = true;
+            $scope.form.contract = true;
 
             appServices.buildMeta();
             console.log('meta: ', $rootScope.meta);
@@ -879,13 +879,34 @@ function capitalize (elem, ind, arr){
 
     };
 
+    $scope.flipType = function(index){
+
+        switch (index) {
+            case 0:
+                console.log('contract');
+                $scope.form.expand = false;
+                $scope.form.exclude = false;
+                break;
+            case 1:
+                console.log('expand');
+                $scope.form.contract = false;
+                $scope.form.exclude = false;
+                break;
+            case 2:
+                console.log('exclude');
+                $scope.form.contract = false;
+                $scope.form.expand = false;
+                break;
+        }
+    }
+
     //FUNCTION TO ORGANISE, PRIORITISE AND RELAY SELECTED META SEARCH TERMS TO appServices QUERY BUILDER.
     //IN RESPONSE appServices.buildMeta() WILL
     //1) POPULATE THE META SEARCH FIELDS WITH APPROPRIATE VALUES
     //2) CREATE THE APPROPRIATE POSTGRES SEARCH STRING FOR WHEN IMAGE SEARCH IS SUBMITTED
-    $scope.build_query = function(searchTerm, index) {
+    $scope.build_query = function(searchTerm) {
 
-        console.log('show me search term: ', searchTerm, index, '\nthis form: ', this.form);
+        console.log('this form: ', this.form);
 
         var query = {};
 
@@ -897,11 +918,11 @@ function capitalize (elem, ind, arr){
                 }
             }
             else {
-                if (this.form.type_and && this.form[searchTerm]) {
+                if (this.form.contract && this.form[searchTerm]) {
                     query.contract = {};
                     query.contract[searchTerm] = this.form[searchTerm];
                 }
-                if (this.form.type_or && this.form[searchTerm]) {
+                if (this.form.expand && this.form[searchTerm]) {
                     query.expand = {};
                     query.expand[searchTerm] = this.form[searchTerm];
                 }
@@ -914,12 +935,12 @@ function capitalize (elem, ind, arr){
 
             query.baseline = $rootScope.baseline;
 
-            if ((!$rootScope.search_terms.contract[searchTerm] && this.form.type_and) || (!$rootScope.search_terms.expand[searchTerm] && this.form.type_or) || (!$rootScope.search_terms.exclude[searchTerm] && this.form.exclude)) {
-                if (this.form.type_and && this.form[searchTerm]) {
+            if ((!$rootScope.search_terms.contract[searchTerm] && this.form.contract) || (!$rootScope.search_terms.expand[searchTerm] && this.form.expand) || (!$rootScope.search_terms.exclude[searchTerm] && this.form.exclude)) {
+                if (this.form.contract && this.form[searchTerm]) {
                     $rootScope.search_terms.contract[searchTerm] = [];
                     $rootScope.search_terms.contract[searchTerm].push(this.form[searchTerm]);
                 }
-                if (this.form.type_or && this.form[searchTerm]) {
+                if (this.form.expand && this.form[searchTerm]) {
                     $rootScope.search_terms.expand[searchTerm] = [];
                     $rootScope.search_terms.expand[searchTerm].push(this.form[searchTerm]);
                 }
@@ -930,10 +951,10 @@ function capitalize (elem, ind, arr){
 
             }
             else {
-                if (this.form.type_and && this.form[searchTerm]) {
+                if (this.form.contract && this.form[searchTerm]) {
                     $rootScope.search_terms.contract[searchTerm].push(this.form[searchTerm]);
                 }
-                if (this.form.type_or && this.form[searchTerm]) {
+                if (this.form.expand && this.form[searchTerm]) {
                     $rootScope.search_terms.expand[searchTerm].push(this.form[searchTerm]);
                 }
                 if (this.form.exclude && this.form[searchTerm]) {
@@ -998,8 +1019,8 @@ function capitalize (elem, ind, arr){
 
         else{
             $scope.form = {};
-            $scope.form.type_and = true;
-            $scope.form.type_or = false;
+            $scope.form.contract = true;
+            $scope.form.expand = false;
             $scope.form.exclude = false;
             appServices.resetSQ();
             appServices.buildMeta();

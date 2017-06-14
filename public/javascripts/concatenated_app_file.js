@@ -883,17 +883,14 @@ function capitalize (elem, ind, arr){
 
         switch (index) {
             case 0:
-                console.log('contract');
                 $scope.form.expand = false;
                 $scope.form.exclude = false;
                 break;
             case 1:
-                console.log('expand');
                 $scope.form.contract = false;
                 $scope.form.exclude = false;
                 break;
             case 2:
-                console.log('exclude');
                 $scope.form.contract = false;
                 $scope.form.expand = false;
                 break;

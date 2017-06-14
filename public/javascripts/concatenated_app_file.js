@@ -879,23 +879,43 @@ function capitalize (elem, ind, arr){
 
     };
 
-    $scope.flipType = function(index){
+    $scope.flipType = function(operator){
 
-        switch (index) {
-            case 0:
-                $scope.form.expand = false;
-                $scope.form.exclude = false;
+        switch (typeof operator) {
+            case "number":
+
+                switch (operator) {
+                    case 0:
+                        $scope.form.expand = false;
+                        $scope.form.exclude = false;
+                        break;
+                    case 1:
+                        $scope.form.contract = false;
+                        $scope.form.exclude = false;
+                        break;
+                    case 2:
+                        $scope.form.contract = false;
+                        $scope.form.expand = false;
+                        break;
+                }
+
                 break;
-            case 1:
-                $scope.form.contract = false;
-                $scope.form.exclude = false;
-                break;
-            case 2:
-                $scope.form.contract = false;
-                $scope.form.expand = false;
+
+            case "string":
+
+                switch (operator){
+                    case "images":
+                        $scope.searchArea.events = false;
+                        break;
+                    case "events":
+                        $scope.searchArea.images = false;
+                        break;
+                }
+
                 break;
         }
-    }
+
+    };
 
     //FUNCTION TO ORGANISE, PRIORITISE AND RELAY SELECTED META SEARCH TERMS TO appServices QUERY BUILDER.
     //IN RESPONSE appServices.buildMeta() WILL
@@ -966,32 +986,23 @@ function capitalize (elem, ind, arr){
     };
 
     //FUNCTON TO BUILD DROPDOWN-AND-SELECT BOXES FOR TIME BASED SEARCH
-    $scope.getValues = function(option){
+    $scope.getValues = function(key){
 
-        var table = 'do you see me?';
+        var table = '';
 
-        //Only switch calls from ng-change with valid call parameter
+        if(this.form.year){
 
-        if(this.selection){
-            switch (option.toString()) {
-                case "1":
-                    option = 'month';
-                    $scope.form.year = this.selection;
-                    $scope.listSelection.push(this.selection);
+            switch (key) {
+                case "year":
+                    this.form.option = "month";
                     break;
-                case "2":
-                    option = 'day';
-                    $scope.form.month = this.selection;
-                    $scope.listSelection.push(this.selection);
+                case "month":
+                    this.form.option = "day";
                     break;
-                default:
-                    option = 'year';
-                    $scope.form.day = this.selection;
-                    $scope.listSelection.push(this.selection);
+                case "day":
+                    this.form.option = "year";
                     break;
             }
-
-            this.form.option = option;
 
             Object.keys($scope.searchArea).forEach(function(elem,ind,array){
                 if($scope.searchArea[elem]){
@@ -1002,6 +1013,7 @@ function capitalize (elem, ind, arr){
             this.form.table = table;
 
             appServices.buildDropdowns($scope);
+
         }
 
     };
@@ -1460,6 +1472,7 @@ function openModal(obj) {
         $http.post('/dropdowns/build', $scope.form)
             .then(function(response){
                 $scope.list.push(response.data);
+                console.log('list: ', $scope.list);
             })
 
     };
@@ -1467,9 +1480,6 @@ function openModal(obj) {
     _appServicesFactory.initPiTSearch = function($scope, table){
 
         $scope.list = [];
-        $scope.selection = '';
-        $scope.listSelection = [];
-
         $scope.form = {};
         $scope.form.option = 'year';
         $scope.form.table = table;

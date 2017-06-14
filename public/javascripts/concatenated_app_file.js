@@ -732,8 +732,6 @@ function capitalize (elem, ind, arr){
 });
 ;app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, $timeout, appServices){
 
-    console.log('calling multiViewCtrl');
-
     $scope.animationsEnabled = true;
 
     $scope.submitCriteria = function(size,type) {
@@ -839,8 +837,6 @@ function capitalize (elem, ind, arr){
 
     //SEARCH TYPE SELECTOR
     $scope.select = function(choice){
-
-        console.log('selecting tab: ', choice);
 
         choice = mapTabsFilter(choice.toLowerCase());
 
@@ -951,14 +947,11 @@ function capitalize (elem, ind, arr){
     //FUNCTON TO BUILD DROPDOWN-AND-SELECT BOXES FOR TIME BASED SEARCH
     $scope.getValues = function(option){
 
-        console.log('getValues - selection: ', this.selection, '\n option: ', option, '\nthis.form.options; ', this.form.option);
-
         var table = 'do you see me?';
 
-        if(this.selection && this.selection != null){
-            console.log('selection NOT null: ', this.selection);
+        //Only switch calls from ng-change with valid call parameter
 
-
+        if(this.selection){
             switch (option.toString()) {
                 case "1":
                     option = 'month';
@@ -987,35 +980,33 @@ function capitalize (elem, ind, arr){
 
             this.form.table = table;
 
-            console.log('sending form: ', this.form);
-
             appServices.buildDropdowns($scope);
         }
-        //else{
-        //
-        //}
-        //
 
     };
 
     //FUNCTION TO CLEAR SELECTED META SEARCH TERMS FROM $scope.build_query
     $scope.clear = function(){
 
-        console.log('clearing meta');
+        if(this.form.table){
+            $scope.form = {};
+            appServices.initPiTSearch($scope, 'images');
+        }
 
-        $scope.form = {};
-        $scope.form.type_and = true;
-        $scope.form.type_or = false;
-        $scope.form.exclude = false;
-        appServices.resetSQ();
-        appServices.buildMeta();
+        else{
+            $scope.form = {};
+            $scope.form.type_and = true;
+            $scope.form.type_or = false;
+            $scope.form.exclude = false;
+            appServices.resetSQ();
+            appServices.buildMeta();
+        }
+
     };
 
     $scope.expand = function(key){
 
         $scope.videos.active = this.item.year;
-
-
 
     };
 
@@ -1444,49 +1435,9 @@ function openModal(obj) {
 
     _appServicesFactory.buildDropdowns = function($scope){
 
-        //console.log('listSelection - igen: ', $scope.listSelection);
-
-        $scope.listSelection.forEach(function(elem, ind){
-            if(elem == null){
-                console.log('lortearray!!', $scope.listSelection);
-                $scope.listSelection.shift();
-                console.log('renset: ', $scope.listSelection);
-            }
-        })
-
         $http.post('/dropdowns/build', $scope.form)
             .then(function(response){
-
-                if(response.data.length > 0){
-                    var temp = typeof response.data[0]['name'];
-                }
-
-                if(response.data.length > 0 && temp){
-
-                    switch (temp) {
-                        case 'number':
-                            if(temp > 31){
-                                console.log('holyhat');
-                                $scope.list.push(response.data);
-                                break;
-                            }else{
-                                $scope.list.push(response.data);
-                                break;
-                            }
-                        case 'string':
-                            $scope.list.push(response.data);
-                            break;
-                        default:
-                            console.log('forkert switch');
-                            break;
-
-                    }
-
-                }else{
-                    $scope.years = {};
-                    $scope.months = {};
-                    $scope.days = {};
-                }
+                $scope.list.push(response.data);
             })
 
     };
@@ -1502,6 +1453,7 @@ function openModal(obj) {
         $scope.form.table = table;
         $scope.searchArea = {};
         $scope.searchArea[table]=true;
+
         _appServicesFactory.buildDropdowns($scope);
 
     };
@@ -1510,7 +1462,6 @@ function openModal(obj) {
 
         $http.get('./models/copy.json')
             .then(function(response){
-                //$rootScope.userLang = response.data[lang];
                 if(lang){
                     $rootScope.copy = response.data.views.private[lang];
                 }

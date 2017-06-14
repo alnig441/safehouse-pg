@@ -56,7 +56,7 @@
         },
         "meta": {
           "labels": {
-            "tags": "vælg søgeord",
+            "meta": "vælg søgeord",
             "names": "vælg personer",
             "occasion": "vælg lejlighed",
             "country": "vælg land",
@@ -111,12 +111,12 @@
         },
         "meta": {
           "labels": {
-            "tags": "select keyword",
+            "meta": "select keyword",
             "names": "select people",
             "occasion": "select occasion",
             "country": "select country",
             "state": "select state",
-            "city": "selects city",
+            "city": "select city",
             "type": "type of search",
             "criteria": "selected search criteria"
           },

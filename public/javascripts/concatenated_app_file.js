@@ -848,6 +848,7 @@ function capitalize (elem, ind, arr){
             $scope.form.type_and = true;
 
             appServices.buildMeta();
+            console.log('meta: ', $rootScope.meta);
 
         }
         else{
@@ -882,7 +883,9 @@ function capitalize (elem, ind, arr){
     //IN RESPONSE appServices.buildMeta() WILL
     //1) POPULATE THE META SEARCH FIELDS WITH APPROPRIATE VALUES
     //2) CREATE THE APPROPRIATE POSTGRES SEARCH STRING FOR WHEN IMAGE SEARCH IS SUBMITTED
-    $scope.build_query = function(searchTerm) {
+    $scope.build_query = function(searchTerm, index) {
+
+        console.log('show me search term: ', searchTerm, index, '\nthis form: ', this.form);
 
         var query = {};
 
@@ -1385,6 +1388,7 @@ function openModal(obj) {
             $http.get('/dropdowns/')
                 .then(function(result){
                     $rootScope.meta = result.data;
+                    console.log('meta: ', $rootScope.meta);
                 });
         }else {
             $http.get('/dropdowns/'+ conditions)

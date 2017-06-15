@@ -226,17 +226,11 @@ function capitalize (elem, ind, arr){
 
     var menu = document.getElementsByClassName('collapse');
 
-    console.log('adminCtrl showing copy: ', $rootScope);
+    $scope.batchEdit = {};
 
-    $rootScope.captions = {
-        images: 'Images',
-        accounts: 'Accounts',
-        'landing_page': 'Landing Page'
-    };
-
-    $rootScope.caption = $rootScope.captions.images;
-    $rootScope.template = {};
-    $rootScope.template.url = './views/images.html';
+    $scope.caption = $rootScope.copy.head.summary.images;
+    $scope.template = {};
+    $scope.template.url = './views/images.html';
 
     $scope.templates = {
         accounts: './views/accounts.html',
@@ -245,20 +239,9 @@ function capitalize (elem, ind, arr){
     };
 
     $scope.switch = function(option){
-        $rootScope.caption = $rootScope.captions[option];
-        $rootScope.template.url = $scope.templates[option];
+        $scope.caption = $rootScope.copy.head.summary[option];
+        $scope.template.url = $scope.templates[option];
         angular.element(menu).collapse('hide');
-    };
-
-    $scope.setLocation = function(option){
-
-        if(option === 'btle'){
-            $location.path('/admin/btle');
-            $rootScope.template = {};
-        }
-        if(option === 'diary'){
-            $location.path('/admin/diary');
-        }
     };
 
     $scope.select = function(choice){
@@ -531,11 +514,6 @@ function capitalize (elem, ind, arr){
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
 
-                //set language preferences
-                //var lang = response.data.lang;
-                //lang ? lang = lang : lang = 'en';
-                //appServices.getLangPreference(lang);
-
                 if(response.data.acct_type === 'admin'){
 
                     appServices.getLangPreference();
@@ -551,7 +529,6 @@ function capitalize (elem, ind, arr){
 
                     $rootScope.default_storage = response.data.storages[0];
 
-                    //$location.path('/admin/diary');
                     $location.path('/admin');
 
                 }

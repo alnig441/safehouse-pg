@@ -3,12 +3,29 @@
     "admin": {
       "head": {
         "summary": {
-          "images": "",
-          "accounts": "",
-          "landing": ""
+          "images": "Images Management",
+          "accounts": "Accounts Management",
+          "landing_page": "Landing Page Management"
         },
-        "menu": ["images", "accounts", "landing_page"]
-
+        "menu": {
+          "images": "images",
+          "accounts": "accounts",
+          "landing_page": "Landing Page"
+        },
+        "img_tabs": {
+          "images": "Images",
+          "events": "Events",
+          "storages": "Storages"
+        },
+        "acct_tabs": {
+          "list": "List",
+          "add": "Add"
+        },
+        "landing_tabs": {
+          "tickers": "Tickers",
+          "projects": "Projects",
+          "biographies": "Biographies"
+        }
       },
       "images": {
         "image": {},
@@ -75,7 +92,8 @@
         "delete": "delete",
         "update": "update",
         "add": "add",
-        "run": "run"
+        "run": "run",
+        "batchEdit": "batch edit"
       }
     },
 

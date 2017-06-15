@@ -8,15 +8,6 @@ app.config(function($routeProvider, $locationProvider){
             templateUrl: 'views/login.html',
             controller: 'singleViewModalCtrl'
         })
-        //.when('/admin/btle', {
-        //    templateUrl: 'views/btle.html',
-        //    controller: 'locationCtrl'
-        //})
-        //.when('/admin/diary', {
-        //    templateUrl: 'views/diary.html',
-        //    controller: 'locationCtrl'
-        //})
-
         .when('/admin', {
             templateUrl: 'views/admin.html',
             controller: 'adminCtrl'
@@ -235,6 +226,8 @@ function capitalize (elem, ind, arr){
 
     var menu = document.getElementsByClassName('collapse');
 
+    console.log('adminCtrl showing copy: ', $rootScope);
+
     $rootScope.captions = {
         images: 'Images',
         accounts: 'Accounts',
@@ -252,8 +245,6 @@ function capitalize (elem, ind, arr){
     };
 
     $scope.switch = function(option){
-
-        console.log('location ctrl switching to ', option);
         $rootScope.caption = $rootScope.captions[option];
         $rootScope.template.url = $scope.templates[option];
         angular.element(menu).collapse('hide');
@@ -278,6 +269,8 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('BatchEditModalCtrl', ['imageServices', 'capInitialFilter', '$scope', '$modalInstance', '$http', '$rootScope', 'appServices', function(imageServices, capInitialFilter, $scope, $modalInstance, $http, $rootScope, appServices){
 
+    console.log('copy: ', $rootScope.copy);
+
     $scope.submit = function(){
 
         if(this.batchEdit){
@@ -290,6 +283,8 @@ function capitalize (elem, ind, arr){
     };
 
     $scope.delete = function(){
+
+        console.log('deleting ', this);
 
         imageServices.deleteImages($scope.ids, $scope);
 
@@ -1114,6 +1109,8 @@ function capitalize (elem, ind, arr){
 ;app.controller('singleViewModalCtrl', function($scope, $http, $modal, $rootScope, $location, Upload, appServices, imageServices){
 
     var menu = document.getElementsByClassName('collapse');
+
+    console.log('single view: ', $rootScope.copy);
 
     $scope.animationsEnabled = true;
 
@@ -1973,7 +1970,10 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 });;app.directive('myAddTagsModal', function(){
 
     return {
-        restrict: 'EA'
+        restrict: 'EA',
+        scope: {
+            copy: '=info'
+        }
     }
 });;app.directive('myBatchEditModal', function(){
 

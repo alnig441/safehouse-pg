@@ -20,6 +20,62 @@
       },
       "landing": {
 
+      },
+      "modals": {
+        "addTags": {
+          "labels": {
+            "meta": "Type of Image",
+            "names": "People in Image",
+            "occasion": "Occasion",
+            "country": "Country of Origin",
+            "state": "State of Origin",
+            "city": "City of Origin",
+            "event_da": "Danish",
+            "event_en": "English"
+          },
+          "checkboxes": {
+            "add_tags": "Add/Modify Tags",
+            "add_event": "Add/Modify Event"
+          }
+        },
+        "batchEdit": {
+          "labels": {
+            "meta": "Type of Image",
+            "names": "People in Image",
+            "occasion": "Occasion",
+            "country": "Country of Origin",
+            "state": "State of Origin",
+            "city": "City of Origin"
+          }
+        },
+        "changePw": {
+          "labels": {
+            "username": "Username",
+            "new_password": "New Password",
+            "confirm_password": "Confirm Password"
+          }
+        },
+        "manageStorages": {
+
+        },
+        "modifyStorages": {
+
+        },
+        "resume": {
+
+        },
+        "saveImg": {
+
+        }
+      },
+      "buttons": {
+        "submit": "submit",
+        "cancel": "cancel",
+        "save": "save",
+        "delete": "delete",
+        "update": "update",
+        "add": "add",
+        "run": "run"
       }
     },
 

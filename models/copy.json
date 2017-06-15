@@ -36,6 +36,38 @@
 
       },
       "landing": {
+        "forms": {
+          "ticker": {
+            "header": "create new ticker item",
+            "labels": {
+              "owner": "owner",
+              "date": "date",
+              "headline": "headline",
+              "copy": "copy"
+            }
+          },
+          "project": {
+            "header": "",
+            "labels": {
+              "owner": "owner",
+              "begin_date": "begin date",
+              "end_date": "end date",
+              "company": "company",
+              "skills": "technologies",
+              "description": "description"
+            }
+
+          },
+          "biography": {
+            "header": "update biography",
+            "labels": {
+              "owner": "owner",
+              "about": "about",
+              "soft_skills": "soft skills",
+              "hard_skills": "hard skills"
+            }
+          }
+        }
 
       },
       "modals": {

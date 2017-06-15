@@ -12,13 +12,14 @@ app.config(function($routeProvider, $locationProvider){
         //    templateUrl: 'views/btle.html',
         //    controller: 'locationCtrl'
         //})
-        .when('/admin/diary', {
-            templateUrl: 'views/diary.html',
-            controller: 'locationCtrl'
-        })
+        //.when('/admin/diary', {
+        //    templateUrl: 'views/diary.html',
+        //    controller: 'locationCtrl'
+        //})
+
         .when('/admin', {
             templateUrl: 'views/admin.html',
-            controller: 'locationCtrl'
+            controller: 'adminCtrl'
         })
         .when('/private', {
             templateUrl: 'views/private.html',
@@ -229,6 +230,51 @@ function capitalize (elem, ind, arr){
         $rootScope.tags_form = {};
         $modalInstance.dismiss('cancel');
     };
+}]);
+;app.controller('adminCtrl', ['$scope', '$rootScope', '$location', 'appServices',  function($scope, $rootScope, $location, appServices){
+
+    var menu = document.getElementsByClassName('collapse');
+
+    $rootScope.captions = {
+        images: 'Images',
+        accounts: 'Accounts',
+        'landing_page': 'Landing Page'
+    };
+
+    $rootScope.caption = $rootScope.captions.images;
+    $rootScope.template = {};
+    $rootScope.template.url = './views/images.html';
+
+    $scope.templates = {
+        accounts: './views/accounts.html',
+        images: './views/images.html',
+        landing_page: './views/landing-page.html'
+    };
+
+    $scope.switch = function(option){
+
+        console.log('location ctrl switching to ', option);
+        $rootScope.caption = $rootScope.captions[option];
+        $rootScope.template.url = $scope.templates[option];
+        angular.element(menu).collapse('hide');
+    };
+
+    $scope.setLocation = function(option){
+
+        if(option === 'btle'){
+            $location.path('/admin/btle');
+            $rootScope.template = {};
+        }
+        if(option === 'diary'){
+            $location.path('/admin/diary');
+        }
+    };
+
+    $scope.select = function(choice){
+
+        appServices.selectTab(choice.toLowerCase());
+    };
+
 }]);
 ;app.controller('BatchEditModalCtrl', ['imageServices', 'capInitialFilter', '$scope', '$modalInstance', '$http', '$rootScope', 'appServices', function(imageServices, capInitialFilter, $scope, $modalInstance, $http, $rootScope, appServices){
 
@@ -483,51 +529,6 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('locationCtrl', ['$scope', '$rootScope', '$location', 'appServices',  function($scope, $rootScope, $location, appServices){
-
-    var menu = document.getElementsByClassName('collapse');
-
-    $rootScope.captions = {
-        images: 'Images',
-        accounts: 'Accounts',
-        'landing_page': 'Landing Page'
-    };
-
-    $rootScope.caption = $rootScope.captions.images;
-    $rootScope.template = {};
-    $rootScope.template.url = './views/images.html';
-
-    $scope.templates = {
-        accounts: './views/accounts.html',
-        images: './views/images.html',
-        landing_page: './views/landing-page.html'
-    };
-
-    $scope.switch = function(option){
-
-        console.log('location ctrl switching to ', option);
-        $rootScope.caption = $rootScope.captions[option];
-        $rootScope.template.url = $scope.templates[option];
-        angular.element(menu).collapse('hide');
-    };
-
-    $scope.setLocation = function(option){
-
-        if(option === 'btle'){
-            $location.path('/admin/btle');
-            $rootScope.template = {};
-        }
-        if(option === 'diary'){
-            $location.path('/admin/diary');
-        }
-    };
-
-    $scope.select = function(choice){
-
-        appServices.selectTab(choice.toLowerCase());
-    };
-
-}]);
 ;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices) {
 
     $scope.submit = function(){
@@ -1472,7 +1473,6 @@ function openModal(obj) {
         $http.post('/dropdowns/build', $scope.form)
             .then(function(response){
                 $scope.list.push(response.data);
-                console.log('list: ', $scope.list);
             })
 
     };

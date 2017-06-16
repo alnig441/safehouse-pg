@@ -159,23 +159,7 @@ function capitalize (elem, ind, arr){
 
     console.log('accounts ctrl root: ', $rootScope);
 
-    $scope.acct = [
-        {name: '<<acct_type>>', value: null},
-        {name: 'Private', value: 'private'},
-        {name: 'Public', value: 'public'},
-        {name: 'Admin', value: 'admin'},
-        {name: 'Superuser', value: 'superuser'}
-    ];
-
-    $scope.lang = [
-        {name: '<<language>>', value: null},
-        {name: 'English', value: 'en'},
-        {name: 'Danish', value: 'da'}
-    ];
-
     $scope.getValues = function(){
-
-
 
     };
 
@@ -280,12 +264,6 @@ function capitalize (elem, ind, arr){
     };
 }]);
 ;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
-
-
-    $scope.tools = [
-        { name: 'import', value: 'loadNewImages' },
-        { name: 'update', value: 'checkExif' }
-    ];
 
     //INITIALISE $scope VARIABLES
     initialiseScope();
@@ -493,11 +471,6 @@ function capitalize (elem, ind, arr){
 
         $scope.form = {};
     };
-
-    $scope.owners = [
-        {name: 'Allan', value: 'Allan'},
-        {name: 'Fiona', value: 'Fiona'}
-    ];
 
 }]);
 ;app.controller('LatestEventModalCtrl', function ($scope, $modalInstance, $http) {

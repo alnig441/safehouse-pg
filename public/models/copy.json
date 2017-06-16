@@ -29,7 +29,33 @@
       },
       "images": {
         "forms": {
-          "image": {},
+          "image": {
+            "manage":{
+              "header": "manage images",
+              "labels": {
+                "id": "id#",
+                "image": "file",
+                "actions": "actions"
+              }
+
+            },
+            "upload": {
+              "header": "upload/categorise images",
+              "labels": {
+                "all": "add all",
+                "id": "id#",
+                "new": "new file",
+                "actions": "actions"
+              }
+            },
+            "failed": {
+              "header": "failed images",
+              "labels": {
+                "file": "file",
+                "error": "error"
+              }
+            }
+          },
           "event": {
             "header": "manage events",
             "labels": {
@@ -38,11 +64,28 @@
               "event_en": "description"
             }
           },
-          "storage": {}
+          "storage": {
+            "header": "manage storages",
+            "labels": {
+              "folder": "folder",
+              "path": "path",
+              "owner": "owner",
+              "actions": "actions"
+            }
+          }
         }
       },
       "accounts": {
         "forms": {
+          "viewAcct": {
+            "header": "active accounts",
+            "labels": {
+              "account": "account",
+              "language": "language",
+              "folders": "folders",
+              "actions": "actions"
+            }
+          },
           "addAcct": {
             "labels": {
               "username": "username",
@@ -146,7 +189,7 @@
         "run": "run",
         "batchEdit": "batch edit"
       },
-      "properties": {
+      "values": {
         "fixed": {
           "templates": {
             "accounts": "./views/accounts.html",
@@ -168,8 +211,8 @@
             {"name": "Danish", "value": "da"}
           ],
           "owners": [
-            {"name": "Allan"},
-            {"name": "Fiona"}
+            {"name": "Allan", "value": "Allan"},
+            {"name": "Fiona", "value": "Fiona"}
           ]
         },
         "dynamic": {

@@ -28,12 +28,31 @@
         }
       },
       "images": {
-        "image": {},
-        "event": {},
-        "storage": {}
+        "forms": {
+          "image": {},
+          "event": {
+            "header": "manage events",
+            "labels": {
+              "img_id": "select img/event",
+              "event_da": "beskrivelse",
+              "event_en": "description"
+            }
+          },
+          "storage": {}
+        }
       },
       "accounts": {
-
+        "forms": {
+          "addAcct": {
+            "labels": {
+              "username": "username",
+              "password": "password",
+              "acct_type": "account type",
+              "storages": "image folder",
+              "lang": "language"
+            }
+          }
+        }
       },
       "landing": {
         "forms": {
@@ -126,6 +145,36 @@
         "add": "add",
         "run": "run",
         "batchEdit": "batch edit"
+      },
+      "properties": {
+        "fixed": {
+          "templates": {
+            "accounts": "./views/accounts.html",
+            "images": "./views/images.html",
+            "landing_page": "./views/landing-page.html"
+          },
+          "tools": [
+            { "name": "import", "value": "loadNewImages" },
+            { "name": "update", "value": "checkExif" }
+          ],
+          "acct": [
+            {"name": "Private", "value": "private"},
+            {"name": "Public", "value": "public"},
+            {"name": "Admin", "value": "admin"},
+            {"name": "Superuser", "value": "superuser"}
+          ],
+          "lang": [
+            {"name": "English", "value": "en"},
+            {"name": "Danish", "value": "da"}
+          ],
+          "owners": [
+            {"name": "Allan"},
+            {"name": "Fiona"}
+          ]
+        },
+        "dynamic": {
+          
+        }
       }
     },
 

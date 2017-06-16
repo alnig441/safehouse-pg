@@ -182,7 +182,7 @@ function capitalize (elem, ind, arr){
 
     $scope.addAcct = function(){
 
-        accountServices.addAcct(this.form);
+        accountServices.addAcct(this.form, $scope);
 
         appServices.selectTab('list');
 
@@ -196,7 +196,7 @@ function capitalize (elem, ind, arr){
 
     $scope.delAcct = function(){
 
-        accountServices.deleteAcct(this.user);
+        accountServices.deleteAcct(this.user, $scope);
     };
 
 }]);
@@ -1195,19 +1195,19 @@ function openModal(obj) {
 
     var _accountServiceFactory = {};
 
-    _accountServiceFactory.addAcct = function(obj){
+    _accountServiceFactory.addAcct = function(obj, $scope){
 
         $http.post('/accounts_mgmt/add', obj)
             .then(function(response){
-                _accountServiceFactory.viewAcct(obj.acct_type);
+                _accountServiceFactory.viewAcct(obj.acct_type, $scope);
             });
     };
 
-    _accountServiceFactory.deleteAcct = function(obj){
+    _accountServiceFactory.deleteAcct = function(obj, $scope){
 
         $http.delete('/accounts_mgmt/' + obj.username)
             .then(function(response){
-                _accountServiceFactory.viewAcct(obj.acct_type);
+                _accountServiceFactory.viewAcct(obj.acct_type, $scope);
             });
 
 

@@ -230,9 +230,9 @@
             "events": "begivenheder"
           },
           "menu": {
+            "latest": "seneste begivenhed",
             "images": "billeder",
-            "videos": "videoer",
-            "latest": "seneste begivenhed"
+            "videos": "videoer"
           },
           "tabs": {
             "time": "Tidsafgrænset",
@@ -285,9 +285,9 @@
             "events": "events"
           },
           "menu": {
+            "latest": "latest event",
             "images": "images",
-            "videos": "videos",
-            "latest": "latest event"
+            "videos": "videos"
           },
           "tabs": {
             "time": "Point-in-Time",

@@ -5,7 +5,7 @@ app.config(function($routeProvider, $locationProvider){
     $locationProvider.html5Mode(true);
     $routeProvider
         .when('/login', {
-            templateUrl: 'views/login.html',
+            templateUrl: 'views/newLogin.html',
             controller: 'indexCtrl'
         })
         .when('/admin', {
@@ -265,7 +265,20 @@ function capitalize (elem, ind, arr){
         $modalInstance.dismiss('cancel');
     };
 }]);
-;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
+;app.controller('globalNavCtrl', ['$scope', '$rootScope', 'appServices', function($scope, $rootScope, appServices){
+
+    $scope.templates = {
+        "images": "./views/imageSearch.html",
+        "videos": "./views/videoSearch.html"
+    }
+
+    $scope.goTo = function(view) {
+
+        $scope.template.url = $scope.templates[view];
+
+    }
+
+}]);;app.controller('imageCtrl', ['storageServices', 'eventServices', 'imageServices', '$scope', '$rootScope', '$http', 'Upload', '$timeout', '$location', '$interval','appServices', function(storageServices, eventServices, imageServices, $scope, $rootScope, $http, Upload, $timeout, $location, $interval, appServices){
 
     //INITIALISE $scope VARIABLES
     initialiseScope();
@@ -483,7 +496,12 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices) {
+;app.controller('localNavCtrl', ['$scope', 'appServices', function($scope, appServices){
+
+    $scope.goTo = function(tab){
+        appServices.selectTab(tab.toLowerCase());
+    }
+}]);;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices) {
 
     $scope.submit = function(){
 
@@ -780,6 +798,10 @@ function capitalize (elem, ind, arr){
     imageServices.getVideos($scope);
     appServices.resetSQ();
     appServices.initPiTSearch($scope, 'images');
+
+
+    $scope.template = {};
+    $scope.template.url = './views/imageSearch.html';
 
     //USE selected_db TO INDICATE WHICH STORAGE AREA IS BEING ACCESSED
     $scope.selected_db = $rootScope.default_storage;
@@ -1388,6 +1410,8 @@ function openModal(obj) {
     };
 
     _appServicesFactory.selectTab = function(option){
+
+        console.log('appServices selectTab incoming; ', option);
 
         for(var prop in elements){
             if(prop !== option){

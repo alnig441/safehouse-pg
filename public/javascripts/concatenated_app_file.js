@@ -6,7 +6,7 @@ app.config(function($routeProvider, $locationProvider){
     $routeProvider
         .when('/login', {
             templateUrl: 'views/login.html',
-            controller: 'singleViewModalCtrl'
+            controller: 'indexCtrl'
         })
         .when('/admin', {
             templateUrl: 'views/admin.html',
@@ -22,16 +22,18 @@ app.config(function($routeProvider, $locationProvider){
         })
         .otherwise({
             redirectTo: '/login'
+
         });
 });
 
-app.run(['loadServices','$rootScope', function(loadServices, $rootScope){
+app.run(['$rootScope', 'loadServices', '$http', function($rootScope, loadServices, $http){
 
     $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
 
     loadServices.getBios();
     loadServices.getTickers();
     loadServices.getProjects();
+    loadServices.getCopy();
 
 }]);;app.filter('capInitial', function(){
 
@@ -415,7 +417,7 @@ function capitalize (elem, ind, arr){
     };
 
 }]);
-;app.controller('indexCtrl',['$location', '$http', '$rootScope', '$scope','$global','getGlobals', function($location, $http, $rootScope, $scope, $global, getGlobals){
+;app.controller('indexCtrl',['$location', '$http', '$rootScope', '$scope','$global','getGlobals', 'appServices', function($location, $http, $rootScope, $scope, $global, getGlobals, appServices){
 
     switch ($location.$$hash) {
         case 'about_allan':
@@ -429,6 +431,7 @@ function capitalize (elem, ind, arr){
             $location.path('/login');
             break;
     }
+
 
 }]);
 ;app.controller('landingPageCtrl', ['$scope', '$http', '$rootScope', 'appServices', 'landingPageServices', function($scope, $http, $rootScope, appServices, landingPageServices){
@@ -487,9 +490,12 @@ function capitalize (elem, ind, arr){
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
 
-                if(response.data.acct_type === 'admin'){
+                var acct  = response.data.acct_type;
+                var lang  = response.data.lang;
 
-                    appServices.getLangPreference();
+                if(acct === 'admin'){
+
+                    appServices.getCopy();
 
                     //INITIALISE rootScope VARIABLES
                     $rootScope.img = {};
@@ -505,9 +511,9 @@ function capitalize (elem, ind, arr){
                     $location.path('/admin');
 
                 }
-                else if(response.data.acct_type === 'private'){
+                else if(acct === 'private'){
 
-                    appServices.getLangPreference(response.data.lang);
+                    appServices.getCopy(lang);
 
                     $rootScope.storages = response.data.storages;
                     $rootScope.default_storage = $rootScope.storages[0];
@@ -515,9 +521,6 @@ function capitalize (elem, ind, arr){
 
                     $location.path('/private');
 
-                }
-                else if(response.data.acct_type === 'public'){
-                    $location.path('/public');
                 }
                 else{$location.path('/login');}
             });
@@ -530,8 +533,12 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('logoutCtrl', function($scope, $location, $http){
+;app.controller('logoutCtrl', function($scope, $location, $http, loadServices){
+
     $scope.logout = function(){
+
+        loadServices.getCopy();
+
         $http.get('/logout')
             .then(function(response){
                 $location.path('/login');
@@ -1060,8 +1067,6 @@ function capitalize (elem, ind, arr){
 
     var menu = document.getElementsByClassName('collapse');
 
-    console.log('single view: ', $rootScope.copy);
-
     $scope.animationsEnabled = true;
 
 
@@ -1437,10 +1442,11 @@ function openModal(obj) {
 
     };
 
-    _appServicesFactory.getLangPreference = function(lang){
+    _appServicesFactory.getCopy = function(lang){
 
         $http.get('./models/copy.json')
             .then(function(response){
+
                 if(lang){
                     $rootScope.copy = response.data.views.private[lang];
                 }
@@ -1794,6 +1800,14 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
             .then(function(response){
                 $rootScope.resumes = response.data;
             });
+    };
+
+    this.getCopy = function(){
+        $http.get('./models/copy.json')
+            .then(function(response){
+                //$rootScope.copy = {};
+                $rootScope.copy = response.data.views.public;
+            })
     }
 
 }]);;app.factory('$global',['$http', function($http){
@@ -1905,11 +1919,21 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 }]);;app.directive('insertBio', function(){
 
     return {
-        restrict: 'EA',
+        restrict: 'E',
         scope: {
-            subject: '='
+            thisSubject: '=info'
         },
         templateUrl: 'views/biography.html'
+    };
+
+});;app.directive('myASection', function(){
+
+    return {
+        restrict: 'EA',
+        scope: {
+            subject: '=info'
+        },
+        templateUrl: 'views/myASection.html'
     };
 
 });;app.directive('myAddStorageModal', function(){
@@ -1925,6 +1949,16 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
             copy: '=info'
         }
     }
+});;app.directive('myBSection', function(){
+
+    return {
+        restrict: 'E',
+        //scope: {
+        //    subject: '=info'
+        //},
+        templateUrl: 'views/myBSection.html'
+    };
+
 });;app.directive('myBatchEditModal', function(){
 
     return {

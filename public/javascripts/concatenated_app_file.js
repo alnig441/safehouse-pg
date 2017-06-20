@@ -496,11 +496,28 @@ function capitalize (elem, ind, arr){
 ;app.controller('localNavCtrl', ['$scope', 'appServices', function($scope, appServices){
 
     $scope.goTo = function(tab){
+
         appServices.selectTab(tab.toLowerCase());
+
+        if(tab === 'meta'){
+
+            $scope.form = {};
+            $scope.form.contract = true;
+
+            appServices.buildMeta();
+
+        }
+        else{
+            $scope.form = {};
+            appServices.initPiTSearch($scope, "images");
+        }
+
     }
 }]);;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices) {
 
     $scope.submit = function(){
+
+        $rootScope.template = {};
 
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
@@ -532,7 +549,7 @@ function capitalize (elem, ind, arr){
 
                     $rootScope.storages = response.data.storages;
                     $rootScope.default_storage = $rootScope.storages[0];
-                    $rootScope.active_table = 'images';
+                    $rootScope.tab = 'images';
 
                     $location.path('/private');
 
@@ -797,7 +814,8 @@ function capitalize (elem, ind, arr){
     appServices.initPiTSearch($scope, 'images');
 
 
-    $rootScope.template = {};
+    //$rootScope.template = {};
+    //INITIALISE NG-INCLUDE
     $rootScope.view = 'images';
     $rootScope.template.url = './views/imageSearch.html';
 
@@ -808,50 +826,7 @@ function capitalize (elem, ind, arr){
     var menu = document.getElementsByClassName('collapse');
     angular.element(menu).collapse('hide');
 
-    //SEARCH TYPE SELECTOR
-    $scope.select = function(choice){
-
-        choice = mapTabsFilter(choice.toLowerCase());
-
-        appServices.selectTab(choice);
-
-        if(choice === 'meta'){
-
-            $scope.form = {};
-            $scope.form.contract = true;
-
-            appServices.buildMeta();
-            console.log('meta: ', $rootScope.meta);
-
-        }
-        else{
-            $scope.form = {};
-            appServices.initPiTSearch($scope, "images");
-        }
-
-    };
-
-    //DB TABLE SELECTOR
-    $scope.selectTable = function(table){
-
-        angular.element(menu).collapse('hide');
-
-        if(table == 'videos'){
-            angular.element(document.getElementById('nav_videos')).addClass('ng-hide');
-            angular.element(document.getElementById('nav_images')).removeClass('ng-hide');
-        }
-
-        if(table == 'images'){
-            angular.element(document.getElementById('nav_images')).addClass('ng-hide');
-            angular.element(document.getElementById('nav_videos')).removeClass('ng-hide');
-        }
-
-        $rootScope.active_table = table;
-
-        appServices.initPiTSearch($scope, table);
-
-    };
-
+    //FORM SEARCH TYPE SELECTOR FUNCTION
     $scope.flipType = function(operator){
 
         switch (typeof operator) {
@@ -994,7 +969,9 @@ function capitalize (elem, ind, arr){
     //FUNCTION TO CLEAR SELECTED META SEARCH TERMS FROM $scope.build_query
     $scope.clear = function(){
 
-        if(this.form.table){
+        console.log('clearing form', $rootScope);
+
+        if($rootScope.tab === 'images'){
             $scope.form = {};
             appServices.initPiTSearch($scope, 'images');
         }
@@ -1330,6 +1307,8 @@ function openModal(obj) {
 
     _appServicesFactory.buildMeta = function(obj){
 
+        console.log('building meta: ', obj);
+
         var column;
         var type;
         var key_value;
@@ -1421,6 +1400,8 @@ function openModal(obj) {
                 angular.element(document.getElementById(elements[prop])).removeClass('ng-hide');
             }
         }
+
+        $rootScope.tab = option;
     };
 
     _appServicesFactory.resetSQ = function(){

@@ -1,0 +1,1 @@
+<ul class="nav nav-tabs nav-justified">{{view}}<li ng-repeat="(tab,value) in localTabs" ng-controller="localNavCtrl"><a id="{{tab}}" data-toggle="tab" ng-click="goTo(tab)" ng-if="tab == 'time'" class="active">{{value}}</a><a id="{{tab}}" data-toggle="tab" ng-click="goTo(tab)" ng-if="tab != 'time'">{{value}}</a></li></ul>

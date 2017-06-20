@@ -38,6 +38,14 @@ module.exports = function(grunt) {
                     spawn: false
                 }
             },
+            components: {
+                files: [paths.from.components],
+                tasks: ['jshint', 'jade', 'copy'],
+                options: {
+                    spawn: false
+                }
+            },
+
             styles: {
                 files: [paths.from.styles],
                 tasks: ['jshint','cssmin'],
@@ -93,7 +101,8 @@ module.exports = function(grunt) {
                     {expand: true, cwd: './node_modules/font_awesome/css/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'},
                     {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.js', dest: paths.to.vendors, filter: 'isFile'},
                     {expand: true, cwd: './bower_components/angular-ticker/release/' ,src: '*.css', dest: paths.to.vendors, filter: 'isFile'},
-                    {expand: true, cwd: './models/', src: '*.json', dest: paths.to.models, filter: 'isFile'}
+                    {expand: true, cwd: './models/', src: '*.json', dest: paths.to.models, filter: 'isFile'},
+                    {expand: true, cwd: './development/components/' ,src: '*.html', dest: paths.to.views, filter: 'isFile'},
                 ]
             }
         },
@@ -103,7 +112,7 @@ module.exports = function(grunt) {
             options: {
                 pretty: true,
                 files: {
-                    "*": [paths.from.views, paths.from.partials]
+                    "*": [paths.from.views, paths.from.partials, paths.from.components]
                 }
             },
             debug: {
@@ -119,7 +128,7 @@ module.exports = function(grunt) {
                         livereload: false
                     },
                     files: {
-                        "*": [paths.from.views, paths.from.partials]
+                        "*": [paths.from.views, paths.from.partials, paths.from.components]
                     },
                     pretty: false
                 }
@@ -185,6 +194,6 @@ module.exports = function(grunt) {
 };
 
 var paths = {
-    from: {templates: './development/templates/*.jade', models: './models/*.json', scripts: './development/javascripts/*.js', partials: './development/partials/*.jade', views: './development/views/*.jade', styles: './development/styles/*.css', icons: './development/icons/*.svg', modules: './development/modules/*.js'},
+    from: {components: './development/components/*.jade', templates: './development/templates/*.jade', models: './models/*.json', scripts: './development/javascripts/*.js', partials: './development/partials/*.jade', views: './development/views/*.jade', styles: './development/styles/*.css', icons: './development/icons/*.svg', modules: './development/modules/*.js'},
     to: {models: './public/models/', scripts: './public/javascripts/angular_app.js', views: './public/views/', styles: './public/stylesheets/', icons: './public/icons/', modules: './public/javascripts/', vendors: './public/vendors/'}
 };

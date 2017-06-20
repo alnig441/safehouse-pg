@@ -267,14 +267,11 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('globalNavCtrl', ['$scope', '$rootScope', 'appServices', function($scope, $rootScope, appServices){
 
-    $scope.templates = {
-        "images": "./views/imageSearch.html",
-        "videos": "./views/videoSearch.html"
-    }
-
     $scope.goTo = function(view) {
 
-        $scope.template.url = $scope.templates[view];
+        $rootScope.view = view;
+
+        $rootScope.template.url = $rootScope.copy.partials[view].url;
 
     }
 
@@ -800,8 +797,9 @@ function capitalize (elem, ind, arr){
     appServices.initPiTSearch($scope, 'images');
 
 
-    $scope.template = {};
-    $scope.template.url = './views/imageSearch.html';
+    $rootScope.template = {};
+    $rootScope.view = 'images';
+    $rootScope.template.url = './views/imageSearch.html';
 
     //USE selected_db TO INDICATE WHICH STORAGE AREA IS BEING ACCESSED
     $scope.selected_db = $rootScope.default_storage;
@@ -1993,7 +1991,20 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
     return {
         restrict: 'EA'
     }
-});;app.directive('myLatestEventModal', function(){
+});;app.directive('myGlobalNav', function(){
+
+    return {
+        restrict: 'E',
+
+        scope: {
+            globalTabs: '=info'
+        },
+
+        templateUrl: './views/myGlobalNavMenu.html'
+
+    };
+});
+;app.directive('myLatestEventModal', function(){
 
     return {
         restrict: 'EA',
@@ -2001,7 +2012,20 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
         templateUrl: 'views/myLatestEventModal.html'
 
     };
-});;app.directive('myLoginModal', function(){
+});;app.directive('myLocalNav', function(){
+
+    return {
+        restrict: 'E',
+
+        scope: {
+            localTabs: '=info'
+        },
+
+        templateUrl: './views/myLocalNavMenu.html'
+
+    };
+});
+;app.directive('myLoginModal', function(){
 
     return {
         restrict: 'EA'

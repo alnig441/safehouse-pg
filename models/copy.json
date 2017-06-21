@@ -1,7 +1,7 @@
 {
   "views": {
     "admin": {
-      "head": {
+      "header": {
         "summary": {
           "images": "Images Management",
           "accounts": "Accounts Management",
@@ -25,6 +25,33 @@
           "tickers": "Tickers",
           "projects": "Projects",
           "biographies": "Biographies"
+        }
+      },
+      "body": {},
+      "footer": {},
+      "partials": {
+        "images": {
+          "localNav": {
+            "images": "Images",
+            "events": "Events",
+            "storages": "Storages"
+          },
+          "url": "./views/images.html"
+        },
+        "accounts": {
+          "localNav": {
+            "list": "List",
+            "add": "Add"
+          },
+          "url": "./views/accounts.html"
+        },
+        "landing_page": {
+          "localNav": {
+            "tickers": "Tickers",
+            "projects": "Projects",
+            "biographies": "Biographies"
+          },
+          "url": "./views/landing-page.html"
         }
       },
       "images": {

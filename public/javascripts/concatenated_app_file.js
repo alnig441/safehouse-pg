@@ -214,21 +214,21 @@ function capitalize (elem, ind, arr){
 
     $scope.batchEdit = {};
 
-    $scope.caption = $rootScope.copy.head.summary.images;
-    $scope.template = {};
-    $scope.template.url = './views/images.html';
+    //$scope.caption = $rootScope.copy.header.summary.images;
+    //$scope.template = {};
+    $rootScope.template.url = './views/images.html';
 
-    $scope.templates = {
-        accounts: './views/accounts.html',
-        images: './views/images.html',
-        landing_page: './views/landing-page.html'
-    };
+    //$scope.templates = {
+    //    accounts: './views/accounts.html',
+    //    images: './views/images.html',
+    //    landing_page: './views/landing-page.html'
+    //};
 
-    $scope.switch = function(option){
-        $scope.caption = $rootScope.copy.head.summary[option];
-        $scope.template.url = $scope.templates[option];
-        angular.element(menu).collapse('hide');
-    };
+    //$scope.switch = function(option){
+    //    $scope.caption = $rootScope.copy.header.summary[option];
+    //    $scope.template.url = $scope.templates[option];
+    //    angular.element(menu).collapse('hide');
+    //};
 
     $scope.select = function(choice){
 
@@ -268,6 +268,8 @@ function capitalize (elem, ind, arr){
 ;app.controller('globalNavCtrl', ['$scope', '$rootScope', 'appServices', function($scope, $rootScope, appServices){
 
     $scope.goTo = function(view) {
+
+        console.log('hitting globalNav: ', view);
 
         $rootScope.view = view;
 
@@ -968,8 +970,6 @@ function capitalize (elem, ind, arr){
 
     //FUNCTION TO CLEAR SELECTED META SEARCH TERMS FROM $scope.build_query
     $scope.clear = function(){
-
-        console.log('clearing form', $rootScope);
 
         if($rootScope.tab === 'images'){
             $scope.form = {};

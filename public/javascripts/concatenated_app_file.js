@@ -213,26 +213,13 @@ function capitalize (elem, ind, arr){
     var menu = document.getElementsByClassName('collapse');
 
     $scope.batchEdit = {};
-
-    //$scope.caption = $rootScope.copy.header.summary.images;
-    //$scope.template = {};
+    $rootScope.view = "images";
     $rootScope.template.url = './views/images.html';
-
-    //$scope.templates = {
-    //    accounts: './views/accounts.html',
-    //    images: './views/images.html',
-    //    landing_page: './views/landing-page.html'
-    //};
-
-    //$scope.switch = function(option){
-    //    $scope.caption = $rootScope.copy.header.summary[option];
-    //    $scope.template.url = $scope.templates[option];
-    //    angular.element(menu).collapse('hide');
-    //};
 
     $scope.select = function(choice){
 
         appServices.selectTab(choice.toLowerCase());
+
     };
 
 }]);
@@ -268,8 +255,6 @@ function capitalize (elem, ind, arr){
 ;app.controller('globalNavCtrl', ['$scope', '$rootScope', 'appServices', function($scope, $rootScope, appServices){
 
     $scope.goTo = function(view) {
-
-        console.log('hitting globalNav: ', view);
 
         $rootScope.view = view;
 

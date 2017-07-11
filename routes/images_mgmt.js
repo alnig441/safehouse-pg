@@ -35,6 +35,8 @@ router.post('/add', call.isAuthenticated, function(req, res) {
 
         var img = new qb(req, 'images');
 
+        console.log('string from qb: ', img.insert());
+
         pg.connect(connectionString, function (err, client, done) {
             var query = client.query(img.insert(), function (error, result) {
 

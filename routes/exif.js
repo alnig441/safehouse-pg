@@ -394,6 +394,9 @@ router.post('/', call.isAuthenticated, function(req, res, next){
 
                         for(var prop in locationObj){
                             if(prop){
+                                if(locationObj[prop]){
+                                    locationObj[prop] = locationObj[prop].replace(/\'/g, "''" );
+                                }
                                 imgObj[prop] = locationObj[prop];
                             }
                         }

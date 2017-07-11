@@ -257,8 +257,10 @@ function capitalize (elem, ind, arr){
     $scope.goTo = function(view) {
 
         $rootScope.view = view;
-
         $rootScope.template.url = $rootScope.copy.partials[view].url;
+
+        var menu = document.getElementsByClassName('collapse');
+        angular.element(menu).collapse('hide');
 
     }
 
@@ -1267,7 +1269,18 @@ function openModal(obj) {
     var excl_incr;
     var conditions;
 
-    var elements = {meta: 'meta_div','time': 'time_div', list: 'list_div', add: 'add_div', images: 'image_div', events: 'event_div', storages: 'storage_div', projects: 'resume_div', tickers: 'ticker_div', biographies: 'biography_div'};
+    var elements = {
+        meta: 'meta_div',
+        time: 'time_div',
+        list: 'list_div',
+        add: 'add_div',
+        images: 'image_div',
+        events: 'event_div',
+        storages: 'storage_div',
+        projects: 'resume_div',
+        tickers: 'ticker_div',
+        biographies: 'biography_div'
+    };
 
     var modals = {
         login: {contr: 'LoginModalCtrl', templ: './views/myLoginModal.html'},

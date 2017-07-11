@@ -15,6 +15,7 @@ function Record (req, table, primaryKey, arrays) {
 
         var parms = parseObj(this.request.body, this.primaryKey, this.arrays);
         var query = 'INSERT INTO '+ this.table + ' (' + parms.cols + ') VALUES (' + parms.vals + ')';
+
         return query;
     };
 
@@ -132,8 +133,13 @@ function parseObj (obj, str, arr) {
         }
     }
 
+    console.log('show me vals: ', vals);
+
     parms.cols = cols.toString();
     parms.vals = vals.toString();
+
+    console.log('show me vals: ', parms.vals, typeof parms.vals);
+
 
     return parms;
 }

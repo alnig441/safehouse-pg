@@ -416,7 +416,7 @@ function capitalize (elem, ind, arr){
     };
 
 }]);
-;app.controller('indexCtrl',['$location', '$http', '$rootScope', '$scope','$global','getGlobals', 'appServices', function($location, $http, $rootScope, $scope, $global, getGlobals, appServices){
+;app.controller('indexCtrl',['$timeout', '$location', '$http', '$rootScope', '$scope','$global','getGlobals', 'appServices', function($timeout, $location, $http, $rootScope, $scope, $global, getGlobals, appServices){
 
     switch ($location.$$hash) {
         case 'about_allan':
@@ -429,6 +429,28 @@ function capitalize (elem, ind, arr){
         default :
             $location.path('/login');
             break;
+    }
+
+    $scope.sendForm = function(){
+
+        $http.post('/form_mailer', this.form)
+            .then(function(response){
+                if(response.data.accepted){
+                    $scope.status = 'message received - response imminent';
+                }
+                else if(response.data.rejected){
+                    $scope.status = 'something went wrong - try again';
+                }
+                $timeout(function(){
+                    $scope.status = undefined;
+                }, 5000);
+
+            })
+
+
+
+        this.form = {};
+
     }
 
 

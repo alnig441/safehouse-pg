@@ -36,6 +36,7 @@ var queries = require('./routes/queries');
 var landing = require('./routes/landing_mgmt');
 var exif = require('./routes/exif');
 var videos = require('./routes/videos_mgmt');
+var form_mailer = require('./routes/form_mailer');
 
 var app = express();
 
@@ -128,6 +129,7 @@ app.use('/queries', queries);
 app.use('/landing_mgmt', landing);
 app.use('/exif', exif);
 app.use('/videos_mgmt', videos);
+app.use('/form_mailer', form_mailer)
 
 
 

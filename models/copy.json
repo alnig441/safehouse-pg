@@ -404,16 +404,15 @@
     "public": {
       "header": {
         "navigation": {
-          "about_allan": "Allan",
-          "about_fiona": "Fiona"
+          "#services": "Services",
+          "#contact": "Contact"
         }
       },
       "body": {},
       "footer": {
         "navigation": {
-          "home": "Home",
-          "about_allan": "Allan",
-          "about_fiona": "Fiona"
+          "#services": "Services",
+          "#contact": "Contact"
         }
       }
     }

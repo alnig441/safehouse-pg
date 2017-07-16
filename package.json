@@ -38,7 +38,8 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "sendmail": "^1.1.1",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "smtp-server": "^3.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

@@ -2,12 +2,31 @@ var express = require('express');
 var router = express.Router();
 
 var nodemailer = require('nodemailer');
+var SMTPServer = require('smtp-server').SMTPServer;
 
 router.post('/', function(req, res, next){
 
     console.log('req body: ', req.body);
 
     var mailOpts, transporter, GMXtransporter;
+
+    var server = new SMTPServer({
+        logger: true,
+        onData(stream, session, callback){
+            stream.pipe(process,stdout);
+            stream.on('end',callback);
+    }
+    });
+
+    server.listen(465, 'localhost', function(x){
+        console.log(x);
+    });
+
+    server.on('error', function(err){
+        if(err){
+            console.log('server error: ', err);
+        }
+    })
 
     //GMXtransporter = nodemailer.createTransport({
     //    host: 'mail.gmx.com',

@@ -433,28 +433,44 @@ function capitalize (elem, ind, arr){
 
     $scope.sendForm = function(){
 
-        $http.post('/form_mailer', this.form)
-            .then(function(response){
-                if(response.data.accepted){
-                    $scope.status = 'message received - response imminent';
-                }
-                else if(response.data.rejected){
-                    $scope.status = 'something went wrong - try again';
-                }
-                $timeout(function(){
-                    $scope.status = undefined;
-                }, 5000);
+        var statusElement = angular.element(document).find('p#status');
 
-            })
+        if(this.form && this.form.name && this.form.email && this.form.project){
+
+            $http.post('/form_mailer', this.form)
+                .then(function(response){
+                    if(response.data.accepted){
+                        statusElement.addClass('bg-success');
+                        $scope.status = 'message received - thank you!';
+                        $scope.form = {};
+                    }
+                    else if(response.data.rejected){
+                        statusElement.addClass('bg-danger');
+                        $scope.status = 'something went wrong - try again';
+                    }
+                    this.form = {};
+                    $timeout(clearMessage, 5000);
 
 
+                })
 
-        this.form = {};
+        }
+        else {
+            statusElement.addClass('bg-warning');
+            $scope.status = 'please fill in required fields';
+            $timeout(clearMessage, 5000);
+
+        }
 
     }
 
+    function clearMessage () {
+        angular.element(document).find('p#status').removeClass('bg-success bg-warning bg-danger');
+        $scope.status = undefined;
+    }
 
 }]);
+
 ;app.controller('landingPageCtrl', ['$scope', '$http', '$rootScope', 'appServices', 'landingPageServices', function($scope, $http, $rootScope, appServices, landingPageServices){
 
     $scope.postItem = function(){

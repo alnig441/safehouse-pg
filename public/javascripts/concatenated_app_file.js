@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFileUpload', 'simpleAngularTicker']);
+var app = angular.module('myApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'ngFileUpload', 'simpleAngularTicker', 'ngSanitize']);
 
 app.config(function($routeProvider, $locationProvider){
 
@@ -30,9 +30,9 @@ app.run(['$rootScope', 'loadServices', '$http', function($rootScope, loadService
 
     $rootScope.tickers = {Allan: [{headline: '', copy: '', created_str: ''}], Fiona: [{headline: '', copy: '', created_str: ''}]};
 
-    loadServices.getBios();
-    loadServices.getTickers();
-    loadServices.getProjects();
+    //loadServices.getBios();
+    //loadServices.getTickers();
+    //loadServices.getProjects();
     loadServices.getCopy();
 
 }]);;app.filter('capInitial', function(){

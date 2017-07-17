@@ -9,6 +9,7 @@
   "dependencies": {
     "angular": "^1.4.6",
     "angular-route": "^1.4.6",
+    "angular-sanitize": "^1.5.3",
     "angular-ui-bootstrap": "^0.13.4",
     "bcrypt": "^0.8.7",
     "body-parser": "~1.13.2",

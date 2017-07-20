@@ -408,7 +408,65 @@
           "#contact": "Contact"
         }
       },
-      "body": {},
+      "body": {
+        "about":{
+          "blurb": "testing this"
+        },
+
+        "test": {
+          "labels": {
+            "name": "name",
+            "email": "email",
+            "company": "company",
+            "project": "project",
+            "budget": "budget"
+          }
+        },
+
+        "contactForm": {
+          "labels": {
+            "name": {
+              "name": "name",
+              "type": "text",
+              "regex":"[a-zA-Z\\s]+",
+              "placeholder": "first last"
+            },
+            "email": {
+              "name": "email",
+              "type": "email",
+              "regex": "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$",
+              "placeholder": "myAddress@myDomain.com"
+            },
+            "company": {
+              "name": "company/website",
+              "type": "text",
+              "regex": "",
+              "placeholder": "my company @ www"
+            },
+            "project": {
+              "name": "project",
+              "type": "textarea",
+              "regex": "",
+              "placeholder": ""
+            },
+            "budget": {
+              "name": "budget usd$",
+              "type": "text",
+              "regex": "\\d+",
+              "placeholder": "$"
+            }
+          }
+        },
+
+        "services": {
+          "blurb": ""
+        },
+
+        "other": {
+          "blurb": ""
+        }
+
+      },
       "footer": {
         "navigation": {
           "#services": "Services",

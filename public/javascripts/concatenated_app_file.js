@@ -418,6 +418,10 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('indexCtrl',['$timeout', '$location', '$http', '$rootScope', '$scope','$global','getGlobals', 'appServices', function($timeout, $location, $http, $rootScope, $scope, $global, getGlobals, appServices){
 
+    console.log('index: ', $scope);
+
+    $scope.form = {};
+
     switch ($location.$$hash) {
         case 'about_allan':
             angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
@@ -433,9 +437,14 @@ function capitalize (elem, ind, arr){
 
     $scope.sendForm = function(){
 
+        console.log('Form: ', this.form);
+        console.log('Form valid: ', this.contactForm.$valid, '\nName valid: ', this.contactForm.name.$valid, '\nEmail valid: ', this.contactForm.email.$valid, '\nProject valid: ', this.contactForm.project.$valid, '\nCompany valid: ', this.contactForm.company.$valid, '\nBudget valid: ', this.contactForm.budget.$valid);
+
         var statusElement = angular.element(document).find('p#status');
 
-        if(this.form && this.form.name && this.form.email && this.form.project){
+        if(this.contactForm.$valid && this.form.name && this.form.email && this.form.project){
+
+            console.log('valid: ', $scope.form.input);
 
             $http.post('/form_mailer', this.form)
                 .then(function(response){
@@ -1988,6 +1997,16 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
             copy: '=info'
         }
     }
+});;app.directive('myAvatarCard', function(){
+
+    return {
+        restrict: 'E',
+        //scope: {
+        //    subject: '=info'
+        //},
+        templateUrl: 'views/myAvatarCard.html'
+    };
+
 });;app.directive('myBSection', function(){
 
     return {

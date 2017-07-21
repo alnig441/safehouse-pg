@@ -420,21 +420,26 @@ function capitalize (elem, ind, arr){
 
     $scope.form = {};
 
-    console.log('index: ', $scope);
-
-
-    switch ($location.$$hash) {
-        case 'about_allan':
-            angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
-            angular.element(document.getElementsByClassName('fiona')).addClass('ng-hide');
-            break;
-        case 'about_fiona':
-            angular.element(document.getElementsByClassName('allan')).addClass('ng-hide');
-            break;
-        default :
-            $location.path('/login');
-            break;
+    $scope.goTo = function(anchor, ev){
+        console.log('event: ', ev);
+        ev.preventDefault();
+        $location.hash(anchor);
     }
+
+    //switch ($location.$$hash) {
+    //    case 'about_allan':
+    //        angular.element(document.getElementsByClassName('content-section-b allan')).css('border-bottom', '0px');
+    //        angular.element(document.getElementsByClassName('fiona')).addClass('ng-hide');
+    //        break;
+    //    case 'about_fiona':
+    //        angular.element(document.getElementsByClassName('allan')).addClass('ng-hide');
+    //        break;
+    //    default :
+    //        $location.path('/login');
+    //        break;
+    //}
+
+
 
     $scope.sendForm = function(){
 
@@ -2100,4 +2105,16 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
         restrict: 'EA',
         templateUrl: 'views/myVideoModal.html'
     };
-});
+});;app.directive('scrollTo', function($location, $anchorScroll){
+    return function(scope,  element, attrs){
+        element.bind('click', function(event){
+            event.stopPropagation();
+            scope.$on('$locationChangeStart', function (ev) {
+                ev.preventDefault();
+            });
+            var location = attrs.scrollTo;
+            $location.hash(location);
+            $anchorScroll();
+        })
+    }
+})

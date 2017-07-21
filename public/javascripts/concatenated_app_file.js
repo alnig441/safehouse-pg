@@ -416,11 +416,12 @@ function capitalize (elem, ind, arr){
     };
 
 }]);
-;app.controller('indexCtrl',['$timeout', '$location', '$http', '$rootScope', '$scope','$global','getGlobals', 'appServices', function($timeout, $location, $http, $rootScope, $scope, $global, getGlobals, appServices){
+;app.controller('indexCtrl',['$timeout', '$location', '$http', '$rootScope', '$scope','$global','getGlobals', 'appServices', 'loadServices', function($timeout, $location, $http, $rootScope, $scope, $global, getGlobals, appServices, loadServices){
+
+    $scope.form = {};
 
     console.log('index: ', $scope);
 
-    $scope.form = {};
 
     switch ($location.$$hash) {
         case 'about_allan':
@@ -1851,10 +1852,9 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
     };
 
     this.getCopy = function(){
-        $http.get('./models/copy.json')
+        $http.get('./models/publicCopy.json')
             .then(function(response){
-                //$rootScope.copy = {};
-                $rootScope.copy = response.data.views.public;
+                $rootScope.copy = response.data;
             })
     }
 
@@ -1978,9 +1978,9 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 
     return {
         restrict: 'EA',
-        scope: {
-            subject: '=info'
-        },
+        //scope: {
+        //    subject: '=info'
+        //},
         templateUrl: 'views/myASection.html'
     };
 

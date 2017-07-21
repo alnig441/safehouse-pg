@@ -1,0 +1,247 @@
+{
+  "header": {
+    "summary": {
+      "images": "Images Management",
+      "accounts": "Accounts Management",
+      "landing_page": "Landing Page Management"
+    },
+    "menu": {
+      "images": "images",
+      "accounts": "accounts",
+      "landing_page": "Landing Page"
+    },
+    "img_tabs": {
+      "images": "Images",
+      "events": "Events",
+      "storages": "Storages"
+    },
+    "acct_tabs": {
+      "list": "List",
+      "add": "Add"
+    },
+    "landing_tabs": {
+      "tickers": "Tickers",
+      "projects": "Projects",
+      "biographies": "Biographies"
+    }
+  },
+  "body": {},
+  "footer": {},
+  "partials": {
+    "images": {
+      "localNav": {
+        "images": "Images",
+        "events": "Events",
+        "storages": "Storages"
+      },
+      "url": "./views/images.html"
+    },
+    "accounts": {
+      "localNav": {
+        "list": "List",
+        "add": "Add"
+      },
+      "url": "./views/accounts.html"
+    },
+    "landing_page": {
+      "localNav": {
+        "tickers": "Tickers",
+        "projects": "Projects",
+        "biographies": "Biographies"
+      },
+      "url": "./views/landing-page.html"
+    }
+  },
+  "images": {
+    "forms": {
+      "image": {
+        "manage":{
+          "header": "manage images",
+          "labels": {
+            "id": "id#",
+            "image": "file",
+            "actions": "actions"
+          }
+
+        },
+        "upload": {
+          "header": "upload/categorise images",
+          "labels": {
+            "all": "add all",
+            "id": "id#",
+            "new": "new file",
+            "actions": "actions"
+          }
+        },
+        "failed": {
+          "header": "failed images",
+          "labels": {
+            "file": "file",
+            "error": "error"
+          }
+        }
+      },
+      "event": {
+        "header": "manage events",
+        "labels": {
+          "img_id": "select img/event",
+          "event_da": "beskrivelse",
+          "event_en": "description"
+        }
+      },
+      "storage": {
+        "header": "manage storages",
+        "labels": {
+          "folder": "folder",
+          "path": "path",
+          "owner": "owner",
+          "actions": "actions"
+        }
+      }
+    }
+  },
+  "accounts": {
+    "forms": {
+      "viewAcct": {
+        "header": "active accounts",
+        "labels": {
+          "account": "account",
+          "language": "language",
+          "folders": "folders",
+          "actions": "actions"
+        }
+      },
+      "addAcct": {
+        "labels": {
+          "username": "username",
+          "password": "password",
+          "acct_type": "account type",
+          "storages": "image folder",
+          "lang": "language"
+        }
+      }
+    }
+  },
+  "landing": {
+    "forms": {
+      "ticker": {
+        "header": "create new ticker item",
+        "labels": {
+          "owner": "owner",
+          "date": "date",
+          "headline": "headline",
+          "copy": "copy"
+        }
+      },
+      "project": {
+        "header": "",
+        "labels": {
+          "owner": "owner",
+          "begin_date": "begin date",
+          "end_date": "end date",
+          "company": "company",
+          "skills": "technologies",
+          "description": "description"
+        }
+
+      },
+      "biography": {
+        "header": "update biography",
+        "labels": {
+          "owner": "owner",
+          "about": "about",
+          "soft_skills": "soft skills",
+          "hard_skills": "hard skills"
+        }
+      }
+    }
+
+  },
+  "modals": {
+    "addTags": {
+      "labels": {
+        "meta": "Type of Image",
+        "names": "People in Image",
+        "occasion": "Occasion",
+        "country": "Country of Origin",
+        "state": "State of Origin",
+        "city": "City of Origin",
+        "event_da": "Danish",
+        "event_en": "English"
+      },
+      "checkboxes": {
+        "add_tags": "Add/Modify Tags",
+        "add_event": "Add/Modify Event"
+      }
+    },
+    "batchEdit": {
+      "labels": {
+        "meta": "Type of Image",
+        "names": "People in Image",
+        "occasion": "Occasion",
+        "country": "Country of Origin",
+        "state": "State of Origin",
+        "city": "City of Origin"
+      }
+    },
+    "changePw": {
+      "labels": {
+        "username": "Username",
+        "new_password": "New Password",
+        "confirm_password": "Confirm Password"
+      }
+    },
+    "manageStorages": {
+
+    },
+    "modifyStorages": {
+
+    },
+    "resume": {
+
+    },
+    "saveImg": {
+
+    }
+  },
+  "buttons": {
+    "submit": "submit",
+    "cancel": "cancel",
+    "save": "save",
+    "delete": "delete",
+    "update": "update",
+    "add": "add",
+    "run": "run",
+    "batchEdit": "batch edit"
+  },
+  "values": {
+    "fixed": {
+      "templates": {
+        "accounts": "./views/accounts.html",
+        "images": "./views/images.html",
+        "landing_page": "./views/landing-page.html"
+      },
+      "tools": [
+        { "name": "import", "value": "loadNewImages" },
+        { "name": "update", "value": "checkExif" }
+      ],
+      "acct": [
+        {"name": "Private", "value": "private"},
+        {"name": "Public", "value": "public"},
+        {"name": "Admin", "value": "admin"},
+        {"name": "Superuser", "value": "superuser"}
+      ],
+      "lang": [
+        {"name": "English", "value": "en"},
+        {"name": "Danish", "value": "da"}
+      ],
+      "owners": [
+        {"name": "Allan", "value": "Allan"},
+        {"name": "Fiona", "value": "Fiona"}
+      ]
+    },
+    "dynamic": {
+
+    }
+  }
+}

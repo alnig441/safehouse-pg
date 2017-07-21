@@ -1,0 +1,59 @@
+{
+  "header": {
+    "navigation": {
+      "#services": "Services",
+      "#contact": "Contact"
+    }
+  },
+  "body": {
+    "about": {
+      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vehicula vitae eros elementum convallis. Nunc posuere porta vestibulum. Morbi tellus lacus, sagittis id ante eu, suscipit ullamcorper nibh. Etiam porta sit amet mi ut tincidunt. Curabitur tristique vehicula dui, scelerisque tincidunt orci ullamcorper elementum. Integer mattis, magna at aliquet accumsan, elit nibh facilisis diam, id sollicitudin felis mauris ut nulla. Nulla nec facilisis libero. Suspendisse commodo consequat convallis. Suspendisse volutpat euismod scelerisque. Praesent porttitor vitae ex viverra malesuada."
+    },
+    "contactForm": {
+      "labels": {
+        "name": {
+          "name": "name",
+          "type": "text",
+          "regex": "[a-zA-Z\\s]+",
+          "placeholder": "<FIRST> <LAST>"
+        },
+        "email": {
+          "name": "email",
+          "type": "email",
+          "regex": "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$",
+          "placeholder": "<MYADDRESS@MYDOMAIN.COM>"
+        },
+        "company": {
+          "name": "company / website",
+          "type": "text",
+          "regex": "",
+          "placeholder": "MY COMPANY @ WWW"
+        },
+        "project": {
+          "name": "project",
+          "type": "textarea",
+          "regex": "",
+          "placeholder": "<MY PROJECT DESCRIPTION>"
+        },
+        "budget": {
+          "name": "budget",
+          "type": "number",
+          "regex": "\\d+",
+          "placeholder": "<$>"
+        }
+      }
+    },
+    "services": {
+      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vehicula vitae eros elementum convallis. Nunc posuere porta vestibulum. Morbi tellus lacus, sagittis id ante eu, suscipit ullamcorper nibh. Etiam porta sit amet mi ut tincidunt. Curabitur tristique vehicula dui, scelerisque tincidunt orci ullamcorper elementum. Integer mattis, magna at aliquet accumsan, elit nibh facilisis diam, id sollicitudin felis mauris ut nulla. Nulla nec facilisis libero. Suspendisse commodo consequat convallis. Suspendisse volutpat euismod scelerisque. Praesent porttitor vitae ex viverra malesuada."
+    },
+    "other": {
+      "blurb": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vehicula vitae eros elementum convallis. Nunc posuere porta vestibulum. Morbi tellus lacus, sagittis id ante eu, suscipit ullamcorper nibh. Etiam porta sit amet mi ut tincidunt. Curabitur tristique vehicula dui, scelerisque tincidunt orci ullamcorper elementum. Integer mattis, magna at aliquet accumsan, elit nibh facilisis diam, id sollicitudin felis mauris ut nulla. Nulla nec facilisis libero. Suspendisse commodo consequat convallis. Suspendisse volutpat euismod scelerisque. Praesent porttitor vitae ex viverra malesuada."
+    }
+  },
+  "footer": {
+    "navigation": {
+      "#services": "Services",
+      "#contact": "Contact"
+    }
+  }
+}

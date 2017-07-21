@@ -1,0 +1,152 @@
+{
+  "da": {
+    "header": {
+      "summary": {
+        "images": "billeder",
+        "videos": "videoer",
+        "events": "begivenheder"
+      },
+      "menu": {
+        "latest": "seneste begivenhed",
+        "images": "billeder",
+        "videos": "videoer"
+      },
+      "tabs": {
+        "time": "Tidsafgrænset",
+        "meta": "Indholdsbaseret"
+      }
+    },
+    "body": {
+    },
+    "footer": {
+    },
+    "partials": {
+      "videos": {
+        "localNav": {
+
+        },
+        "url": "./views/videoSearch.html"
+      },
+      "images": {
+        "localNav": {
+          "time": "Tidsafgrænset",
+          "meta": "Indholdsbaseret"
+        },
+        "url": "./views/imageSearch.html"
+      }
+    },
+    "forms": {
+      "time": {
+        "labels": {
+          "area": "vælg søgeområde",
+          "year": "vælg år",
+          "month": "vælg måned",
+          "day": "vælg dag",
+          "significance": "søg som mærkedag"
+        },
+        "checkboxes": {
+          "images": "billeder",
+          "events": "begivenheder"
+        }
+      },
+      "meta": {
+        "labels": {
+          "meta": "vælg søgeord",
+          "names": "vælg personer",
+          "occasion": "vælg lejlighed",
+          "country": "vælg land",
+          "state": "vælg stat",
+          "city": "vælg by",
+          "type": "vælg søgningstype",
+          "criteria": "valgte søgekriterier"
+        },
+        "checkboxes": {
+          "contract": "begræns",
+          "expand": "udvid",
+          "exclude": "frasorter",
+          "items": "emner i søgning"
+        }
+      }
+    },
+    "buttons": {
+      "search": "søg",
+      "searching": "søger...",
+      "cancel": "afslut",
+      "reset": "nulstil"
+    }
+  },
+  "en": {
+    "header": {
+      "summary": {
+        "images": "images",
+        "videos": "videos",
+        "events": "events"
+      },
+      "menu": {
+        "latest": "latest event",
+        "images": "images",
+        "videos": "videos"
+      },
+      "tabs": {
+        "time": "Point-in-Time",
+        "meta": "Content"
+      }
+    },
+    "body": {
+
+    },
+    "footer": {},
+    "partials": {
+      "videos": {
+        "localNav": {},
+        "url": "./views/videoSearch.html"
+      },
+      "images": {
+        "localNav": {
+          "time": "Point-in-Time",
+          "meta": "Content"
+        },
+        "url": "./views/imageSearch.html"
+      }
+    },
+    "forms": {
+      "time": {
+        "labels": {
+          "area": "select search area",
+          "year": "select year",
+          "month": "select month",
+          "day": "select day",
+          "significance": "date of significance"
+        },
+        "checkboxes": {
+          "images": "images",
+          "events": "events"
+        }
+      },
+      "meta": {
+        "labels": {
+          "meta": "select keyword",
+          "names": "select people",
+          "occasion": "select occasion",
+          "country": "select country",
+          "state": "select state",
+          "city": "select city",
+          "type": "type of search",
+          "criteria": "selected search criteria"
+        },
+        "checkboxes": {
+          "contract": "contract",
+          "expand": "expand",
+          "exclude": "exclude",
+          "items": "items in current search"
+        }
+      }
+    },
+    "buttons": {
+      "search": "search",
+      "searching": "searching..",
+      "cancel": "cancel",
+      "reset": "reset"
+    }
+  }
+}

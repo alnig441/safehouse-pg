@@ -18,7 +18,7 @@
           "placeholder": "<FIRST> <LAST>"
         },
         "email": {
-          "name": "email",
+          "name": "email address",
           "type": "email",
           "regex": "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$",
           "placeholder": "<MYADDRESS@MYDOMAIN.COM>"
@@ -27,16 +27,16 @@
           "name": "company / website",
           "type": "text",
           "regex": "",
-          "placeholder": "MY COMPANY @ WWW"
+          "placeholder": "<MY COMPANY> / <WWW>"
         },
         "project": {
-          "name": "project",
+          "name": "project description",
           "type": "textarea",
           "regex": "",
           "placeholder": "<MY PROJECT DESCRIPTION>"
         },
         "budget": {
-          "name": "budget",
+          "name": "budget usd$",
           "type": "number",
           "regex": "\\d+",
           "placeholder": "<$>"

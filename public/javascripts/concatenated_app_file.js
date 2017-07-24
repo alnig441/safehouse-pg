@@ -256,6 +256,8 @@ function capitalize (elem, ind, arr){
 
     $scope.goTo = function(view) {
 
+        console.log('hello from globalNavCtrl');
+
         $rootScope.view = view;
         $rootScope.template.url = $rootScope.copy.partials[view].url;
 
@@ -822,6 +824,8 @@ function capitalize (elem, ind, arr){
 });
 ;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices',  function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices){
 
+    console.log('hello from privCtrl');
+
     $scope.summaryCount = {};
 
     imageServices.getDbCount($scope);
@@ -841,8 +845,8 @@ function capitalize (elem, ind, arr){
     $scope.selected_db = $rootScope.default_storage;
 
     //COLLAPSE DROPDOWN MENU
-    var menu = document.getElementsByClassName('collapse');
-    angular.element(menu).collapse('hide');
+    //var menu = document.getElementsByClassName('collapse');
+    //angular.element(menu).collapse('hide');
 
     //FORM SEARCH TYPE SELECTOR FUNCTION
     $scope.flipType = function(operator){
@@ -1472,7 +1476,7 @@ function openModal(obj) {
 
     };
 
-    _appServicesFactory.getCopy = function(lang){
+    _appServicesFactory.getCopy = function(lang, $scope){
 
         $http.get('./models/copy.json')
             .then(function(response){
@@ -2096,6 +2100,8 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 
             var location = attrs.scrollTo;
             $location.hash(location);
+
+            console.log('hello from scrollToDirective');
 
             var menu = document.getElementsByClassName('collapse');
             angular.element(menu).collapse('hide');

@@ -596,7 +596,7 @@ function capitalize (elem, ind, arr){
 
         $http.get('/logout')
             .then(function(response){
-                //$route.reload();
+                $route.reload();
                 $location.path('/login');
             });
     };

@@ -533,7 +533,7 @@ function capitalize (elem, ind, arr){
         }
 
     }
-}]);;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices) {
+}]);;app.controller('LoginModalCtrl', function ($scope, $modalInstance, $http, $location, $rootScope, appServices, storageServices, imageServices, eventServices, $route) {
 
     $scope.submit = function(){
 
@@ -541,6 +541,9 @@ function capitalize (elem, ind, arr){
 
         $http.post('/login/authenticate', $scope.form)
             .then(function(response){
+
+                // RELOAD ROUTES IN ORDER TO REINSTANTIATE CONTROLLERS AFTER PREVENTDEFAULT RUN IN SCROLLTO.JS
+                $route.reload();
 
                 var acct  = response.data.acct_type;
                 var lang  = response.data.lang;
@@ -585,7 +588,7 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('logoutCtrl', function($scope, $location, $http, loadServices){
+;app.controller('logoutCtrl', function($scope, $location, $http, loadServices, $route){
 
     $scope.logout = function(){
 
@@ -593,6 +596,7 @@ function capitalize (elem, ind, arr){
 
         $http.get('/logout')
             .then(function(response){
+                //$route.reload();
                 $location.path('/login');
             });
     };
@@ -822,9 +826,7 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices',  function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices){
-
-    console.log('hello from privCtrl');
+;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', '$route', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices, $route){
 
     $scope.summaryCount = {};
 
@@ -2046,9 +2048,9 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 
     };
 });
-;app.directive('myLoginModal', function(){
+;app.directive('myLoginModal', function($location, $anchorScroll){
 
-    return {
+    return  {
         restrict: 'EA'
     };
 });
@@ -2090,18 +2092,14 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
     return function(scope,  element, attrs){
         element.bind('click', function(event){
 
-            console.log('element:', element, "\nscope: ", scope, "\nattributes: ", attrs);
-
             event.stopPropagation();
 
             scope.$on('$locationChangeStart', function (ev) {
-                ev.preventDefault();
+                ev.preventDefault(false);
             });
 
             var location = attrs.scrollTo;
             $location.hash(location);
-
-            console.log('hello from scrollToDirective');
 
             var menu = document.getElementsByClassName('collapse');
             angular.element(menu).collapse('hide');

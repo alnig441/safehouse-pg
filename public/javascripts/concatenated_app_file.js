@@ -252,17 +252,16 @@ function capitalize (elem, ind, arr){
         $modalInstance.dismiss('cancel');
     };
 }]);
-;app.controller('globalNavCtrl', ['$scope', '$rootScope', 'appServices', function($scope, $rootScope, appServices){
+;app.controller('globalNavCtrl', ['$scope', '$rootScope', 'appServices',  function($scope, $rootScope, appServices){
 
     $scope.goTo = function(view) {
 
-        console.log('hello from globalNavCtrl');
+        var elem = document.getElementsByClassName('collapse');
 
         $rootScope.view = view;
         $rootScope.template.url = $rootScope.copy.partials[view].url;
 
-        var menu = document.getElementsByClassName('collapse');
-        angular.element(menu).collapse('hide');
+        angular.element(elem).collapse("toggle");
 
     }
 
@@ -828,6 +827,8 @@ function capitalize (elem, ind, arr){
 });
 ;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', '$route', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices, $route){
 
+    console.log('helle from priv: ', $scope.$includeContentLoaded);
+
     $scope.summaryCount = {};
 
     imageServices.getDbCount($scope);
@@ -837,18 +838,25 @@ function capitalize (elem, ind, arr){
     appServices.resetSQ();
     appServices.initPiTSearch($scope, 'images');
 
+    $scope.$on('', function(x, y, z){
+
+        console.log('blah: ', x, y , z);
+    })
+
+
+    $scope.$on('$includeContentLoaded', function(){
+        console.log('include content loaded!');
+        //$scope.$emit('click');
+    })
 
     //$rootScope.template = {};
     //INITIALISE NG-INCLUDE
     $rootScope.view = 'images';
+
     $rootScope.template.url = './views/imageSearch.html';
 
     //USE selected_db TO INDICATE WHICH STORAGE AREA IS BEING ACCESSED
     $scope.selected_db = $rootScope.default_storage;
-
-    //COLLAPSE DROPDOWN MENU
-    //var menu = document.getElementsByClassName('collapse');
-    //angular.element(menu).collapse('hide');
 
     //FORM SEARCH TYPE SELECTOR FUNCTION
     $scope.flipType = function(operator){
@@ -894,8 +902,6 @@ function capitalize (elem, ind, arr){
     //1) POPULATE THE META SEARCH FIELDS WITH APPROPRIATE VALUES
     //2) CREATE THE APPROPRIATE POSTGRES SEARCH STRING FOR WHEN IMAGE SEARCH IS SUBMITTED
     $scope.build_query = function(searchTerm) {
-
-        console.log('this form: ', this.form);
 
         var query = {};
 
@@ -1090,8 +1096,6 @@ function capitalize (elem, ind, arr){
 
 
     $scope.open = function (size, option, misc) {
-
-        console.log('option: ', option, this);
 
         var config = {
             $scope: $scope,
@@ -1340,8 +1344,6 @@ function openModal(obj) {
 
     _appServicesFactory.buildMeta = function(obj){
 
-        console.log('building meta: ', obj);
-
         var column;
         var type;
         var key_value;
@@ -1403,7 +1405,6 @@ function openModal(obj) {
             $http.get('/dropdowns/')
                 .then(function(result){
                     $rootScope.meta = result.data;
-                    console.log('meta: ', $rootScope.meta);
                 });
         }else {
             $http.get('/dropdowns/'+ conditions)
@@ -1420,8 +1421,6 @@ function openModal(obj) {
     };
 
     _appServicesFactory.selectTab = function(option){
-
-        console.log('appServices selectTab incoming; ', option);
 
         for(var prop in elements){
             if(prop !== option){
@@ -2031,7 +2030,6 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 
     return {
         restrict: 'EA',
-        //templateUrl: 'views/latestEvent.html'
         templateUrl: 'views/myLatestEventModal.html'
 
     };
@@ -2089,8 +2087,8 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
     };
 });;app.directive('scrollTo', function($location, $anchorScroll){
 
-    return function(scope,  element, attrs){
-        element.bind('click', function(event){
+    return function(scope, element, attrs){
+        element.on('click', function(event){
 
             event.stopPropagation();
 

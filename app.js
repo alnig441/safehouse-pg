@@ -92,7 +92,6 @@ passport.use('local', new localStrategy({
             });
 
             query.on('end', function(result){
-                console.log('login happened: ', user);
                 client.end();
             });
         })

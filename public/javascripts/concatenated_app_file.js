@@ -159,8 +159,6 @@ function capitalize (elem, ind, arr){
 
 };app.controller('acctsCtrl',['accountServices', '$scope', 'appServices', '$http', '$rootScope', function(accountServices, $scope, appServices, $http, $rootScope){
 
-    console.log('accounts ctrl root: ', $rootScope);
-
     $scope.getValues = function(){
 
     };
@@ -210,7 +208,9 @@ function capitalize (elem, ind, arr){
 }]);
 ;app.controller('adminCtrl', ['$scope', '$rootScope', '$location', 'appServices',  function($scope, $rootScope, $location, appServices){
 
-    var menu = document.getElementsByClassName('collapse');
+    console.log('acctsctrl - hello');
+
+    //var menu = document.getElementsByClassName('collapse');
 
     $scope.batchEdit = {};
     $rootScope.view = "images";
@@ -528,7 +528,7 @@ function capitalize (elem, ind, arr){
         }
         else{
             $scope.form = {};
-            appServices.initPiTSearch($scope, "images");
+        //    appServices.initPiTSearch($scope, "images");
         }
 
     }
@@ -571,7 +571,9 @@ function capitalize (elem, ind, arr){
 
                     $rootScope.storages = response.data.storages;
                     $rootScope.default_storage = $rootScope.storages[0];
-                    $rootScope.tab = 'images';
+                    $rootScope.tab = 'time';
+                    $rootScope.view = 'images';
+                    $rootScope.template.url = './views/imageSearch.html';
 
                     $location.path('/private');
 
@@ -744,6 +746,8 @@ function capitalize (elem, ind, arr){
 
     $scope.submitCriteria = function(size,type) {
 
+        console.log('submitting search: ', this.form);
+
         $scope.spinning = true;
 
         $scope.executeSearch(type);
@@ -774,6 +778,8 @@ function capitalize (elem, ind, arr){
 
     $scope.executeSearch = function (type) {
 
+        console.log('executing search: \nthis.form: ', this.form ,'\nscope.form; ', $scope.form);
+
         var obj = {};
         var arr = [];
 
@@ -783,7 +789,6 @@ function capitalize (elem, ind, arr){
 
         if(type === 'meta' && arr[0]){
             if(arr[0].toLowerCase() !== 'select'){
-                console.log('bingo');
                 obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
             }
             else{
@@ -803,8 +808,6 @@ function capitalize (elem, ind, arr){
 
         var temp = [];
 
-        console.log('show me obj: ', obj);
-
 
         $http.post('/queries', obj)
             .then(function(response){
@@ -812,22 +815,13 @@ function capitalize (elem, ind, arr){
 
             });
 
-        if(type == 'meta'){
-            $scope.clear();
-        }
-        else{
-            console.log('clearing time form');
-            $scope.select('time');
-        }
-
-
 
     };
 
 });
 ;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', '$route', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices, $route){
 
-    console.log('helle from priv: ', $scope.$includeContentLoaded);
+    console.log('hello from privCtrl', $scope.list, $rootScope.list);
 
     $scope.summaryCount = {};
 
@@ -838,22 +832,11 @@ function capitalize (elem, ind, arr){
     appServices.resetSQ();
     appServices.initPiTSearch($scope, 'images');
 
-    $scope.$on('', function(x, y, z){
-
-        console.log('blah: ', x, y , z);
-    })
-
-
-    $scope.$on('$includeContentLoaded', function(){
-        console.log('include content loaded!');
-        //$scope.$emit('click');
-    })
-
     //$rootScope.template = {};
     //INITIALISE NG-INCLUDE
-    $rootScope.view = 'images';
+    //$rootScope.view = 'images';
 
-    $rootScope.template.url = './views/imageSearch.html';
+    //$rootScope.template.url = './views/imageSearch.html';
 
     //USE selected_db TO INDICATE WHICH STORAGE AREA IS BEING ACCESSED
     $scope.selected_db = $rootScope.default_storage;
@@ -999,12 +982,19 @@ function capitalize (elem, ind, arr){
     //FUNCTION TO CLEAR SELECTED META SEARCH TERMS FROM $scope.build_query
     $scope.clear = function(){
 
-        if($rootScope.tab === 'images'){
+
+        if($rootScope.tab === 'time'){
+
+            console.log('clearing form ', $rootScope.tab, '\n', $scope.form);
+
             $scope.form = {};
             appServices.initPiTSearch($scope, 'images');
         }
 
         else{
+
+            console.log('clearing form ', $rootScope.tab, '\n', $scope.form);
+
             $scope.form = {};
             $scope.form.contract = true;
             $scope.form.expand = false;
@@ -1092,6 +1082,15 @@ function capitalize (elem, ind, arr){
 
     var menu = document.getElementsByClassName('collapse');
 
+    $scope.setSrc = function(src) {
+
+        console.log('show src: ', src);
+
+        document.getElementById('myVideo').src = src;
+
+
+    }
+
     $scope.animationsEnabled = true;
 
 
@@ -1154,15 +1153,24 @@ function capitalize (elem, ind, arr){
             openModal(config);
         }
 
-        else if(misc === 'allan'){
-            $scope.projects = $rootScope.resumes.Allan;
-            openModal(config);
-        }
+        //else if(misc === 'allan'){
+        //    $scope.projects = $rootScope.resumes.Allan;
+        //    openModal(config);
+        //}
+        //
+        //else if(misc === 'fiona'){
+        //    $scope.projects = $rootScope.resumes.Fiona;
+        //    openModal(config);
+        //}
 
-        else if(misc === 'fiona'){
-            $scope.projects = $rootScope.resumes.Fiona;
-            openModal(config);
-        }
+        //else if(misc) {
+        //
+        //    var video = document.getElementsByTagName('source');
+        //    video.src = misc;
+        //    console.log('myVideo: ', document.getElementById('myVideo'));
+        //    openModal(config);
+        //
+        //}
 
         else {
             openModal(config);
@@ -1187,7 +1195,7 @@ function openModal(obj) {
     }
 
 
-};;app.controller('VideoModalCtrl', function($scope, $modalInstance, $http, appServices, $location){
+};;app.controller('VideoModalCtrl', function($scope, $modalInstance){
 
     $scope.cancel = function(){
         $modalInstance.dismiss('cancel');
@@ -1421,6 +1429,8 @@ function openModal(obj) {
     };
 
     _appServicesFactory.selectTab = function(option){
+
+        console.log('selecting tab: ', option);
 
         for(var prop in elements){
             if(prop !== option){
@@ -1950,7 +1960,39 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 
     return _videoServiceFactory;
 
-}]);;app.directive('insertBio', function(){
+}]);;app.directive('myEventHandler', function(){
+
+    return {
+        restrict: 'EA',
+        link: function(scope, element, attrs) {
+
+            var video = document.getElementById('myVideo');
+
+            element.on('canplay', function(event){
+
+                console.log('ready to play\nattrs: ', attrs, '\nscope: ', scope, '\nelement: ', element);
+
+                video.play();
+
+            })
+
+            element.on('canplaythrough', function(event){
+
+                console.log('fully loaded\nattrs: ', attrs, '\nscope: ', scope, '\nelement: ', element);
+
+                video.play();
+
+            })
+
+            element.on('error', function(event) {
+
+                console.log('error handler reporting error: \n' ,event.target)
+
+            })
+        }
+    }
+
+});app.directive('insertBio', function(){
 
     return {
         restrict: 'E',
@@ -2033,11 +2075,10 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
         templateUrl: 'views/myLatestEventModal.html'
 
     };
-});;app.directive('myLocalNav', function(){
+});;app.directive('myLocalNav', function($rootScope){
 
     return {
         restrict: 'E',
-
         scope: {
             localTabs: '=info'
         },
@@ -2084,6 +2125,7 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
     return {
         restrict: 'EA',
         templateUrl: 'views/myVideoModal.html'
+
     };
 });;app.directive('scrollTo', function($location, $anchorScroll){
 

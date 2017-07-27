@@ -67,7 +67,7 @@
 
             },
             "upload": {
-              "header": "upload/categorise images",
+              "header": "upload/categorise",
               "labels": {
                 "all": "add all",
                 "id": "id#",
@@ -107,8 +107,8 @@
           "viewAcct": {
             "header": "active accounts",
             "labels": {
-              "account": "account",
-              "language": "language",
+              "account": "acct",
+              "language": "lang",
               "folders": "folders",
               "actions": "actions"
             }

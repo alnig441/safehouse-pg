@@ -1126,17 +1126,16 @@ function capitalize (elem, ind, arr){
     //FUNCTION TO CLEAR SELECTED META SEARCH TERMS FROM $scope.build_query
     $scope.clear = function(){
 
+        $scope.form = {};
+        $scope.form.contract = true;
+        $scope.form.expand = false;
+        $scope.form.exclude = false;
 
         if($rootScope.tab === 'time'){
-            $scope.form = {};
             appServices.initPiTSearch($scope, 'images');
         }
 
         else{
-            $scope.form = {};
-            $scope.form.contract = true;
-            $scope.form.expand = false;
-            $scope.form.exclude = false;
             appServices.resetSQ();
             appServices.buildMeta();
         }

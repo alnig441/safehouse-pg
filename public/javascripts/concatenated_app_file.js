@@ -826,7 +826,8 @@ function capitalize (elem, ind, arr){
 
     $scope.close = function() {
 
-        angular.element(document.getElementById("myFrame")).css({"top": "-700px", "transition-duration": "0.5s" });
+        $scope.selector = 0;
+        angular.element(document.getElementById("myFrame")).css({"top": "-1200px", "transition-duration": "0.5s" });
         angular.element(document.getElementById("privateTmpl")).css('opacity','1');
 
         $timeout(function(){

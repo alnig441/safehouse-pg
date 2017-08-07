@@ -2120,7 +2120,7 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
                     angular.element(footer).find('#footer_date').text($rootScope.events[scope.selector].created);
                     angular.element(footer).find('#footer_count').text(scope.selector + 1 + '/' + $rootScope.events.length);
 
-                    if($rootScope.events[scope.selector].decription){
+                    if($rootScope.events[scope.selector].description){
                         angular.element(header).find('#header_text').text($rootScope.events[scope.selector].description);
                     }
 

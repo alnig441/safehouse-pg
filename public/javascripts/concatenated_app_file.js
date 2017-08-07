@@ -574,6 +574,7 @@ function capitalize (elem, ind, arr){
                     $rootScope.tab = 'time';
                     $rootScope.view = 'images';
                     $rootScope.template.url = './views/imageSearch.html';
+                    $rootScope.events = {};
 
                     $location.path('/private');
 
@@ -602,7 +603,72 @@ function capitalize (elem, ind, arr){
             });
     };
 });
-;app.controller('ModalInstanceCtrl2', function($scope, $rootScope, $modalInstance, events, $interval) {
+;app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, storageServices){
+
+    storageServices.getStorages();
+
+    $scope.submit = function(option){
+
+        if(option){
+
+            this.user.option = option;
+
+            $http.put('/accounts_mgmt/modify_storage',this.user)
+                .then(function(response){
+                    $scope.viewAcct(response.config.data.acct_type);
+                });
+
+            $modalInstance.dismiss('cancel');
+        }
+
+        else{
+
+            if(this.user.new_password === $scope.user.confirm_password){
+                $http.put('/accounts_mgmt/chg', $scope.user)
+                    .then(function(response){
+                        var alert = document.getElementById('alerts');
+                        angular.element(alert).html(response.data);
+                    });
+            }
+            else {
+                angular.element(document.getElementById('alerts')).html('password mismatch');
+            }
+
+            $modalInstance.dismiss('cancel');
+
+        }
+
+    };
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
+;app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http, $rootScope, appServices, storageServices){
+
+    $scope.submit = function(option){
+
+        if(option === 'add'){
+            storageServices.addStorage(this.storage);
+        }
+
+        if(option === 'modify'){
+            storageServices.modifyStorage(this.storage);
+        }
+
+        $modalInstance.dismiss('cancel');
+    };
+
+
+    $scope.cancel = function(){
+        $modalInstance.dismiss('cancel');
+    };
+
+});
+;app.controller('MultiViewModalCtrl', function($scope, $rootScope, $modalInstance, events, $interval) {
+
+    console.log('MVM ctrl');
 
     $scope.selector = 0;
 
@@ -677,76 +743,13 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('ModifyAcctModalCtrl', function($scope, $modalInstance, $http, storageServices){
+;app.controller('multiViewModalInstanceCtrl', function($scope, $rootScope, $http, $modal, $timeout, appServices){
 
-    storageServices.getStorages();
-
-    $scope.submit = function(option){
-
-        if(option){
-
-            this.user.option = option;
-
-            $http.put('/accounts_mgmt/modify_storage',this.user)
-                .then(function(response){
-                    $scope.viewAcct(response.config.data.acct_type);
-                });
-
-            $modalInstance.dismiss('cancel');
-        }
-
-        else{
-
-            if(this.user.new_password === $scope.user.confirm_password){
-                $http.put('/accounts_mgmt/chg', $scope.user)
-                    .then(function(response){
-                        var alert = document.getElementById('alerts');
-                        angular.element(alert).html(response.data);
-                    });
-            }
-            else {
-                angular.element(document.getElementById('alerts')).html('password mismatch');
-            }
-
-            $modalInstance.dismiss('cancel');
-
-        }
-
-    };
-
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
-
-});
-;app.controller('ModifyStorageModalCtrl', function($scope, $modalInstance, $http, $rootScope, appServices, storageServices){
-
-    $scope.submit = function(option){
-
-        if(option === 'add'){
-            storageServices.addStorage(this.storage);
-        }
-
-        if(option === 'modify'){
-            storageServices.modifyStorage(this.storage);
-        }
-
-        $modalInstance.dismiss('cancel');
-    };
-
-
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
-
-});
-;app.controller('multiViewModalCtrl', function($scope, $rootScope, $http, $modal, $timeout, appServices){
+    console.log('MVMI ctrl');
 
     $scope.animationsEnabled = true;
 
     $scope.submitCriteria = function(size,type) {
-
-        console.log('submitting search: ', this.form);
 
         $scope.spinning = true;
 
@@ -777,8 +780,6 @@ function capitalize (elem, ind, arr){
     };
 
     $scope.executeSearch = function (type) {
-
-        console.log('executing search: \nthis.form: ', this.form ,'\nscope.form; ', $scope.form);
 
         var obj = {};
         var arr = [];
@@ -819,9 +820,149 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', '$route', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices, $route){
+;app.controller('myPictureFrameCtrl', ['$scope','$rootScope', 'appServices', '$http', '$timeout', function($scope, $rootScope, appServices, $http, $timeout){
 
-    console.log('hello from privCtrl', $scope.list, $rootScope.list);
+    $scope.selector = 0;
+
+    $scope.close = function() {
+
+        angular.element(document.getElementById("myFrame")).css({"top": "-700px", "transition-duration": "0.5s" });
+        angular.element(document.getElementById("privateTmpl")).css('opacity','1');
+
+        $timeout(function(){
+            angular.element(document.getElementsByTagName('img')).removeClass('playing paused').removeAttr('src');
+            angular.element(document.getElementsByClassName('fa-pause')).removeClass('fa-pause').addClass('fa-play');
+            angular.element(document.getElementById('stepForward')).prop('disabled', false);
+            angular.element(document.getElementById('stepBackward')).prop('disabled', false);
+            $timeout.cancel();
+        },1000);
+
+
+    }
+
+    $scope.callToAction = function(action, origin) {
+
+        console.log('call to action: ', $scope);
+
+        var body = document.getElementsByClassName('body');
+        var footer = document.getElementsByClassName('footer');
+
+        switch (action) {
+
+            case 'play':
+
+                if(angular.element(footer).find('#play').children('i').hasClass('fa-play')){
+                    angular.element(footer).find("#play").children('i').addClass('fa-pause').removeClass('fa-play');
+                    angular.element(body).find('img').removeClass('paused').addClass('playing');
+                    angular.element(footer).find('#stepForward').prop('disabled', true);
+                    angular.element(footer).find('#stepBackward').prop('disabled', true);
+                    $scope.callToAction('stepForward', 'playFunction');
+                    break;
+                }
+
+                if(angular.element(footer).find('#play').children('i').hasClass('fa-pause')){
+                    angular.element(footer).find('#play').children('i').addClass('fa-play').removeClass('fa-pause');
+                    angular.element(body).find('img').removeClass('playing loading').addClass('paused');
+                    angular.element(footer).find('#stepForward').prop('disabled', false);
+                    angular.element(footer).find('#stepBackward').prop('disabled', false);
+                    if($scope.selector === 0) {
+                        $scope.selector = $rootScope.events.length - 1;
+                    }
+                    else {
+                        $scope.selector --;
+                    }
+                    break;
+                }
+
+            case 'stepForward':
+
+                if($rootScope.events.length -1 === $scope.selector){
+                    $scope.selector = 0;
+                }
+                else {
+                    $scope.selector ++;
+                }
+                angular.element(body).find('.next').removeClass('loaded').addClass('loading').prop('src', $rootScope.events[$scope.selector].url);
+                break;
+
+            case 'stepBackward':
+
+                if($scope.selector === 0){
+                    $scope.selector = $rootScope.events.length -1;
+                }
+                else{
+                    $scope.selector--;
+                }
+                angular.element(body).find('.next').removeClass('loaded').addClass('loading').prop('src', $rootScope.events[$scope.selector].url);
+
+                break;
+
+            default:
+                $scope.close();
+                break;
+        }
+
+    }
+
+    $scope.executeSearch = function (type) {
+
+
+        var obj = {};
+        var arr = [];
+
+        if(appServices.getConditions()){
+            arr = appServices.getConditions().trim().split(' ');
+        }
+
+        if(type === 'meta' && arr[0]){
+            if(arr[0].toLowerCase() !== 'select'){
+                obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
+            }
+            else{
+                obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
+                obj.query = obj.query.replace(/COLUMN/g, "*");
+            }
+        }
+        else{
+            Object.keys($scope.searchArea).forEach(function(elem, ind, array){
+                if($scope.searchArea[elem]){
+                    $scope.form.table = elem;
+                }
+            });
+            obj = $scope.form;
+        }
+
+        var temp = [];
+
+
+        $http.post('/queries', obj)
+            .then(function(response){
+                $rootScope.events = response.data;
+                console.log('events: ', $rootScope.events);
+
+            })
+            .then(function(response){
+                var current = document.getElementsByClassName('current');
+                var footer = document.getElementsByClassName('footer');
+                var header = document.getElementsByClassName('header');
+                angular.element(current).prop('src', $rootScope.events[0].url);
+                angular.element(footer).find('#footer_id').text('ID: ' + $rootScope.events[0].id);
+                angular.element(footer).find('#footer_date').text($rootScope.events[0].created);
+                angular.element(footer).find('#footer_count').text($scope.selector + 1 + '/' + $rootScope.events.length);
+
+                if($rootScope.events[0].decription){
+                    angular.element(header).find('#header_text').text($rootScope.events[0].decription);
+                }
+            })
+
+    };
+
+
+
+
+}]);;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', '$timeout',function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices, $timeout){
+
+    console.log('privCtrl root: ', $rootScope);
 
     $scope.summaryCount = {};
 
@@ -984,17 +1125,11 @@ function capitalize (elem, ind, arr){
 
 
         if($rootScope.tab === 'time'){
-
-            console.log('clearing form ', $rootScope.tab, '\n', $scope.form);
-
             $scope.form = {};
             appServices.initPiTSearch($scope, 'images');
         }
 
         else{
-
-            console.log('clearing form ', $rootScope.tab, '\n', $scope.form);
-
             $scope.form = {};
             $scope.form.contract = true;
             $scope.form.expand = false;
@@ -1016,7 +1151,6 @@ function capitalize (elem, ind, arr){
         $scope.videos.active = false;
 
     };
-
 
 }]);
 ;app.controller('ResumeModalCtrl', function($scope, $modalInstance, $http, appServices, $location){
@@ -1339,7 +1473,7 @@ function openModal(obj) {
         modify_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myModifyStorageModal.html'},
         add_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myAddStorageModal.html'},
         event: {contr: 'LatestEventModalCtrl', templ: './views/myLatestEventModal.html'},
-        multi: {contr: 'ModalInstanceCtrl2', templ: './views/myMultiViewModal.html'},
+        //multi: {contr: 'MultiViewModalCtrl', templ: './views/myMultiViewModal.html'},
         batch: {contr: 'BatchEditModalCtrl', templ: './views/myBatchEditModal.html'},
         video: {contr: 'VideoModalCtrl', templ: './views/myVideoModal.html'}
     };
@@ -1960,35 +2094,60 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 
     return _videoServiceFactory;
 
-}]);;app.directive('myEventHandler', function(){
+}]);;app.directive('myEventHandler', function($timeout, $rootScope){
 
     return {
         restrict: 'EA',
+        transclude: true,
+
         link: function(scope, element, attrs) {
 
-            var video = document.getElementById('myVideo');
+            element.on('load', function(event){
 
-            element.on('canplay', function(event){
+                var footer = document.getElementsByClassName('footer');
+                var header = document.getElementsByClassName('header');
+                var body = document.getElementsByClassName('body');
 
-                console.log('ready to play\nattrs: ', attrs, '\nscope: ', scope, '\nelement: ', element);
+                if(element.hasClass('paused')) {
+                    angular.element(element).prop('src','');
+                    angular.element(document.getElementsByTagName('img')).removeClass('paused');
+                }
 
-                video.play();
+                else if(element.hasClass('loading')) {
+                    angular.element(footer).find('#footer_id').text('ID: ' + $rootScope.events[scope.selector].id);
+                    angular.element(footer).find('#footer_date').text($rootScope.events[scope.selector].created);
+                    angular.element(footer).find('#footer_count').text(scope.selector + 1 + '/' + $rootScope.events.length);
 
-            })
+                    if($rootScope.events[scope.selector].decription){
+                        angular.element(header).find('#header_text').text($rootScope.events[scope.selector].decription);
+                    }
 
-            element.on('canplaythrough', function(event){
+                    angular.element(body).children('.current').addClass('loaded').removeClass('current');
 
-                console.log('fully loaded\nattrs: ', attrs, '\nscope: ', scope, '\nelement: ', element);
+                    angular.element(body).children('.next').addClass('current').removeClass('loading next');
 
-                video.play();
+                    angular.element(body).children('.loaded').addClass('next');
 
+                    if(element.hasClass('playing')){
+                        $timeout(function(){
+                            scope.callToAction('stepForward', 'eventHandler');
+                        },2500);
+                    }
+                }
+
+                else {
+                    var frame = document.getElementById('myFrame');
+                    var tmpl = document.getElementById('privateTmpl');
+                    angular.element(frame).css({'top': '15px', 'transition-duration': '1s'});
+                    angular.element(tmpl).css('opacity', '0.2');
+                }
             })
 
             element.on('error', function(event) {
-
-                console.log('error handler reporting error: \n' ,event.target)
-
+                console.log('an error occurred \n', scope.pictureFrameMessage);
             })
+
+
         }
     }
 
@@ -2109,7 +2268,30 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
         restrict: 'EA',
         templateUrl: 'views/multiView.html'
     };
-});;app.directive('myResumeModal', function(){
+});;app.directive('myPictureFrame', function($rootScope){
+
+    return {
+
+        restrict: 'EA',
+        transclude: true,
+        templateUrl: './views/myPictureFrame.html',
+
+        link: function(scope,element,attrs){
+            element.on('click', function(event){
+                if(event.target.firstChild && (event.target.firstChild.className === 'col-sm-4 outer' || event.target.firstChild.className === 'frameDef')){
+                    scope.close();
+                    scope.$parent.clear();
+                }
+
+                if(event.target.className === 'fa fa-close'){
+                    scope.close();
+                    scope.$parent.clear();
+                }
+            })
+        }
+    }
+
+});app.directive('myResumeModal', function(){
 
     return {
         restrict: 'EA'

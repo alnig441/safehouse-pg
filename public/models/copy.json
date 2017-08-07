@@ -267,6 +267,13 @@
           }
         },
         "body": {
+          "pictureFrame": {
+            "buttons": {
+              "stepBackward": "fa fa-step-backward",
+              "play": "fa fa-play",
+              "stepForward": "fa fa-step-forward"
+            }
+          }
         },
         "footer": {
         },
@@ -343,7 +350,13 @@
           }
         },
         "body": {
-
+          "pictureFrame": {
+            "buttons": {
+              "stepBackward": "fa fa-step-backward",
+              "play": "fa fa-play",
+              "stepForward": "fa fa-step-forward"
+            }
+          }
         },
         "footer": {},
         "partials": {

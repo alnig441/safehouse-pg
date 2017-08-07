@@ -8,9 +8,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" afterPath="$PROJECT_DIR$/public/javascripts/concatenated_app_file.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/models/copy.json" afterPath="$PROJECT_DIR$/public/models/copy.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/landing-page.min.css" afterPath="$PROJECT_DIR$/public/stylesheets/landing-page.min.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/accounts.html" afterPath="$PROJECT_DIR$/public/views/accounts.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/admin.html" afterPath="$PROJECT_DIR$/public/views/admin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/images.html" afterPath="$PROJECT_DIR$/public/views/images.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/imageSearch.html" afterPath="$PROJECT_DIR$/public/views/imageSearch.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/myVideoModal.html" afterPath="$PROJECT_DIR$/public/views/myVideoModal.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/private.html" afterPath="$PROJECT_DIR$/public/views/private.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/views/videoSearch.html" afterPath="$PROJECT_DIR$/public/views/videoSearch.html" />
@@ -33,97 +31,113 @@
     <favorites_list name="starting_over" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.489426">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="imageSearch.jade" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/development/partials/imageSearch.jade">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.4651163">
-                  <caret line="20" column="67" selection-start-line="20" selection-start-column="67" selection-end-line="20" selection-end-column="67" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="privCtrl.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="174" column="77" selection-start-line="174" selection-start-column="77" selection-end-line="174" selection-end-column="77" />
-                  <folding>
-                    <element signature="e#993#2002#0" expanded="false" />
-                    <element signature="e#2359#4969#0" expanded="false" />
-                    <element signature="e#6479#6535#0" expanded="false" />
-                    <element signature="e#6573#6620#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="multiViewModalInstanceCtrl.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/multiViewModalInstanceCtrl.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="copy.json" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/models/copy.json">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-10.0">
-                  <caret line="289" column="23" selection-start-line="289" selection-start-column="23" selection-end-line="289" selection-end-column="23" />
-                  <folding>
-                    <element signature="n#!!block;n#admin#0;n#!!block;n#views#0;n#!!top" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="factories.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/development/javascripts/factories/factories.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.54108524">
-                  <caret line="156" column="57" selection-start-line="156" selection-start-column="57" selection-end-line="156" selection-end-column="57" />
-                  <folding>
-                    <element signature="e#176#476#0" expanded="false" />
-                    <element signature="e#1598#1638#0" expanded="false" />
-                    <element signature="e#1690#4958#0" expanded="false" />
-                    <element signature="e#1855#2045#0" expanded="false" />
-                    <element signature="e#1892#2035#0" expanded="false" />
-                    <element signature="e#2055#4407#0" expanded="false" />
-                    <element signature="e#2157#2317#0" expanded="false" />
-                    <element signature="e#2338#2503#0" expanded="false" />
-                    <element signature="e#2613#2771#0" expanded="false" />
-                    <element signature="e#2792#2955#0" expanded="false" />
-                    <element signature="e#3082#3390#0" expanded="false" />
-                    <element signature="e#3411#3707#0" expanded="false" />
-                    <element signature="e#3817#3945#0" expanded="false" />
-                    <element signature="e#3966#4374#0" expanded="false" />
-                    <element signature="e#4039#4179#0" expanded="false" />
-                    <element signature="e#4221#4356#0" expanded="false" />
-                    <element signature="e#4685#4755#0" expanded="false" />
-                    <element signature="e#4867#4949#0" expanded="false" />
-                    <element signature="e#5013#5588#0" expanded="false" />
-                    <element signature="e#5635#6020#0" expanded="false" />
-                    <element signature="e#6073#6108#0" expanded="false" />
-                    <element signature="e#6168#6331#0" expanded="false" />
-                    <element signature="e#6713#7038#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="copy.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/copy.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-24.708334">
+              <caret line="359" column="0" selection-start-line="359" selection-start-column="0" selection-end-line="359" selection-end-column="0" />
+              <folding>
+                <element signature="n#!!block;n#admin#0;n#!!block;n#views#0;n#!!top" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="imageSearch.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/development/partials/imageSearch.jade">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="20" column="67" selection-start-line="20" selection-start-column="67" selection-end-line="20" selection-end-column="67" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="factories.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/development/javascripts/factories/factories.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+              <folding>
+                <element signature="e#176#476#0" expanded="false" />
+                <element signature="e#1600#1640#0" expanded="false" />
+                <element signature="e#1692#4960#0" expanded="false" />
+                <element signature="e#1857#2047#0" expanded="false" />
+                <element signature="e#1894#2037#0" expanded="false" />
+                <element signature="e#2057#4409#0" expanded="false" />
+                <element signature="e#2159#2319#0" expanded="false" />
+                <element signature="e#2340#2505#0" expanded="false" />
+                <element signature="e#2615#2773#0" expanded="false" />
+                <element signature="e#2794#2957#0" expanded="false" />
+                <element signature="e#3084#3392#0" expanded="false" />
+                <element signature="e#3413#3709#0" expanded="false" />
+                <element signature="e#3819#3947#0" expanded="false" />
+                <element signature="e#3968#4376#0" expanded="false" />
+                <element signature="e#4041#4181#0" expanded="false" />
+                <element signature="e#4223#4358#0" expanded="false" />
+                <element signature="e#4687#4757#0" expanded="false" />
+                <element signature="e#4869#4951#0" expanded="false" />
+                <element signature="e#5015#5590#0" expanded="false" />
+                <element signature="e#5637#6022#0" expanded="false" />
+                <element signature="e#6075#6110#0" expanded="false" />
+                <element signature="e#6170#6333#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="private.jade" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/development/views/private.jade">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.7187017">
+              <caret line="31" column="53" selection-start-line="31" selection-start-column="53" selection-end-line="31" selection-end-column="53" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="myPictureFrame.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/development/styles/myPictureFrame.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-1.1764706">
+              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="landing-page.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/development/styles/landing-page.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-3.8823528">
+              <caret line="105" column="19" selection-start-line="105" selection-start-column="13" selection-end-line="105" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="myPictureFrame.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/development/components/myPictureFrame.jade">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="23" column="117" selection-start-line="23" selection-start-column="110" selection-end-line="23" selection-end-column="117" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="privateCopy.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/privateCopy.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="18.75">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -144,7 +158,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/models/adminCopy.json" />
         <option value="$PROJECT_DIR$/models/privateCopy.json" />
         <option value="$PROJECT_DIR$/public/models/publicCopy.json" />
         <option value="$PROJECT_DIR$/models/publicCopy.json" />
@@ -173,7 +186,6 @@
         <option value="$PROJECT_DIR$/development/javascripts/controllers/acctsCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/globalNavCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/adminCtrl.js" />
-        <option value="$PROJECT_DIR$/models/copy.json" />
         <option value="$PROJECT_DIR$/development/partials/accounts.jade" />
         <option value="$PROJECT_DIR$/development/partials/landing-page.jade" />
         <option value="$PROJECT_DIR$/development/partials/images.jade" />
@@ -186,15 +198,17 @@
         <option value="$PROJECT_DIR$/development/javascripts/controllers/singleViewModalInstanceCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/directives/myVideo.js" />
         <option value="$PROJECT_DIR$/development/components/myVideoModal.jade" />
-        <option value="$PROJECT_DIR$/development/views/private.jade" />
         <option value="$PROJECT_DIR$/development/javascripts/directives/eventHandler.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/localNavCtrl.js" />
         <option value="$PROJECT_DIR$/development/partials/imageSearch.jade" />
         <option value="$PROJECT_DIR$/development/javascripts/directives/myLocalNav.js" />
-        <option value="$PROJECT_DIR$/development/javascripts/factories/factories.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/loginModalCtrl.js" />
-        <option value="$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js" />
         <option value="$PROJECT_DIR$/development/javascripts/controllers/multiViewModalInstanceCtrl.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js" />
+        <option value="$PROJECT_DIR$/development/javascripts/factories/factories.js" />
+        <option value="$PROJECT_DIR$/development/styles/myPictureFrame.css" />
+        <option value="$PROJECT_DIR$/models/copy.json" />
+        <option value="$PROJECT_DIR$/development/views/private.jade" />
       </list>
     </option>
   </component>
@@ -235,7 +249,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -464,74 +477,13 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="development" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="javascripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="starting_over" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="starting_over" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="development" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="javascripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="configuration" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="starting_over" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="starting_over" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="development" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="starting_over" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="starting_over" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="bin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -642,7 +594,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1053" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12848867" sideWeight="0.6157143" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32914573" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -651,7 +603,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24907847" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29968783" sideWeight="0.48708206" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2990654" sideWeight="0.48708206" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15797788" sideWeight="0.38428572" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -699,46 +651,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/development/javascripts/factories/factories.js</url>
-          <line>7</line>
-          <option name="timeStamp" value="77" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="85" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/development/javascripts/directives/myAddStorage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/styles/avatarBlur.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7826087">
-          <caret line="40" column="13" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/directives/myAddTags.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/components/myASection.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39534885">
-          <caret line="17" column="49" selection-start-line="17" selection-start-column="49" selection-end-line="17" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/components/myBSection.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.74418604">
@@ -844,13 +761,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development/styles/landing-page.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.25">
-          <caret line="218" column="17" selection-start-line="218" selection-start-column="17" selection-end-line="218" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/videos_mgmt.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -925,7 +835,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -933,7 +842,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -941,7 +849,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="9.459042">
           <caret line="1139" column="0" selection-start-line="1139" selection-start-column="0" selection-end-line="1139" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -949,7 +856,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.1329212">
           <caret line="49" column="124" selection-start-line="49" selection-start-column="124" selection-end-line="49" selection-end-column="124" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -957,7 +863,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.023255814">
           <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -965,15 +870,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="66" selection-start-line="0" selection-start-column="66" selection-end-line="0" selection-end-column="66" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/views/private.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="34" selection-start-line="31" selection-start-column="34" selection-end-line="31" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -981,7 +877,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.39534885">
           <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -989,15 +884,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/partials/videoSearch.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1005,7 +891,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.27906978">
           <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1013,7 +898,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.20930232">
           <caret line="9" column="48" selection-start-line="9" selection-start-column="48" selection-end-line="9" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1021,15 +905,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5116279">
           <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/loginModalCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1041,70 +916,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/copy.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.0">
-          <caret line="289" column="23" selection-start-line="289" selection-start-column="23" selection-end-line="289" selection-end-column="23" />
-          <folding>
-            <element signature="n#!!block;n#admin#0;n#!!block;n#views#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/factories/factories.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.54108524">
-          <caret line="156" column="57" selection-start-line="156" selection-start-column="57" selection-end-line="156" selection-end-column="57" />
-          <folding>
-            <element signature="e#176#476#0" expanded="false" />
-            <element signature="e#1598#1638#0" expanded="false" />
-            <element signature="e#1690#4958#0" expanded="false" />
-            <element signature="e#1855#2045#0" expanded="false" />
-            <element signature="e#1892#2035#0" expanded="false" />
-            <element signature="e#2055#4407#0" expanded="false" />
-            <element signature="e#2157#2317#0" expanded="false" />
-            <element signature="e#2338#2503#0" expanded="false" />
-            <element signature="e#2613#2771#0" expanded="false" />
-            <element signature="e#2792#2955#0" expanded="false" />
-            <element signature="e#3082#3390#0" expanded="false" />
-            <element signature="e#3411#3707#0" expanded="false" />
-            <element signature="e#3817#3945#0" expanded="false" />
-            <element signature="e#3966#4374#0" expanded="false" />
-            <element signature="e#4039#4179#0" expanded="false" />
-            <element signature="e#4221#4356#0" expanded="false" />
-            <element signature="e#4685#4755#0" expanded="false" />
-            <element signature="e#4867#4949#0" expanded="false" />
-            <element signature="e#5013#5588#0" expanded="false" />
-            <element signature="e#5635#6020#0" expanded="false" />
-            <element signature="e#6073#6108#0" expanded="false" />
-            <element signature="e#6168#6331#0" expanded="false" />
-            <element signature="e#6713#7038#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="174" column="77" selection-start-line="174" selection-start-column="77" selection-end-line="174" selection-end-column="77" />
-          <folding>
-            <element signature="e#993#2002#0" expanded="false" />
-            <element signature="e#2359#4969#0" expanded="false" />
-            <element signature="e#6479#6535#0" expanded="false" />
-            <element signature="e#6573#6620#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/multiViewModalInstanceCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/development/components/myLatestEventModal.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/myPictureFrameCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1112,10 +931,123 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/multiViewModalInstanceCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.7387944">
+          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/privCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.04636785">
+          <caret line="2" column="47" selection-start-line="2" selection-start-column="47" selection-end-line="2" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/loginModalCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.1128285">
+          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/partials/videoSearch.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3709428">
+          <caret line="16" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/javascripts/factories/factories.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding>
+            <element signature="e#176#476#0" expanded="false" />
+            <element signature="e#1600#1640#0" expanded="false" />
+            <element signature="e#1692#4960#0" expanded="false" />
+            <element signature="e#1857#2047#0" expanded="false" />
+            <element signature="e#1894#2037#0" expanded="false" />
+            <element signature="e#2057#4409#0" expanded="false" />
+            <element signature="e#2159#2319#0" expanded="false" />
+            <element signature="e#2340#2505#0" expanded="false" />
+            <element signature="e#2615#2773#0" expanded="false" />
+            <element signature="e#2794#2957#0" expanded="false" />
+            <element signature="e#3084#3392#0" expanded="false" />
+            <element signature="e#3413#3709#0" expanded="false" />
+            <element signature="e#3819#3947#0" expanded="false" />
+            <element signature="e#3968#4376#0" expanded="false" />
+            <element signature="e#4041#4181#0" expanded="false" />
+            <element signature="e#4223#4358#0" expanded="false" />
+            <element signature="e#4687#4757#0" expanded="false" />
+            <element signature="e#4869#4951#0" expanded="false" />
+            <element signature="e#5015#5590#0" expanded="false" />
+            <element signature="e#5637#6022#0" expanded="false" />
+            <element signature="e#6075#6110#0" expanded="false" />
+            <element signature="e#6170#6333#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/privateCopy.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="18.75">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/styles/landing-page.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.8823528">
+          <caret line="105" column="19" selection-start-line="105" selection-start-column="13" selection-end-line="105" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/styles/myPictureFrame.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.1764706">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/copy.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-24.708334">
+          <caret line="359" column="0" selection-start-line="359" selection-start-column="0" selection-end-line="359" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!block;n#admin#0;n#!!block;n#views#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/development/partials/imageSearch.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4651163">
+        <state vertical-scroll-proportion="0.0">
           <caret line="20" column="67" selection-start-line="20" selection-start-column="67" selection-end-line="20" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/components/myPictureFrame.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="117" selection-start-line="23" selection-start-column="110" selection-end-line="23" selection-end-column="117" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development/views/private.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7187017">
+          <caret line="31" column="53" selection-start-line="31" selection-start-column="53" selection-end-line="31" selection-end-column="53" />
           <folding />
         </state>
       </provider>

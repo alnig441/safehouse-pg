@@ -832,6 +832,7 @@ function capitalize (elem, ind, arr){
 
         $timeout(function(){
             angular.element(document.getElementsByTagName('img')).removeClass('playing paused').removeAttr('src');
+            angular.element(document.getElementById('#header_text')).text('');
             angular.element(document.getElementsByClassName('fa-pause')).removeClass('fa-pause').addClass('fa-play');
             angular.element(document.getElementById('stepForward')).prop('disabled', false);
             angular.element(document.getElementById('stepBackward')).prop('disabled', false);
@@ -951,8 +952,8 @@ function capitalize (elem, ind, arr){
                 angular.element(footer).find('#footer_date').text($rootScope.events[0].created);
                 angular.element(footer).find('#footer_count').text($scope.selector + 1 + '/' + $rootScope.events.length);
 
-                if($rootScope.events[0].decription){
-                    angular.element(header).find('#header_text').text($rootScope.events[0].decription);
+                if($rootScope.events[0].description){
+                    angular.element(header).find('#header_text').text($rootScope.events[0].description);
                 }
             })
 

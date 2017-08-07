@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="bbcf99ad-c21b-4e76-a851-238232d70183" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/development/javascripts/controllers/myPictureFrameCtrl.js" afterPath="$PROJECT_DIR$/development/javascripts/controllers/myPictureFrameCtrl.js" />
     </list>
     <ignored path="starting_over.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -111,8 +112,8 @@
           <file leaf-file-name="myPictureFrameCtrl.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/myPictureFrameCtrl.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.44358578">
-                  <caret line="123" column="73" selection-start-line="123" selection-start-column="73" selection-end-line="123" selection-end-column="73" />
+                <state vertical-scroll-proportion="0.4636785">
+                  <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
                   <folding />
                 </state>
               </provider>
@@ -1117,8 +1118,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/development/javascripts/controllers/myPictureFrameCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44358578">
-          <caret line="123" column="73" selection-start-line="123" selection-start-column="73" selection-end-line="123" selection-end-column="73" />
+        <state vertical-scroll-proportion="0.4636785">
+          <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
           <folding />
         </state>
       </provider>

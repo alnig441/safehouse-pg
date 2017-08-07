@@ -982,6 +982,7 @@ function capitalize (elem, ind, arr){
 
     //USE selected_db TO INDICATE WHICH STORAGE AREA IS BEING ACCESSED
     $scope.selected_db = $rootScope.default_storage;
+    $scope.form.contract = true;
 
     //FORM SEARCH TYPE SELECTOR FUNCTION
     $scope.flipType = function(operator){
@@ -2120,7 +2121,7 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
                     angular.element(footer).find('#footer_count').text(scope.selector + 1 + '/' + $rootScope.events.length);
 
                     if($rootScope.events[scope.selector].decription){
-                        angular.element(header).find('#header_text').text($rootScope.events[scope.selector].decription);
+                        angular.element(header).find('#header_text').text($rootScope.events[scope.selector].description);
                     }
 
                     angular.element(body).children('.current').addClass('loaded').removeClass('current');

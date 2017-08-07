@@ -832,7 +832,7 @@ function capitalize (elem, ind, arr){
 
         $timeout(function(){
             angular.element(document.getElementsByTagName('img')).removeClass('playing paused').removeAttr('src');
-            angular.element(document.getElementById('#header_text')).text('...');
+            angular.element(document.getElementById('header_text')).text('');
             angular.element(document.getElementsByClassName('fa-pause')).removeClass('fa-pause').addClass('fa-play');
             angular.element(document.getElementById('stepForward')).prop('disabled', false);
             angular.element(document.getElementById('stepBackward')).prop('disabled', false);

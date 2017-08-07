@@ -1614,6 +1614,7 @@ function openModal(obj) {
 
         $scope.list = [];
         $scope.form = {};
+        $scope.form.contract = true;
         $scope.form.option = 'year';
         $scope.form.table = table;
         $scope.searchArea = {};

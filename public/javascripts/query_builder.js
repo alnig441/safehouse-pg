@@ -116,7 +116,6 @@ function parseObj (obj, str, arr) {
             else{
 
                 if(compare(prop, arr)){
-
                     cols.push(prop);
                     vals.push(breakout(obj[prop]));
                 }
@@ -154,6 +153,7 @@ function breakout (str) {
     }
 
     arr.forEach(function(elem, ind, arr){
+        console.log('show me elem: ', elem);
         tmpArr.push("'" + elem.trim() + "'");
     });
 

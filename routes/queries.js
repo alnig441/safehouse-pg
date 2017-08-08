@@ -37,7 +37,6 @@ router.get('/latest', call.isAuthenticated, function(req, res, next){
 
 });
 
-
 router.post('/', call.isAuthenticated, function(req, res, next){
 
     var descr;
@@ -116,6 +115,7 @@ router.post('/', call.isAuthenticated, function(req, res, next){
     }
 
     if(req.body.table === 'events'){
+        console.log('show me search string: ', search);
         query_string ="SELECT ID, YEAR, MONTH, DAY, "+descr+" AS DESCRIPTION, CREATED, PATH || FOLDER || '/' || FILE AS URL FROM EVENTS CROSS JOIN IMAGES CROSS JOIN STORAGES WHERE IMG_ID = ID AND STORAGE = FOLDER AND META IS NOT NULL" + search + " ORDER BY CREATED";
     }
     if(req.body.table === 'images'){
@@ -143,7 +143,6 @@ router.post('/', call.isAuthenticated, function(req, res, next){
         })
     })
 });
-
 
 router.put('/count', call.isAuthenticated, function(req, res, next){
 

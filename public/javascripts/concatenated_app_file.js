@@ -97,6 +97,17 @@ app.filter('dotFilter', function(){
     }
 });
 
+
+app.filter('replaceSingleQuote', function(){
+
+    return function(input){
+
+        var str = input.replace(/\'/g, "''" );
+
+        return str;
+    }
+});
+
 function elemIsArray(elem, index, array){
 
     var outArr = [];
@@ -962,7 +973,7 @@ function capitalize (elem, ind, arr){
 
 
 
-}]);;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', '$timeout',function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices, $timeout){
+}]);;app.controller('privCtrl', ['mapTabsFilter','$scope','$rootScope', '$http', '$log', '$modal', '$location','appServices', 'imageServices', 'eventServices', '$timeout', 'replaceSingleQuoteFilter', function(mapTabsFilter, $scope, $rootScope, $http, $log, $modal, $location, appServices, imageServices, eventServices, $timeout, replaceSingleQuoteFilter){
 
     console.log('privCtrl root: ', $rootScope);
 
@@ -1031,10 +1042,11 @@ function capitalize (elem, ind, arr){
     $scope.build_query = function(searchTerm) {
 
         var query = {};
+        var input = replaceSingleQuoteFilter(this.form[searchTerm]);
 
         if(this.form[searchTerm]){
             if (Object.keys($rootScope.baseline).length === 0) {
-                $rootScope.baseline[searchTerm] = this.form[searchTerm];
+                $rootScope.baseline[searchTerm] = input;
                 if(this.form.exclude){
                     $rootScope.baseline_type = 'exclude';
                 }
@@ -1042,15 +1054,15 @@ function capitalize (elem, ind, arr){
             else {
                 if (this.form.contract && this.form[searchTerm]) {
                     query.contract = {};
-                    query.contract[searchTerm] = this.form[searchTerm];
+                    query.contract[searchTerm] = input;
                 }
                 if (this.form.expand && this.form[searchTerm]) {
                     query.expand = {};
-                    query.expand[searchTerm] = this.form[searchTerm];
+                    query.expand[searchTerm] = input;
                 }
                 if (this.form.exclude && this.form[searchTerm]) {
                     query.exclude = {};
-                    query.exclude[searchTerm] = this.form[searchTerm];
+                    query.exclude[searchTerm] = input;
                 }
 
             }
@@ -1559,6 +1571,7 @@ function openModal(obj) {
 
         $http.put('/queries/count', {conditions: conditions})
             .then(function(response){
+                console.log('count conditions: ', conditions);
                 $rootScope.queries_count = response.data[0].count;
             });
 

@@ -7,8 +7,6 @@ var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/sa
 
 router.post('/build', call.isAuthenticated, function(req, res, next){
 
-
-
     if(req.body.month === 12){
         req.body.month = 0;
     }
@@ -42,8 +40,6 @@ router.post('/build', call.isAuthenticated, function(req, res, next){
     }
 
     db === 'events' ? query_string = 'SELECT DISTINCT '+ option +' FROM events CROSS JOIN images where id = img_id'+ filter +' ORDER BY '+ option +' asc' : query_string = 'SELECT DISTINCT '+ option +' FROM images WHERE META IS NOT NULL '+ filter +' ORDER BY '+ option +' asc' ;
-
-    console.log('query string: ', query_string);
 
     pg.connect(connectionString, function(error, client, done){
         var query = client.query(query_string, function(error, result){

@@ -677,6 +677,8 @@ function capitalize (elem, ind, arr){
     $scope.close = function() {
 
         $scope.selector = 0;
+        $rootScope.spinning = false;
+
         angular.element(document.getElementById("myFrame")).css({"top": "-1200px", "transition-duration": "0.5s" });
         angular.element(document.getElementById("privateTmpl")).css({'position': 'static', 'opacity':'1'});
 
@@ -758,9 +760,10 @@ function capitalize (elem, ind, arr){
 
     $scope.executeSearch = function (type) {
 
-        if(type === 'latest') {
+        $rootScope.spinning = true;
+        $rootScope.startMoment = Date.now();
 
-            console.log('getting latest event');
+        if(type === 'latest') {
 
             $http.get('/queries/latest')
                 .then(function(response){
@@ -810,7 +813,6 @@ function capitalize (elem, ind, arr){
             $http.post('/queries', obj)
                 .then(function(response){
                     $rootScope.events = response.data;
-                    console.log('events: ', $rootScope.events);
 
                 })
                 .then(function(response){
@@ -825,6 +827,7 @@ function capitalize (elem, ind, arr){
                     if($rootScope.events[0].description){
                         angular.element(header).find('#header_text').text($rootScope.events[0].description);
                     }
+                    $rootScope.spinning = false;
                 })
         }
 
@@ -1950,6 +1953,17 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 
             element.on('load', function(event){
 
+                var loadMoment = Date.now();
+
+                function delay(){
+                    if((loadMoment - $rootScope.startMoment) > 5000){
+                         return;
+                    }
+                    else {
+                         return (5000 - (loadMoment - $rootScope.startMoment));
+                    }
+                }
+
                 var footer = document.getElementsByClassName('footer');
                 var header = document.getElementsByClassName('header');
                 var body = document.getElementsByClassName('body');
@@ -1976,12 +1990,14 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 
                     if(element.hasClass('playing')){
                         $timeout(function(){
+                            $rootScope.startMoment = Date.now();
                             scope.callToAction('stepForward', 'eventHandler');
-                        },2500);
+                        },delay());
                     }
                 }
 
                 else {
+                    $rootScope.spinning = false;
                     var frame = document.getElementById('myFrame');
                     var tmpl = document.getElementById('privateTmpl');
                     angular.element(frame).css({'top': '15px', 'transition-duration': '1s'});

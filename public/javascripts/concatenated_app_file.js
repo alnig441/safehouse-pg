@@ -839,7 +839,7 @@ function capitalize (elem, ind, arr){
 
         $scope.selector = 0;
         angular.element(document.getElementById("myFrame")).css({"top": "-1200px", "transition-duration": "0.5s" });
-        angular.element(document.getElementById("privateTmpl")).css('opacity','1');
+        angular.element(document.getElementById("privateTmpl")).css({'position': 'static', 'opacity':'1'});
 
         $timeout(function(){
             angular.element(document.getElementsByTagName('img')).removeClass('playing paused').removeAttr('src');
@@ -2158,7 +2158,7 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
                     var frame = document.getElementById('myFrame');
                     var tmpl = document.getElementById('privateTmpl');
                     angular.element(frame).css({'top': '15px', 'transition-duration': '1s'});
-                    angular.element(tmpl).css('opacity', '0.2');
+                    angular.element(tmpl).css({'position': 'fixed','opacity': '0.2'});
                 }
             })
 

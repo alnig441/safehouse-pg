@@ -516,13 +516,6 @@ function capitalize (elem, ind, arr){
     };
 
 }]);
-;app.controller('LatestEventModalCtrl', function ($scope, $modalInstance, $http) {
-
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
-
-});
 ;app.controller('localNavCtrl', ['$scope', 'appServices', function($scope, appServices){
 
     $scope.goTo = function(tab){
@@ -677,161 +670,7 @@ function capitalize (elem, ind, arr){
     };
 
 });
-;app.controller('MultiViewModalCtrl', function($scope, $rootScope, $modalInstance, events, $interval) {
-
-    console.log('MVM ctrl');
-
-    $scope.selector = 0;
-
-    eventFrame($scope.selector);
-
-    function eventFrame (i) {
-
-        var j;
-
-        //initialisation of eventMinusOne
-
-        if(i==0){
-            j = $rootScope.events.length;
-        } else {
-            j = i;
-        }
-
-        $scope.selected = {
-            event: $rootScope.events[i],
-            eventPlusOne: $rootScope.events[i + 1],
-            eventMinusOne: $rootScope.events[j - 1]
-        }
-
-    }
-
-    $scope.cancel = function(){
-        $modalInstance.dismiss('cancel');
-    };
-
-    $scope.play = function(bool){
-
-        if(!$scope.interval){
-            $scope.interval = $interval(function(){
-                $scope.next();
-            }, 5000)
-        }
-
-        else{
-            $interval.cancel($scope.interval);
-            $scope.interval = false;
-        }
-
-    };
-
-    $scope.next = function(){
-
-        $scope.selected.event = $scope.selected.eventPlusOne;
-
-        if($scope.selector < $rootScope.events.length - 1){
-            $scope.selector ++;
-        }
-        else{
-            $scope.selector = 0;
-        }
-
-        eventFrame($scope.selector);
-
-    };
-
-    $scope.previous = function(){
-
-        $scope.selected.event = $scope.selected.eventMinusOne;
-
-        if($scope.selector == 0){
-            $scope.selector = $rootScope.events.length -1;
-        }
-        else {
-            $scope.selector --;
-        }
-
-        eventFrame($scope.selector);
-    };
-
-});
-;app.controller('multiViewModalInstanceCtrl', function($scope, $rootScope, $http, $modal, $timeout, appServices){
-
-    console.log('MVMI ctrl');
-
-    $scope.animationsEnabled = true;
-
-    $scope.submitCriteria = function(size,type) {
-
-        $scope.spinning = true;
-
-        $scope.executeSearch(type);
-
-        $timeout(function () {
-
-            var modal = appServices.setModal('multi');
-
-            if($rootScope.events.length > 0){
-                var modalInstance = $modal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: modal.templ,
-                    controller: modal.contr,
-                    size: size,
-                    resolve: {
-                        events: function () {
-                            return $rootScope.events;
-                        }
-                    }
-                });
-            }
-
-            $scope.spinning = false;
-
-        }, 2500);
-
-    };
-
-    $scope.executeSearch = function (type) {
-
-        var obj = {};
-        var arr = [];
-
-        if(appServices.getConditions()){
-            arr = appServices.getConditions().trim().split(' ');
-        }
-
-        if(type === 'meta' && arr[0]){
-            if(arr[0].toLowerCase() !== 'select'){
-                obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
-            }
-            else{
-                console.log('banko');
-                obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
-                obj.query = obj.query.replace(/COLUMN/g, "*");
-            }
-        }
-        else{
-            Object.keys($scope.searchArea).forEach(function(elem, ind, array){
-                if($scope.searchArea[elem]){
-                    $scope.form.table = elem;
-                }
-            });
-            obj = $scope.form;
-        }
-
-        var temp = [];
-
-
-        $http.post('/queries', obj)
-            .then(function(response){
-                $rootScope.events = response.data;
-
-            });
-
-
-    };
-
-});
-;app.controller('myPictureFrameCtrl', ['$scope','$rootScope', 'appServices', '$http', '$timeout', function($scope, $rootScope, appServices, $http, $timeout){
+;app.controller('myPictureFrameCtrl', ['$scope','$rootScope', 'appServices', '$http', '$timeout', 'eventServices', function($scope, $rootScope, appServices, $http, $timeout, eventServices){
 
     $scope.selector = 0;
 
@@ -919,54 +758,77 @@ function capitalize (elem, ind, arr){
 
     $scope.executeSearch = function (type) {
 
+        if(type === 'latest') {
 
-        var obj = {};
-        var arr = [];
+            console.log('getting latest event');
 
-        if(appServices.getConditions()){
-            arr = appServices.getConditions().trim().split(' ');
+            $http.get('/queries/latest')
+                .then(function(response){
+                    $rootScope.events = response.data;
+                })
+                .then(function(response){
+                    var current = document.getElementsByClassName('current');
+                    var footer = document.getElementsByClassName('footer');
+                    var header = document.getElementsByClassName('header');
+                    angular.element(current).prop('src', $rootScope.events.url);
+                    angular.element(footer).find('#footer_date').text($rootScope.events.created);
+                    angular.element(header).find('#header_text').text($rootScope.events.description);
+                })
+
         }
 
-        if(type === 'meta' && arr[0]){
-            if(arr[0].toLowerCase() !== 'select'){
-                obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
+        else {
+
+            var obj = {};
+            var arr = [];
+
+            if(appServices.getConditions()){
+                arr = appServices.getConditions().trim().split(' ');
+            }
+
+            if(type === 'meta' && arr[0]){
+                if(arr[0].toLowerCase() !== 'select'){
+                    obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from (select * from images where meta is not null "+ appServices.getConditions() +") as x cross join storages where folder = x.storage order by created asc";
+                }
+                else{
+                    obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
+                    obj.query = obj.query.replace(/COLUMN/g, "*");
+                }
             }
             else{
-                obj.query = "select id, created, year, month, day, path || folder || '/' || file as url from ("+ appServices.getConditions()+ ") as x cross join storages where folder = x.storage order by created asc";
-                obj.query = obj.query.replace(/COLUMN/g, "*");
+                Object.keys($scope.searchArea).forEach(function(elem, ind, array){
+                    if($scope.searchArea[elem]){
+                        $scope.form.table = elem;
+                    }
+                });
+                obj = $scope.form;
             }
+
+            var temp = [];
+
+
+            $http.post('/queries', obj)
+                .then(function(response){
+                    $rootScope.events = response.data;
+                    console.log('events: ', $rootScope.events);
+
+                })
+                .then(function(response){
+                    var current = document.getElementsByClassName('current');
+                    var footer = document.getElementsByClassName('footer');
+                    var header = document.getElementsByClassName('header');
+                    angular.element(current).prop('src', $rootScope.events[0].url);
+                    angular.element(footer).find('#footer_id').text('ID: ' + $rootScope.events[0].id);
+                    angular.element(footer).find('#footer_date').text($rootScope.events[0].created);
+                    angular.element(footer).find('#footer_count').text($scope.selector + 1 + '/' + $rootScope.events.length);
+
+                    if($rootScope.events[0].description){
+                        angular.element(header).find('#header_text').text($rootScope.events[0].description);
+                    }
+                })
         }
-        else{
-            Object.keys($scope.searchArea).forEach(function(elem, ind, array){
-                if($scope.searchArea[elem]){
-                    $scope.form.table = elem;
-                }
-            });
-            obj = $scope.form;
-        }
-
-        var temp = [];
 
 
-        $http.post('/queries', obj)
-            .then(function(response){
-                $rootScope.events = response.data;
-                console.log('events: ', $rootScope.events);
-
-            })
-            .then(function(response){
-                var current = document.getElementsByClassName('current');
-                var footer = document.getElementsByClassName('footer');
-                var header = document.getElementsByClassName('header');
-                angular.element(current).prop('src', $rootScope.events[0].url);
-                angular.element(footer).find('#footer_id').text('ID: ' + $rootScope.events[0].id);
-                angular.element(footer).find('#footer_date').text($rootScope.events[0].created);
-                angular.element(footer).find('#footer_count').text($scope.selector + 1 + '/' + $rootScope.events.length);
-
-                if($rootScope.events[0].description){
-                    angular.element(header).find('#header_text').text($rootScope.events[0].description);
-                }
-            })
 
     };
 
@@ -981,7 +843,6 @@ function capitalize (elem, ind, arr){
 
     imageServices.getDbCount($scope);
     eventServices.getEventCount($scope);
-    eventServices.getLatestEvent($scope);
     imageServices.getVideos($scope);
     appServices.resetSQ();
     appServices.initPiTSearch($scope, 'images');
@@ -1271,19 +1132,6 @@ function capitalize (elem, ind, arr){
             }
         }
 
-        else if(option === 'event'){
-
-            $http.get('/queries/latest')
-                .then(function(response){
-                    if(response.data.hasOwnProperty('id')){
-                        config.$scope.event = response.data;
-                        angular.element(menu).collapse('hide');
-                        openModal(config);
-
-                    }
-                });
-        }
-
         else if(misc === 'new'){
 
             if(this.uncategorized){
@@ -1300,25 +1148,6 @@ function capitalize (elem, ind, arr){
 
             openModal(config);
         }
-
-        //else if(misc === 'allan'){
-        //    $scope.projects = $rootScope.resumes.Allan;
-        //    openModal(config);
-        //}
-        //
-        //else if(misc === 'fiona'){
-        //    $scope.projects = $rootScope.resumes.Fiona;
-        //    openModal(config);
-        //}
-
-        //else if(misc) {
-        //
-        //    var video = document.getElementsByTagName('source');
-        //    video.src = misc;
-        //    console.log('myVideo: ', document.getElementById('myVideo'));
-        //    openModal(config);
-        //
-        //}
 
         else {
             openModal(config);
@@ -1486,8 +1315,6 @@ function openModal(obj) {
         storage: {contr: 'ModifyAcctModalCtrl', templ: './views/myManageStoragesModal.html'},
         modify_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myModifyStorageModal.html'},
         add_storage: {contr: 'ModifyStorageModalCtrl', templ: './views/myAddStorageModal.html'},
-        event: {contr: 'LatestEventModalCtrl', templ: './views/myLatestEventModal.html'},
-        //multi: {contr: 'MultiViewModalCtrl', templ: './views/myMultiViewModal.html'},
         batch: {contr: 'BatchEditModalCtrl', templ: './views/myBatchEditModal.html'},
         video: {contr: 'VideoModalCtrl', templ: './views/myVideoModal.html'}
     };
@@ -2246,14 +2073,7 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
 
     };
 });
-;app.directive('myLatestEventModal', function(){
-
-    return {
-        restrict: 'EA',
-        templateUrl: 'views/myLatestEventModal.html'
-
-    };
-});;app.directive('myLocalNav', function($rootScope){
+;app.directive('myLocalNav', function($rootScope){
 
     return {
         restrict: 'E',
@@ -2281,12 +2101,6 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
     return {
         restrict: 'EA'
     }
-});;app.directive('myMultiViewModal', function(){
-
-    return {
-        restrict: 'EA',
-        templateUrl: 'views/multiView.html'
-    };
 });;app.directive('myPictureFrame', function($rootScope){
 
     return {

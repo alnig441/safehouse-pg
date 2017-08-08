@@ -1674,7 +1674,7 @@ function openModal(obj) {
     }
 
 }]);;
-app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFilter', 'eventServices', function($http, $rootScope, appServices, capInitialFilter, eventServices){
+app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFilter', 'eventServices', 'replaceSingleQuoteFilter', function($http, $rootScope, appServices, capInitialFilter, eventServices, replaceSingleQuoteFilter){
 
     var _imageServiceFactory = {};
 
@@ -1732,7 +1732,10 @@ app.service('imageServices', ['$http','$rootScope', 'appServices', 'capInitialFi
 
             for (var prop in obj.image) {
                 if(obj.image[prop] && typeof obj.image[prop] !== 'number' ){
-                    obj.image[prop] = capInitialFilter(obj.image[prop]);
+                    if(prop === 'meta' || prop === 'names' || prop === 'occasion'){
+                        obj.image[prop] = capInitialFilter(obj.image[prop]);
+                    }
+                    obj.image[prop] = replaceSingleQuoteFilter(obj.image[prop]);
                 }
             }
             _imageServiceFactory.addMeta($scope, obj.image);

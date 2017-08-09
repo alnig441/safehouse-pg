@@ -308,14 +308,38 @@
           },
           "meta": {
             "labels": {
-              "meta": "vælg søgeord",
-              "names": "vælg personer",
-              "occasion": "vælg lejlighed",
-              "country": "vælg land",
-              "state": "vælg stat",
-              "city": "vælg by",
-              "type": "vælg søgningstype",
-              "criteria": "valgte søgekriterier"
+              "names": {
+                "value": "vælg personer",
+                "class": ""
+              },
+              "country": {
+                "value": "vælg land",
+                "classe": ""
+              },
+              "state": {
+                "value": "vælg stat",
+                "class": "extended"
+              },
+              "city": {
+                "value": "vælg by",
+                "class": ""
+              },
+              "occasion": {
+                "value": "vælg lejlighed",
+                "class": "extended"
+              },
+              "meta": {
+                "value": "vælg søgeord",
+                "class": "extended"
+              },
+              "type": {
+                "value": "vælg søgningstype",
+                "class": ""
+              },
+              "criteria": {
+                "value": "valgte søgekriterier",
+                "class": ""
+              }
             },
             "checkboxes": {
               "contract": "begræns",
@@ -330,6 +354,16 @@
           "searching": "søger...",
           "cancel": "afslut",
           "reset": "nulstil"
+        },
+        "links": {
+          "extended": {
+            "show": "standard søgning",
+            "hide": "udvidet søgning"
+          },
+          "criteria": {
+            "show": "gem søgekriterier",
+            "hide": "vis søgekriterier"
+          }
         }
       },
       "en": {
@@ -388,14 +422,38 @@
           },
           "meta": {
             "labels": {
-              "meta": "select keyword",
-              "names": "select people",
-              "occasion": "select occasion",
-              "country": "select country",
-              "state": "select state",
-              "city": "select city",
-              "type": "type of search",
-              "criteria": "selected search criteria"
+              "names": {
+                "value": "select people",
+                "class": ""
+              },
+              "country": {
+                "value": "select country",
+                "classe": ""
+              },
+              "state": {
+                "value": "select state",
+                "class": "extended"
+              },
+              "city": {
+                "value": "select city",
+                "class": ""
+              },
+              "occasion": {
+                "value": "select occasion",
+                "class": "extended"
+              },
+              "meta": {
+                "value": "select keyword",
+                "class": "extended"
+              },
+              "type": {
+                "value": "select search type",
+                "class": ""
+              },
+              "criteria": {
+                "value": "selected search criteria",
+                "class": ""
+              }
             },
             "checkboxes": {
               "contract": "contract",
@@ -410,6 +468,16 @@
           "searching": "searching..",
           "cancel": "cancel",
           "reset": "reset"
+        },
+        "links": {
+          "extended": {
+            "show": "standard search",
+            "hide": "extended search"
+          },
+          "criteria": {
+            "show": "hide search criteria",
+            "hide": "show search criteria"
+          }
         }
       }
     },

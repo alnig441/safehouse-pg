@@ -673,6 +673,35 @@ function capitalize (elem, ind, arr){
 ;app.controller('myPictureFrameCtrl', ['$scope','$rootScope', 'appServices', '$http', '$timeout', 'eventServices', function($scope, $rootScope, appServices, $http, $timeout, eventServices){
 
     $scope.selector = 0;
+    $scope.doShowCriteria = false;
+
+    $scope.showExtended = function(){
+        var extend = document.getElementById('extend');
+        var extended = document.getElementsByClassName('extended');
+
+        if(angular.element(extended).css('display') === 'none'){
+            angular.element(extended).css({"display": "block"});
+            angular.element(extend).text($rootScope.copy.links.extended.show);
+        }
+        else{
+            angular.element(extended).css({"display": "none"});
+            angular.element(extend).text($rootScope.copy.links.extended.hide);
+        }
+    }
+
+    $scope.showCriteria = function() {
+
+        var criteria = document.getElementById('criteria');
+
+        if(!$scope.doShowCriteria){
+            $scope.doShowCriteria = true;
+            angular.element(criteria).text($rootScope.copy.links.criteria.show)
+        }
+        else{
+            $scope.doShowCriteria = false;
+            angular.element(criteria).text($rootScope.copy.links.criteria.hide)
+        }
+    }
 
     $scope.close = function() {
 
@@ -695,8 +724,6 @@ function capitalize (elem, ind, arr){
     }
 
     $scope.callToAction = function(action, origin) {
-
-        console.log('call to action: ', $scope);
 
         var body = document.getElementsByClassName('body');
         var footer = document.getElementsByClassName('footer');
@@ -827,7 +854,12 @@ function capitalize (elem, ind, arr){
                     if($rootScope.events[0].description){
                         angular.element(header).find('#header_text').text($rootScope.events[0].description);
                     }
-                    $rootScope.spinning = false;
+                })
+                .then(function(){
+                    $timeout(function(){
+                        $rootScope.spinning = false;
+                        $timeout.cancel();
+                    },2500)
                 })
         }
 
@@ -1002,6 +1034,7 @@ function capitalize (elem, ind, arr){
     //FUNCTION TO CLEAR SELECTED META SEARCH TERMS FROM $scope.build_query
     $scope.clear = function(){
 
+        $rootScope.spinning = false;
         $scope.form = {};
         $scope.form.contract = true;
         $scope.form.expand = false;
@@ -1997,7 +2030,6 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
                 }
 
                 else {
-                    $rootScope.spinning = false;
                     var frame = document.getElementById('myFrame');
                     var tmpl = document.getElementById('privateTmpl');
                     angular.element(frame).css({'top': '15px', 'transition-duration': '1s'});

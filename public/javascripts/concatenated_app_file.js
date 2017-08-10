@@ -2041,6 +2041,14 @@ app.service('FUCK', ['$http','$rootScope','$scope', function($http, $rootScope, 
                 console.log('an error occurred \n', scope.pictureFrameMessage);
             })
 
+            element.on('canplay', function(event){
+                console.log('bingo play');
+            })
+
+            element.on('canplaythrough', function(event){
+                console.log('video can play through');
+            })
+
 
         }
     }

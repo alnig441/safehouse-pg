@@ -280,7 +280,7 @@
         "partials": {
           "videos": {
             "localNav": {
-
+              "year": "Årgang"
             },
             "url": "./views/videoSearch.html"
           },
@@ -395,7 +395,9 @@
         "footer": {},
         "partials": {
           "videos": {
-            "localNav": {},
+            "localNav": {
+              "year": "Year"
+            },
             "url": "./views/videoSearch.html"
           },
           "images": {
